@@ -1,10 +1,15 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import React from "react";
+import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
+import CreatePinjamanModal from "./Partials/CreatePinjamanModal";
 
-const RequestPinjaman = (props) => {
+const Pinjaman = (props) => {
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const hideCreateModal = (e) => {
+        setShowCreateModal(false);
+    };
     return (
         <Authenticated
             auth={props.auth}
@@ -19,15 +24,19 @@ const RequestPinjaman = (props) => {
                             icon={<IoMdAdd />}
                             size={"md"}
                             title={"Tambah"}
-                            onClick={() => setShowModalCreate(true)}
+                            onClick={() => setShowCreateModal(true)}
                         ></PrimaryButton>
                     </div>
                 </>
             }
         >
             <Head title="Data Pinjaman" />
+            <CreatePinjamanModal
+                show={showCreateModal}
+                onClose={hideCreateModal}
+            />
         </Authenticated>
     );
 };
 
-export default RequestPinjaman;
+export default Pinjaman;

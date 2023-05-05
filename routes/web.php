@@ -88,8 +88,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [CustomerController::class, 'index'])->name('index');
             Route::post('/', [CustomerController::class, 'store'])->name('store');
         });
-        Route::prefix('request-loan')->name('requestloan.')->group(function () {
-            Route::get('/', [PinjamanController::class, 'requestLoan'])->name('index');
+        Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
+            Route::get('/', [PinjamanController::class, 'pinjaman'])->name('index');
+            Route::get('/create', [PinjamanController::class, 'create'])->name('create');
         });
     });
 });

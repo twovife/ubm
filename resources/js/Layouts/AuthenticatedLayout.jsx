@@ -112,7 +112,7 @@ export default function Authenticated({ auth, header, children }) {
                         <SideBarDropDown
                             onClick={() => onClickDropDownHandler(1)}
                             title={"Data Karyawan"}
-                            active={route().current("cabang-utama.*")}
+                            active={route().current("employee.*")}
                             colapse={colapse}
                             dropdownId={1}
                             lists={[
@@ -121,6 +121,21 @@ export default function Authenticated({ auth, header, children }) {
                                     href: route("employee.index"),
                                     name: "Data Karyawan",
                                     active: route().current("employee.*"),
+                                },
+                            ]}
+                        />
+                        <SideBarDropDown
+                            onClick={() => onClickDropDownHandler(2)}
+                            title={"Data Pinjaman"}
+                            active={route().current("unit.pinjaman*")}
+                            colapse={colapse}
+                            dropdownId={2}
+                            lists={[
+                                {
+                                    id: 1,
+                                    href: route("unit.pinjaman.index"),
+                                    name: "Data Pinjaman",
+                                    active: route().current("unit.pinjaman.*"),
                                 },
                             ]}
                         />

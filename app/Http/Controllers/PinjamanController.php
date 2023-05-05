@@ -7,8 +7,13 @@ use Inertia\Inertia;
 
 class PinjamanController extends Controller
 {
-    public function requestLoan()
+    public function pinjaman()
     {
-        return Inertia::render('Pinjaman/RequestPinjaman');
+        return Inertia::render('Pinjaman/Pinjaman');
+    }
+
+    public function create()
+    {
+        return Inertia::render('Pinjaman/CreatePinjaman');
     }
 }

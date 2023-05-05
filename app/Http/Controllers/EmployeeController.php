@@ -144,7 +144,7 @@ class EmployeeController extends Controller
                 'record' => $record,
             ];
 
-            // $employee->histories()->create($data);
+            $employee->histories()->create($data);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

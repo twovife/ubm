@@ -32,6 +32,8 @@ return new class extends Migration
             $table->integer('pencairan_simpanan_by')->nullable();
             $table->date('handover_jaminan')->nullable();
             $table->integer('handover_jaminan_by')->nullable();
+            $table->date('pencairan_simpanan_w_date')->nullable();
+            $table->integer('pencairan_simpanan_w_by')->nullable();
             $table->timestamps();
         });
     }

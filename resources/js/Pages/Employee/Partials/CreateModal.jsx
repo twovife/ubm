@@ -24,11 +24,6 @@ const CreateModal = ({ show, onClose, ...props }) => {
         value: branch.id,
         display: branch.unit,
     }));
-    const titleJabatan = props.titles.map((jabatan) => ({
-        id: jabatan.id,
-        value: jabatan.title,
-        display: jabatan.title,
-    }));
 
     const onJabatanChangeHandler = (e) => {
         setData(e.target.name, e.target.value);
@@ -147,7 +142,7 @@ const CreateModal = ({ show, onClose, ...props }) => {
                                         required
                                         onChange={onJabatanChangeHandler}
                                         nullValue={true}
-                                        options={titleJabatan}
+                                        options={props.titles}
                                         className={`flex-[2]`}
                                         name={`jabatan`}
                                         id={`jabatan`}

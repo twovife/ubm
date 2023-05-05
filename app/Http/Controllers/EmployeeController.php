@@ -27,7 +27,7 @@ class EmployeeController extends Controller
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
-        $emp = Employee::query()->with('branch', 'history')->filterData()->orderBy('branch_id', 'asc')->paginate(10)->withQueryString();
+        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->paginate(10)->withQueryString();
         return Inertia::render('Employee/Employee', [
             'branch' => $branch,
             'employee' => $emp,
@@ -219,9 +219,11 @@ class EmployeeController extends Controller
     public function handover(Request $request, Employee $employee)
     {
         $employee->pencairan_simpanan_date = $request->pencairan_simpanan_date;
-        $employee->pencairan_simpanan_by = $request->pencairan_simpanan_by;
+        $employee->pencairan_simpanan_by = $request->pencairan_simpanan_date ? auth()->user()->employee->id : null;
+        $employee->pencairan_simpanan_w_date = $request->pencairan_simpanan_w_date;
+        $employee->pencairan_simpanan_w_by = $request->pencairan_simpanan_w_date ? auth()->user()->employee->id : null;
         $employee->handover_jaminan = $request->handover_jaminan;
-        $employee->handover_jaminan_by = $request->handover_jaminan_by;
+        $employee->handover_jaminan_by = $request->handover_jaminan ? auth()->user()->employee->id : null;
         $employee->save();
 
         return redirect()->route('employee.index')->with('message', 'data berhasil diubah');

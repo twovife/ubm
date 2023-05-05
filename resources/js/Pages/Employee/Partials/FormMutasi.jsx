@@ -112,33 +112,7 @@ const FormMutasi = ({ branch, detailId, onClose, ...props }) => {
                             required
                             onChange={onJabatanChangeHandler}
                             nullValue={true}
-                            options={[
-                                {
-                                    id: 1,
-                                    value: "Kepala Unit",
-                                    display: "Kepala Unit",
-                                },
-                                {
-                                    id: 2,
-                                    value: "Admin",
-                                    display: "Admin",
-                                },
-                                {
-                                    id: 3,
-                                    value: "Kasir",
-                                    display: "Kasir",
-                                },
-                                {
-                                    id: 4,
-                                    value: "Kepala Mantri",
-                                    display: "Kepala Mantri",
-                                },
-                                {
-                                    id: 5,
-                                    value: "Mantri",
-                                    display: "Mantri",
-                                },
-                            ]}
+                            options={props.titles}
                             className={`mt-1 w-full`}
                             name={`jabatan`}
                             id={`jabatan`}

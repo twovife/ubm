@@ -25,6 +25,8 @@ class Employee extends Model
         'resign_reson',
         'pencairan_simpanan_date',
         'pencairan_simpanan_by',
+        'pencairan_simpanan_w_date',
+        'pencairan_simpanan_w_by',
         'handover_jaminan',
         'handover_jaminan_by',
     ];
@@ -40,6 +42,18 @@ class Employee extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class);
+    }
+    public function ttdss()
+    {
+        return $this->belongsTo(Employee::class, 'pencairan_simpanan_by', 'id');
+    }
+    public function ttdsw()
+    {
+        return $this->belongsTo(Employee::class, 'pencairan_simpanan_w_by', 'id');
+    }
+    public function ttdjaminan()
+    {
+        return $this->belongsTo(Employee::class, 'handover_jaminan_by', 'id');
     }
 
     public function scopeFilterData($query)

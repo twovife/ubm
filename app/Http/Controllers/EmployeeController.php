@@ -8,7 +8,6 @@ use App\Http\Requests\UpdateEmployeeMutationRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeResignRequest;
 use App\Models\Branch;
-use App\Models\EmployeeHistory;
 use App\Models\Title;
 use Exception;
 use Illuminate\Http\Request;
@@ -138,13 +137,14 @@ class EmployeeController extends Controller
             $employee->area = $request->area ?? 0;
             $employee->save();
 
-
-            EmployeeHistory::create([
+            $data = [
                 'employee_id' => $request->employee_id,
                 'history_date' => $request->history_date,
                 'keterangan' => $request->keterangan,
                 'record' => $record,
-            ]);
+            ];
+
+            $employee->histories()->create($data);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -196,7 +196,7 @@ class EmployeeController extends Controller
             $employee->branch_id = $request->branch_id;
             $employee->save();
 
-            // $employee->histories()->createMany($data);
+            $employee->histories()->createMany($data);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

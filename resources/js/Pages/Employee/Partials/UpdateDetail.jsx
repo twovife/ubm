@@ -8,7 +8,7 @@ import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import React from "react";
 
-const UpdateDetail = ({ onClose, detailData, branch }) => {
+const UpdateDetail = ({ onClose, detailData, branch, ...props }) => {
     const { data, setData, put, processing, errors, reset } =
         useForm(detailData);
     const onInputChangeHandler = (e) => {
@@ -108,33 +108,7 @@ const UpdateDetail = ({ onClose, detailData, branch }) => {
                             value={data.jabatan}
                             onChange={onJabatanChangeHandler}
                             nullValue={true}
-                            options={[
-                                {
-                                    id: 1,
-                                    value: "kepala unit",
-                                    display: "kepala unit",
-                                },
-                                {
-                                    id: 2,
-                                    value: "admin",
-                                    display: "admin",
-                                },
-                                {
-                                    id: 3,
-                                    value: "kasir",
-                                    display: "kasir",
-                                },
-                                {
-                                    id: 4,
-                                    value: "kepala mantri",
-                                    display: "kepala mantri",
-                                },
-                                {
-                                    id: 5,
-                                    value: "mantri",
-                                    display: "mantri",
-                                },
-                            ]}
+                            options={props.titles}
                             className={`mt-1 w-full`}
                             name={`jabatan`}
                             id={`jabatan`}

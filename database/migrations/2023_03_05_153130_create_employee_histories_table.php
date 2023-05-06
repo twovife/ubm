@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('employee_id')->nullable();
             $table->date('history_date')->nullable();
             $table->string('keterangan', 255)->nullable();
-            $table->string('note', 400)->nullable();
+            $table->string('record', 400)->nullable();
             $table->timestamps();
         });
     }

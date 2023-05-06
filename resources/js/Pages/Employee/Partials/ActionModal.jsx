@@ -29,6 +29,7 @@ const ActionModal = ({ show, onClose, data, ...props }) => {
                             branch={branch}
                             detailData={data}
                             onClose={onClose}
+                            titles={props.titles}
                         />
                     </div>
                     <div className="flex-[2]">
@@ -38,6 +39,7 @@ const ActionModal = ({ show, onClose, data, ...props }) => {
                                     branch={branch}
                                     detailData={data}
                                     onClose={onClose}
+                                    titles={props.titles}
                                 />
                             ) : (
                                 <>
@@ -46,6 +48,7 @@ const ActionModal = ({ show, onClose, data, ...props }) => {
                                             branch={branch}
                                             detailId={data.id}
                                             onClose={onClose}
+                                            titles={props.titles}
                                         />
                                     </div>
                                     <div className="flex-1">
@@ -53,6 +56,7 @@ const ActionModal = ({ show, onClose, data, ...props }) => {
                                             branch={branch}
                                             detailId={data.id}
                                             onClose={onClose}
+                                            titles={props.titles}
                                         />
                                     </div>
                                 </>
@@ -62,15 +66,16 @@ const ActionModal = ({ show, onClose, data, ...props }) => {
                             <div className="flex-1">
                                 <PencairanSimpanan
                                     detailId={data.id}
+                                    detailData={data}
                                     onClose={onClose}
                                 />
                             </div>
-                            <div className="flex-1">
+                            {/* <div className="flex-1">
                                 <PengambilanJaminan
                                     detailId={data.id}
                                     onClose={onClose}
                                 />
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

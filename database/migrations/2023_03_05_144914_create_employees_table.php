@@ -26,12 +26,14 @@ return new class extends Migration
             $table->integer('branch_id')->nullable();
             $table->string('janis_jaminan')->nullable();
             $table->date('date_resign')->nullable();
-            $table->enum('resign_status', ['resign', 'phk'])->nullable();
+            $table->string('resign_status')->nullable();
             $table->string('resign_reson')->nullable();
             $table->date('pencairan_simpanan_date')->nullable();
             $table->integer('pencairan_simpanan_by')->nullable();
             $table->date('handover_jaminan')->nullable();
             $table->integer('handover_jaminan_by')->nullable();
+            $table->date('pencairan_simpanan_w_date')->nullable();
+            $table->integer('pencairan_simpanan_w_by')->nullable();
             $table->timestamps();
         });
     }

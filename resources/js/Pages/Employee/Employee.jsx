@@ -14,6 +14,7 @@ import Loading from "@/Components/Loading";
 import ModalAlert from "@/Components/ModalAlert";
 
 const Employee = ({ branch, employee, ...props }) => {
+    console.log(employee);
     const firstData = employee.from;
     const employees = employee.data;
     const [showModalCreate, setShowModalCreate] = useState(false);
@@ -83,6 +84,13 @@ const Employee = ({ branch, employee, ...props }) => {
             })
         );
     };
+    const titleJabatan = props.titles.map((jabatan) => ({
+        id: jabatan.id,
+        value: jabatan.title,
+        display: jabatan.title,
+    }));
+
+    console.log(titleJabatan);
 
     const [alertModal, setAlertModal] = useState({
         show: false,
@@ -110,7 +118,6 @@ const Employee = ({ branch, employee, ...props }) => {
             });
         }
     }, []);
-
     return (
         <Authenticated
             auth={props.auth}
@@ -137,13 +144,14 @@ const Employee = ({ branch, employee, ...props }) => {
             <CreateModal
                 show={showModalCreate}
                 onClose={hideModalCreate}
-                titles={props.titles}
+                titles={titleJabatan}
                 branch={branch}
             />
             <ActionModal
                 show={showModalAction.show}
                 data={showModalAction.data}
                 onClose={hideModalAction}
+                titles={titleJabatan}
                 branch={branch}
             />
 
@@ -266,8 +274,13 @@ const Employee = ({ branch, employee, ...props }) => {
                                                 Petugas
                                             </th>
                                             <th className="px-6 py-3 bg-rose-100">
-                                                Pengambilan
-                                                Jaminan&nbsp;&&nbsp;S.Wajib
+                                                Tanggal Pengambilan&nbsp;S.Wajib
+                                            </th>
+                                            <th className="px-6 py-3 bg-rose-100">
+                                                Petugas
+                                            </th>
+                                            <th className="px-6 py-3 bg-rose-100">
+                                                Pengambilan Jaminan
                                             </th>
                                             <th className="px-6 py-3 bg-rose-100">
                                                 Petugas
@@ -366,9 +379,21 @@ const Employee = ({ branch, employee, ...props }) => {
                                                         }
                                                     </td>
                                                     <td className="px-6 py-4">
+                                                        {employee.ttdss
+                                                            ? employee.ttdss
+                                                                  .nama_karyawan
+                                                            : ""}
+                                                    </td>
+                                                    <td className="px-6 py-4">
                                                         {
-                                                            employee.pencairan_simpanan_by
+                                                            employee.pencairan_simpanan_w_date
                                                         }
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {employee.ttdsw
+                                                            ? employee.ttdsw
+                                                                  .nama_karyawan
+                                                            : ""}
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         {
@@ -376,9 +401,11 @@ const Employee = ({ branch, employee, ...props }) => {
                                                         }
                                                     </td>
                                                     <td className="px-6 py-4">
-                                                        {
-                                                            employee.handover_jaminan_by
-                                                        }
+                                                        {employee.ttdjaminan
+                                                            ? employee
+                                                                  .ttdjaminan
+                                                                  .nama_karyawan
+                                                            : ""}
                                                     </td>
                                                 </tr>
                                             ))}

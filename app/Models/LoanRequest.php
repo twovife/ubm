@@ -16,11 +16,18 @@ class LoanRequest extends Model
         'hari',
         'pinjaman',
         'tanggal_drop',
-        'mantri_approved',
+        'approved_date',
+        'approved_by',
+        'status',
     ];
 
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }
 }

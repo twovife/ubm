@@ -5,12 +5,13 @@ import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import ActionModal from "./Partials/ActionModal";
 import CreateModal from "./Partials/CreateModal";
 import InputLabel from "@/Components/InputLabel";
 import Loading from "@/Components/Loading";
+import ModalAlert from "@/Components/ModalAlert";
 
 const Employee = ({ branch, employee, ...props }) => {
     const firstData = employee.from;
@@ -82,6 +83,34 @@ const Employee = ({ branch, employee, ...props }) => {
             })
         );
     };
+
+    const [alertModal, setAlertModal] = useState({
+        show: false,
+        textAlert: null,
+        typeAlert: null,
+    });
+
+    const hideAlertModal = (e) => {
+        setAlertModal(false);
+    };
+
+    useEffect(() => {
+        if (props.flash.message) {
+            setAlertModal({
+                show: true,
+                textAlert: props.flash.message,
+                typeAlert: "success",
+            });
+        }
+        if (props.errors[0]) {
+            setAlertModal({
+                show: true,
+                textAlert: props.errors[0],
+                typeAlert: "danger",
+            });
+        }
+    }, []);
+
     return (
         <Authenticated
             auth={props.auth}
@@ -102,8 +131,9 @@ const Employee = ({ branch, employee, ...props }) => {
                 </>
             }
         >
+            <ModalAlert alertParams={alertModal} onClose={hideAlertModal} />
             <Head title="Dashboard" />
-            <Loading show={loadings} />
+            {/* <Loading show={loadings} /> */}
             <CreateModal
                 show={showModalCreate}
                 onClose={hideModalCreate}

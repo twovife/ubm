@@ -4,6 +4,7 @@ import { Head } from "@inertiajs/react";
 import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import CreatePinjamanModal from "./Partials/CreatePinjamanModal";
+import LinkButton from "@/Components/LinkButton";
 
 const Pinjaman = (props) => {
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -20,21 +21,18 @@ const Pinjaman = (props) => {
                         Data Pinjaman
                     </h2>
                     <div className="ml-auto flex items-center">
-                        <PrimaryButton
+                        <LinkButton
                             icon={<IoMdAdd />}
                             size={"md"}
-                            title={"Tambah"}
-                            onClick={() => setShowCreateModal(true)}
-                        ></PrimaryButton>
+                            title={"Tambah Pinjaman"}
+                            type="a"
+                            href={route("unit.pinjaman.create")}
+                        ></LinkButton>
                     </div>
                 </>
             }
         >
             <Head title="Data Pinjaman" />
-            <CreatePinjamanModal
-                show={showCreateModal}
-                onClose={hideCreateModal}
-            />
         </Authenticated>
     );
 };

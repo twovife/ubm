@@ -91,6 +91,10 @@ Route::middleware('auth')->group(function () {
         Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
             Route::get('/', [PinjamanController::class, 'pinjaman'])->name('index');
             Route::get('/create', [PinjamanController::class, 'create'])->name('create');
+            Route::post('/', [PinjamanController::class, 'store'])->name('store');
+            Route::prefix('request')->name('request.')->group(function () {
+                Route::get('/', [PinjamanController::class, 'requestPinjaman'])->name('requestPinjaman');
+            });
         });
     });
 });

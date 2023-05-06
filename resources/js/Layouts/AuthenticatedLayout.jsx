@@ -133,6 +133,16 @@ export default function Authenticated({ auth, header, children }) {
                             lists={[
                                 {
                                     id: 1,
+                                    href: route(
+                                        "unit.pinjaman.request.requestPinjaman"
+                                    ),
+                                    name: "Data Request Pinjaman",
+                                    active: route().current(
+                                        "unit.pinjaman.request.*"
+                                    ),
+                                },
+                                {
+                                    id: 2,
                                     href: route("unit.pinjaman.index"),
                                     name: "Data Pinjaman",
                                     active: route().current("unit.pinjaman.*"),

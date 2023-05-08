@@ -117,7 +117,7 @@ export default function Authenticated({ auth, header, children }) {
                             dropdownId={1}
                             lists={[
                                 {
-                                    id: 1,
+                                    id: 11,
                                     href: route("employee.index"),
                                     name: "Data Karyawan",
                                     active: route().current("employee.*"),
@@ -136,7 +136,7 @@ export default function Authenticated({ auth, header, children }) {
                                     href: route(
                                         "unit.pinjaman.request.requestPinjaman"
                                     ),
-                                    name: "Data Request Pinjaman",
+                                    name: "Permintaan Drop",
                                     active: route().current(
                                         "unit.pinjaman.request.*"
                                     ),
@@ -144,8 +144,16 @@ export default function Authenticated({ auth, header, children }) {
                                 {
                                     id: 2,
                                     href: route("unit.pinjaman.index"),
-                                    name: "Data Pinjaman",
+                                    name: "Buku Storting",
                                     active: route().current("unit.pinjaman.*"),
+                                },
+                                {
+                                    id: 3,
+                                    href: route("unit.pinjaman.angsuran.index"),
+                                    name: "Data Storting",
+                                    active: route().current(
+                                        "unit.pinjaman.angsuran.*"
+                                    ),
                                 },
                             ]}
                         />

@@ -9,7 +9,6 @@ import { useForm } from "@inertiajs/react";
 import React from "react";
 
 const ModalCreateNewCustomer = ({ auth, ...props }) => {
-    console.log(auth);
     const { data, setData, post, processing, errors } = useForm({
         nama: "",
         nik: props.nik,

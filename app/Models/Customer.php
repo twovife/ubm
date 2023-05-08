@@ -36,4 +36,13 @@ class Customer extends Model
     {
         return $this->belongsTo(Branch::class, 'unit_id', 'id');
     }
+
+    public function scopeWithFilter($query)
+    {
+        return $query->when(request()->input('data.search', []), function ($q) {
+            $searchTerm = request()->data['search'];
+            $q->where('nik', request()->data['search'])->orWhere('no_kk', $searchTerm)
+                ->orWhereRaw('LOWER(`nama`) LIKE ? ', ['%' . strtolower($searchTerm) . '%']);
+        });
+    }
 }

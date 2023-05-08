@@ -25,10 +25,14 @@ const Index = (props) => {
                     <FcBriefcase className="text-7xl" />
                     <div className="font-bold text-lg">PENGAJUAN</div>
                 </Link>
-                <div className="w-32 h-32 bg-main-200 border border-white rounded-xl shadow shadow-black/30 flex justify-center items-center flex-col hover:shadow-none hover:bg-main-200">
-                    <FcCalendar className="text-7xl" />
-                    <div className="font-bold text-xl">DROP</div>
-                </div>
+                <Link
+                    as="a"
+                    href={route("mantriapps.drop.mantriDrop")}
+                    className="w-32 h-32 bg-main-200 border border-white rounded-xl shadow shadow-black/30 flex justify-center items-center flex-col hover:shadow-none hover:bg-main-200"
+                >
+                    <FcBriefcase className="text-7xl" />
+                    <div className="font-bold text-lg">DROP</div>
+                </Link>
                 <div className="w-32 h-32 bg-main-200 border border-white rounded-xl shadow shadow-black/30 flex justify-center items-center flex-col hover:shadow-none hover:bg-main-200">
                     <FcDonate className="text-7xl" />
                     <div className="font-bold text-lg">ANGSURAN</div>

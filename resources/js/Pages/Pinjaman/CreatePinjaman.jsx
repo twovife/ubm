@@ -9,12 +9,14 @@ import React, { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import ModalCreateNewCustomer from "./Partials/ModalCreateNewCustomer";
 import ModalCreateOldCustomer from "./Partials/ModalCreateOldCustomer";
+import ModalAlert from "@/Components/ModalAlert";
 
 const CreatePinjaman = ({ customer, ...props }) => {
     console.log(props);
     const [customerData, setCustomerData] = useState(customer);
     const [loading, setLoading] = useState(false);
     const [searchNik, setSearchNik] = useState(props.keyword ?? "");
+
     const employeeLists = props.employees.map((emp) => {
         return {
             id: emp.id,
@@ -36,6 +38,7 @@ const CreatePinjaman = ({ customer, ...props }) => {
             }
         );
     };
+
     return (
         <Authenticated
             auth={props.auth}
@@ -60,6 +63,7 @@ const CreatePinjaman = ({ customer, ...props }) => {
             }
         >
             <Loading show={loading} />
+            {/* <ModalAlert alertParams={alertModal} onClose={hideAlertModal} /> */}
             <Head title="Data Pinjaman" />
             <div className="py-3">
                 <div className="mx-auto sm:px-6 lg:px-8">
@@ -115,9 +119,9 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            {props.request && (
+                                            {props.request.length !== 0 && (
                                                 <div className="mb-6">
-                                                    <h1 className="text-lg font-semibold">
+                                                    <h1 className="text-lg font-semibold mb-3">
                                                         Request Berjalan
                                                     </h1>
                                                     <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
@@ -149,8 +153,12 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                         </thead>
                                                         <tbody>
                                                             {props.request.map(
-                                                                (req) => (
-                                                                    <tr>
+                                                                (req, key) => (
+                                                                    <tr
+                                                                        key={
+                                                                            key
+                                                                        }
+                                                                    >
                                                                         <td className="px-6 py-4">
                                                                             {
                                                                                 req
@@ -194,9 +202,9 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                     </table>
                                                 </div>
                                             )}
-                                            {props.pinjaman == null ? (
+                                            {props.pinjaman.length !== 0 ? (
                                                 <div className="mb-6">
-                                                    <h1 className="text-lg font-semibold">
+                                                    <h1 className="text-lg font-semibold mb-3">
                                                         History Pinjaman
                                                     </h1>
                                                     <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
@@ -224,12 +232,19 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                                 <th className="px-6 py-3">
                                                                     Status
                                                                 </th>
+                                                                <th className="px-6 py-3">
+                                                                    Keterangan
+                                                                </th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {props.pinjaman.map(
-                                                                (req) => (
-                                                                    <tr>
+                                                                (req, key) => (
+                                                                    <tr
+                                                                        key={
+                                                                            key
+                                                                        }
+                                                                    >
                                                                         <td className="px-6 py-4">
                                                                             {
                                                                                 req
@@ -261,10 +276,16 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                                                     .unit
                                                                             }
                                                                         </td>
-                                                                        <td className="px-6 py-4">
+                                                                        <td className="px-6 py-4 uppercase">
                                                                             {
                                                                                 req.status
                                                                             }
+                                                                        </td>
+                                                                        <td className="px-6 py-4 uppercase">
+                                                                            {req.saldo ==
+                                                                            0
+                                                                                ? "Lunas"
+                                                                                : "Belum Lunas"}
                                                                         </td>
                                                                     </tr>
                                                                 )
@@ -286,6 +307,7 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                         </div>
                                     )}
                                 </div>
+
                                 {props.keyword && !customerData && (
                                     <div className="flex-1">
                                         <ModalCreateNewCustomer
@@ -297,7 +319,11 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                 )}
                                 {customerData && (
                                     <div className="flex-1">
-                                        <ModalCreateOldCustomer />
+                                        <ModalCreateOldCustomer
+                                            nik={searchNik}
+                                            auth={props.auth}
+                                            employees={employeeLists}
+                                        />
                                     </div>
                                 )}
                             </div>

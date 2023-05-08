@@ -18,6 +18,8 @@ class Loan extends Model
         'pinjaman',
         'saldo',
         'status',
+        'loan_request_id',
+        'tanggal_drop',
     ];
 
     public function customer()
@@ -28,5 +30,10 @@ class Loan extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'branch_id', 'id');
+    }
+
+    public function angsuran()
+    {
+        return $this->hasMany(Instalment::class, 'loan_id', 'id');
     }
 }

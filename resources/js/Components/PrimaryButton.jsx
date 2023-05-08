@@ -66,6 +66,8 @@ export default function PrimaryButton({
         btnsize = `px-4 py-2 text-xs`;
     } else if (size == "lg") {
         btnsize = `px-6 py-3`;
+    } else if (size == "xl") {
+        btnsize = `px-6 py-3 text-xl`;
     } else if (size == "box-lg") {
         btnsize = `px-6 py-6`;
     } else if (size == "box-md") {

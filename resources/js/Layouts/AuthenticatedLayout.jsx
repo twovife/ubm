@@ -112,15 +112,48 @@ export default function Authenticated({ auth, header, children }) {
                         <SideBarDropDown
                             onClick={() => onClickDropDownHandler(1)}
                             title={"Data Karyawan"}
-                            active={route().current("cabang-utama.*")}
+                            active={route().current("employee.*")}
                             colapse={colapse}
                             dropdownId={1}
                             lists={[
                                 {
-                                    id: 1,
+                                    id: 11,
                                     href: route("employee.index"),
                                     name: "Data Karyawan",
                                     active: route().current("employee.*"),
+                                },
+                            ]}
+                        />
+                        <SideBarDropDown
+                            onClick={() => onClickDropDownHandler(2)}
+                            title={"Data Pinjaman"}
+                            active={route().current("unit.pinjaman*")}
+                            colapse={colapse}
+                            dropdownId={2}
+                            lists={[
+                                {
+                                    id: 1,
+                                    href: route(
+                                        "unit.pinjaman.request.requestPinjaman"
+                                    ),
+                                    name: "Permintaan Drop",
+                                    active: route().current(
+                                        "unit.pinjaman.request.*"
+                                    ),
+                                },
+                                {
+                                    id: 2,
+                                    href: route("unit.pinjaman.index"),
+                                    name: "Buku Storting",
+                                    active: route().current("unit.pinjaman.*"),
+                                },
+                                {
+                                    id: 3,
+                                    href: route("unit.pinjaman.angsuran.index"),
+                                    name: "Data Storting",
+                                    active: route().current(
+                                        "unit.pinjaman.angsuran.*"
+                                    ),
                                 },
                             ]}
                         />

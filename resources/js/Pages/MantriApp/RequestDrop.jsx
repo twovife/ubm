@@ -10,46 +10,35 @@ import { HiAdjustments, HiClipboardList, HiUserCircle } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
 import CreateNewCustomerModal from "./CreateNewCustomerModal";
 import CreateOldCustomerModal from "./CreateOldCustomerModal";
+import { Head, router } from "@inertiajs/react";
+import OldCustomer from "./Partials/OldCustomer";
+import NewCustomer from "./Partials/NewCustomer";
 
-const RequestDrop = ({ data, ...props }) => {
-    const [customer, setCustomer] = useState();
-    const [customerApiStatus, setCustomerApiStatus] = useState();
-    const [dataNik, setDataNik] = useState(null);
-    const [showCreateNew, setShowCreateNew] = useState(false);
-    const [showCreateOld, setShowCreateOld] = useState(false);
-    const [showTabs, setShowTabs] = useState("customer");
+const RequestDrop = ({ customer, ...props }) => {
+    const [customerData, setCustomerData] = useState(customer);
+    const [loading, setLoading] = useState(false);
+    const [searchNik, setSearchNik] = useState(props.keyword ?? "");
 
-    const onNikChange = (e) => {
-        setCustomerApiStatus(null);
-        setDataNik(e.target.value);
+    const employeeLists = props.employees.map((emp) => {
+        return {
+            id: emp.id,
+            value: emp.id,
+            display: `${emp.nama_karyawan} - ${emp.jabatan} ${emp.area}`,
+        };
+    });
+    const onKeywordChange = (e) => {
+        setSearchNik(e.target.value);
     };
-
-    const onFormNikSubmit = async (e) => {
+    const onSubmitKtp = (e) => {
         e.preventDefault();
-        const { status, data } = await axios
-            .get(route("api.cekcustomerbynik"), {
-                params: {
-                    nik: dataNik,
-                },
-            })
-            .then((data) => data)
-            .catch((err) => err);
-        setCustomerApiStatus(status);
-        setCustomer(data.data);
-        if (status == 200) {
-            document.getElementById("nik").setAttribute("readOnly", "readOnly");
-        }
-    };
-
-    const hideCreateNew = (e) => {
-        setShowCreateNew(false);
-    };
-    const hideCreateOld = (e) => {
-        setShowCreateOld(false);
-    };
-
-    const onTabClick = (e) => {
-        setShowTabs(e.target.getAttribute("data-button"));
+        router.get(
+            route("mantriapps.pinjaman.requestDrop"),
+            { nik: searchNik },
+            {
+                onBefore: () => setLoading(true),
+                onFinish: () => setLoading(false),
+            }
+        );
     };
     return (
         <MobileLayout
@@ -57,123 +46,200 @@ const RequestDrop = ({ data, ...props }) => {
             errors={props.errors}
             header={<h1>Tambah Permohonan Drop / Pinjaman</h1>}
         >
-            <form onSubmit={onFormNikSubmit}>
-                <InputLabel value={"Silahkan Masukkan NIK Customer :"} />
-                <TextInput
-                    className="w-full text-xl mt-2"
-                    name="nik"
-                    id="nik"
-                    onChange={onNikChange}
-                    required
-                />
-                <div className="mt-2 flex gap-2">
-                    <PrimaryButton
-                        disabled={customerApiStatus == 200 ?? false}
-                        type={"submit"}
-                        size={"md"}
-                        className="block ml-auto"
-                        title={"Cari"}
-                        theme={"primary"}
-                        icon={<AiOutlineSearch />}
-                    />
+            <Head title="Data Pinjaman" />
+            <div className="py-3">
+                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="border p-6 text-main-800">
+                        <div className="gap-6">
+                            <div>
+                                <form onSubmit={onSubmitKtp} className="mb-3">
+                                    <InputLabel value={"Masukkan Nomor KTP"} />
+                                    <div className="flex items-baseline gap-3">
+                                        <TextInput
+                                            className="mt-1 block w-full"
+                                            name={"cek_ktp"}
+                                            value={searchNik}
+                                            onChange={onKeywordChange}
+                                            id={"cek_ktp"}
+                                        />
+                                        <PrimaryButton
+                                            size={"sm"}
+                                            className="whitespace-nowrap"
+                                            title={"Cek KTP"}
+                                            type="submit"
+                                        />
+                                    </div>
+                                </form>
+                                {customerData && (
+                                    <>
+                                        <div className="mb-6">
+                                            <h1 className="text-lg font-semibold">
+                                                Data Customer
+                                            </h1>
+                                            <div className="flex w-full justify-between border-b border-black/40 mb-2">
+                                                <div>NIK</div>
+                                                <div>{customerData.nik}</div>
+                                            </div>
+                                            <div className="flex w-full justify-between border-b border-black/40 mb-2">
+                                                <div>Nomor KK</div>
+                                                <div>{customerData.no_kk}</div>
+                                            </div>
+                                            <div className="flex w-full justify-between border-b border-black/40 mb-2">
+                                                <div>Nama</div>
+                                                <div>{customerData.nama}</div>
+                                            </div>
+                                        </div>
+                                        {props.request.length !== 0 && (
+                                            <div className="mb-6">
+                                                <h1 className="text-lg font-semibold mb-3">
+                                                    Request Berjalan
+                                                </h1>
+                                                <div className="max-h-[30vh] overflow-y-auto">
+                                                    <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
+                                                        <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
+                                                            <tr>
+                                                                <th className="px-6 py-3">
+                                                                    Drop
+                                                                </th>
+                                                                <th className="px-6 py-3">
+                                                                    Unit
+                                                                </th>
+                                                                <th className="px-6 py-3">
+                                                                    Status
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {props.request.map(
+                                                                (req, key) => (
+                                                                    <tr
+                                                                        key={
+                                                                            key
+                                                                        }
+                                                                    >
+                                                                        <td className="px-6 py-4">
+                                                                            {
+                                                                                req.tanggal_drop
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-6 py-4">
+                                                                            {
+                                                                                req
+                                                                                    .branch
+                                                                                    .unit
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-6 py-4">
+                                                                            {
+                                                                                req.status
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                )
+                                                            )}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {props.pinjaman.length !== 0 ? (
+                                            <div className="mb-6">
+                                                <h1 className="text-lg font-semibold mb-3">
+                                                    History Pinjaman
+                                                </h1>
+                                                <div className="max-h-[30vh] overflow-y-auto">
+                                                    <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
+                                                        <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
+                                                            <tr className="text-center">
+                                                                <th className="px-6 py-3">
+                                                                    Drop
+                                                                </th>
+                                                                <th className="px-6 py-3">
+                                                                    Unit
+                                                                </th>
+                                                                <th className="px-6 py-3">
+                                                                    Status
+                                                                </th>
+                                                                <th className="px-6 py-3">
+                                                                    Ket
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="text-center">
+                                                            {props.pinjaman.map(
+                                                                (req, key) => (
+                                                                    <tr
+                                                                        key={
+                                                                            key
+                                                                        }
+                                                                    >
+                                                                        <td className="px-6 py-4">
+                                                                            {
+                                                                                req.tanggal_drop
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-6 py-4">
+                                                                            {
+                                                                                req
+                                                                                    .branch
+                                                                                    .unit
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-6 py-4 uppercase">
+                                                                            {
+                                                                                req.status
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-6 py-4 uppercase">
+                                                                            {req.saldo ==
+                                                                            0
+                                                                                ? "Lunas"
+                                                                                : "Belum Lunas"}
+                                                                        </td>
+                                                                    </tr>
+                                                                )
+                                                            )}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="text-lg font-semibold">
+                                                Customer Belum Pernah Melakukan
+                                                Pinjaman
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                                {props.keyword && !customerData && (
+                                    <div className="text-xl">
+                                        Data Customer Tidak Ditemukan
+                                    </div>
+                                )}
+                            </div>
 
-                    <PrimaryButton
-                        size={"md"}
-                        className={`block ${
-                            customerApiStatus == 200 ? "" : "hidden"
-                        }`}
-                        title={"Buat Baru"}
-                        theme={"primary"}
-                        icon={<AiOutlinePlus />}
-                        onClick={() => setShowCreateOld(true)}
-                    />
-                </div>
-            </form>
-            {customerApiStatus &&
-                (customerApiStatus == 200 ? (
-                    <>
-                        <div className="mt-2">
-                            <div className="w-full bg-red-50 flex">
-                                <PrimaryButton
-                                    disabled={showTabs == "customer" ?? false}
-                                    className={`w-full rounded-none rounded-l-lg flex justify-center py-3`}
-                                    title={"Customer"}
-                                    data-button="customer"
-                                    onClick={onTabClick}
-                                />
-                                <PrimaryButton
-                                    disabled={showTabs == "pinjaman" ?? false}
-                                    className={`w-full rounded-none rounded-r-lg flex justify-center`}
-                                    title={"Pinjaman"}
-                                    data-button="pinjaman"
-                                    onClick={onTabClick}
-                                />
-                            </div>
-                        </div>
-                        <div className="mt-2" id="tabContent">
-                            <div
-                                data-tab="customer"
-                                className={`${
-                                    showTabs == "customer" ? "" : "hidden"
-                                }`}
-                            >
-                                <div className="p-4 rounded-lg shadow-md border">
-                                    <h1 className="font-semibold text-lg text-main-800">
-                                        Detail Nasabah
-                                    </h1>
+                            {props.keyword && !customerData && (
+                                <div>
+                                    <NewCustomer
+                                        nik={searchNik}
+                                        auth={props.auth}
+                                        employees={employeeLists}
+                                    />
                                 </div>
-                            </div>
-                            <div
-                                data-tab="pinjaman"
-                                className={`${
-                                    showTabs == "pinjaman" ? "" : "hidden"
-                                }`}
-                            >
-                                <div className="p-4 rounded-lg shadow-md border">
-                                    <h1 className="font-semibold text-lg text-main-800">
-                                        History Pinjaman Nasabah
-                                    </h1>
+                            )}
+                            {customerData && (
+                                <div>
+                                    <OldCustomer
+                                        nik={searchNik}
+                                        auth={props.auth}
+                                        employees={employeeLists}
+                                    />
                                 </div>
-                            </div>
-                        </div>
-                    </>
-                ) : customerApiStatus == 204 ? (
-                    <div className="mt-2">
-                        <div className="border p-4 rounded shadow border-gray-300 text-main-800 text-lg">
-                            <div className=" text-center">
-                                <h1 className="text-2xl font-semibold">
-                                    Customer Belum Terdaftar di Sistem UBM
-                                </h1>
-                                <p className="mt-2">
-                                    Tambahkan Customer ke Sistem UBM untuk
-                                    melanjutkan proses pinjaman baru
-                                </p>
-                            </div>
-                            <div className="mt-2">
-                                <PrimaryButton
-                                    className={"block ml-auto"}
-                                    size={"md"}
-                                    title={"Buat Baru"}
-                                    onClick={() => setShowCreateNew(true)}
-                                />
-                            </div>
+                            )}
                         </div>
                     </div>
-                ) : (
-                    <div>Somethink error detection</div>
-                ))}
-            <CreateNewCustomerModal
-                show={showCreateNew}
-                onClose={hideCreateNew}
-                auth={props.auth}
-                dataNik={dataNik}
-            />
-            <CreateOldCustomerModal
-                show={showCreateOld}
-                onClose={hideCreateOld}
-                auth={props.auth}
-                dataNik={dataNik}
-            />
+                </div>
+            </div>
         </MobileLayout>
     );
 };

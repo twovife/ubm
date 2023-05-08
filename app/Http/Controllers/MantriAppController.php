@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AppHelper;
 use App\Models\Customer;
+use App\Models\Employee;
+use App\Models\Loan;
 use App\Models\LoanRequest;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,7 +22,70 @@ class MantriAppController extends Controller
 
     public function requestDrop()
     {
-        return Inertia::render('MantriApp/RequestDrop');
+        $data_customer = Customer::where("nik", request()->nik)->first();
+
+        $emp = Employee::where('jabatan', 'mantri')->filterData()->orderBy('area', 'asc')->get();
+
+        $request = LoanRequest::whereHas('customer', function ($q) {
+            $q->where('nik', request()->nik);
+        })->with('customer', 'branch')->where('status', 'open')->get();
+
+        $pinjaman = Loan::whereHas('customer', function ($q) {
+            $q->where('nik', request()->nik);
+        })->with('customer', 'branch')->orderBy('branch_id', 'asc')->orderBy('tanggal_drop', 'desc')->get();
+        return Inertia::render('MantriApp/RequestDrop', [
+            'customer' => $data_customer ?? null,
+            'keyword' => request()->nik ?? null,
+            'employees' => $emp,
+            'request' => $request ?? null,
+            'pinjaman' => $pinjaman ?? null,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $mantri = Employee::find($request->mantri);
+            $customer = Customer::firstOrCreate(["nik" => $request->nik], [
+                "nama" => $request->nama,
+                "no_kk" => $request->no_kk,
+                "alamat" => $request->alamat,
+                "unit_id" => $request->unit_id,
+                "mantri" => $request->mantri,
+                "area" => $mantri->area,
+            ]);
+            $req = $customer->loan_request()->create([
+                "branch_id" => $request->unit_id,
+                "mantri" => $request->mantri,
+                "kelompok" => $mantri->area,
+                "hari" => AppHelper::dateName($request->tanggal_drop),
+                "pinjaman" => $request->pinjaman,
+                "tanggal_drop" => $request->tanggal_drop,
+                "approved_date" => $request->type_drop ? $request->input('tanggal_drop') : null,
+                "approved_by" => $request->type_drop ? $request->mantri : null,
+                'status' => $request->type_drop ? 'acc' : 'open'
+            ]);
+            if (request()->input('type_drop', false)) {
+                $req->loan()->create([
+                    "customer_id" => $customer->id,
+                    "branch_id" => $request->unit_id,
+                    "mantri" => $request->mantri,
+                    "kelompok" => $mantri->area,
+                    "hari" => AppHelper::dateName($request->tanggal_drop),
+                    "pinjaman" => $request->pinjaman,
+                    "saldo" => $request->pinjaman,
+                    "tanggal_drop" => $request->tanggal_drop,
+                    "status" => "normal"
+                ]);
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('mantriapps.drop.calonDrop')->withErrors('input gagal silahkan refresh page terlebih dahulu');
+        }
+        return redirect()->route('mantriapps.drop.calonDrop')->with('message', 'Data berhasil ditambahkan');
     }
 
     public function newCustomerDropStore(Request $request)
@@ -106,6 +171,54 @@ class MantriAppController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e);
+        }
+    }
+
+    public function mantriDrop()
+    {
+        $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'mantri')
+            ->where('kelompok', auth()->user()->employee->area)
+            ->where('tanggal_drop', Carbon::now()->format('Y-m-d'))
+            ->doesntHave('loan')
+            ->orderBy('tanggal_drop', 'asc')
+            ->get();
+        return Inertia::render('MantriApp/DropMantri', [
+            'requestDrop' => $requestDrop
+        ]);
+    }
+    public function calonDrop()
+    {
+        $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'mantri')
+            ->where('kelompok', auth()->user()->employee->area)
+            ->where('tanggal_drop', ">", Carbon::now()->format('Y-m-d'))
+            ->doesntHave('loan')
+            ->orderBy('tanggal_drop', 'asc')
+            ->get();
+        return Inertia::render('MantriApp/CalonDrop', [
+            'requestDrop' => $requestDrop
+        ]);
+    }
+
+    public function storeMantriDrop(Request $request, LoanRequest $loanRequest)
+    {
+        try {
+            DB::beginTransaction();
+            $loanRequest->loan()->create([
+                "customer_id" => $loanRequest->customer_id,
+                "branch_id" => $loanRequest->branch_id,
+                "mantri" => $loanRequest->mantri,
+                "kelompok" => $loanRequest->kelompok,
+                "hari" => $loanRequest->hari,
+                "pinjaman" => $loanRequest->pinjaman,
+                "saldo" => $loanRequest->pinjaman,
+                "tanggal_drop" => $loanRequest->tanggal_drop,
+                "status" => "normal"
+            ]);
+            DB::commit();
+            return redirect()->route('mantriapps.drop.mantriDrop')->with('message', 'Data berhasil ditambahkan');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('mantriapps.drop.mantriDrop')->withErrors('input gagal silahkan refresh page terlebih dahulu');
         }
     }
 }

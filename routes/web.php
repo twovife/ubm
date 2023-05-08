@@ -4,11 +4,13 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InstalmentController;
 use App\Http\Controllers\MantriAppController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Models\Employee;
+use App\Models\Instalment;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -70,11 +72,16 @@ Route::middleware('auth')->group(function () {
     Route::prefix('mantriapps')->name('mantriapps.')->group(function () {
         Route::get('/', [MantriAppController::class, 'index'])->name('index');
         Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
-            Route::get('/ceknik', [MantriAppController::class, 'ceknik'])->name('ceknik');
             Route::get('/request-drop', [MantriAppController::class, 'requestDrop'])->name('requestDrop');
+            Route::post('/', [MantriAppController::class, 'store'])->name('store');
             Route::post('/new-customer-drop', [MantriAppController::class, 'newCustomerDropStore'])->name('newCustomerDropStore');
             Route::post('/old-customer-drop', [MantriAppController::class, 'oldCustomerDropStore'])->name('oldCustomerDropStore');
         });
+        Route::prefix('drop')->name('drop.')->group((function () {
+            Route::get('/drop', [MantriAppController::class, 'mantriDrop'])->name('mantriDrop');
+            Route::get('/calondrop', [MantriAppController::class, 'calonDrop'])->name('calonDrop');
+            Route::put('/drop/{loanRequest}', [MantriAppController::class, 'storeMantriDrop'])->name('storeMantriDrop');
+        }));
     });
 
     Route::prefix('cabang-utama')->name('cabangutama.')->group(function () {
@@ -88,8 +95,18 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [CustomerController::class, 'index'])->name('index');
             Route::post('/', [CustomerController::class, 'store'])->name('store');
         });
-        Route::prefix('request-loan')->name('requestloan.')->group(function () {
-            Route::get('/', [PinjamanController::class, 'requestLoan'])->name('index');
+        Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
+            Route::get('/', [PinjamanController::class, 'pinjaman'])->name('index');
+            Route::get('/create', [PinjamanController::class, 'create'])->name('create');
+            Route::post('/', [PinjamanController::class, 'store'])->name('store');
+            Route::prefix('request')->name('request.')->group(function () {
+                Route::get('/', [PinjamanController::class, 'requestPinjaman'])->name('requestPinjaman');
+                Route::post('/{loanRequest}', [PinjamanController::class, 'actions'])->name('actions');
+            });
+            Route::prefix('angsuran')->name('angsuran.')->group(function () {
+                Route::get('/', [InstalmentController::class, 'index'])->name('index');
+                Route::put('/{loan}', [InstalmentController::class, 'bayar'])->name('bayar');
+            });
         });
     });
 });

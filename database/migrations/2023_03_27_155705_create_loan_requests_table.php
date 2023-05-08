@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('hari', 255)->nullable();
             $table->integer('pinjaman')->nullable();
             $table->date('tanggal_drop')->nullable();
-            $table->date('mantri_approved')->nullable();
+            $table->date('approved_date')->nullable();
+            $table->integer('approved_by')->nullable();
             $table->timestamps();
         });
     }

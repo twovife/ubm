@@ -1,0 +1,4 @@
+[{"name":"area", "guard_name":"web"},
+ {"name":"pusat", "guard_name":"web"},
+ {"name":"unit", "guard_name":"web"},
+ {"name":"wilayah", "guard_name":"web"}]

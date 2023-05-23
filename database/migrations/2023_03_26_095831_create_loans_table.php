@@ -18,11 +18,13 @@ return new class extends Migration
             $table->integer('customer_id')->nullable();
             $table->integer('branch_id')->nullable();
             $table->integer('mantri')->nullable();
-            $table->string('kelompok', 255)->nullable();
+            $table->integer('kelompok')->nullable();
             $table->string('hari', 255)->nullable();
             $table->integer('pinjaman')->nullable();
             $table->integer('saldo')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status', 255)->nullable();
+            $table->integer('loan_request_id')->nullable();
+            $table->date('tanggal_drop')->nullable();
             $table->timestamps();
         });
     }

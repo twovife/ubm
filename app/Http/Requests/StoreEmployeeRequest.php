@@ -25,12 +25,18 @@ class StoreEmployeeRequest extends FormRequest
     {
         return [
             'nama_karyawan' => ["required", 'string'],
-            'nik' => ["required", 'string'],
+            'nik' => ["required", 'string', 'unique:employees'],
             'alamat' => ["required", 'string'],
             'branch_id' => ["required", 'integer'],
             'hire_date' => ["required", 'date'],
             'jabatan' => ["required", 'string'],
             'area' => ["nullable", 'integer'],
+        ];
+    }
+    public function messages()
+    {
+        return [
+            '*.unique' => ['NIK Sudah terdaftar silahkan hubungi Pusat untuk konfirmasi']
         ];
     }
 }

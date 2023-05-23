@@ -27,11 +27,10 @@ class EmployeeController extends Controller
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
-        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->paginate(10)->withQueryString();
+        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->orderBy('date_resign', 'asc')->orderBy('updated_at', 'desc')->paginate(10)->withQueryString();
         return Inertia::render('Employee/Employee', [
             'branch' => $branch,
             'employee' => $emp,
-            'titles' => Title::all(),
             'filters' => request()->data ?? null
         ]);
     }
@@ -53,7 +52,15 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Employee/Create');
+        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
+            $q->where('id', auth()->user()->employee->branch_id);
+        })->get();
+        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->paginate(10)->withQueryString();
+        return Inertia::render('Employee/EmployeeCreate', [
+            'branch' => $branch,
+            'employee' => $emp,
+            'titles' => Title::all(),
+        ]);
     }
 
     /**
@@ -74,7 +81,7 @@ class EmployeeController extends Controller
             DB::rollBack();
             return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
         }
-        return redirect()->route('employee.index');
+        return redirect()->route('employee.index')->with('message', 'Data berhasil ditambahkan');
     }
 
     /**
@@ -105,6 +112,18 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
+
+    public function action(Employee $employee)
+    {
+        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
+            $q->where('id', auth()->user()->employee->branch_id);
+        })->get();
+        return Inertia::render('Employee/EmployeeAction', [
+            'titles' => Title::all(),
+            'branch' => $branch,
+            'data' => $employee->load('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')
+        ]);
+    }
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
         // dd($employee);
@@ -123,7 +142,8 @@ class EmployeeController extends Controller
             return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
         }
 
-        return redirect()->route('employee.index')->with('message', 'data berhasil diubah');
+        $data['search'] = $employee->nik;
+        return redirect()->route('employee.index', ['data' => $data])->with('message', 'data berhasil diubah');
     }
 
     public function mutasi(UpdateEmployeeMutationRequest $request, Employee $employee)
@@ -150,7 +170,9 @@ class EmployeeController extends Controller
             DB::rollBack();
             return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
         }
-        return redirect()->route('employee.index')->with('message', 'data berhasil diubah');
+
+        $data['search'] = $employee->nik;
+        return redirect()->route('employee.index', ['data' => $data])->with('message', 'data berhasil diubah');
     }
 
     public function resign(UpdateEmployeeResignRequest $request, Employee $employee)
@@ -169,7 +191,8 @@ class EmployeeController extends Controller
             return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
         }
 
-        return redirect()->route('employee.index')->with('message', 'data berhasil diubah');
+        $data['search'] = $employee->nik;
+        return redirect()->route('employee.index', ['data' => $data])->with('message', 'data berhasil diubah');
     }
 
     public function reactive(Request $request, Employee $employee)
@@ -202,7 +225,9 @@ class EmployeeController extends Controller
             DB::rollBack();
             return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
         }
-        return redirect()->route('employee.index')->with('message', 'data berhasil diubah');
+
+        $data['search'] = $employee->nik;
+        return redirect()->route('employee.index', ['data' => $data])->with('message', 'data berhasil diubah');
     }
 
     /**
@@ -226,6 +251,7 @@ class EmployeeController extends Controller
         $employee->handover_jaminan_by = $request->handover_jaminan ? auth()->user()->employee->id : null;
         $employee->save();
 
-        return redirect()->route('employee.index')->with('message', 'data berhasil diubah');
+        $data['search'] = $employee->nik;
+        return redirect()->route('employee.index', ['data' => $data])->with('message', 'data berhasil diubah');
     }
 }

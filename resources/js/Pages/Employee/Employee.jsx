@@ -12,18 +12,18 @@ import CreateModal from "./Partials/CreateModal";
 import InputLabel from "@/Components/InputLabel";
 import Loading from "@/Components/Loading";
 import ModalAlert from "@/Components/ModalAlert";
+import LinkButton from "@/Components/LinkButton";
 
 const Employee = ({ branch, employee, ...props }) => {
-    console.log(employee);
     const firstData = employee.from;
     const employees = employee.data;
-    const [showModalCreate, setShowModalCreate] = useState(false);
     const [filterData, setFilterData] = useState({
         branch_id: "",
         is_active: "",
         search: "",
         ...props.filters,
     });
+
     const [loadings, setLoadings] = useState(false);
 
     const [showModalAction, setShowModalAction] = useState({
@@ -50,9 +50,7 @@ const Employee = ({ branch, employee, ...props }) => {
             value: unit.id,
         };
     });
-    const hideModalCreate = (e) => {
-        setShowModalCreate(false);
-    };
+
     const hideModalAction = (e) => {
         setShowModalAction({
             show: false,
@@ -84,13 +82,6 @@ const Employee = ({ branch, employee, ...props }) => {
             })
         );
     };
-    const titleJabatan = props.titles.map((jabatan) => ({
-        id: jabatan.id,
-        value: jabatan.title,
-        display: jabatan.title,
-    }));
-
-    console.log(titleJabatan);
 
     const [alertModal, setAlertModal] = useState({
         show: false,
@@ -128,32 +119,20 @@ const Employee = ({ branch, employee, ...props }) => {
                         Daftar Karyawan
                     </h2>
                     <div className="ml-auto flex items-center">
-                        <PrimaryButton
+                        <LinkButton
+                            as="a"
+                            href={route("employee.create")}
                             icon={<IoMdAdd />}
                             size={"md"}
                             title={"Tambah"}
-                            onClick={() => setShowModalCreate(true)}
-                        ></PrimaryButton>
+                        ></LinkButton>
                     </div>
                 </>
             }
         >
             <ModalAlert alertParams={alertModal} onClose={hideAlertModal} />
             <Head title="Dashboard" />
-            {/* <Loading show={loadings} /> */}
-            <CreateModal
-                show={showModalCreate}
-                onClose={hideModalCreate}
-                titles={titleJabatan}
-                branch={branch}
-            />
-            <ActionModal
-                show={showModalAction.show}
-                data={showModalAction.data}
-                onClose={hideModalAction}
-                titles={titleJabatan}
-                branch={branch}
-            />
+            <Loading show={loadings} />
 
             <div className="py-3">
                 <div className="mx-auto sm:px-6 lg:px-8">
@@ -240,6 +219,9 @@ const Employee = ({ branch, employee, ...props }) => {
                                                 Tanggal&nbsp;Masuk
                                             </th>
                                             <th className="px-6 py-3">
+                                                Lama&nbsp;Bekerja
+                                            </th>
+                                            <th className="px-6 py-3">
                                                 Jabatan
                                             </th>
                                             <th className="px-6 py-3">
@@ -293,8 +275,12 @@ const Employee = ({ branch, employee, ...props }) => {
                                                 <tr
                                                     key={employee.id}
                                                     className={`border-b dark:bg-gray-900 dark:border-gray-700 ${
-                                                        employee.date_resign
-                                                            ? "bg-red-100"
+                                                        employee.resign_status ==
+                                                        "Resign"
+                                                            ? "bg-yellow-200"
+                                                            : employee.resign_status ==
+                                                              "Pecat"
+                                                            ? "bg-red-200"
                                                             : "bg-white"
                                                     }`}
                                                 >
@@ -303,15 +289,12 @@ const Employee = ({ branch, employee, ...props }) => {
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         <div className="flex gap-2">
-                                                            <PrimaryButton
-                                                                onClick={() =>
-                                                                    setShowModalAction(
-                                                                        {
-                                                                            show: true,
-                                                                            data: employee,
-                                                                        }
-                                                                    )
-                                                                }
+                                                            <LinkButton
+                                                                as="a"
+                                                                href={route(
+                                                                    "employee.action",
+                                                                    employee.id
+                                                                )}
                                                                 theme="yellow"
                                                                 size={"sm"}
                                                                 title={"Edit"}
@@ -334,6 +317,15 @@ const Employee = ({ branch, employee, ...props }) => {
                                                         {dayjs(
                                                             employee.hire_date
                                                         ).format("DD/MM/YYYY")}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {Math.floor(
+                                                            dayjs().diff(
+                                                                employee.hire_date,
+                                                                "year",
+                                                                true
+                                                            )
+                                                        )}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         {employee.area == 0

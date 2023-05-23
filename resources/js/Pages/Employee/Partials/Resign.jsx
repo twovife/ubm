@@ -9,8 +9,13 @@ import { useForm } from "@inertiajs/react";
 import React from "react";
 
 const Resign = ({ onClose, detailData, branch, ...props }) => {
-    const { data, setData, put, processing, errors, reset } =
-        useForm(detailData);
+    const { data, setData, put, processing, errors, reset } = useForm({
+        history_date: "",
+        jabatan: "",
+        area: "",
+        branch_id: "",
+        janis_jaminan: "",
+    });
     const onInputChangeHandler = (e) => {
         setData(e.target.name, e.target.value);
     };

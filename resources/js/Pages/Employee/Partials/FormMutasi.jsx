@@ -7,7 +7,7 @@ import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import React from "react";
 
-const FormMutasi = ({ branch, detailId, onClose, ...props }) => {
+const FormMutasi = ({ branch, detailId, ...props }) => {
     const { data, setData, put, processing, errors, reset } = useForm({
         history_date: "",
         keterangan: "",
@@ -32,16 +32,9 @@ const FormMutasi = ({ branch, detailId, onClose, ...props }) => {
         setData(e.target.name, e.target.value);
     };
 
-    const afterSubmitMutasi = () => {
-        reset();
-        onClose();
-    };
-
     const onSubmitProcessMutasi = (e) => {
         e.preventDefault();
-        put(route("employee.mutasi", detailId), {
-            onSuccess: () => afterSubmitMutasi(),
-        });
+        put(route("employee.mutasi", detailId));
     };
 
     return (

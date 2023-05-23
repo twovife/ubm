@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('alamat', 255)->nullable();
             $table->integer('unit_id')->nullable();
             $table->integer('mantri')->nullable();
-            $table->string('area', 255)->nullable();
+            $table->integer('area')->nullable();
             $table->timestamps();
         });
     }

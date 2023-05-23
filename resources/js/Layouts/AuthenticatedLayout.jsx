@@ -124,7 +124,7 @@ export default function Authenticated({ auth, header, children }) {
                                 },
                             ]}
                         />
-                        <SideBarDropDown
+                        {/* <SideBarDropDown
                             onClick={() => onClickDropDownHandler(2)}
                             title={"Data Pinjaman"}
                             active={route().current("unit.pinjaman*")}
@@ -156,7 +156,7 @@ export default function Authenticated({ auth, header, children }) {
                                     ),
                                 },
                             ]}
-                        />
+                        /> */}
                         {/* <SideBarDropDown
                             onClick={() => onClickDropDownHandler(2)}
                             title={"Administrator"}

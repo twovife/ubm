@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->string('wilayah')->nullable();
-            $table->string('unit')->nullable();
+            $table->integer('wilayah')->nullable();
+            $table->string('unit', 255)->nullable();
             $table->integer('isactive')->nullable();
+            $table->string('code', 255)->nullable();
             $table->timestamps();
         });
     }

@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Branch extends Model
 {
-  use HasFactory;
+    use HasFactory;
 
-  protected $fillable = [
-    'wilayah',
-    'unit',
-    'isactive',
-  ];
+    protected $fillable = [
+        'wilayah',
+        'unit',
+        'isactive',
+        'code',
+    ];
 }

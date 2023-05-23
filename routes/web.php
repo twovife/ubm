@@ -41,6 +41,8 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/testdump', [PinjamanController::class, 'testdump']);
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -57,10 +59,12 @@ Route::middleware('auth')->group(function () {
     });
 
 
+
     Route::prefix('employee')->name('employee.')->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('index');
         Route::get('/exemployee', [EmployeeController::class, 'exemployee'])->name('exemployee');
-        Route::get('create', [EmployeeController::class, 'create'])->name('create');
+        Route::get('/create', [EmployeeController::class, 'create'])->name('create');
+        Route::get('/action/{employee}', [EmployeeController::class, 'action'])->name('action');
         Route::post('/', [EmployeeController::class, 'store'])->name('store');
         Route::put('/{employee}/update', [EmployeeController::class, 'update'])->name('update');
         Route::put('/{employee}/mutasi', [EmployeeController::class, 'mutasi'])->name('mutasi');

@@ -6,24 +6,31 @@ import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import React from "react";
 
-const PencairanSimpanan = ({ detailId, detailData, onClose, ...props }) => {
-    const { data, setData, put, processing, errors, reset } =
-        useForm(detailData);
+const PencairanSimpanan = ({ detailId, detailData, ...props }) => {
+    console.log(props);
+    const { data, setData, put, processing, errors, reset } = useForm({
+        pencairan_simpanan_date: detailId.pencairan_simpanan_date,
+        pencairan_simpanan_by: detailId.pencairan_simpanan_by,
+        pencairan_simpanan_w_date: detailId.pencairan_simpanan_w_date,
+        handover_jaminan: detailId.handover_jaminan,
+        handover_jaminan_by: detailId.handover_jaminan_by,
+    });
 
     const onInputChangeHandler = (e) => {
-        setData(e.target.name, e.target.value);
-    };
-
-    const afterSubmitMutasi = () => {
-        reset();
-        onClose();
+        setData({
+            ...data,
+            [e.target.name]: e.target.value,
+            [e.target.name == "pencairan_simpanan_date"
+                ? "pencairan_simpanan_by"
+                : e.target.name == "handover_jaminan"
+                ? "handover_jaminan_by"
+                : "pencairan_simpanan_w_date"]: props.auth.id,
+        });
     };
 
     const onSubmitProcessMutasi = (e) => {
         e.preventDefault();
-        put(route("employee.handover", detailId), {
-            onSuccess: () => afterSubmitMutasi(),
-        });
+        put(route("employee.handover", detailId));
     };
 
     return (

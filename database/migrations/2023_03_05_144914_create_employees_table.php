@@ -22,12 +22,12 @@ return new class extends Migration
             $table->string('kota', 255)->nullable();
             $table->date('hire_date')->nullable();
             $table->string('jabatan', 255)->nullable();
-            $table->string('area')->nullable();
+            $table->integer('area')->nullable();
             $table->integer('branch_id')->nullable();
-            $table->string('janis_jaminan')->nullable();
+            $table->string('janis_jaminan', 255)->nullable();
             $table->date('date_resign')->nullable();
-            $table->string('resign_status')->nullable();
-            $table->string('resign_reson')->nullable();
+            $table->string('resign_status', 255)->nullable();
+            $table->string('resign_reson', 255)->nullable();
             $table->date('pencairan_simpanan_date')->nullable();
             $table->integer('pencairan_simpanan_by')->nullable();
             $table->date('handover_jaminan')->nullable();

@@ -14,6 +14,21 @@ use Inertia\Inertia;
 
 class PinjamanController extends Controller
 {
+
+    public function testdump()
+    {
+
+        $branch_path = database_path('seeders/data/branch.csv');
+        $branch_get_contents = file_get_contents($branch_path);
+        $branch_data = array_map("str_getcsv", explode("\n", $branch_get_contents));
+        $branch_header = array_shift($branch_data);
+        $newTittle = array();
+        foreach ($branch_data as $row) {
+            $data = array_combine($branch_header, $row);
+            $newTittle[] = $data;
+        }
+        dd($newTittle);
+    }
     public function pinjaman()
     {
         return Inertia::render('Pinjaman/Pinjaman');

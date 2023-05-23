@@ -18,12 +18,13 @@ return new class extends Migration
             $table->integer('customer_id')->nullable();
             $table->integer('branch_id')->nullable();
             $table->integer('mantri')->nullable();
-            $table->string('kelompok', 255)->nullable();
+            $table->integer('kelompok')->nullable();
             $table->string('hari', 255)->nullable();
             $table->integer('pinjaman')->nullable();
             $table->date('tanggal_drop')->nullable();
             $table->date('approved_date')->nullable();
             $table->integer('approved_by')->nullable();
+            $table->string('status', 255)->nullable();
             $table->timestamps();
         });
     }

@@ -5,7 +5,7 @@ import FormMutasi from "./Partials/FormMutasi";
 import ResignModal from "./Partials/ResignModal";
 import PencairanSimpanan from "./Partials/PencairanSimpanan";
 import LinkButton from "@/Components/LinkButton";
-import { IoMdArrowBack } from "react-icons/io";
+import { IoMdArrowBack, IoMdTrash } from "react-icons/io";
 
 const EmployeeAction = ({ data, ...props }) => {
     const titleJabatan = props.titles.map((jabatan) => ({
@@ -23,15 +23,17 @@ const EmployeeAction = ({ data, ...props }) => {
     return (
         <div>
             <div className="p-6 overflow-auto">
-                <div className="flex w-full justify-between items-center">
+                <div className="flex w-full justify-start items-center">
                     <div className="text-lg mb-6">Action Form</div>
-                    <LinkButton
-                        as="a"
-                        href={route("employee.index")}
-                        icon={<IoMdArrowBack />}
-                        size={"sm"}
-                        title={"Back"}
-                    ></LinkButton>
+                    <div className="flex ml-auto gap-3 items-center">
+                        <LinkButton
+                            as="a"
+                            href={route("employee.index")}
+                            icon={<IoMdArrowBack />}
+                            size={"sm"}
+                            title={"Back"}
+                        ></LinkButton>
+                    </div>
                 </div>
                 <div className="lg:flex gap-6">
                     <div className="flex-1">
@@ -78,6 +80,19 @@ const EmployeeAction = ({ data, ...props }) => {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="flex w-full items-center justify-end mt-3">
+                    {props.deletable && (
+                        <LinkButton
+                            as="a"
+                            href={route("employee.destroy", data.id)}
+                            method="delete"
+                            icon={<IoMdTrash />}
+                            size={"sm"}
+                            title={"Delete"}
+                            theme="red"
+                        ></LinkButton>
+                    )}
                 </div>
             </div>
         </div>

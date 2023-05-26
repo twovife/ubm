@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/{employee}/resign', [EmployeeController::class, 'resign'])->name('resign');
         Route::put('/{employee}/handover', [EmployeeController::class, 'handover'])->name('handover');
         Route::put('/{employee}/reactive', [EmployeeController::class, 'reactive'])->name('reactive');
+        Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('mantriapps')->name('mantriapps.')->group(function () {

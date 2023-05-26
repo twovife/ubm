@@ -15,4 +15,9 @@ class Instalment extends Model
         "status",
         "mantri",
     ];
+
+    public function mantri()
+    {
+        return $this->belongsTo(Employee::class, 'mantri', 'id');
+    }
 }

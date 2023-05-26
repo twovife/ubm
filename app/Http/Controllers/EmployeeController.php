@@ -8,10 +8,13 @@ use App\Http\Requests\UpdateEmployeeMutationRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeResignRequest;
 use App\Models\Branch;
+use App\Models\Customer;
+use App\Models\Loan;
+use App\Models\Instalment;
+use App\Models\LoanRequest;
 use App\Models\Title;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -118,10 +121,29 @@ class EmployeeController extends Controller
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
+        $countCustomer = Customer::whereHas('employee', function ($q) use ($employee) {
+            $q->where('mantri', $employee->id);
+        })->count();
+        $countLoan = Loan::whereHas('mantri', function ($q) use ($employee) {
+            $q->where('mantri', $employee->id);
+        })->count();
+        $countLoanReq = LoanRequest::whereHas('mantri', function ($q) use ($employee) {
+            $q->where('mantri', $employee->id);
+        })->count();
+        $countLoanReq = LoanRequest::whereHas('mantri', function ($q) use ($employee) {
+            $q->where('mantri', $employee->id);
+        })->count();
+        $countInst = Instalment::whereHas('mantri', function ($q) use ($employee) {
+            $q->where('mantri', $employee->id);
+        })->count();
+
+        $isDeletable = $countCustomer + $countLoan + $countLoanReq + $countInst;
+
         return Inertia::render('Employee/EmployeeAction', [
             'titles' => Title::all(),
             'branch' => $branch,
-            'data' => $employee->load('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')
+            'data' => $employee->load('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan'),
+            'deletable' => $isDeletable == 0 ? true : false
         ]);
     }
     public function update(UpdateEmployeeRequest $request, Employee $employee)
@@ -217,6 +239,7 @@ class EmployeeController extends Controller
             $employee->jabatan =  $request->jabatan;
             $employee->area = $request->area ?? 0;
             $employee->branch_id = $request->branch_id;
+            $employee->janis_jaminan = $request->janis_jaminan;
             $employee->save();
 
             $employee->histories()->createMany($data);
@@ -238,7 +261,16 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $employee->delete();
+            $employee->histories()->delete();
+            DB::commit();
+            return redirect()->route('employee.index')->with('message', 'data berhasil dihapus');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
+        }
     }
 
     public function handover(Request $request, Employee $employee)

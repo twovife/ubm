@@ -151,7 +151,6 @@ const UpdateDetail = ({ onClose, detailData, branch, ...props }) => {
             <div className="mb-3">
                 <InputLabel htmlFor={"janis_jaminan"} value={"Jenis Jaminan"} />
                 <TextInput
-                    required
                     onChange={onInputChangeHandler}
                     className={`mt-1 w-full`}
                     name={`janis_jaminan`}

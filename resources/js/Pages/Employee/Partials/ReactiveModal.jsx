@@ -23,7 +23,7 @@ const ReactiveModal = ({ show, onClose, detailId, ...props }) => {
 
     const onJabatanChangeHandler = (e) => {
         setData(e.target.name, e.target.value);
-        if (e.target.value !== "Mantri") {
+        if (e.target.value !== "mantri") {
             document.getElementById("area").disabled = true;
             document.getElementById("area").required = "";
         } else {

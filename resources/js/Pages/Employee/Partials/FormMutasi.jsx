@@ -18,7 +18,7 @@ const FormMutasi = ({ branch, detailId, ...props }) => {
 
     const onJabatanChangeHandler = (e) => {
         setData(e.target.name, e.target.value);
-        if (e.target.value !== "Mantri") {
+        if (e.target.value !== "Mantrii") {
             document.getElementById("mutasiArea").disabled = true;
             document.getElementById("mutasiArea").required = "";
         } else {

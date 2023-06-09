@@ -10,7 +10,7 @@ const Home = (props) => {
                 <h1 className="p-2 text-3xl text-main-500">
                     <HiCubeTransparent />
                 </h1>
-                <h1 className="text-3xl font-bold">UBM</h1>
+                <h1 className="text-3xl font-bold">UBM APPS</h1>
                 <div className="ml-auto flex gap-2">
                     <MdVerifiedUser className="text-2xl" />
                 </div>

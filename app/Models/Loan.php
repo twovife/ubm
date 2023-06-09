@@ -36,4 +36,9 @@ class Loan extends Model
     {
         return $this->hasMany(Instalment::class, 'loan_id', 'id');
     }
+
+    public function mantri()
+    {
+        return $this->belongsTo(Employee::class, 'mantri', 'id');
+    }
 }

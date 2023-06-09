@@ -8,12 +8,13 @@ import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import React from "react";
 
-const Resign = ({ onClose, detailData, branch, ...props }) => {
+const Resign = ({ detailData, branch, ...props }) => {
     const { data, setData, put, processing, errors, reset } = useForm({
+        id: detailData.id,
         history_date: "",
-        jabatan: "",
-        area: "",
-        branch_id: "",
+        jabatan: detailData.jabatan,
+        area: detailData.area,
+        branch_id: detailData.branch_id,
         janis_jaminan: "",
     });
     const onInputChangeHandler = (e) => {
@@ -33,17 +34,10 @@ const Resign = ({ onClose, detailData, branch, ...props }) => {
         }
     };
 
-    const afterSubmitUpdate = () => {
-        reset();
-        onClose();
-    };
-
     const onSubmitProcessUpdate = (e) => {
         e.preventDefault();
         console.log(data);
-        put(route("employee.reactive", data.id), {
-            onSuccess: () => afterSubmitUpdate(),
-        });
+        put(route("employee.reactive", data.id));
     };
 
     return (
@@ -121,7 +115,6 @@ const Resign = ({ onClose, detailData, branch, ...props }) => {
             <div className="mb-3">
                 <InputLabel htmlFor={"janis_jaminan"} value={"Jenis Jaminan"} />
                 <TextInput
-                    required
                     onChange={onInputChangeHandler}
                     className={`mt-1 w-full`}
                     name={`janis_jaminan`}

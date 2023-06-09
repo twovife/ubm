@@ -281,6 +281,11 @@ const Employee = ({ branch, employee, ...props }) => {
                                                             : employee.resign_status ==
                                                               "Pecat"
                                                             ? "bg-red-200"
+                                                            : employee.janis_jaminan ==
+                                                                  null ||
+                                                              employee.janis_jaminan ==
+                                                                  ""
+                                                            ? "bg-blue-200"
                                                             : "bg-white"
                                                     }`}
                                                 >

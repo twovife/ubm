@@ -95,6 +95,8 @@ Route::middleware('auth')->group(function () {
         });
     });
 
+
+    // routing untuk aplikasi unit
     Route::prefix('unit')->name('unit.')->group(function () {
         Route::prefix('/customer')->name('customer.')->group(function () {
             Route::get('/', [CustomerController::class, 'index'])->name('index');
@@ -106,6 +108,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [PinjamanController::class, 'store'])->name('store');
             Route::prefix('request')->name('request.')->group(function () {
                 Route::get('/', [PinjamanController::class, 'requestPinjaman'])->name('requestPinjaman');
+                Route::get('/buku-transaksi', [PinjamanController::class, 'bukutransaksi'])->name('bukutransaksi');
                 Route::post('/{loanRequest}', [PinjamanController::class, 'actions'])->name('actions');
             });
             Route::prefix('angsuran')->name('angsuran.')->group(function () {

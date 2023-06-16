@@ -5,7 +5,7 @@ import { router } from "@inertiajs/react";
 import React, { useState } from "react";
 
 const ActionPinjaman = ({ onClose, ...props }) => {
-    const { show, id } = props.data;
+    const { show, id, disabled } = props.data;
     const [actionLoading, setActionLoading] = useState(false);
 
     const onActionAcc = (e) => {
@@ -36,6 +36,7 @@ const ActionPinjaman = ({ onClose, ...props }) => {
             }
         );
     };
+
     const onActionDroped = (e) => {
         e.preventDefault();
         router.post(
@@ -70,13 +71,15 @@ const ActionPinjaman = ({ onClose, ...props }) => {
                             size={"xl"}
                         />
                     </form>
-                    <form onSubmit={onActionDroped}>
-                        <PrimaryButton
-                            type="submit"
-                            title={"Drop"}
-                            size={"xl"}
-                        />
-                    </form>
+                    {disabled && (
+                        <form onSubmit={onActionDroped}>
+                            <PrimaryButton
+                                type="submit"
+                                title={"Drop"}
+                                size={"xl"}
+                            />
+                        </form>
+                    )}
                 </div>
             </div>
         </Modal>

@@ -20,6 +20,9 @@ return new class extends Migration
             $table->integer('jumlah')->nullable();
             $table->string('status', 255)->nullable();
             $table->integer('mantri')->nullable();
+            $table->string('danatitipan', 255)->nullable();
+            $table->integer('total_angsuran')->nullable();
+            $table->integer('saldo_terakhir')->nullable();
             $table->timestamps();
         });
     }

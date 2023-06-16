@@ -7,8 +7,10 @@ import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import React from "react";
+import CurrencyInput from "react-currency-input-field";
 
 const ModalCreateNewCustomer = ({ auth, ...props }) => {
+    console.log(props);
     const { data, setData, post, processing, errors } = useForm({
         nama: "",
         nik: props.nik,
@@ -28,6 +30,10 @@ const ModalCreateNewCustomer = ({ auth, ...props }) => {
         );
     };
 
+    const onHandleCurencyChange = (value, name) => {
+        setData(name, value);
+    };
+
     const onSubmitCreate = (e) => {
         e.preventDefault();
         post(route("unit.pinjaman.store"));
@@ -36,7 +42,7 @@ const ModalCreateNewCustomer = ({ auth, ...props }) => {
         <div>
             <Loading show={processing} />
             <h1 className="mb-3 text-lg font-semibold">
-                Buat Pengajuan Pinjaman Customer Baru
+                Buat Pengajuan Pinjaman Nasabah Baru
             </h1>
             <div className="mb-3">
                 <form onSubmit={onSubmitCreate}>
@@ -146,7 +152,20 @@ const ModalCreateNewCustomer = ({ auth, ...props }) => {
                     </div>
                     <div className="mb-1">
                         <InputLabel value={"Jumlah Drop :"} />
-                        <TextInput
+                        <CurrencyInput
+                            name="pinjaman"
+                            id="pinjaman"
+                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-xl mt-2`}
+                            allowDecimals={false}
+                            prefix="Rp. "
+                            min={1}
+                            required
+                            onValueChange={onHandleCurencyChange}
+                            value={data.pinjaman}
+                            placeholder={"Inputkan angka tanpa sparator"}
+                        />
+
+                        {/* <TextInput
                             type={"number"}
                             className="w-full text-xl mt-2"
                             name="pinjaman"
@@ -154,7 +173,7 @@ const ModalCreateNewCustomer = ({ auth, ...props }) => {
                             required
                             value={data.pinjaman}
                             onChange={onInputChangeHandler}
-                        />
+                        /> */}
                         <InputError
                             message={errors.pinjaman}
                             className="mt-2"

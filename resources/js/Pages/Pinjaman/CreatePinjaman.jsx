@@ -12,7 +12,6 @@ import ModalCreateOldCustomer from "./Partials/ModalCreateOldCustomer";
 import ModalAlert from "@/Components/ModalAlert";
 
 const CreatePinjaman = ({ customer, ...props }) => {
-    console.log(props);
     const [customerData, setCustomerData] = useState(customer);
     const [loading, setLoading] = useState(false);
     const [searchNik, setSearchNik] = useState(props.keyword ?? "");

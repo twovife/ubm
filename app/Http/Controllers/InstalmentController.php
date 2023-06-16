@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Validation\ValidationException;
 
 class InstalmentController extends Controller
 {
@@ -37,9 +38,11 @@ class InstalmentController extends Controller
             }
             $startDate = date('Y-m-d', strtotime($startDate . ' + 1 day'));
         }
+
         $kelompok = Employee::when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('branch_id', auth()->user()->employee->branch_id);
         })->where('area', '!=', "0");
+
         return Inertia::render('Pinjaman/Angsuran', [
             'display_tanggal' => $dateArray,
             'pinjaman' => $pinjaman->get(),
@@ -56,8 +59,16 @@ class InstalmentController extends Controller
      */
     public function bayar(Request $request, Loan $loan)
     {
+        $isPaid = Instalment::where('loan_id', $loan->id)->where('pembayaran_date', $request->pembayaran_date)->first() ? true : false;
+        if ($isPaid) {
+            throw ValidationException::withMessages([
+                'pembayaran_date' => 'Data Tanggal Ini Sudah Di isi',
+            ]);
+        }
         try {
             DB::beginTransaction();
+            $sumAngsuran = Instalment::where('loan_id', $loan->id)->sum('jumlah');
+
             $loan->saldo = $loan->saldo - $request->jumlah;
             $loan->status = $request->status;
             $loan->save();
@@ -66,6 +77,10 @@ class InstalmentController extends Controller
                 "jumlah" => $request->jumlah,
                 "status" => $request->status,
                 "mantri" => $loan->mantri,
+                'total_angsuran' => $sumAngsuran + $request->jumlah,
+                'saldo_terakhir' => $loan->saldo - $request->jumlah,
+                'danatitipan' => $request->danatitipan ? 'true' : 'false'
+
             ]);
             DB::commit();
         } catch (\Exception $e) {

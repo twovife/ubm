@@ -124,9 +124,77 @@ export default function Authenticated({ auth, header, children }) {
                                 },
                             ]}
                         />
+                        <SideBarDropDown
+                            onClick={() => onClickDropDownHandler(2)}
+                            title={"Buku Transaksi Drop"}
+                            active={route().current("unit.pinjaman.request.*")}
+                            colapse={colapse}
+                            dropdownId={2}
+                            lists={[
+                                {
+                                    id: 21,
+                                    href: route(
+                                        "unit.pinjaman.request.requestPinjaman"
+                                    ),
+                                    name: "Transaksi Drop",
+                                    active: route().current(
+                                        "unit.pinjaman.request.requestPinjaman"
+                                    ),
+                                },
+                                {
+                                    id: 22,
+                                    href: route(
+                                        "unit.pinjaman.request.bukutransaksi"
+                                    ),
+                                    name: "Rekap Transaksi Drop",
+                                    active: route().current(
+                                        "unit.pinjaman.request.bukutransaksi"
+                                    ),
+                                },
+                            ]}
+                        />
+
+                        <SideBarDropDown
+                            onClick={() => onClickDropDownHandler(3)}
+                            title={"Buku Angsuran"}
+                            active={route().current("unit.pinjaman.angsuran.*")}
+                            colapse={colapse}
+                            dropdownId={3}
+                            lists={[
+                                {
+                                    id: 31,
+                                    href: route("unit.pinjaman.angsuran.index"),
+                                    name: "Data Storting",
+                                    active: route().current(
+                                        "unit.pinjaman.angsuran.*"
+                                    ),
+                                },
+                                {
+                                    id: 32,
+                                    href: route(
+                                        "unit.pinjaman.request.requestPinjaman"
+                                    ),
+                                    name: "Pembayaran Angsuran MB",
+                                    active: route().current(
+                                        "unit.pinjaman.request.requestPinjaman"
+                                    ),
+                                },
+                                {
+                                    id: 33,
+                                    href: route(
+                                        "unit.pinjaman.request.requestPinjaman"
+                                    ),
+                                    name: "Pembayaran Angsuran ML",
+                                    active: route().current(
+                                        "unit.pinjaman.request.requestPinjaman"
+                                    ),
+                                },
+                            ]}
+                        />
+
                         {/* <SideBarDropDown
                             onClick={() => onClickDropDownHandler(2)}
-                            title={"Data Pinjaman"}
+                            title={"Data Administrasi"}
                             active={route().current("unit.pinjaman*")}
                             colapse={colapse}
                             dropdownId={2}
@@ -136,7 +204,7 @@ export default function Authenticated({ auth, header, children }) {
                                     href: route(
                                         "unit.pinjaman.request.requestPinjaman"
                                     ),
-                                    name: "Permintaan Drop",
+                                    name: "Buku Transaksi",
                                     active: route().current(
                                         "unit.pinjaman.request.*"
                                     ),
@@ -145,7 +213,9 @@ export default function Authenticated({ auth, header, children }) {
                                     id: 2,
                                     href: route("unit.pinjaman.index"),
                                     name: "Buku Storting",
-                                    active: route().current("unit.pinjaman.*"),
+                                    active: route().current(
+                                        "unit.pinjaman.index"
+                                    ),
                                 },
                                 {
                                     id: 3,
@@ -181,9 +251,9 @@ export default function Authenticated({ auth, header, children }) {
                                     ),
                                 },
                             ]}
-                        />
+                        /> */}
 
-                        <SideBarDropDown
+                        {/* <SideBarDropDown
                             onClick={() => onClickDropDownHandler(3)}
                             title={"Administrasi Pusat"}
                             active={route().current("cabang-utama.*")}
@@ -199,9 +269,9 @@ export default function Authenticated({ auth, header, children }) {
                                     ),
                                 },
                             ]}
-                        />
+                        /> */}
 
-                        <SideBarDropDown
+                        {/* <SideBarDropDown
                             onClick={() => onClickDropDownHandler(4)}
                             title={"Administrasi Unit"}
                             active={route().current("cabang-utama.*")}

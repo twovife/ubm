@@ -31,8 +31,8 @@ const DropMantri = ({ requestDrop, ...props }) => {
             <div className="p-3 border rounded-lg">
                 <div className="border rounded p-3">
                     {requestDrop.map((drop, key) => (
-                        <div key={key}>
-                            <div className="flex mb-3">
+                        <div key={key} className="mb-3 py-2 border-b">
+                            <div className="flex">
                                 <div className="flex-1">
                                     <div className="mb-1">
                                         <p className="underline underline-offset-2 font-semibold">
@@ -104,6 +104,9 @@ const DropMantri = ({ requestDrop, ...props }) => {
                                 <PrimaryButton
                                     className="ml-auto"
                                     title={"Drop"}
+                                    disabled={
+                                        drop.status == "acc" ? false : true
+                                    }
                                     onClick={(e) =>
                                         setShowModalDrop({
                                             id: drop.id,

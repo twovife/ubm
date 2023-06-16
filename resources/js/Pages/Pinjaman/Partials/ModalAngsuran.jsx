@@ -8,6 +8,9 @@ import { useForm } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React from "react";
 import { NumericFormat } from "react-number-format";
+import CurrencyInput from "react-currency-input-field";
+import InputError from "@/Components/InputError";
+import Checkbox from "@/Components/Checkbox";
 
 const ModalAngsuran = ({ onClose, ...props }) => {
     const { show, dataArray } = props.data;
@@ -15,7 +18,15 @@ const ModalAngsuran = ({ onClose, ...props }) => {
         pembayaran_date: "",
         jumlah: "",
         status: "",
+        danatitipan: false,
     });
+
+    console.log(errors);
+
+    const onHandleCurencyChange = (value, name) => {
+        setData(name, value);
+    };
+
     const mantriList = props.mantri.map((man) => {
         return {
             id: man.id,
@@ -32,7 +43,10 @@ const ModalAngsuran = ({ onClose, ...props }) => {
     ];
 
     const onInputChange = (e) => {
-        setData(e.target.name, e.target.value);
+        setData(
+            e.target.name,
+            e.target.type === "checkbox" ? e.target.checked : e.target.value
+        );
     };
 
     const afterSubmit = () => {
@@ -107,14 +121,26 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                                             : null
                                     }
                                 />
+                                <InputError
+                                    message={errors.pembayaran_date}
+                                    className="mt-2"
+                                />
                             </div>
                             <div className="flex-1">
                                 <InputLabel value={"Jumlah Pembayaran"} />
-                                <TextInput
+                                <CurrencyInput
                                     name="jumlah"
-                                    onChange={onInputChange}
-                                    type="number"
-                                    className="mt-1 block w-full"
+                                    id="jumlah"
+                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full mt-1`}
+                                    allowDecimals={false}
+                                    prefix="Rp. "
+                                    min={1}
+                                    required
+                                    onValueChange={onHandleCurencyChange}
+                                    value={data.pinjaman}
+                                    placeholder={
+                                        "Inputkan angka tanpa sparator"
+                                    }
                                 />
                             </div>
                         </div>
@@ -129,6 +155,18 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                                     options={ansuranStatus}
                                 />
                             </div>
+                        </div>
+                        <div className="block mt-4">
+                            <label className="flex items-center">
+                                <Checkbox
+                                    name="danatitipan"
+                                    value={data.danatitipan}
+                                    onChange={onInputChange}
+                                />
+                                <span className="ml-2 text-sm text-gray-600">
+                                    Dana Titipan?
+                                </span>
+                            </label>
                         </div>
                         <div className="w-full mt-3">
                             <PrimaryButton

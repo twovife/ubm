@@ -29,6 +29,8 @@ class PinjamanController extends Controller
         }
         dd($newTittle);
     }
+
+
     public function pinjaman()
     {
         return Inertia::render('Pinjaman/Pinjaman');
@@ -42,6 +44,7 @@ class PinjamanController extends Controller
                 $q->withFilter();
             })
             ->doesntHave('loan')
+            ->whereNot('status', 'tolak')
             ->orderBy('kelompok', 'asc')
             ->orderBy('tanggal_drop', 'asc')
             ->paginate(10)
@@ -51,15 +54,47 @@ class PinjamanController extends Controller
             $q->where('branch_id', auth()->user()->employee->branch_id);
         })->where('area', '!=', "0")->distinct('area')->get('area');
 
-        $array = [
+        $arrayFilter = [
             "hari" => request()->data['hari'] ?? AppHelper::dateName(Carbon::now()->format('Y-m-d')),
-            "kelompok" => request()->data['hari'] ?? "1",
+            "kelompok" => request()->data['kelompok'] ?? "1",
             "search" => ""
         ];
+
         return Inertia::render('Pinjaman/RequestPinjaman', [
             'requestDrops' => $requestDrop,
             'employee' => $kelompok,
-            'dataFilters' => $array
+            'dataFilters' => $arrayFilter,
+            'canCreate' => true
+        ]);
+    }
+
+    public function bukutransaksi()
+    {
+        $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'mantri')
+            ->withFilter()
+            ->whereHas('customer', function ($q) {
+                $q->withFilter();
+            })
+            ->orderBy('kelompok', 'asc')
+            ->orderBy('tanggal_drop', 'asc')
+            ->paginate(10)
+            ->withQueryString();
+
+        $kelompok = Employee::when(auth()->user()->hasPermissionTo('unit'), function ($q) {
+            $q->where('branch_id', auth()->user()->employee->branch_id);
+        })->where('area', '!=', "0")->distinct('area')->get('area');
+
+        $arrayFilter = [
+            "hari" => request()->data['hari'] ?? AppHelper::dateName(Carbon::now()->format('Y-m-d')),
+            "kelompok" => request()->data['kelompok'] ?? "1",
+            "search" => ""
+        ];
+
+        return Inertia::render('Pinjaman/RequestPinjaman', [
+            'requestDrops' => $requestDrop,
+            'employee' => $kelompok,
+            'dataFilters' => $arrayFilter,
+            'canCreate' => false
         ]);
     }
 
@@ -67,9 +102,7 @@ class PinjamanController extends Controller
     {
 
         $data_customer = Customer::where("nik", request()->nik)->first();
-
         $emp = Employee::where('jabatan', 'mantri')->filterData()->orderBy('area', 'asc')->get();
-
         $request = LoanRequest::whereHas('customer', function ($q) {
             $q->where('nik', request()->nik);
         })->with('customer', 'branch')->where('status', 'open')->get();
@@ -77,6 +110,7 @@ class PinjamanController extends Controller
         $pinjaman = Loan::whereHas('customer', function ($q) {
             $q->where('nik', request()->nik);
         })->with('customer', 'branch')->orderBy('branch_id', 'asc')->orderBy('tanggal_drop', 'desc')->get();
+
 
         return Inertia::render('Pinjaman/CreatePinjaman', [
             'customer' => $data_customer ?? null,
@@ -109,7 +143,7 @@ class PinjamanController extends Controller
                 "tanggal_drop" => $request->tanggal_drop,
                 "approved_date" => $request->type_drop ? $request->input('tanggal_drop') : null,
                 "approved_by" => $request->type_drop ? $request->mantri : null,
-                'status' => $request->type_drop ? 'acc' : 'open'
+                'status' => $request->type_drop ? 'acc' : 'open',
             ]);
             if (request()->input('type_drop', false)) {
                 $req->loan()->create([
@@ -118,19 +152,33 @@ class PinjamanController extends Controller
                     "mantri" => $request->mantri,
                     "kelompok" => $mantri->area,
                     "hari" => AppHelper::dateName($request->tanggal_drop),
-                    "pinjaman" => $request->pinjaman,
-                    "saldo" => $request->pinjaman,
+                    "drop" => $request->pinjaman,
+                    "pinjaman" => $request->pinjaman + ($request->pinjaman * 0.3),
+                    "saldo" => $request->pinjaman + ($request->pinjaman * 0.3),
                     "tanggal_drop" => $request->tanggal_drop,
-                    "status" => "normal"
+                    'lunas' => 'belum lunas',
+                    "status" => "normal",
                 ]);
             }
-
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+
+            $arrayFilter = [
+                "hari" => AppHelper::dateName($request->tanggal_drop),
+                "kelompok" => $mantri->area,
+            ];
+
             return redirect()->route('unit.pinjaman.request.requestPinjaman')->withErrors('input gagal silahkan refresh page terlebih dahulu');
         }
-        return redirect()->route('unit.pinjaman.request.requestPinjaman')->with('message', 'Data berhasil ditambahkan');
+
+
+        $arrayFilter = [
+            "hari" => AppHelper::dateName($request->tanggal_drop),
+            "kelompok" => $mantri->area,
+        ];
+
+        return redirect()->route('unit.pinjaman.request.requestPinjaman', ['data' => $arrayFilter])->with('message', 'Data berhasil ditambahkan');
     }
 
     public function actions(Request $request, LoanRequest $loanRequest)
@@ -162,13 +210,19 @@ class PinjamanController extends Controller
                     "mantri" => $loanRequest->mantri,
                     "kelompok" => $loanRequest->kelompok,
                     "hari" => $loanRequest->hari,
-                    "pinjaman" => $loanRequest->pinjaman,
-                    "saldo" => $loanRequest->pinjaman,
+                    "drop" => $loanRequest->pinjaman,
+                    "pinjaman" => $loanRequest->pinjaman + ($loanRequest->pinjaman * 0.3),
+                    "saldo" => $loanRequest->pinjaman + ($loanRequest->pinjaman * 0.3),
                     "tanggal_drop" => $loanRequest->tanggal_drop,
+                    'lunas' => 'belum lunas',
                     "status" => "normal"
                 ]);
                 DB::commit();
-                return redirect()->route('unit.pinjaman.request.requestPinjaman')->with('message', 'Data berhasil ditambahkan');
+                $arrayFilter = [
+                    "hari" => AppHelper::dateName($request->tanggal_drop),
+                    "kelompok" => $loanRequest->kelompok,
+                ];
+                return redirect()->route('unit.pinjaman.angsuran.index', ['data' => $arrayFilter])->with('message', 'Data berhasil ditambahkan');
             } catch (\Throwable $th) {
                 DB::rollBack();
                 return redirect()->route('unit.pinjaman.request.requestPinjaman')->withErrors('input gagal silahkan refresh page terlebih dahulu');
@@ -176,12 +230,3 @@ class PinjamanController extends Controller
         }
     }
 }
-// "nama" => "Et dolor velit quia"
-// "nik" => "1"
-// "no_kk" => "Magna quia id culpa"
-// "alamat" => "Nisi voluptatibus ac"
-// "unit_id" => 32
-// "unit" => "Kediri 1"
-// "mantri" => "709"
-// "tanggal_drop" => "1"
-// "pinjaman" => "500000"

@@ -14,6 +14,9 @@ class Instalment extends Model
         "jumlah",
         "status",
         "mantri",
+        "danatitipan",
+        "total_angsuran",
+        "saldo_terakhir",
     ];
 
     public function mantri()

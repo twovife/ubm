@@ -73,10 +73,13 @@ class MantriAppController extends Controller
                     "mantri" => $request->mantri,
                     "kelompok" => $mantri->area,
                     "hari" => AppHelper::dateName($request->tanggal_drop),
-                    "pinjaman" => $request->pinjaman,
-                    "saldo" => $request->pinjaman,
+                    "drop" => $request->pinjaman,
+                    "pinjaman" => $request->pinjaman + ($request->pinjaman * 0.3),
+                    "saldo" => $request->pinjaman + ($request->pinjaman * 0.3),
                     "tanggal_drop" => $request->tanggal_drop,
-                    "status" => "normal"
+                    'lunas' => 'belum lunas',
+                    "status" => "normal",
+
                 ]);
             }
 
@@ -209,9 +212,11 @@ class MantriAppController extends Controller
                 "mantri" => $loanRequest->mantri,
                 "kelompok" => $loanRequest->kelompok,
                 "hari" => $loanRequest->hari,
-                "pinjaman" => $loanRequest->pinjaman,
-                "saldo" => $loanRequest->pinjaman,
+                "drop" => $loanRequest->pinjaman,
+                "pinjaman" => $loanRequest->pinjaman + ($loanRequest->pinjaman * 0.3),
+                "saldo" => $loanRequest->pinjaman + ($loanRequest->pinjaman * 0.3),
                 "tanggal_drop" => $loanRequest->tanggal_drop,
+                'lunas' => 'belum lunas',
                 "status" => "normal"
             ]);
             DB::commit();

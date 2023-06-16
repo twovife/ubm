@@ -15,7 +15,6 @@ import ActionPinjaman from "./Partials/ActionPinjaman";
 import { NumericFormat } from "react-number-format";
 
 const RequestPinjaman = ({ requestDrops, employee, ...props }) => {
-    console.log(props.dataFilters);
     const [oldFilter, setOldFilter] = useState({
         search: "",
         hari: "",
@@ -123,16 +122,18 @@ const RequestPinjaman = ({ requestDrops, employee, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Data Request Pinjaman
+                        Transaksi Drop
                     </h2>
                     <div className="ml-auto flex items-center">
-                        <LinkButton
-                            icon={<IoMdAdd />}
-                            size={"md"}
-                            title={"Tambah Pinjaman"}
-                            type="a"
-                            href={route("unit.pinjaman.create")}
-                        ></LinkButton>
+                        {props.canCreate && (
+                            <LinkButton
+                                icon={<IoMdAdd />}
+                                size={"md"}
+                                title={"Tambah Pinjaman"}
+                                type="a"
+                                href={route("unit.pinjaman.create")}
+                            ></LinkButton>
+                        )}
                     </div>
                 </>
             }
@@ -239,25 +240,50 @@ const RequestPinjaman = ({ requestDrops, employee, ...props }) => {
                                                         className={`${
                                                             drop.status == "acc"
                                                                 ? "bg-green-100"
+                                                                : drop.status ==
+                                                                  "tolak"
+                                                                ? "bg-red-100"
                                                                 : ""
                                                         }`}
                                                     >
                                                         <td className="px-6 py-3">
                                                             {key + 1}
                                                         </td>
-                                                        <td
-                                                            className="px-6 py-3 hover:cursor-pointer hover:bg-gray-100 text-blue-500"
-                                                            onClick={(e) =>
-                                                                setShowActionPinjaman(
-                                                                    {
-                                                                        show: true,
-                                                                        id: drop.id,
-                                                                    }
-                                                                )
-                                                            }
-                                                        >
-                                                            {drop.customer.nama}
-                                                        </td>
+                                                        {props.canCreate ? (
+                                                            <td
+                                                                className={`px-6 py-3 hover:cursor-pointer hover:bg-gray-100 text-blue-500`}
+                                                                onClick={(e) =>
+                                                                    setShowActionPinjaman(
+                                                                        {
+                                                                            show: true,
+                                                                            id: drop.id,
+                                                                            disabled:
+                                                                                drop.status ==
+                                                                                "acc"
+                                                                                    ? true
+                                                                                    : false,
+                                                                        }
+                                                                    )
+                                                                }
+                                                            >
+                                                                {
+                                                                    drop
+                                                                        .customer
+                                                                        .nama
+                                                                }
+                                                            </td>
+                                                        ) : (
+                                                            <td
+                                                                className={`px-6 py-3`}
+                                                            >
+                                                                {
+                                                                    drop
+                                                                        .customer
+                                                                        .nama
+                                                                }
+                                                            </td>
+                                                        )}
+
                                                         <td className="px-6 py-3">
                                                             {drop.customer.nik}
                                                         </td>

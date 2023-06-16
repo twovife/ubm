@@ -20,8 +20,10 @@ return new class extends Migration
             $table->integer('mantri')->nullable();
             $table->integer('kelompok')->nullable();
             $table->string('hari', 255)->nullable();
+            $table->integer('drop')->nullable();
             $table->integer('pinjaman')->nullable();
             $table->integer('saldo')->nullable();
+            $table->string('lunas', 255)->nullable();
             $table->string('status', 255)->nullable();
             $table->integer('loan_request_id')->nullable();
             $table->date('tanggal_drop')->nullable();

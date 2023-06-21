@@ -17,6 +17,7 @@ class Loan extends Model
         'hari',
         'drop',
         'pinjaman',
+        'pinjaman_ke',
         'saldo',
         'lunas',
         'status',

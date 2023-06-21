@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('kelompok')->nullable();
             $table->string('hari', 255)->nullable();
             $table->integer('pinjaman')->nullable();
+            $table->integer('pinjaman_ke')->nullable();
             $table->date('tanggal_drop')->nullable();
             $table->date('approved_date')->nullable();
             $table->integer('approved_by')->nullable();

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('hari', 255)->nullable();
             $table->integer('drop')->nullable();
             $table->integer('pinjaman')->nullable();
+            $table->integer('pinjaman_ke')->nullable();
             $table->integer('saldo')->nullable();
             $table->string('lunas', 255)->nullable();
             $table->string('status', 255)->nullable();

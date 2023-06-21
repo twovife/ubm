@@ -80,7 +80,9 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                                     <tr key={key}>
                                         <td className="px-6 py-3">{key + 1}</td>
                                         <td className="px-6 py-3">
-                                            {angs.pembayaran_date}
+                                            {dayjs(angs.pembayaran_date).format(
+                                                "DD-MMM-YYYY"
+                                            )}
                                         </td>
                                         <td className="px-6 py-3">
                                             <NumericFormat
@@ -109,6 +111,7 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                             <div className="flex-1">
                                 <InputLabel value={"Tanggal Pembayaran"} />
                                 <TextInput
+                                    required
                                     name="pembayaran_date"
                                     onChange={onInputChange}
                                     type="date"
@@ -148,6 +151,7 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                             <div className="flex-1">
                                 <InputLabel value={"Status Angsuran"} />
                                 <SelectList
+                                    required
                                     name="status"
                                     className="w-full mt-1"
                                     onChange={onInputChange}

@@ -7,6 +7,7 @@ import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import React from "react";
+import CurrencyInput from "react-currency-input-field";
 
 const ModalCreateOldCustomer = ({ auth, ...props }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -23,6 +24,10 @@ const ModalCreateOldCustomer = ({ auth, ...props }) => {
             e.target.name,
             e.target.type === "checkbox" ? e.target.checked : e.target.value
         );
+    };
+
+    const onHandleCurencyChange = (value, name) => {
+        setData(name, value);
     };
 
     const onSubmitCreate = (e) => {
@@ -109,7 +114,20 @@ const ModalCreateOldCustomer = ({ auth, ...props }) => {
                     </div>
                     <div className="mb-1">
                         <InputLabel value={"Jumlah Drop :"} />
-                        <TextInput
+                        <CurrencyInput
+                            name="pinjaman"
+                            id="pinjaman"
+                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-xl mt-2`}
+                            allowDecimals={false}
+                            prefix="Rp. "
+                            min={1}
+                            required
+                            onValueChange={onHandleCurencyChange}
+                            value={data.pinjaman}
+                            placeholder={"Inputkan angka tanpa sparator"}
+                        />
+
+                        {/* <TextInput
                             type={"number"}
                             className="w-full text-xl mt-2"
                             name="pinjaman"
@@ -117,7 +135,7 @@ const ModalCreateOldCustomer = ({ auth, ...props }) => {
                             required
                             value={data.pinjaman}
                             onChange={onInputChangeHandler}
-                        />
+                        /> */}
                         <InputError
                             message={errors.pinjaman}
                             className="mt-2"

@@ -9,6 +9,7 @@ use App\Http\Controllers\MantriAppController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Instalment;
 use Illuminate\Foundation\Application;
@@ -98,9 +99,10 @@ Route::middleware('auth')->group(function () {
 
     // routing untuk aplikasi unit
     Route::prefix('unit')->name('unit.')->group(function () {
-        Route::prefix('/customer')->name('customer.')->group(function () {
-            Route::get('/', [CustomerController::class, 'index'])->name('index');
-            Route::post('/', [CustomerController::class, 'store'])->name('store');
+        Route::controller(CustomerController::class)->prefix('/customer')->name('customer.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/',  'store')->name('store');
+            Route::get('/historykknasabah/{no_kk}',  'historyNasabahByKK')->name('historyNasabahByKK');
         });
         Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
             Route::get('/', [PinjamanController::class, 'pinjaman'])->name('index');
@@ -113,6 +115,8 @@ Route::middleware('auth')->group(function () {
             });
             Route::prefix('angsuran')->name('angsuran.')->group(function () {
                 Route::get('/', [InstalmentController::class, 'index'])->name('index');
+                Route::get('/mb', [InstalmentController::class, 'indexMb'])->name('indexmb');
+                Route::get('/ml', [InstalmentController::class, 'indexMl'])->name('indexml');
                 Route::put('/{loan}', [InstalmentController::class, 'bayar'])->name('bayar');
             });
         });

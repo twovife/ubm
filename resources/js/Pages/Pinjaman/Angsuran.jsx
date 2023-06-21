@@ -14,7 +14,7 @@ import ModalAngsuran from "./Partials/ModalAngsuran";
 import ModalAlert from "@/Components/ModalAlert";
 
 const Angsuran = ({ ...props }) => {
-    console.log(props.pinjaman);
+    console.log(props.display_tanggal);
     const [showAngsuranModal, setShowAngsuranModal] = useState(false);
     const hideAngsuranModal = (e) => {
         setShowAngsuranModal(false);
@@ -63,7 +63,7 @@ const Angsuran = ({ ...props }) => {
         };
 
         router.get(
-            route("unit.pinjaman.angsuran.index"),
+            window.location.href,
             {
                 data: data,
             },
@@ -116,10 +116,11 @@ const Angsuran = ({ ...props }) => {
     };
     const myFunction = (parameter, loan) => {
         let lastMont = null;
+        let loanPerMonth = 0;
+        let lastSaldo = 0;
         return parameter.map((tgl, key) => {
             const bulan = new Date(tgl).getMonth() + 1;
             let detailTd = null;
-
             if (lastMont == null || lastMont == bulan) {
                 detailTd = (
                     <td
@@ -131,7 +132,7 @@ const Angsuran = ({ ...props }) => {
                                 ? "text-red-500"
                                 : ""
                         }`}
-                        key={`x2${key}`}
+                        key={`headerdate${key}`}
                         tanggal_id={dayjs(tgl).format("DD/MM")}
                     >
                         {(() => {
@@ -140,11 +141,17 @@ const Angsuran = ({ ...props }) => {
                                     (s) => s.pembayaran_date === tgl
                                 )
                             ) {
+                                //
+
                                 const loanvalue = loan.angsuran
                                     .filter(
                                         (item) => item.pembayaran_date == tgl
                                     )
-                                    .map((item) => item.jumlah)
+                                    .map((item) => {
+                                        loanPerMonth += item.jumlah;
+                                        lastSaldo = item.saldo_terakhir;
+                                        return item.jumlah;
+                                    })
                                     .join(", ");
                                 return (
                                     <NumericFormat
@@ -165,67 +172,23 @@ const Angsuran = ({ ...props }) => {
                             key={`xx1${key}`}
                             className={`text-center whitespace-nowrap text-sm px-6 py-3 bg-yellow-50`}
                         >
-                            {(() => {
-                                if (
-                                    loan.angsuran.some(
-                                        (s) => s.pembayaran_date === tgl
-                                    )
-                                ) {
-                                    const loanvalue = loan.angsuran
-                                        .filter(
-                                            (item) =>
-                                                item.pembayaran_date == tgl
-                                        )
-                                        .map((item) =>
-                                            parseInt(
-                                                item.total_angsuran -
-                                                    item.jumlah
-                                            )
-                                        )
-                                        .join(", ");
-                                    return (
-                                        <NumericFormat
-                                            value={loanvalue}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    );
-                                }
-                            })()}
+                            <NumericFormat
+                                value={loanPerMonth}
+                                displayType={"text"}
+                                thousandSeparator={","}
+                                prefix={"Rp. "}
+                            />
                         </td>
                         <td
                             key={`xx2${key}`}
                             className={`text-center whitespace-nowrap text-sm px-6 py-3 bg-yellow-50`}
                         >
-                            {(() => {
-                                if (
-                                    loan.angsuran.some(
-                                        (s) => s.pembayaran_date === tgl
-                                    )
-                                ) {
-                                    const loanvalue = loan.angsuran
-                                        .filter(
-                                            (item) =>
-                                                item.pembayaran_date == tgl
-                                        )
-                                        .map((item) =>
-                                            parseInt(
-                                                item.saldo_terakhir +
-                                                    item.jumlah
-                                            )
-                                        )
-                                        .join(", ");
-                                    return (
-                                        <NumericFormat
-                                            value={loanvalue}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    );
-                                }
-                            })()}
+                            <NumericFormat
+                                value={lastSaldo}
+                                displayType={"text"}
+                                thousandSeparator={","}
+                                prefix={"Rp. "}
+                            />
                         </td>
 
                         <td
@@ -253,7 +216,12 @@ const Angsuran = ({ ...props }) => {
                                             (item) =>
                                                 item.pembayaran_date == tgl
                                         )
-                                        .map((item) => item.jumlah)
+                                        .map((item) => {
+                                            loanPerMonth = 0;
+                                            loanPerMonth += item.jumlah;
+                                            lastSaldo = item.saldo_terakhir;
+                                            return item.jumlah;
+                                        })
                                         .join(", ");
                                     return (
                                         <NumericFormat
@@ -263,6 +231,9 @@ const Angsuran = ({ ...props }) => {
                                             prefix={"Rp. "}
                                         />
                                     );
+                                } else {
+                                    loanPerMonth = 0;
+                                    loanPerMonth += 0;
                                 }
                             })()}
                         </td>

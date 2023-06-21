@@ -49,195 +49,174 @@ const RequestDrop = ({ customer, ...props }) => {
             <Head title="Data Pinjaman" />
             <div className="py-3">
                 <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div className="border p-6 text-main-800">
-                        <div className="gap-6">
-                            <div>
-                                <form onSubmit={onSubmitKtp} className="mb-3">
-                                    <InputLabel value={"Masukkan Nomor KTP"} />
-                                    <div className="flex items-baseline gap-3">
-                                        <TextInput
-                                            className="mt-1 block w-full"
-                                            name={"cek_ktp"}
-                                            value={searchNik}
-                                            onChange={onKeywordChange}
-                                            id={"cek_ktp"}
-                                        />
-                                        <PrimaryButton
-                                            size={"sm"}
-                                            className="whitespace-nowrap"
-                                            title={"Cek KTP"}
-                                            type="submit"
-                                        />
+                    <div className="py-3 px-6 text-main-800 rounded-md border mb-3">
+                        <form onSubmit={onSubmitKtp}>
+                            <InputLabel value={"Masukkan Nomor KTP"} />
+                            <div className="flex items-baseline gap-3">
+                                <TextInput
+                                    className="mt-1 block w-full"
+                                    name={"cek_ktp"}
+                                    value={searchNik}
+                                    onChange={onKeywordChange}
+                                    id={"cek_ktp"}
+                                />
+                                <PrimaryButton
+                                    size={"sm"}
+                                    className="whitespace-nowrap"
+                                    title={"Cek KTP"}
+                                    type="submit"
+                                />
+                            </div>
+                        </form>
+                    </div>
+                    {customerData && (
+                        <>
+                            <div className="py-3 px-6 text-main-800 rounded-md border mb-3">
+                                <h1 className="text-lg font-semibold">
+                                    Data Customer
+                                </h1>
+                                <div className="flex w-full justify-between border-b border-black/40 mb-2">
+                                    <div>NIK</div>
+                                    <div>{customerData.nik}</div>
+                                </div>
+                                <div className="flex w-full justify-between border-b border-black/40 mb-2">
+                                    <div>Nomor KK</div>
+                                    <div>{customerData.no_kk}</div>
+                                </div>
+                                <div className="flex w-full justify-between border-b border-black/40 mb-2">
+                                    <div>Nama</div>
+                                    <div>{customerData.nama}</div>
+                                </div>
+                            </div>
+                            {props.request.length !== 0 && (
+                                <div className="py-3 px-6 text-main-800 rounded-md border mb-3">
+                                    <h1 className="text-lg font-semibold mb-3">
+                                        Request Berjalan
+                                    </h1>
+                                    <div className="max-h-[30vh] overflow-y-auto">
+                                        <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
+                                            <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
+                                                <tr>
+                                                    <th className="px-6 py-3">
+                                                        Drop
+                                                    </th>
+                                                    <th className="px-6 py-3">
+                                                        Unit
+                                                    </th>
+                                                    <th className="px-6 py-3">
+                                                        Status
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {props.request.map(
+                                                    (req, key) => (
+                                                        <tr key={key}>
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                {
+                                                                    req.tanggal_drop
+                                                                }
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                {
+                                                                    req.branch
+                                                                        .unit
+                                                                }
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                {req.status}
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                )}
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </form>
-                                {customerData && (
-                                    <>
-                                        <div className="mb-6">
-                                            <h1 className="text-lg font-semibold">
-                                                Data Customer
-                                            </h1>
-                                            <div className="flex w-full justify-between border-b border-black/40 mb-2">
-                                                <div>NIK</div>
-                                                <div>{customerData.nik}</div>
-                                            </div>
-                                            <div className="flex w-full justify-between border-b border-black/40 mb-2">
-                                                <div>Nomor KK</div>
-                                                <div>{customerData.no_kk}</div>
-                                            </div>
-                                            <div className="flex w-full justify-between border-b border-black/40 mb-2">
-                                                <div>Nama</div>
-                                                <div>{customerData.nama}</div>
-                                            </div>
-                                        </div>
-                                        {props.request.length !== 0 && (
-                                            <div className="mb-6">
-                                                <h1 className="text-lg font-semibold mb-3">
-                                                    Request Berjalan
-                                                </h1>
-                                                <div className="max-h-[30vh] overflow-y-auto">
-                                                    <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
-                                                        <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
-                                                            <tr>
-                                                                <th className="px-6 py-3">
-                                                                    Drop
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Unit
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Status
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {props.request.map(
-                                                                (req, key) => (
-                                                                    <tr
-                                                                        key={
-                                                                            key
-                                                                        }
-                                                                    >
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req.tanggal_drop
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req
-                                                                                    .branch
-                                                                                    .unit
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req.status
-                                                                            }
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            )}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        )}
-                                        {props.pinjaman.length !== 0 ? (
-                                            <div className="mb-6">
-                                                <h1 className="text-lg font-semibold mb-3">
-                                                    History Pinjaman
-                                                </h1>
-                                                <div className="max-h-[30vh] overflow-y-auto">
-                                                    <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
-                                                        <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
-                                                            <tr className="text-center">
-                                                                <th className="px-6 py-3">
-                                                                    Drop
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Unit
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Status
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Ket
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody className="text-center">
-                                                            {props.pinjaman.map(
-                                                                (req, key) => (
-                                                                    <tr
-                                                                        key={
-                                                                            key
-                                                                        }
-                                                                    >
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req.tanggal_drop
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req
-                                                                                    .branch
-                                                                                    .unit
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4 uppercase">
-                                                                            {
-                                                                                req.status
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4 uppercase">
-                                                                            {req.saldo ==
-                                                                            0
-                                                                                ? "Lunas"
-                                                                                : "Belum Lunas"}
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            )}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="text-lg font-semibold">
-                                                Customer Belum Pernah Melakukan
-                                                Pinjaman
-                                            </div>
-                                        )}
-                                    </>
-                                )}
-                                {props.keyword && !customerData && (
-                                    <div className="text-xl">
-                                        Data Customer Tidak Ditemukan
+                                </div>
+                            )}
+
+                            {props.pinjaman.length !== 0 ? (
+                                <div className="py-3 px-6 text-main-800 rounded-md border mb-3">
+                                    <h1 className="text-lg font-semibold mb-3">
+                                        History Pinjaman
+                                    </h1>
+                                    <div className="max-h-[30vh] overflow-y-auto">
+                                        <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
+                                            <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
+                                                <tr className="text-center">
+                                                    <th className="px-6 py-3">
+                                                        Drop
+                                                    </th>
+                                                    <th className="px-6 py-3">
+                                                        Unit
+                                                    </th>
+                                                    <th className="px-6 py-3">
+                                                        Status
+                                                    </th>
+                                                    <th className="px-6 py-3">
+                                                        Ket
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="text-center">
+                                                {props.pinjaman.map(
+                                                    (req, key) => (
+                                                        <tr key={key}>
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                {
+                                                                    req.tanggal_drop
+                                                                }
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                {
+                                                                    req.branch
+                                                                        .unit
+                                                                }
+                                                            </td>
+                                                            <td className="px-6 py-4 uppercase whitespace-nowrap">
+                                                                {req.status}
+                                                            </td>
+                                                            <td className="px-6 py-4 uppercase  whitespace-nowrap">
+                                                                {req.saldo == 0
+                                                                    ? "Lunas"
+                                                                    : "Belum Lunas"}
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                )}
+                                            </tbody>
+                                        </table>
                                     </div>
-                                )}
+                                </div>
+                            ) : (
+                                <div className="py-3 px-6 rounded-md border mb-3 text-red-500 font-semibold">
+                                    Customer Belum Pernah Melakukan Pinjaman
+                                </div>
+                            )}
+
+                            <OldCustomer
+                                nik={searchNik}
+                                auth={props.auth}
+                                employees={employeeLists}
+                            />
+                        </>
+                    )}
+
+                    {props.keyword && !customerData && (
+                        <>
+                            <div className="py-3 px-6 rounded-md border mb-3 text-red-500 font-semibold">
+                                Data Customer Tidak Ditemukan
                             </div>
 
-                            {props.keyword && !customerData && (
-                                <div>
-                                    <NewCustomer
-                                        nik={searchNik}
-                                        auth={props.auth}
-                                        employees={employeeLists}
-                                    />
-                                </div>
-                            )}
-                            {customerData && (
-                                <div>
-                                    <OldCustomer
-                                        nik={searchNik}
-                                        auth={props.auth}
-                                        employees={employeeLists}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                            <div>
+                                <NewCustomer
+                                    nik={searchNik}
+                                    auth={props.auth}
+                                    employees={employeeLists}
+                                />
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </MobileLayout>

@@ -17,6 +17,7 @@ class LoanRequest extends Model
         'kelompok',
         'hari',
         'pinjaman',
+        'pinjaman_ke',
         'tanggal_drop',
         'approved_date',
         'approved_by',

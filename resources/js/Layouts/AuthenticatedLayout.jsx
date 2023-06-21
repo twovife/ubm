@@ -117,7 +117,7 @@ export default function Authenticated({ auth, header, children }) {
                             dropdownId={1}
                             lists={[
                                 {
-                                    id: 11,
+                                    id: "em1",
                                     href: route("employee.index"),
                                     name: "Data Karyawan",
                                     active: route().current("employee.*"),
@@ -132,7 +132,7 @@ export default function Authenticated({ auth, header, children }) {
                             dropdownId={2}
                             lists={[
                                 {
-                                    id: 21,
+                                    id: "trs1",
                                     href: route(
                                         "unit.pinjaman.request.requestPinjaman"
                                     ),
@@ -142,7 +142,7 @@ export default function Authenticated({ auth, header, children }) {
                                     ),
                                 },
                                 {
-                                    id: 22,
+                                    id: "trs2",
                                     href: route(
                                         "unit.pinjaman.request.bukutransaksi"
                                     ),
@@ -162,25 +162,25 @@ export default function Authenticated({ auth, header, children }) {
                             dropdownId={3}
                             lists={[
                                 {
-                                    id: 31,
+                                    id: "angs1",
                                     href: route("unit.pinjaman.angsuran.index"),
                                     name: "Data Storting",
                                     active: route().current(
-                                        "unit.pinjaman.angsuran.*"
+                                        "unit.pinjaman.angsuran.index"
                                     ),
                                 },
                                 {
-                                    id: 32,
+                                    id: "angs2",
                                     href: route(
-                                        "unit.pinjaman.request.requestPinjaman"
+                                        "unit.pinjaman.angsuran.indexmb"
                                     ),
-                                    name: "Pembayaran Angsuran MB",
+                                    name: "Data Storting MB",
                                     active: route().current(
-                                        "unit.pinjaman.request.requestPinjaman"
+                                        "unit.pinjaman.angsuran.indexmb"
                                     ),
                                 },
                                 {
-                                    id: 33,
+                                    id: "angs3",
                                     href: route(
                                         "unit.pinjaman.request.requestPinjaman"
                                     ),

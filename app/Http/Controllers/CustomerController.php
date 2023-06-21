@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Branch;
 use App\Models\Employee;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -101,5 +102,10 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    public function historyNasabahByKK(Request $request)
+    {
+        return Inertia::render('Customer/HistoryByKartuKeluarga');
     }
 }

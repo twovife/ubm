@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import ModalCreateNewCustomer from "./Partials/ModalCreateNewCustomer";
 import ModalCreateOldCustomer from "./Partials/ModalCreateOldCustomer";
+import { AiFillExclamationCircle } from "react-icons/ai";
 import ModalAlert from "@/Components/ModalAlert";
 
 const CreatePinjaman = ({ customer, ...props }) => {
@@ -107,9 +108,20 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                 </div>
                                                 <div className="flex w-full justify-between max-w-md border-b border-black/40 mb-2">
                                                     <div>Nomor KK</div>
-                                                    <div>
-                                                        {customerData.no_kk}
-                                                    </div>
+                                                    <a
+                                                        className="text-blue-500 font-black underline decoration-dotted flex items-center"
+                                                        href={route(
+                                                            "unit.customer.historyNasabahByKK",
+                                                            customerData.no_kk
+                                                        )}
+                                                        target="_blank"
+                                                    >
+                                                        <AiFillExclamationCircle className="mr-2" />
+
+                                                        <span>
+                                                            {customerData.no_kk}
+                                                        </span>
+                                                    </a>
                                                 </div>
                                                 <div className="flex w-full justify-between max-w-md border-b border-black/40 mb-2">
                                                     <div>Nama</div>
@@ -189,7 +201,9 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                                                     .unit
                                                                             }
                                                                         </td>
-                                                                        <td className="px-6 py-4">
+                                                                        <td
+                                                                            className={`px-6 py-4`}
+                                                                        >
                                                                             {
                                                                                 req.status
                                                                             }
@@ -206,7 +220,7 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                     <h1 className="text-lg font-semibold mb-3">
                                                         History Pinjaman
                                                     </h1>
-                                                    <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
+                                                    <table className="w-full text-sm text-main-500 dark:text-main-400 text-center">
                                                         <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
                                                             <tr>
                                                                 <th className="px-6 py-3">
@@ -275,16 +289,31 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                                                     .unit
                                                                             }
                                                                         </td>
-                                                                        <td className="px-6 py-4 uppercase">
+                                                                        <td
+                                                                            className={`px-6 py-4 uppercase font-black ${
+                                                                                req.status ==
+                                                                                "normal"
+                                                                                    ? `text-green-500`
+                                                                                    : req.status ==
+                                                                                      "cm"
+                                                                                    ? `text-orange-100`
+                                                                                    : req.status ==
+                                                                                      "mb"
+                                                                                    ? `text-red-500`
+                                                                                    : req.status ==
+                                                                                      "ml"
+                                                                                    ? `text-white bg-red-500`
+                                                                                    : ""
+                                                                            }`}
+                                                                        >
                                                                             {
                                                                                 req.status
                                                                             }
                                                                         </td>
                                                                         <td className="px-6 py-4 uppercase">
-                                                                            {req.saldo ==
-                                                                            0
-                                                                                ? "Lunas"
-                                                                                : "Belum Lunas"}
+                                                                            {
+                                                                                req.lunas
+                                                                            }
                                                                         </td>
                                                                     </tr>
                                                                 )

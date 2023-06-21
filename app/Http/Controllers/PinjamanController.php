@@ -134,17 +134,21 @@ class PinjamanController extends Controller
                 "mantri" => $request->mantri,
                 "area" => $mantri->area,
             ]);
+
+            // dd(LoanRequest::where('customer_id', $customer->id)->count('id'));
             $req = $customer->loan_request()->create([
                 "branch_id" => $request->unit_id,
                 "mantri" => $request->mantri,
                 "kelompok" => $mantri->area,
                 "hari" => AppHelper::dateName($request->tanggal_drop),
                 "pinjaman" => $request->pinjaman,
+                'pinjaman_ke' => LoanRequest::where('customer_id', $customer->id)->count('id') + 1,
                 "tanggal_drop" => $request->tanggal_drop,
                 "approved_date" => $request->type_drop ? $request->input('tanggal_drop') : null,
                 "approved_by" => $request->type_drop ? $request->mantri : null,
                 'status' => $request->type_drop ? 'acc' : 'open',
             ]);
+
             if (request()->input('type_drop', false)) {
                 $req->loan()->create([
                     "customer_id" => $customer->id,
@@ -154,6 +158,7 @@ class PinjamanController extends Controller
                     "hari" => AppHelper::dateName($request->tanggal_drop),
                     "drop" => $request->pinjaman,
                     "pinjaman" => $request->pinjaman + ($request->pinjaman * 0.3),
+                    'pinjaman_ke' => Loan::where('customer_id', $customer->id)->count('id') + 1,
                     "saldo" => $request->pinjaman + ($request->pinjaman * 0.3),
                     "tanggal_drop" => $request->tanggal_drop,
                     'lunas' => 'belum lunas',
@@ -177,7 +182,6 @@ class PinjamanController extends Controller
             "hari" => AppHelper::dateName($request->tanggal_drop),
             "kelompok" => $mantri->area,
         ];
-
         return redirect()->route('unit.pinjaman.request.requestPinjaman', ['data' => $arrayFilter])->with('message', 'Data berhasil ditambahkan');
     }
 
@@ -212,6 +216,7 @@ class PinjamanController extends Controller
                     "hari" => $loanRequest->hari,
                     "drop" => $loanRequest->pinjaman,
                     "pinjaman" => $loanRequest->pinjaman + ($loanRequest->pinjaman * 0.3),
+                    'pinjaman_ke' => Loan::where('customer_id', $loanRequest->customer_id)->count('id') + 1,
                     "saldo" => $loanRequest->pinjaman + ($loanRequest->pinjaman * 0.3),
                     "tanggal_drop" => $loanRequest->tanggal_drop,
                     'lunas' => 'belum lunas',

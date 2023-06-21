@@ -6,6 +6,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import React from "react";
+import CurrencyInput from "react-currency-input-field";
 
 const OldCustomer = ({ auth, ...props }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -25,12 +26,16 @@ const OldCustomer = ({ auth, ...props }) => {
         );
     };
 
+    const onHandleCurencyChange = (value, name) => {
+        setData(name, value);
+    };
+
     const onSubmitCreate = (e) => {
         e.preventDefault();
         post(route("mantriapps.pinjaman.store"));
     };
     return (
-        <div>
+        <div className="py-3 px-6 text-main-800 rounded-md border mb-3">
             <Loading show={processing} />
             <h1 className="mb-3 text-lg font-semibold">
                 Buat Pengajuan Pinjaman Customer Baru
@@ -84,14 +89,17 @@ const OldCustomer = ({ auth, ...props }) => {
                     </div>
                     <div className="mb-1">
                         <InputLabel value={"Jumlah Drop :"} />
-                        <TextInput
-                            type={"number"}
-                            className="w-full text-xl mt-2"
+                        <CurrencyInput
                             name="pinjaman"
                             id="pinjaman"
+                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-xl mt-2`}
+                            allowDecimals={false}
+                            prefix="Rp. "
+                            min={1}
                             required
+                            onValueChange={onHandleCurencyChange}
                             value={data.pinjaman}
-                            onChange={onInputChangeHandler}
+                            placeholder={"Inputkan angka tanpa sparator"}
                         />
                         <InputError
                             message={errors.pinjaman}

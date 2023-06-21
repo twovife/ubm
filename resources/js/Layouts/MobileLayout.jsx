@@ -5,7 +5,7 @@ import { AiTwotoneHome } from "react-icons/ai";
 const MobileLayout = ({ auth, header, children }) => {
     return (
         <div className="min-h-screen max-w-xl mx-auto relative">
-            <div className="p-4 shadow flex w-full items-center sticky top-0 z-50">
+            <div className="p-4 shadow flex w-full items-center sticky top-0 z-50 backdrop-blur-sm">
                 <div className="text-2xl font-semibold text-main-800 tracking-widest">
                     UBM APPS
                 </div>

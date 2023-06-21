@@ -19,7 +19,7 @@ const CalonDrop = ({ requestDrop, ...props }) => {
             errors={props.errors}
             header={
                 <div className="flex justify-between items-center">
-                    <h1>Tambah Permohonan Drop / Pinjaman</h1>
+                    <h1>Transaksi Drop</h1>
                     <LinkButton
                         as="a"
                         href={route("mantriapps.drop.mantriDrop")}

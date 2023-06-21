@@ -75,18 +75,22 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('destroy');
     });
 
-    Route::prefix('mantriapps')->name('mantriapps.')->group(function () {
-        Route::get('/', [MantriAppController::class, 'index'])->name('index');
+    Route::controller(MantriAppController::class)->prefix('mantriapps')->name('mantriapps.')->group(function () {
+        Route::get('/', 'index')->name('index');
         Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
-            Route::get('/request-drop', [MantriAppController::class, 'requestDrop'])->name('requestDrop');
-            Route::post('/', [MantriAppController::class, 'store'])->name('store');
-            Route::post('/new-customer-drop', [MantriAppController::class, 'newCustomerDropStore'])->name('newCustomerDropStore');
-            Route::post('/old-customer-drop', [MantriAppController::class, 'oldCustomerDropStore'])->name('oldCustomerDropStore');
+            Route::get('/request-drop', 'requestDrop')->name('requestDrop');
+            Route::post('/', 'store')->name('store');
+            Route::post('/new-customer-drop', 'newCustomerDropStore')->name('newCustomerDropStore');
+            Route::post('/old-customer-drop', 'oldCustomerDropStore')->name('oldCustomerDropStore');
         });
         Route::prefix('drop')->name('drop.')->group((function () {
-            Route::get('/drop', [MantriAppController::class, 'mantriDrop'])->name('mantriDrop');
-            Route::get('/calondrop', [MantriAppController::class, 'calonDrop'])->name('calonDrop');
-            Route::put('/drop/{loanRequest}', [MantriAppController::class, 'storeMantriDrop'])->name('storeMantriDrop');
+            Route::get('/drop', 'mantriDrop')->name('mantriDrop');
+            Route::get('/calondrop', 'calonDrop')->name('calonDrop');
+            Route::put('/drop/{loanRequest}', 'storeMantriDrop')->name('storeMantriDrop');
+        }));
+        Route::prefix('angsur')->name('angsur.')->group((function () {
+            Route::get('/{nik}', 'angsur')->name('angsur');
+            Route::get('/update/{loan}', 'updateAngsur')->name('updateangsur');
         }));
     });
 

@@ -18,7 +18,7 @@ const DropMantri = ({ requestDrop, ...props }) => {
             errors={props.errors}
             header={
                 <div className="flex justify-between items-center">
-                    <h1>Tambah Permohonan Drop / Pinjaman</h1>
+                    <h1>Drop Hari Ini</h1>
                     <LinkButton
                         as="a"
                         href={route("mantriapps.drop.calonDrop")}
@@ -102,7 +102,7 @@ const DropMantri = ({ requestDrop, ...props }) => {
                             </div>
                             <div className="w-full">
                                 <PrimaryButton
-                                    className="ml-auto"
+                                    className="ml-auto disabled:bg-slate-400"
                                     title={"Drop"}
                                     disabled={
                                         drop.status == "acc" ? false : true

@@ -38,7 +38,7 @@ const OldCustomer = ({ auth, ...props }) => {
         <div className="py-3 px-6 text-main-800 rounded-md border mb-3">
             <Loading show={processing} />
             <h1 className="mb-3 text-lg font-semibold">
-                Buat Pengajuan Pinjaman Customer Baru
+                Pengajuan Nasabah Lama
             </h1>
             <div className="mb-3">
                 <form onSubmit={onSubmitCreate}>

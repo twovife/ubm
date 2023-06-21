@@ -10,6 +10,7 @@ use App\Models\LoanRequest;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -197,6 +198,7 @@ class MantriAppController extends Controller
             'requestDrop' => $requestDrop
         ]);
     }
+
     public function calonDrop()
     {
         $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'mantri')
@@ -234,5 +236,27 @@ class MantriAppController extends Controller
             DB::rollBack();
             return redirect()->route('mantriapps.drop.mantriDrop')->withErrors('input gagal silahkan refresh page terlebih dahulu');
         }
+    }
+
+    public function angsur($nik)
+    {
+        $daysNow = AppHelper::dateName(Carbon::now()->format('Y-m-d'));
+        $loan_this_day = Loan::whereHas('customer', function ($q) use ($nik) {
+            $q->where('nik', $nik);
+        })
+            ->where('hari', $daysNow)
+            ->where('kelompok', auth()->user()->employee->area);
+
+        return Inertia::render('MantriApp/Angsuran', [
+            'loans' => $loan_this_day->get() ?? null,
+            'customer' => Customer::where('nik', $nik)->first() ?? null,
+        ]);
+    }
+
+    public function updateAngsur(Loan $loan)
+    {
+        return Inertia::render('MantriApp/BayarAngsuran', [
+            'loans' => $loan->load('customer', 'angsuran', 'mantri'),
+        ]);
     }
 }

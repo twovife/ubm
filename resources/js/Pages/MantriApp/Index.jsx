@@ -1,6 +1,6 @@
 import MobileLayout from "@/Layouts/MobileLayout";
 import { Link } from "@inertiajs/react";
-import React from "react";
+import React, { useState } from "react";
 import {
     FcCalendar,
     FcTodoList,
@@ -8,8 +8,13 @@ import {
     FcUnlock,
     FcBriefcase,
 } from "react-icons/fc";
+import ModalNik from "./Partials/ModalNik";
 
 const Index = (props) => {
+    const [showModal, setShowModal] = useState(false);
+    const onModalClosed = () => {
+        setShowModal(false);
+    };
     return (
         <MobileLayout
             auth={props.auth}
@@ -33,7 +38,10 @@ const Index = (props) => {
                     <FcBriefcase className="text-7xl" />
                     <div className="font-bold text-lg">DROP</div>
                 </Link>
-                <div className="w-32 h-32 bg-main-200 border border-white rounded-xl shadow shadow-black/30 flex justify-center items-center flex-col hover:shadow-none hover:bg-main-200">
+                <div
+                    onClick={() => setShowModal(true)}
+                    className="w-32 h-32 bg-main-200 border border-white rounded-xl shadow shadow-black/30 flex justify-center items-center flex-col hover:shadow-none hover:bg-main-200"
+                >
                     <FcDonate className="text-7xl" />
                     <div className="font-bold text-lg">ANGSURAN</div>
                 </div>
@@ -46,6 +54,7 @@ const Index = (props) => {
                     <div className="font-bold text-xl">LOGOUT</div>
                 </div>
             </div>
+            <ModalNik show={showModal} onClose={onModalClosed} />
         </MobileLayout>
     );
 };

@@ -152,7 +152,7 @@ const Angsuran = ({ ...props }) => {
                                         lastSaldo = parseInt(
                                             item.saldo_terakhir
                                         );
-                                        return item.jumlah;
+                                        return parseInt(item.jumlah);
                                     })
                                     .join(", ");
                                 return (
@@ -220,9 +220,13 @@ const Angsuran = ({ ...props }) => {
                                         )
                                         .map((item) => {
                                             loanPerMonth = 0;
-                                            loanPerMonth += item.jumlah;
-                                            lastSaldo = item.saldo_terakhir;
-                                            return item.jumlah;
+                                            loanPerMonth += parseInt(
+                                                item.jumlah
+                                            );
+                                            lastSaldo = parseInt(
+                                                item.saldo_terakhir
+                                            );
+                                            return parseInt(item.jumlah);
                                         })
                                         .join(", ");
                                     return (

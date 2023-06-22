@@ -2,6 +2,7 @@ import Checkbox from "@/Components/Checkbox";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import LinkButton from "@/Components/LinkButton";
+import Loading from "@/Components/Loading";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
@@ -14,7 +15,7 @@ import { NumericFormat } from "react-number-format";
 
 const BayarAngsuran = ({ ...props }) => {
     const { data, setData, put, processing, reset, errors } = useForm({
-        pembayaran_date: "",
+        pembayaran_date: dayjs().format("YYYY-MM-DD"),
         jumlah: "",
         mantri: props.auth.user.employee_id,
         status: "",
@@ -35,7 +36,9 @@ const BayarAngsuran = ({ ...props }) => {
 
     const onSubmitForm = (e) => {
         e.preventDefault();
-        put(route("unit.pinjaman.angsuran.bayar", props.loans.id));
+        put(route("unit.pinjaman.angsuran.bayar", props.loans.id), {
+            onSuccess: reset(),
+        });
     };
 
     const ansuranStatus = [
@@ -51,6 +54,7 @@ const BayarAngsuran = ({ ...props }) => {
             errors={props.errors}
             header={"Angsuran Mantri"}
         >
+            <Loading show={processing} />
             <div className="py-3 px-6 text-main-800 rounded-md border mb-3 shadow">
                 <div className="flex w-full items-center mb-2 border-b">
                     <div className="flex-[2]">Nama Customer</div>
@@ -58,7 +62,7 @@ const BayarAngsuran = ({ ...props }) => {
                 </div>
                 <div className="flex w-full items-center mb-2 border-b">
                     <div className="flex-[2]">NIK</div>
-                    <div className="flex-[3]">{props.loans.customer.nama}</div>
+                    <div className="flex-[3]">{props.loans.customer.nik}</div>
                 </div>
             </div>
             <div>
@@ -83,7 +87,7 @@ const BayarAngsuran = ({ ...props }) => {
                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                                     key={key}
                                 >
-                                    <td className="px-6 py-4">{key}</td>
+                                    <td className="px-6 py-4">{key + 1}</td>
                                     <td className="px-6 py-4">
                                         {dayjs(el.pembayaran_date).format(
                                             "DD/MM/YYYY"
@@ -108,23 +112,6 @@ const BayarAngsuran = ({ ...props }) => {
                     <h1 className="text-xl mb-3">Pembayaran Angsuran</h1>
                     <form onSubmit={onSubmitForm} className="mb-3">
                         <div className="flex gap-3">
-                            <div className="flex-1">
-                                <InputLabel value={"Tanggal Pembayaran"} />
-                                <TextInput
-                                    required
-                                    name="pembayaran_date"
-                                    onChange={onInputChange}
-                                    type="date"
-                                    className="mt-1 block w-full"
-                                    min={dayjs(props.loans.tanggal_drop)
-                                        .add(1, "week")
-                                        .format("YYYY-MM-DD")}
-                                />
-                                <InputError
-                                    message={errors.pembayaran_date}
-                                    className="mt-2"
-                                />
-                            </div>
                             <div className="flex-1">
                                 <InputLabel value={"Jumlah Pembayaran"} />
                                 <CurrencyInput

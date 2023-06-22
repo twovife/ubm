@@ -40,6 +40,11 @@ class Loan extends Model
         return $this->hasMany(Instalment::class, 'loan_id', 'id');
     }
 
+    public function lastAngsuran()
+    {
+        return $this->hasOne(Instalment::class, 'loan_id', 'id')->latest();
+    }
+
     public function mantri()
     {
         return $this->belongsTo(Employee::class, 'mantri', 'id');

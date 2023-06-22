@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Symfony\Component\Console\Input\Input;
 
 class MantriAppController extends Controller
 {
@@ -203,7 +204,7 @@ class MantriAppController extends Controller
     {
         $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'mantri')
             ->where('kelompok', auth()->user()->employee->area)
-            ->where('tanggal_drop', ">", Carbon::now()->format('Y-m-d'))
+            ->where('tanggal_drop', "!=", Carbon::now()->format('Y-m-d'))
             ->doesntHave('loan')
             ->orderBy('tanggal_drop', 'asc')
             ->get();
@@ -236,6 +237,36 @@ class MantriAppController extends Controller
             DB::rollBack();
             return redirect()->route('mantriapps.drop.mantriDrop')->withErrors('input gagal silahkan refresh page terlebih dahulu');
         }
+    }
+
+    /**
+     * undocumented function summary
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function storting()
+    {
+        $daysNow = AppHelper::dateName(Carbon::now()->format('Y-m-d'));
+        $mantri = auth()->user()->employee;
+        // dd(auth()->user()->employee->area);
+        $loans = Loan::where('hari', $daysNow)
+            ->when(request()->input('status', []), function ($q) {
+                $q->where('status', request()->input('status'));
+            })
+            ->where('branch_id', auth()->user()->employee->branch_id)
+            ->where('kelompok', auth()->user()->employee->area)
+            ->where('tanggal_drop', '<', Carbon::now()->format('Y-m-d'))
+            ->with('customer', 'lastAngsuran')
+            ->get();
+        // dd($loans);
+        return Inertia::render('MantriApp/StortingMantri', [
+            'loans' => $loans,
+            'daysNow' => $daysNow
+        ]);
     }
 
     public function angsur($nik)

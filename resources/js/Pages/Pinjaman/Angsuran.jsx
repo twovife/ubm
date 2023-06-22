@@ -333,6 +333,9 @@ const Angsuran = ({ ...props }) => {
                                             <th className="px-6 py-3 whitespace-nowrap">
                                                 Nama Nasabah
                                             </th>
+                                            <th className="px-6 py-3 whitespace-nowrap">
+                                                NIK
+                                            </th>
                                             <th className="px-6 py-3">
                                                 Alamat
                                             </th>
@@ -375,6 +378,9 @@ const Angsuran = ({ ...props }) => {
                                                     }
                                                 >
                                                     {loan.customer.nama}
+                                                </td>
+                                                <td className="px-6 py-3">
+                                                    {loan.customer.nik}
                                                 </td>
                                                 <td className="px-6 py-3">
                                                     {loan.customer.alamat}

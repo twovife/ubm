@@ -191,6 +191,7 @@ class InstalmentController extends Controller
      */
     public function bayar(Request $request, Loan $loan)
     {
+        // dd($request->all());
         $isPaid = Instalment::where('loan_id', $loan->id)->where('pembayaran_date', $request->pembayaran_date)->first() ? true : false;
         if ($isPaid) {
             throw ValidationException::withMessages([
@@ -234,7 +235,7 @@ class InstalmentController extends Controller
         }
 
         if ($request->isMantriApp) {
-            return redirect()->back()->with('message', 'Data Berhasil Diubah');
+            return redirect()->route('mantriapps.angsur.updateangsur', $loan->id)->with('message', 'Data Berhasil Diubah');
         }
 
         return redirect()->route($route, ['data' => $arrayFilter])->with('message', 'Data Berhasil Diubah');

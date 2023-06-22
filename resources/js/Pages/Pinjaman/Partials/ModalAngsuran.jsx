@@ -114,6 +114,7 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                                     onChange={onInputChange}
                                     type="date"
                                     className="mt-1 block w-full"
+                                    max={dayjs().format("YYYY-MM-DD")}
                                     min={
                                         dataArray
                                             ? dayjs(dataArray.tanggal_drop)

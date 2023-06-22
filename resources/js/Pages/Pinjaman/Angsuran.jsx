@@ -234,8 +234,8 @@ const Angsuran = ({ ...props }) => {
                                         />
                                     );
                                 } else {
-                                    loanPerMonth = 0;
-                                    loanPerMonth += 0;
+                                    loanPerMonth = parseInt(0);
+                                    loanPerMonth += parseInt(0);
                                 }
                             })()}
                         </td>

@@ -148,8 +148,10 @@ const Angsuran = ({ ...props }) => {
                                         (item) => item.pembayaran_date == tgl
                                     )
                                     .map((item) => {
-                                        loanPerMonth += item.jumlah;
-                                        lastSaldo = item.saldo_terakhir;
+                                        loanPerMonth += parseInt(item.jumlah);
+                                        lastSaldo = parseInt(
+                                            item.saldo_terakhir
+                                        );
                                         return item.jumlah;
                                     })
                                     .join(", ");

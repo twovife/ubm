@@ -38,21 +38,27 @@ const Index = (props) => {
                     <FcBriefcase className="text-7xl" />
                     <div className="font-bold text-lg">DROP</div>
                 </Link>
-                <div
-                    onClick={() => setShowModal(true)}
+                <Link
+                    as="a"
+                    href={route("mantriapps.angsur.storting")}
                     className="w-32 h-32 bg-main-200 border border-white rounded-xl shadow shadow-black/30 flex justify-center items-center flex-col hover:shadow-none hover:bg-main-200"
                 >
                     <FcDonate className="text-7xl" />
                     <div className="font-bold text-lg">ANGSURAN</div>
-                </div>
+                </Link>
                 <div className="w-32 h-32 bg-main-200 border border-white rounded-xl shadow shadow-black/30 flex justify-center items-center flex-col hover:shadow-none hover:bg-main-200">
                     <FcTodoList className="text-7xl" />
                     <div className="font-bold text-xl">HISTORY</div>
                 </div>
-                <div className="w-32 h-32 bg-main-200 border border-white rounded-xl shadow shadow-black/30 flex justify-center items-center flex-col hover:shadow-none hover:bg-main-200">
+                <Link
+                    method="post"
+                    as="button"
+                    href={route("logout")}
+                    className="w-32 h-32 bg-main-200 border border-white rounded-xl shadow shadow-black/30 flex justify-center items-center flex-col hover:shadow-none hover:bg-main-200"
+                >
                     <FcUnlock className="text-7xl" />
                     <div className="font-bold text-xl">LOGOUT</div>
-                </div>
+                </Link>
             </div>
             <ModalNik show={showModal} onClose={onModalClosed} />
         </MobileLayout>

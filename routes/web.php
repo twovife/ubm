@@ -32,6 +32,7 @@ Route::get('/', function () {
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
+        'isMantri' => auth()->user() ? auth()->user()->hasPermissionTo('area') : false,
         'phpVersion' => PHP_VERSION,
     ]);
 });
@@ -39,6 +40,9 @@ Route::get('/', function () {
 // Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
+    if (auth()->user()->hasPermissionTo('area')) {
+        return redirect()->route('mantriapps.index');
+    }
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -59,9 +63,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-
-
-    Route::prefix('employee')->name('employee.')->group(function () {
+    Route::prefix('employee')->name('employee.')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('index');
         Route::get('/exemployee', [EmployeeController::class, 'exemployee'])->name('exemployee');
         Route::get('/create', [EmployeeController::class, 'create'])->name('create');
@@ -75,7 +77,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('destroy');
     });
 
-    Route::controller(MantriAppController::class)->prefix('mantriapps')->name('mantriapps.')->group(function () {
+    Route::controller(MantriAppController::class)->prefix('mantriapps')->name('mantriapps.')->middleware('can:area')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
             Route::get('/request-drop', 'requestDrop')->name('requestDrop');
@@ -95,7 +97,7 @@ Route::middleware('auth')->group(function () {
         }));
     });
 
-    Route::prefix('cabang-utama')->name('cabangutama.')->group(function () {
+    Route::prefix('cabang-utama')->middleware(['auth', 'verified'])->name('cabangutama.')->group(function () {
         Route::prefix('/customer')->name('customer.')->group(function () {
             Route::get('/', [CustomerController::class, 'index'])->name('index');
         });
@@ -103,7 +105,7 @@ Route::middleware('auth')->group(function () {
 
 
     // routing untuk aplikasi unit
-    Route::prefix('unit')->name('unit.')->group(function () {
+    Route::prefix('unit')->middleware(['auth', 'verified'])->name('unit.')->group(function () {
         Route::controller(CustomerController::class)->prefix('/customer')->name('customer.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/',  'store')->name('store');

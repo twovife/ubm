@@ -208,7 +208,7 @@ class MantriAppController extends Controller
             ->doesntHave('loan')
             ->orderBy('tanggal_drop', 'asc')
             ->get();
-        dd($requestDrop);
+        // dd($requestDrop);
         return Inertia::render('MantriApp/CalonDrop', [
             'requestDrop' => $requestDrop
         ]);

@@ -140,7 +140,7 @@ const RequestDrop = ({ customer, ...props }) => {
                                     <h1 className="text-lg font-semibold mb-3">
                                         History Pinjaman
                                     </h1>
-                                    <div className="max-h-[30vh] overflow-y-auto">
+                                    <div className="max-h-[30vh] overflow-y-auto overflow-x-auto">
                                         <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
                                             <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
                                                 <tr className="text-center">

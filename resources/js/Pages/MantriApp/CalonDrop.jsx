@@ -23,7 +23,7 @@ const CalonDrop = ({ requestDrop, ...props }) => {
                     <LinkButton
                         as="a"
                         href={route("mantriapps.drop.mantriDrop")}
-                        title={"Drop Harian"}
+                        title={"Go To Drop"}
                     />
                 </div>
             }

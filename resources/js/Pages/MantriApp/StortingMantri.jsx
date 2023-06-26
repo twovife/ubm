@@ -15,6 +15,7 @@ import { router } from "@inertiajs/react";
 import LinkButton from "@/Components/LinkButton";
 
 const StortingMantri = (props) => {
+    console.log(props.loans);
     function gotoDetailPage(id) {
         router.get(route("mantriapps.angsur.updateangsur", id));
     }
@@ -84,12 +85,17 @@ const StortingMantri = (props) => {
                     <tbody>
                         {props.loans ? (
                             props.loans.map((loan) => {
-                                const lastpay =
-                                    loan.last_angsuran.pembayaran_date ??
-                                    dayjs().format("YYYY-MM-DD");
+                                const lastpay = loan.last_angsuran
+                                    ? loan.last_angsuran.pembayaran_date
+                                    : null;
+                                console.log([
+                                    lastpay,
+                                    dayjs().format("YYYY-MM-DD"),
+                                    lastpay == dayjs().format("YYYY-MM-DD"),
+                                ]);
                                 return (
                                     <tr
-                                        className={`bg-white border-b dark:border-gray-700 ${
+                                        className={`border-b dark:border-gray-700 ${
                                             lastpay ==
                                             dayjs().format("YYYY-MM-DD")
                                                 ? `bg-green-200 dark:bg-gray-900`
@@ -98,9 +104,12 @@ const StortingMantri = (props) => {
                                     >
                                         <td
                                             className="px-6 py-4 text-left hover:cursor-pointer hover:bg-gray-200"
-                                            onClick={() =>
-                                                gotoDetailPage(loan.id)
-                                            }
+                                            onClick={(e) => {
+                                                lastpay ==
+                                                dayjs().format("YYYY-MM-DD")
+                                                    ? e.stopPropagation()
+                                                    : gotoDetailPage(loan.id);
+                                            }}
                                         >
                                             <div className="border-b border-gray">
                                                 {loan.customer.nama}

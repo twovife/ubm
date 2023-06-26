@@ -72,10 +72,10 @@ const StortingMantri = (props) => {
                                 scope="col"
                                 className="px-6 py-3 whitespace-nowrap"
                             >
-                                Tanggal Drop
+                                Drop
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Drop
+                                Saldo
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Status
@@ -111,7 +111,7 @@ const StortingMantri = (props) => {
                                                     : gotoDetailPage(loan.id);
                                             }}
                                         >
-                                            <div className="border-b border-gray">
+                                            <div className="border-b border-gray mb-1">
                                                 {loan.customer.nama}
                                             </div>
                                             <div>
@@ -121,13 +121,23 @@ const StortingMantri = (props) => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            {dayjs(loan.tanggal_drop).format(
-                                                "DD-MM-YYYY"
-                                            )}
+                                            <div className="border-b border-gray mb-1">
+                                                {dayjs(
+                                                    loan.tanggal_drop
+                                                ).format("DD-MM-YYYY")}
+                                            </div>
+                                            <div>
+                                                <NumericFormat
+                                                    value={loan.drop}
+                                                    displayType={"text"}
+                                                    thousandSeparator={","}
+                                                    prefix={"Rp. "}
+                                                />
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <NumericFormat
-                                                value={loan.drop}
+                                                value={loan.saldo_terakhir}
                                                 displayType={"text"}
                                                 thousandSeparator={","}
                                                 prefix={"Rp. "}

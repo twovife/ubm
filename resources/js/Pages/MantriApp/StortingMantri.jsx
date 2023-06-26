@@ -85,7 +85,8 @@ const StortingMantri = (props) => {
                         {props.loans ? (
                             props.loans.map((loan) => {
                                 const lastpay =
-                                    loan.last_angsuran.pembayaran_date;
+                                    loan.last_angsuran.pembayaran_date ??
+                                    dayjs().format("YYYY-MM-DD");
                                 return (
                                     <tr
                                         className={`bg-white border-b dark:border-gray-700 ${

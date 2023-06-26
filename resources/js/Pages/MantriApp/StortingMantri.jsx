@@ -137,7 +137,7 @@ const StortingMantri = (props) => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <NumericFormat
-                                                value={loan.saldo_terakhir}
+                                                value={loan.saldo}
                                                 displayType={"text"}
                                                 thousandSeparator={","}
                                                 prefix={"Rp. "}

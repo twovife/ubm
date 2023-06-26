@@ -235,7 +235,7 @@ class InstalmentController extends Controller
         }
 
         if ($request->isMantriApp) {
-            return redirect()->route('mantriapps.angsur.updateangsur', $loan->id)->with('message', 'Data Berhasil Diubah');
+            return redirect()->route('mantriapps.angsur.storting')->with('message', 'Data Berhasil Diubah');
         }
 
         return redirect()->route($route, ['data' => $arrayFilter])->with('message', 'Data Berhasil Diubah');

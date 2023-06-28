@@ -108,20 +108,26 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                 </div>
                                                 <div className="flex w-full justify-between max-w-md border-b border-black/40 mb-2">
                                                     <div>Nomor KK</div>
-                                                    <a
-                                                        className="text-blue-500 font-black underline decoration-dotted flex items-center"
-                                                        href={route(
-                                                            "unit.customer.historyNasabahByKK",
-                                                            customerData.no_kk
-                                                        )}
-                                                        target="_blank"
-                                                    >
-                                                        <AiFillExclamationCircle className="mr-2" />
+                                                    {customerData.no_kk ? (
+                                                        <a
+                                                            className="text-blue-500 font-black underline decoration-dotted flex items-center"
+                                                            href={route(
+                                                                "unit.customer.historyNasabahByKK",
+                                                                customerData.no_kk
+                                                            )}
+                                                            target="_blank"
+                                                        >
+                                                            <AiFillExclamationCircle className="mr-2" />
 
-                                                        <span>
-                                                            {customerData.no_kk}
-                                                        </span>
-                                                    </a>
+                                                            <span>
+                                                                {
+                                                                    customerData.no_kk
+                                                                }
+                                                            </span>
+                                                        </a>
+                                                    ) : (
+                                                        <span>Not Found</span>
+                                                    )}
                                                 </div>
                                                 <div className="flex w-full justify-between max-w-md border-b border-black/40 mb-2">
                                                     <div>Nama</div>

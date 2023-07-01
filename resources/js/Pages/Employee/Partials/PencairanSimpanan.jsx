@@ -7,13 +7,12 @@ import { useForm } from "@inertiajs/react";
 import React from "react";
 
 const PencairanSimpanan = ({ detailId, detailData, ...props }) => {
-    console.log(props);
     const { data, setData, put, processing, errors, reset } = useForm({
-        pencairan_simpanan_date: detailId.pencairan_simpanan_date,
-        pencairan_simpanan_by: detailId.pencairan_simpanan_by,
-        pencairan_simpanan_w_date: detailId.pencairan_simpanan_w_date,
-        handover_jaminan: detailId.handover_jaminan,
-        handover_jaminan_by: detailId.handover_jaminan_by,
+        pencairan_simpanan_date: detailData.pencairan_simpanan_date,
+        pencairan_simpanan_by: detailData.pencairan_simpanan_by,
+        pencairan_simpanan_w_date: detailData.pencairan_simpanan_w_date,
+        handover_jaminan: detailData.handover_jaminan,
+        handover_jaminan_by: detailData.handover_jaminan_by,
     });
 
     const onInputChangeHandler = (e) => {

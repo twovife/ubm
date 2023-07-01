@@ -1,13 +1,5 @@
 import MobileLayout from "@/Layouts/MobileLayout";
 import React, { useState } from "react";
-import {
-    FcCalendar,
-    FcTodoList,
-    FcDonate,
-    FcUnlock,
-    FcBriefcase,
-} from "react-icons/fc";
-import ModalNik from "./Partials/ModalNik";
 import dayjs from "dayjs";
 import { upperFirst } from "lodash";
 import { NumericFormat } from "react-number-format";
@@ -15,7 +7,7 @@ import { router } from "@inertiajs/react";
 import LinkButton from "@/Components/LinkButton";
 
 const StortingMantri = (props) => {
-    console.log(props.loans);
+    console.log(props);
     function gotoDetailPage(id) {
         router.get(route("mantriapps.angsur.updateangsur", id));
     }
@@ -61,11 +53,14 @@ const StortingMantri = (props) => {
                 </div>
             }
         >
-            <div className="py-3 text-main-800 relative overflow-x-auto shadow-md sm:rounded-lg border mb-3 ">
-                <table className="w-full text-sm text-main-500 dark:text-main-400 text-center">
+            <div className="py-3 text-main-800 overflow-auto relative shadow-md sm:rounded-lg border mb-3 ">
+                <table className="w-full text-xs text-main-500 dark:text-main-400 text-center">
                     <thead className="text-xs text-main-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-main-400">
                         <tr>
-                            <th scope="col" className="px-6 py-3">
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap"
+                            >
                                 Nama Nasabah
                             </th>
                             <th
@@ -78,6 +73,9 @@ const StortingMantri = (props) => {
                                 Saldo
                             </th>
                             <th scope="col" className="px-6 py-3">
+                                Jml Angsuran
+                            </th>
+                            <th scope="col" className="px-6 py-3">
                                 Status
                             </th>
                         </tr>
@@ -88,11 +86,7 @@ const StortingMantri = (props) => {
                                 const lastpay = loan.last_angsuran
                                     ? loan.last_angsuran.pembayaran_date
                                     : null;
-                                console.log([
-                                    lastpay,
-                                    dayjs().format("YYYY-MM-DD"),
-                                    lastpay == dayjs().format("YYYY-MM-DD"),
-                                ]);
+
                                 return (
                                     <tr
                                         className={`border-b dark:border-gray-700 ${
@@ -111,7 +105,7 @@ const StortingMantri = (props) => {
                                                     : gotoDetailPage(loan.id);
                                             }}
                                         >
-                                            <div className="border-b border-gray mb-1">
+                                            <div className="border-b border-gray mb-1 w-full">
                                                 {loan.customer.nama}
                                             </div>
                                             <div>
@@ -121,12 +115,12 @@ const StortingMantri = (props) => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="border-b border-gray mb-1">
+                                            <div className="border-b border-gray mb-1 whitespace-nowrap">
                                                 {dayjs(
                                                     loan.tanggal_drop
                                                 ).format("DD-MM-YYYY")}
                                             </div>
-                                            <div>
+                                            <div className="whitespace-nowrap">
                                                 <NumericFormat
                                                     value={loan.drop}
                                                     displayType={"text"}
@@ -137,11 +131,15 @@ const StortingMantri = (props) => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <NumericFormat
+                                                className="whitespace-nowrap"
                                                 value={loan.saldo}
                                                 displayType={"text"}
                                                 thousandSeparator={","}
                                                 prefix={"Rp. "}
                                             />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {loan.angsuran_count}
                                         </td>
                                         <td className="px-6 py-4">
                                             {upperFirst(loan.status)}

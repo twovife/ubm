@@ -25,6 +25,7 @@ export default function UpdatePasswordForm({ className }) {
     });
 
     const updatePassword = (e) => {
+        console.log("ditutul");
         e.preventDefault();
 
         put(route("password.update"), {
@@ -122,7 +123,9 @@ export default function UpdatePasswordForm({ className }) {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton type="submit" disabled={processing}>
+                        Save
+                    </PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}

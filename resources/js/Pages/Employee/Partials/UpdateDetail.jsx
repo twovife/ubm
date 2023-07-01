@@ -9,8 +9,15 @@ import { useForm } from "@inertiajs/react";
 import React from "react";
 
 const UpdateDetail = ({ onClose, detailData, branch, ...props }) => {
-    const { data, setData, put, processing, errors, reset } =
-        useForm(detailData);
+    const {
+        data,
+        setData,
+        put,
+        processing,
+        errors,
+        reset,
+        recentlySuccessful,
+    } = useForm(detailData);
     const onInputChangeHandler = (e) => {
         setData(e.target.name, e.target.value);
     };
@@ -160,6 +167,86 @@ const UpdateDetail = ({ onClose, detailData, branch, ...props }) => {
                 />
                 <InputError message={errors.janis_jaminan} className="mt-2" />
             </div>
+
+            {detailData.date_resign && (
+                <>
+                    <div className="mb-3">
+                        <span className="underline underline-offset-4">
+                            Resign Information
+                        </span>
+                    </div>
+                    <div className="mb-3">
+                        <InputLabel
+                            htmlFor={"date_resign"}
+                            value={"Tanggal Keluar"}
+                        />
+                        <TextInput
+                            required
+                            onChange={onInputChangeHandler}
+                            className={`mt-1 w-full`}
+                            name={`date_resign`}
+                            disabled={data.date_resign ? false : "disabled"}
+                            id={`date_resign`}
+                            value={data.date_resign}
+                            type={`date`}
+                        />
+                        <InputError
+                            message={errors.date_resign}
+                            className="mt-2"
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <InputLabel
+                            htmlFor={"resign_status"}
+                            value={"Status Keluar"}
+                        />
+                        <SelectList
+                            required
+                            onChange={onInputChangeHandler}
+                            nullValue={true}
+                            options={[
+                                {
+                                    id: 1,
+                                    value: "Resign",
+                                    display: "Resign",
+                                },
+                                {
+                                    id: 2,
+                                    value: "Pecat",
+                                    display: "Pecat",
+                                },
+                            ]}
+                            className={`mt-1 w-full`}
+                            name={`resign_status`}
+                            value={data.resign_status}
+                            id={`resign_status`}
+                        />
+                        <InputError
+                            message={errors.resign_status}
+                            className="mt-2"
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <InputLabel
+                            htmlFor={"resign_reson"}
+                            value={"Alasan Keluar"}
+                        />
+                        <TextInput
+                            required
+                            onChange={onInputChangeHandler}
+                            className={`mt-1 w-full`}
+                            name={`resign_reson`}
+                            value={data.resign_reson}
+                            id={`resign_reson`}
+                        />
+                        <InputError
+                            message={errors.resign_reson}
+                            className="mt-2"
+                        />
+                    </div>
+                </>
+            )}
+
             <div className="w-full mt-auto">
                 <PrimaryButton
                     className="ml-auto"

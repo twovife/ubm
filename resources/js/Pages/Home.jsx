@@ -3,7 +3,6 @@ import { HiCubeTransparent } from "react-icons/hi";
 import { MdVerifiedUser } from "react-icons/md";
 
 const Home = (props) => {
-    console.log(props);
     return (
         <div className="font-roboto px-8 py-3">
             <div className="w-full flex items-center">

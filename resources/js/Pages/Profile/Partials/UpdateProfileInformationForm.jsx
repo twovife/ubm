@@ -11,10 +11,12 @@ export default function UpdateProfileInformation({
     className,
 }) {
     const user = usePage().props.auth.user;
-
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
-            name: user.name,
+            username: user.username,
+            name: user.employee.nama_karyawan,
+            jabatan: user.employee.jabatan,
+            branch: user.employee.branch.unit,
             email: user.email,
         });
 
@@ -38,10 +40,26 @@ export default function UpdateProfileInformation({
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
+                    <InputLabel htmlFor="username" value="Username" />
+
+                    <TextInput
+                        id="username"
+                        disabled
+                        className="mt-1 block w-full"
+                        value={data.username}
+                        required
+                        isFocused
+                        autoComplete="username"
+                    />
+
+                    <InputError className="mt-2" message={errors.name} />
+                </div>
+                <div>
                     <InputLabel htmlFor="name" value="Name" />
 
                     <TextInput
                         id="name"
+                        disabled
                         className="mt-1 block w-full"
                         value={data.name}
                         onChange={(e) => setData("name", e.target.value)}
@@ -52,23 +70,37 @@ export default function UpdateProfileInformation({
 
                     <InputError className="mt-2" message={errors.name} />
                 </div>
-
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="branch" value="Cabang" />
 
                     <TextInput
-                        id="email"
-                        type="email"
+                        id="branch"
+                        disabled
                         className="mt-1 block w-full"
-                        value={data.email}
-                        onChange={(e) => setData("email", e.target.value)}
+                        value={data.branch}
                         required
-                        autoComplete="username"
+                        isFocused
+                        autoComplete="branch"
                     />
 
-                    <InputError className="mt-2" message={errors.email} />
+                    <InputError className="mt-2" message={errors.branch} />
                 </div>
+                <div>
+                    <InputLabel htmlFor="jabatan" value="Jabatan" />
 
+                    <TextInput
+                        id="jabatan"
+                        disabled
+                        className="mt-1 block w-full"
+                        value={data.jabatan}
+                        required
+                        isFocused
+                        autoComplete="jabatan"
+                    />
+
+                    <InputError className="mt-2" message={errors.jabatan} />
+                </div>
+                {/*
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
                         <p className="text-sm mt-2 text-gray-800">
@@ -90,9 +122,9 @@ export default function UpdateProfileInformation({
                             </div>
                         )}
                     </div>
-                )}
+                )} */}
 
-                <div className="flex items-center gap-4">
+                {/* <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Save</PrimaryButton>
 
                     <Transition
@@ -103,7 +135,7 @@ export default function UpdateProfileInformation({
                     >
                         <p className="text-sm text-gray-600">Saved.</p>
                     </Transition>
-                </div>
+                </div> */}
             </form>
         </section>
     );

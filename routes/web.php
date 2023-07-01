@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::prefix('employee')->name('employee.')->middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('employee')->name('employee.')->middleware(['auth', 'verified', 'permission:unit|pusat'])->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('index');
         Route::get('/exemployee', [EmployeeController::class, 'exemployee'])->name('exemployee');
         Route::get('/create', [EmployeeController::class, 'create'])->name('create');
@@ -95,12 +95,6 @@ Route::middleware('auth')->group(function () {
             // Route::get('/{nik}', 'angsur')->name('angsur');
             Route::get('/update/{loan}', 'updateAngsur')->name('updateangsur');
         }));
-    });
-
-    Route::prefix('cabang-utama')->middleware(['auth', 'verified'])->name('cabangutama.')->group(function () {
-        Route::prefix('/customer')->name('customer.')->group(function () {
-            Route::get('/', [CustomerController::class, 'index'])->name('index');
-        });
     });
 
 

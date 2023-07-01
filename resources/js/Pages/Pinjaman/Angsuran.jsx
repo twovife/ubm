@@ -14,7 +14,6 @@ import ModalAngsuran from "./Partials/ModalAngsuran";
 import ModalAlert from "@/Components/ModalAlert";
 
 const Angsuran = ({ ...props }) => {
-    console.log(props.display_tanggal);
     const [showAngsuranModal, setShowAngsuranModal] = useState(false);
     const hideAngsuranModal = (e) => {
         setShowAngsuranModal(false);
@@ -26,16 +25,6 @@ const Angsuran = ({ ...props }) => {
         kelompok: "",
         ...props.dataFilters,
     });
-
-    const [alertModal, setAlertModal] = useState({
-        show: false,
-        textAlert: null,
-        typeAlert: null,
-    });
-
-    const hideAlertModal = (e) => {
-        setAlertModal(false);
-    };
 
     const daysOnWeek = [
         { id: 1, display: "senin", value: "senin" },
@@ -50,7 +39,7 @@ const Angsuran = ({ ...props }) => {
         .sort((a, b) => a.area - b.area)
         .map((emp) => {
             return {
-                id: emp.id,
+                id: emp.area,
                 value: emp.area,
                 display: emp.area,
             };
@@ -82,7 +71,10 @@ const Angsuran = ({ ...props }) => {
 
             if (lastMontHeader == null || lastMontHeader == bulan) {
                 header = (
-                    <th className="w-16 text-center px-6 py-3" key={`x${key}`}>
+                    <th
+                        className="w-16 text-center px-6 py-3"
+                        key={`headerDate${key}`}
+                    >
                         {dayjs(tgl).format("DD/MM")}
                     </th>
                 );
@@ -91,19 +83,19 @@ const Angsuran = ({ ...props }) => {
                     <>
                         <th
                             className="w-16 text-center px-6 py-3"
-                            key={`xa${key}`}
+                            key={`headerTotalAngs${key}`}
                         >
                             TTL Angsuran
                         </th>
                         <th
                             className="w-16 text-center px-6 py-3"
-                            key={`xaa${key}`}
+                            key={`headerSaldoperMonth${key}`}
                         >
                             Saldo
                         </th>
                         <th
                             className="w-16 text-center px-6 py-3"
-                            key={`x${key}`}
+                            key={`headerAfterMonth${key}`}
                         >
                             {dayjs(tgl).format("DD/MM")}
                         </th>
@@ -132,7 +124,7 @@ const Angsuran = ({ ...props }) => {
                                 ? "text-red-500"
                                 : ""
                         }`}
-                        key={`headerdate${key}`}
+                        key={`valueAngsuran${key}`}
                         tanggal_id={dayjs(tgl).format("DD/MM")}
                     >
                         {(() => {
@@ -171,7 +163,7 @@ const Angsuran = ({ ...props }) => {
                 detailTd = (
                     <>
                         <td
-                            key={`xx1${key}`}
+                            key={`valueTotalAngsuran${key}`}
                             className={`text-center whitespace-nowrap text-sm px-6 py-3 bg-yellow-50`}
                         >
                             <NumericFormat
@@ -182,7 +174,7 @@ const Angsuran = ({ ...props }) => {
                             />
                         </td>
                         <td
-                            key={`xx2${key}`}
+                            key={`valueSaldoperMonth${key}`}
                             className={`text-center whitespace-nowrap text-sm px-6 py-3 bg-yellow-50`}
                         >
                             <NumericFormat
@@ -204,7 +196,7 @@ const Angsuran = ({ ...props }) => {
                                     ? "text-red-500"
                                     : ""
                             }`}
-                            key={`x2${key}`}
+                            key={`valueAngsuranAwalBulan${key}`}
                             tanggal_id={dayjs(tgl).format("DD/MM")}
                         >
                             {(() => {
@@ -359,7 +351,7 @@ const Angsuran = ({ ...props }) => {
                                     </thead>
                                     <tbody>
                                         {props.pinjaman.map((loan, key) => (
-                                            <tr key={key}>
+                                            <tr key={`reportangsuran${key}`}>
                                                 <td className="px-6 py-3">
                                                     {key + 1}
                                                 </td>

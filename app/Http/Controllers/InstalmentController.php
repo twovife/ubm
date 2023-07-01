@@ -198,11 +198,21 @@ class InstalmentController extends Controller
                 'pembayaran_date' => 'Data Tanggal Ini Sudah Di isi',
             ]);
         }
+        $saldoAfter =  $loan->saldo - $request->jumlah;
+        $isLunas = $saldoAfter == 0 ? 'lunas' : 'belum lunas';
+        if ($saldoAfter < 0) {
+            if ($isPaid) {
+                throw ValidationException::withMessages([
+                    'jumlah' => 'Data Tanggal Ini Sudah Di isi',
+                ]);
+            }
+        }
+        // dd($loan->saldo - $request->jumlah);
         try {
             DB::beginTransaction();
             $sumAngsuran = Instalment::where('loan_id', $loan->id)->sum('jumlah');
-
             $loan->saldo = $loan->saldo - $request->jumlah;
+            $loan->lunas =  $isLunas;
             $loan->status = $request->status;
             $loan->save();
             $loan->angsuran()->create([

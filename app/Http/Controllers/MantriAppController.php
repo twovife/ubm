@@ -262,6 +262,7 @@ class MantriAppController extends Controller
             ->where('kelompok', auth()->user()->employee->area)
             ->where('tanggal_drop', '<', Carbon::now()->format('Y-m-d'))
             ->with('customer', 'lastAngsuran')
+            ->withCount('angsuran')
             ->get();
         // dd($loans);
         return Inertia::render('MantriApp/StortingMantri', [

@@ -75,7 +75,7 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                         {dataArray &&
                             (dataArray.angsuran.length !== 0 ? (
                                 dataArray.angsuran.map((angs, key) => (
-                                    <tr key={key}>
+                                    <tr key={`angsuran${key}`}>
                                         <td className="px-6 py-3">{key + 1}</td>
                                         <td className="px-6 py-3">
                                             {dayjs(angs.pembayaran_date).format(
@@ -114,6 +114,7 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                                     onChange={onInputChange}
                                     type="date"
                                     className="mt-1 block w-full"
+                                    value={data.pembayaran_date}
                                     max={dayjs().format("YYYY-MM-DD")}
                                     min={
                                         dataArray
@@ -139,10 +140,14 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                                     min={1}
                                     required
                                     onValueChange={onHandleCurencyChange}
-                                    value={data.pinjaman}
+                                    value={data.jumlah}
                                     placeholder={
                                         "Inputkan angka tanpa sparator"
                                     }
+                                />
+                                <InputError
+                                    message={errors.jumlah}
+                                    className="mt-2"
                                 />
                             </div>
                         </div>
@@ -159,7 +164,7 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                                 />
                             </div>
                         </div>
-                        <div className="block mt-4">
+                        <div className="flex w-full mt-4">
                             <label className="flex items-center">
                                 <Checkbox
                                     name="danatitipan"
@@ -167,7 +172,7 @@ const ModalAngsuran = ({ onClose, ...props }) => {
                                     onChange={onInputChange}
                                 />
                                 <span className="ml-2 text-sm text-gray-600">
-                                    Dana Titipan?
+                                    Dana Titipan DO?
                                 </span>
                             </label>
                         </div>

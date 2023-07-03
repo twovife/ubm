@@ -97,7 +97,9 @@ class MantriAppController extends Controller
             return redirect()->route('mantriapps.drop.calonDrop')->withErrors('input gagal silahkan refresh page terlebih dahulu');
         }
 
-
+        if (request()->input('type_drop', false)) {
+            return redirect()->route('mantriapps.drop.detaildrop', $req->id)->with('message', 'Data berhasil ditambahkan');
+        }
         return redirect()->route('mantriapps.drop.calonDrop')->with('message', 'Data berhasil ditambahkan');
     }
 
@@ -293,6 +295,13 @@ class MantriAppController extends Controller
     {
         return Inertia::render('MantriApp/BayarAngsuran', [
             'loans' => $loan->load('customer', 'angsuran', 'mantri'),
+        ]);
+    }
+
+    function detaildrop(Loan $loan)
+    {
+        return Inertia::render('MantriApp/DetailDrop', [
+            'loans' => $loan->load('customer')
         ]);
     }
 }

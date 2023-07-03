@@ -353,7 +353,7 @@ const Angsuran = ({ ...props }) => {
                                         {props.pinjaman.map((loan, key) => (
                                             <tr key={`reportangsuran${key}`}>
                                                 <td className="px-6 py-3">
-                                                    {key + 1}
+                                                    {loan.loan_request_id}
                                                 </td>
                                                 <td className="px-6 py-3">
                                                     {dayjs(

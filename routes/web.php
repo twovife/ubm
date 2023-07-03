@@ -89,6 +89,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/drop', 'mantriDrop')->name('mantriDrop');
             Route::get('/calondrop', 'calonDrop')->name('calonDrop');
             Route::put('/drop/{loanRequest}', 'storeMantriDrop')->name('storeMantriDrop');
+            Route::get('/{loan}', 'detaildrop')->name('detaildrop');
         }));
         Route::prefix('angsur')->name('angsur.')->group((function () {
             Route::get('/storting', 'storting')->name('storting');

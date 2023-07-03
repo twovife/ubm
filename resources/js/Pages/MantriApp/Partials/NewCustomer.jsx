@@ -3,6 +3,7 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import Loading from "@/Components/Loading";
 import PrimaryButton from "@/Components/PrimaryButton";
+import SelectList from "@/Components/SelectList";
 import TextArea from "@/Components/TextArea";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";

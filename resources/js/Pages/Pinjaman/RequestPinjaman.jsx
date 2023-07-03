@@ -247,7 +247,7 @@ const RequestPinjaman = ({ requestDrops, employee, ...props }) => {
                                                         }`}
                                                     >
                                                         <td className="px-6 py-3">
-                                                            {key + 1}
+                                                            {drop.id}
                                                         </td>
                                                         {props.canCreate ? (
                                                             <td

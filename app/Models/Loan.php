@@ -23,6 +23,7 @@ class Loan extends Model
         'status',
         'loan_request_id',
         'tanggal_drop',
+        'loan_notes',
     ];
 
     public function customer()

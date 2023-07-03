@@ -147,6 +147,7 @@ class PinjamanController extends Controller
                 "approved_date" => $request->type_drop ? $request->input('tanggal_drop') : null,
                 "approved_by" => $request->type_drop ? $request->mantri : null,
                 'status' => $request->type_drop ? 'acc' : 'open',
+                'loan_notes' => $request->loan_notes,
             ]);
 
             if (request()->input('type_drop', false)) {
@@ -163,6 +164,7 @@ class PinjamanController extends Controller
                     "tanggal_drop" => $request->tanggal_drop,
                     'lunas' => 'belum lunas',
                     "status" => "normal",
+                    "loan_notes" => $request->loan_notes,
                 ]);
             }
             DB::commit();
@@ -220,7 +222,8 @@ class PinjamanController extends Controller
                     "saldo" => $loanRequest->pinjaman + ($loanRequest->pinjaman * 0.3),
                     "tanggal_drop" => $loanRequest->tanggal_drop,
                     'lunas' => 'belum lunas',
-                    "status" => "normal"
+                    "status" => "normal",
+                    "loan_notes" => $loanRequest->loan_notes,
                 ]);
                 DB::commit();
                 $arrayFilter = [

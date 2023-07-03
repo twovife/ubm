@@ -73,7 +73,7 @@ class MantriAppController extends Controller
 
             ]);
             if (request()->input('type_drop', false)) {
-                $req->loan()->create([
+                $loans_request =  $req->loan()->create([
                     "customer_id" => $customer->id,
                     "branch_id" => $request->unit_id,
                     "mantri" => $request->mantri,
@@ -98,7 +98,7 @@ class MantriAppController extends Controller
         }
 
         if (request()->input('type_drop', false)) {
-            return redirect()->route('mantriapps.drop.detaildrop', $req->id)->with('message', 'Data berhasil ditambahkan');
+            return redirect()->route('mantriapps.drop.detaildrop', $loans_request->id)->with('message', 'Data berhasil ditambahkan');
         }
         return redirect()->route('mantriapps.drop.calonDrop')->with('message', 'Data berhasil ditambahkan');
     }

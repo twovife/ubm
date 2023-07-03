@@ -12,12 +12,21 @@ import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 import ModalAngsuran from "./Partials/ModalAngsuran";
 import ModalAlert from "@/Components/ModalAlert";
+import { AiFillEdit } from "react-icons/ai";
+import InputError from "@/Components/InputError";
+import ModalNotes from "./Partials/ModalNotes";
 
 const Angsuran = ({ ...props }) => {
     const [showAngsuranModal, setShowAngsuranModal] = useState(false);
     const hideAngsuranModal = (e) => {
         setShowAngsuranModal(false);
     };
+
+    const [showModalNotes, setShowModalNotes] = useState(false);
+    const hideModalNotes = (e) => {
+        setShowModalNotes(false);
+    };
+
     const [angsuranLoading, setAngsuranLoading] = useState(false);
     const [oldFilter, setOldFilter] = useState({
         search: "",
@@ -263,6 +272,8 @@ const Angsuran = ({ ...props }) => {
                 mantri={props.mantri}
             />
 
+            <ModalNotes data={showModalNotes} closedModal={hideModalNotes} />
+
             <div className="py-3">
                 <div className="mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -326,7 +337,7 @@ const Angsuran = ({ ...props }) => {
                                                 Nama Nasabah
                                             </th>
                                             <th className="px-6 py-3 whitespace-nowrap">
-                                                NIK
+                                                &nbsp;
                                             </th>
                                             <th className="px-6 py-3">
                                                 Alamat
@@ -369,10 +380,31 @@ const Angsuran = ({ ...props }) => {
                                                         })
                                                     }
                                                 >
-                                                    {loan.customer.nama}
+                                                    <div className="w-full border-b-2 whitespace-nowrap">
+                                                        {loan.customer.nama}
+                                                    </div>
+                                                    <span className="text-main-600 italic">
+                                                        {loan.customer.nik}
+                                                    </span>
                                                 </td>
-                                                <td className="px-6 py-3">
-                                                    {loan.customer.nik}
+                                                <td className="px-6 py-3 whitespace-nowrap ">
+                                                    <div className="flex items-center justify-between gap-3 w-full">
+                                                        <div>
+                                                            {loan.loan_notes}
+                                                        </div>
+                                                        <AiFillEdit
+                                                            onClick={(e) =>
+                                                                setShowModalNotes(
+                                                                    {
+                                                                        show: true,
+                                                                        dataArray:
+                                                                            loan,
+                                                                    }
+                                                                )
+                                                            }
+                                                            className="hover:cursor-pointer text-md"
+                                                        />
+                                                    </div>
                                                 </td>
                                                 <td className="px-6 py-3">
                                                     {loan.customer.alamat}

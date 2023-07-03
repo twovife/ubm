@@ -267,6 +267,7 @@ class MantriAppController extends Controller
             ->where('kelompok', auth()->user()->employee->area)
             ->where('tanggal_drop', '<', Carbon::now()->format('Y-m-d'))
             ->with('customer', 'lastAngsuran')
+            ->where('lunas', 'belum lunas')
             ->withCount('angsuran')
             ->get();
         // dd($loans);

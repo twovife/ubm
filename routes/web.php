@@ -110,6 +110,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [PinjamanController::class, 'pinjaman'])->name('index');
             Route::get('/create', [PinjamanController::class, 'create'])->name('create');
             Route::post('/', [PinjamanController::class, 'store'])->name('store');
+            Route::put('/notes/{loan}', [PinjamanController::class, 'editNotes'])->name('editNotes');
+
             Route::prefix('request')->name('request.')->group(function () {
                 Route::get('/', [PinjamanController::class, 'requestPinjaman'])->name('requestPinjaman');
                 Route::get('/buku-transaksi', [PinjamanController::class, 'bukutransaksi'])->name('bukutransaksi');

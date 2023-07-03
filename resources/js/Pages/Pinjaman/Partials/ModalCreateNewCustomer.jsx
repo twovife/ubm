@@ -22,6 +22,7 @@ const ModalCreateNewCustomer = ({ auth, ...props }) => {
         tanggal_drop: "",
         type_drop: "",
         pinjaman: "",
+        loan_notes: "",
     });
     const onInputChangeHandler = (e) => {
         setData(
@@ -29,6 +30,24 @@ const ModalCreateNewCustomer = ({ auth, ...props }) => {
             e.target.type === "checkbox" ? e.target.checked : e.target.value
         );
     };
+
+    const jenisNasabah = [
+        {
+            id: 1,
+            value: "Nasabah 10L",
+            display: "Nasabah 10L",
+        },
+        {
+            id: 2,
+            value: "Nasabah Beban Pemakaian",
+            display: "Nasabah Beban Pemakaian",
+        },
+        {
+            id: 3,
+            value: "Nasabah CM Lunas",
+            display: "Nasabah CM Lunas",
+        },
+    ];
 
     const onHandleCurencyChange = (value, name) => {
         setData(name, value);
@@ -116,6 +135,22 @@ const ModalCreateNewCustomer = ({ auth, ...props }) => {
                             className="w-full text-xl mt-2"
                         />
                         <InputError message={errors.mantri} className="mt-2" />
+                    </div>
+
+                    <div className="mb-1">
+                        <InputLabel value={"Jenis Nasabah :"} />
+                        <SelectList
+                            name="loan_notes"
+                            options={jenisNasabah}
+                            nullValue={true}
+                            value={data.loan_notes}
+                            onChange={onInputChangeHandler}
+                            className="w-full text-xl mt-2"
+                        />
+                        <InputError
+                            message={errors.loan_notes}
+                            className="mt-2"
+                        />
                     </div>
 
                     <div className="mb-1">

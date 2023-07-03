@@ -151,7 +151,7 @@ const BayarAngsuran = ({ ...props }) => {
                                     onChange={onInputChange}
                                 />
                                 <span className="ml-2 text-sm text-gray-600">
-                                    Dana Titipan?
+                                    Dana Titipan DO?
                                 </span>
                             </label>
                         </div>

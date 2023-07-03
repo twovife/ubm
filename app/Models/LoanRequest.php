@@ -22,6 +22,7 @@ class LoanRequest extends Model
         'approved_date',
         'approved_by',
         'status',
+        'loan_notes',
     ];
 
     public function customer()

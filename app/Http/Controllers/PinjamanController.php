@@ -30,6 +30,12 @@ class PinjamanController extends Controller
         dd($newTittle);
     }
 
+    function editNotes(Loan $loan, Request $request)
+    {
+        $loan->loan_notes = $request->loan_notes;
+        $loan->save();
+        return redirect()->back()->with('message', 'Data berhasil diubah');
+    }
 
     public function pinjaman()
     {

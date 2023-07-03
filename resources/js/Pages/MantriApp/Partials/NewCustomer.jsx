@@ -148,7 +148,7 @@ const NewCustomer = ({ auth, ...props }) => {
                         </div>
                     </div>
 
-                    <div className="mb-1">
+                    {/* <div className="mb-1">
                         <InputLabel value={"Jenis Nasabah :"} />
                         <SelectList
                             name="loan_notes"
@@ -162,7 +162,7 @@ const NewCustomer = ({ auth, ...props }) => {
                             message={errors.loan_notes}
                             className="mt-2"
                         />
-                    </div>
+                    </div> */}
 
                     <div className="mb-1">
                         <InputLabel value={"Jumlah Drop :"} />

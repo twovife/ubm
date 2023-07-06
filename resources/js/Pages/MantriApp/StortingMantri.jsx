@@ -142,7 +142,16 @@ const StortingMantri = (props) => {
                                             {loan.angsuran_count}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {upperFirst(loan.status)}
+                                            <div className="border-b border-gray mb-1 w-full">
+                                                {upperFirst(loan.status)}
+                                            </div>
+                                            <div>
+                                                <small className="font-italic">
+                                                    {upperFirst(
+                                                        loan.loan_notes
+                                                    )}
+                                                </small>
+                                            </div>
                                         </td>
                                     </tr>
                                 );

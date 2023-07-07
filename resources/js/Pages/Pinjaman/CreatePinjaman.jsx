@@ -69,7 +69,7 @@ const CreatePinjaman = ({ customer, ...props }) => {
                 <div className="mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="border p-6 text-main-800">
-                            <div className="flex gap-6">
+                            <div className="lg:flex gap-6">
                                 <div className="flex-1">
                                     <form
                                         onSubmit={onSubmitKtp}
@@ -141,84 +141,90 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                     <h1 className="text-lg font-semibold mb-3">
                                                         Request Berjalan
                                                     </h1>
-                                                    <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
-                                                        <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
-                                                            <tr>
-                                                                <th className="px-6 py-3">
-                                                                    NIK
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Nama
-                                                                    Customer
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Tanggal
-                                                                    Permintaan
-                                                                    Drop
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Hari
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Unit Pemberi
-                                                                    Pinjaman
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Status
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {props.request.map(
-                                                                (req, key) => (
-                                                                    <tr
-                                                                        key={
-                                                                            key
-                                                                        }
-                                                                    >
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req
-                                                                                    .customer
-                                                                                    .nik
+                                                    <div className="w-full overflow-auto">
+                                                        <table className="w-full text-sm text-left text-main-500 dark:text-main-400">
+                                                            <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
+                                                                <tr>
+                                                                    <th className="px-6 py-3">
+                                                                        NIK
+                                                                    </th>
+                                                                    <th className="px-6 py-3">
+                                                                        Nama
+                                                                        Customer
+                                                                    </th>
+                                                                    <th className="px-6 py-3">
+                                                                        Tanggal
+                                                                        Permintaan
+                                                                        Drop
+                                                                    </th>
+                                                                    <th className="px-6 py-3">
+                                                                        Hari
+                                                                    </th>
+                                                                    <th className="px-6 py-3">
+                                                                        Unit
+                                                                        Pemberi
+                                                                        Pinjaman
+                                                                    </th>
+                                                                    <th className="px-6 py-3">
+                                                                        Status
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {props.request.map(
+                                                                    (
+                                                                        req,
+                                                                        key
+                                                                    ) => (
+                                                                        <tr
+                                                                            key={
+                                                                                key
                                                                             }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req
-                                                                                    .customer
-                                                                                    .nama
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req.tanggal_drop
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req.hari
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req
-                                                                                    .branch
-                                                                                    .unit
-                                                                            }
-                                                                        </td>
-                                                                        <td
-                                                                            className={`px-6 py-4`}
                                                                         >
-                                                                            {
-                                                                                req.status
-                                                                            }
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            )}
-                                                        </tbody>
-                                                    </table>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req
+                                                                                        .customer
+                                                                                        .nik
+                                                                                }
+                                                                            </td>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req
+                                                                                        .customer
+                                                                                        .nama
+                                                                                }
+                                                                            </td>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req.tanggal_drop
+                                                                                }
+                                                                            </td>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req.hari
+                                                                                }
+                                                                            </td>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req
+                                                                                        .branch
+                                                                                        .unit
+                                                                                }
+                                                                            </td>
+                                                                            <td
+                                                                                className={`px-6 py-4`}
+                                                                            >
+                                                                                {
+                                                                                    req.status
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                )}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             )}
                                             {props.pinjaman.length !== 0 ? (
@@ -226,106 +232,112 @@ const CreatePinjaman = ({ customer, ...props }) => {
                                                     <h1 className="text-lg font-semibold mb-3">
                                                         History Pinjaman
                                                     </h1>
-                                                    <table className="w-full text-sm text-main-500 dark:text-main-400 text-center">
-                                                        <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
-                                                            <tr>
-                                                                <th className="px-6 py-3">
-                                                                    NIK
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Nama
-                                                                    Customer
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Tanggal
-                                                                    Permintaan
-                                                                    Drop
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Hari
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Unit Pemberi
-                                                                    Pinjaman
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Status
-                                                                </th>
-                                                                <th className="px-6 py-3">
-                                                                    Keterangan
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {props.pinjaman.map(
-                                                                (req, key) => (
-                                                                    <tr
-                                                                        key={
-                                                                            key
-                                                                        }
-                                                                    >
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req
-                                                                                    .customer
-                                                                                    .nik
+                                                    <div className="w-full overflow-auto">
+                                                        <table className="w-full text-sm text-main-500 dark:text-main-400 text-center">
+                                                            <thead className="text-xs text-main-700 uppercase bg-main-100 dark:bg-gray-700 dark:text-main-400">
+                                                                <tr>
+                                                                    <th className="px-6 py-3">
+                                                                        NIK
+                                                                    </th>
+                                                                    <th className="px-6 py-3 whitespace-nowrap">
+                                                                        Nama
+                                                                        Customer
+                                                                    </th>
+                                                                    <th className="px-6 py-3">
+                                                                        Tanggal
+                                                                        Permintaan
+                                                                        Drop
+                                                                    </th>
+                                                                    <th className="px-6 py-3">
+                                                                        Hari
+                                                                    </th>
+                                                                    <th className="px-6 py-3 whitespace-nowrap">
+                                                                        Unit
+                                                                        Pemberi
+                                                                        Pinjaman
+                                                                    </th>
+                                                                    <th className="px-6 py-3">
+                                                                        Status
+                                                                    </th>
+                                                                    <th className="px-6 py-3">
+                                                                        Keterangan
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {props.pinjaman.map(
+                                                                    (
+                                                                        req,
+                                                                        key
+                                                                    ) => (
+                                                                        <tr
+                                                                            key={
+                                                                                key
                                                                             }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req
-                                                                                    .customer
-                                                                                    .nama
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req.tanggal_drop
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req.hari
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4">
-                                                                            {
-                                                                                req
-                                                                                    .branch
-                                                                                    .unit
-                                                                            }
-                                                                        </td>
-                                                                        <td
-                                                                            className={`px-6 py-4 uppercase font-black ${
-                                                                                req.status ==
-                                                                                "normal"
-                                                                                    ? `text-green-500`
-                                                                                    : req.status ==
-                                                                                      "cm"
-                                                                                    ? `text-orange-100`
-                                                                                    : req.status ==
-                                                                                      "mb"
-                                                                                    ? `text-red-500`
-                                                                                    : req.status ==
-                                                                                      "ml"
-                                                                                    ? `text-white bg-red-500`
-                                                                                    : ""
-                                                                            }`}
                                                                         >
-                                                                            {
-                                                                                req.status
-                                                                            }
-                                                                        </td>
-                                                                        <td className="px-6 py-4 uppercase">
-                                                                            {
-                                                                                req.lunas
-                                                                            }
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            )}
-                                                        </tbody>
-                                                    </table>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req
+                                                                                        .customer
+                                                                                        .nik
+                                                                                }
+                                                                            </td>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req
+                                                                                        .customer
+                                                                                        .nama
+                                                                                }
+                                                                            </td>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req.tanggal_drop
+                                                                                }
+                                                                            </td>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req.hari
+                                                                                }
+                                                                            </td>
+                                                                            <td className="px-6 py-4">
+                                                                                {
+                                                                                    req
+                                                                                        .branch
+                                                                                        .unit
+                                                                                }
+                                                                            </td>
+                                                                            <td
+                                                                                className={`px-6 py-4 uppercase font-black ${
+                                                                                    req.status ==
+                                                                                    "normal"
+                                                                                        ? `text-green-500`
+                                                                                        : req.status ==
+                                                                                          "cm"
+                                                                                        ? `text-orange-100`
+                                                                                        : req.status ==
+                                                                                          "mb"
+                                                                                        ? `text-red-500`
+                                                                                        : req.status ==
+                                                                                          "ml"
+                                                                                        ? `text-white bg-red-500`
+                                                                                        : ""
+                                                                                }`}
+                                                                            >
+                                                                                {
+                                                                                    req.status
+                                                                                }
+                                                                            </td>
+                                                                            <td className="px-6 py-4 uppercase">
+                                                                                {
+                                                                                    req.lunas
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                )}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             ) : (
                                                 <div className="text-lg font-semibold">

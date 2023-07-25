@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Customer extends Model
 {
@@ -35,6 +36,36 @@ class Customer extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'unit_id', 'id');
+    }
+
+    public function scopeWhereLower($query, $columnName, $value)
+    {
+        return $query->whereRaw('LOWER(' . DB::getTablePrefix() . $query->getModel()->getTable() . '.' . $columnName . ') = ?', [strtolower($value)]);
+    }
+
+    public function scopeOrWhereLower($query, $columnName, $value)
+    {
+        return $query->orWhereRaw('LOWER(' . DB::getTablePrefix() . $query->getModel()->getTable() . '.' . $columnName . ') = ?', [strtolower($value)]);
+    }
+
+    public function scopeLikeLower($query, $columnName, $value)
+    {
+        return $query->whereRaw('LOWER(' . DB::getTablePrefix() . $query->getModel()->getTable() . '.' . $columnName . ') LIKE ?', ['%' . strtolower($value) . '%']);
+    }
+
+    public function scopeOrLikeLower($query, $columnName, $value)
+    {
+        return $query->orWhereRaw('LOWER(' . DB::getTablePrefix() . $query->getModel()->getTable() . '.' . $columnName . ') LIKE ?', ['%' . strtolower($value) . '%']);
+    }
+
+    public function scopeWhereDateBetween($query, $columnName, $value)
+    {
+        $startfrom = $value['startfrom'] ?? false;
+        $thru = $value['thru'] ?? false;
+
+        return $query
+            ->when($startfrom, fn ($que) => $que->whereDate(DB::getTablePrefix() . $query->getModel()->getTable() . '.' . $columnName, '>=', $startfrom))
+            ->when($thru, fn ($que) => $que->whereDate(DB::getTablePrefix() . $query->getModel()->getTable() . '.' . $columnName, '<=', $thru));
     }
 
     public function scopeWithFilter($query)

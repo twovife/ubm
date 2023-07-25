@@ -6,6 +6,7 @@ use App\Helpers\AppHelper;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class LoanRequest extends Model
 {
@@ -52,6 +53,16 @@ class LoanRequest extends Model
     public function getmantri()
     {
         return $this->belongsTo(Employee::class, 'mantri', 'id');
+    }
+
+    public function scopeWhereDateBetween($query, $columnName, $value)
+    {
+        $startfrom = $value['startfrom'] ?? false;
+        $thru = $value['thru'] ?? false;
+
+        return $query
+            ->when($startfrom, fn ($que) => $que->whereDate(DB::getTablePrefix() . $query->getModel()->getTable() . '.' . $columnName, '>=', $startfrom))
+            ->when($thru, fn ($que) => $que->whereDate(DB::getTablePrefix() . $query->getModel()->getTable() . '.' . $columnName, '<=', $thru));
     }
 
     public function scopeWithFilter($query)

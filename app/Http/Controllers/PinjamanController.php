@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Helpers\AppHelper;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Models\Instalment;
 use App\Models\Loan;
 use App\Models\LoanRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -44,62 +46,117 @@ class PinjamanController extends Controller
 
     public function requestPinjaman()
     {
-        $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'mantri')
-            ->withFilter()
-            ->whereHas('customer', function ($q) {
-                $q->withFilter();
-            })
+        // $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'mantri')
+        //     ->withFilter()
+        //     ->whereHas('customer', function ($q) {
+        //         $q->withFilter();
+        //     })
+        //     ->doesntHave('loan')
+        //     ->whereNot('status', 'tolak')
+        //     ->orderBy('kelompok', 'asc')
+        //     ->orderBy('tanggal_drop', 'asc')
+        //     ->paginate(10)
+        //     ->withQueryString();
+
+        // $kelompok = Employee::when(auth()->user()->hasPermissionTo('unit'), function ($q) {
+        //     $q->where('branch_id', auth()->user()->employee->branch_id);
+        // })->where('area', '!=', "0")->distinct('area')->get('area');
+
+        // $arrayFilter = [
+        //     "hari" => request()->data['hari'] ?? AppHelper::dateName(Carbon::now()->format('Y-m-d')),
+        //     "kelompok" => request()->data['kelompok'] ?? "1",
+        //     "search" => ""
+        // ];
+
+        // return Inertia::render('Pinjaman/RequestPinjaman', [
+        //     'requestDrops' => $requestDrop,
+        //     'employee' => $kelompok,
+        //     'dataFilters' => $arrayFilter,
+        //     'canCreate' => true
+        // ]);
+
+        //
+        $branch = auth()->user()->employee->branch_id;
+        $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'getmantri', 'mantri')
+            ->where('branch_id', $branch)
             ->doesntHave('loan')
             ->whereNot('status', 'tolak')
+            ->withFilter()
             ->orderBy('kelompok', 'asc')
             ->orderBy('tanggal_drop', 'asc')
             ->paginate(10)
             ->withQueryString();
 
-        $kelompok = Employee::when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-            $q->where('branch_id', auth()->user()->employee->branch_id);
-        })->where('area', '!=', "0")->distinct('area')->get('area');
+        $data['data'] = collect($requestDrop->items())->map(fn ($que) => [
+            'id' => $que->id,
+            'customer_nama' => $que->customer->nama,
+            'customer_nik' => $que->customer->nik,
+            'customer_alamat' => $que->customer->alamat,
+            'kelompok' => $que->kelompok,
+            'hari' => $que->hari,
+            'pinjaman' => $que->pinjaman,
+            'approved_date' => $que->approved_date ?? "",
+            'tanggal_drop' => $que->tanggal_drop,
+            'approved_by' => $que->approvedby->nama_karyawan ?? "",
+            'status' => $que->status ?? "",
+            'mantri' => $que->getmantri->nama_karyawan
+        ]);
 
-        $arrayFilter = [
-            "hari" => request()->data['hari'] ?? AppHelper::dateName(Carbon::now()->format('Y-m-d')),
-            "kelompok" => request()->data['kelompok'] ?? "1",
-            "search" => ""
+        $data['link'] = [
+            'first_page' => $requestDrop->url(1),
+            'last' => $requestDrop->url($requestDrop->lastPage()),
+            'previous_page' => $requestDrop->previousPageUrl(),
+            'next_page' => $requestDrop->nextPageUrl(),
+            'total_data' => $requestDrop->total()
         ];
 
+
         return Inertia::render('Pinjaman/RequestPinjaman', [
-            'requestDrops' => $requestDrop,
-            'employee' => $kelompok,
-            'dataFilters' => $arrayFilter,
+            'datadrops' => $data,
+            'filters' => request()->all(),
             'canCreate' => true
         ]);
     }
 
     public function bukutransaksi()
     {
-        $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'mantri')
+
+        $branch = auth()->user()->employee->branch_id;
+        $requestDrop = LoanRequest::with('customer', 'branch', 'approvedby', 'getmantri')
+            ->where('branch_id', $branch)
             ->withFilter()
-            ->whereHas('customer', function ($q) {
-                $q->withFilter();
-            })
             ->orderBy('kelompok', 'asc')
             ->orderBy('tanggal_drop', 'asc')
             ->paginate(10)
             ->withQueryString();
 
-        $kelompok = Employee::when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-            $q->where('branch_id', auth()->user()->employee->branch_id);
-        })->where('area', '!=', "0")->distinct('area')->get('area');
+        $data['data'] = collect($requestDrop->items())->map(fn ($que) => [
+            'id' => $que->id,
+            'customer_nama' => $que->customer->nama,
+            'customer_nik' => $que->customer->nik,
+            'customer_alamat' => $que->customer->alamat,
+            'kelompok' => $que->kelompok,
+            'hari' => $que->hari,
+            'pinjaman' => $que->pinjaman,
+            'approved_date' => $que->approved_date ?? "",
+            'tanggal_drop' => $que->tanggal_drop,
+            'approved_by' => $que->approvedby->nama_karyawan ?? "",
+            'status' => $que->status ?? "",
+            'mantri' => $que->getmantri->nama_karyawan
+        ]);
 
-        $arrayFilter = [
-            "hari" => request()->data['hari'] ?? AppHelper::dateName(Carbon::now()->format('Y-m-d')),
-            "kelompok" => request()->data['kelompok'] ?? "1",
-            "search" => ""
+        $data['link'] = [
+            'first_page' => $requestDrop->url(1),
+            'last' => $requestDrop->url($requestDrop->lastPage()),
+            'previous_page' => $requestDrop->previousPageUrl(),
+            'next_page' => $requestDrop->nextPageUrl(),
+            'total_data' => $requestDrop->total()
         ];
 
+
         return Inertia::render('Pinjaman/RequestPinjaman', [
-            'requestDrops' => $requestDrop,
-            'employee' => $kelompok,
-            'dataFilters' => $arrayFilter,
+            'datadrops' => $data,
+            'filters' => request()->all(),
             'canCreate' => false
         ]);
     }
@@ -237,10 +294,85 @@ class PinjamanController extends Controller
                     "kelompok" => $loanRequest->kelompok,
                 ];
                 return redirect()->route('unit.pinjaman.angsuran.index', ['data' => $arrayFilter])->with('message', 'Data berhasil ditambahkan');
-            } catch (\Throwable $th) {
+            } catch (\Exception $e) {
                 DB::rollBack();
                 return redirect()->route('unit.pinjaman.request.requestPinjaman')->withErrors('input gagal silahkan refresh page terlebih dahulu');
             }
         }
+    }
+
+    public function edit(LoanRequest $loanRequest)
+    {
+        $branch = auth()->user()->employee->branch_id;
+        return Inertia::render('Pinjaman/EditKeterangan', [
+            'loanrequest' => $loanRequest->load('customer', 'branch', 'loan.lastAngsuran', 'loan.angsuran', 'approvedby', 'getmantri'),
+            'employees' => Employee::where('jabatan', 'mantri')->where('branch_id', $branch)->whereNull('date_resign')->orderBy('area', 'asc')->get(),
+        ]);
+    }
+
+    public function update(LoanRequest $loanRequest, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $area = Employee::find($request->mantri);
+            $loan = Loan::where('loan_request_id', $loanRequest->id)->first();
+            $LastAngsuran = Instalment::where('loan_id', $loan->id)->latest()->first();
+
+            $loanRequest->mantri = $request->mantri;
+            $loanRequest->tanggal_drop = $request->tanggal_drop;
+            $loanRequest->pinjaman = $request->pinjaman;
+            $LastAngsuran->jumlah = $request->jumlah;
+            $LastAngsuran->danatitipan = $request->danatitipan;
+            $aftersum = $request->pinjaman * 1.3;
+
+
+            if ($loanRequest->isDirty('pinjaman')) {
+                $loan->drop = $request->pinjaman;
+                $loan->pinjaman = $aftersum;
+                $loan->saldo = $aftersum;
+            }
+
+            if ($loanRequest->isDirty('mantri')) {
+                $loanRequest->kelompok = $area->area;
+                $loan->kelompok = $area->area;
+                $loan->mantri = $area->id;
+            }
+
+            if ($loanRequest->isDirty('tanggal_drop')) {
+                $loan->tanggal_drop = $request->tanggal_drop;
+            }
+
+            if ($LastAngsuran->isDirty('jumlah')) {
+                $range = $LastAngsuran->jumlah - $request->jumlah;
+                $LastAngsuran->total_angsuran = $LastAngsuran->total_angsuran - $range;
+                $LastAngsuran->saldo_terakhir = $LastAngsuran->saldo_terakhir + $range;
+                $loan->saldo = $loan->saldo + $range;
+            }
+
+            $loanRequest->save();
+            $loan->save();
+            $LastAngsuran->save();
+            DB::commit();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('Terjadi Kesalahan Saat Mengubah Data');
+        }
+
+        return redirect()->back()->with('message', 'Data Berhasil Diubah');
+    }
+
+    public function destroy(LoanRequest $loanRequest)
+    {
+        try {
+            DB::beginTransaction();
+            $loan = Loan::where('loan_request_id', $loanRequest->id)->first();
+            Instalment::where('loan_id', $loan->id)->delete();
+            $loan->delete();
+            $loanRequest->delete();
+            DB::commit();
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors('Terjadi Kesalahan Saat Mengubah Data');
+        }
+
+        return redirect()->route('unit.pinjaman.request.bukutransaksi')->with('message', 'Data Berhasil Diubah');
     }
 }

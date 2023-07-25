@@ -18,7 +18,7 @@ const EditKeterangan = ({ loanrequest, ...props }) => {
         mantri: loanrequest.mantri,
         tanggal_drop: loanrequest.tanggal_drop,
         pinjaman: loanrequest.pinjaman,
-        pembayaran_date: loanrequest.loan.last_angsuran.pembayaran_date,
+        pembayaran_date: loanrequest.loan.last_angsuran.pembayaran_date ?? "",
         jumlah: loanrequest.loan.last_angsuran.jumlah,
         danatitipan: loanrequest.loan.last_angsuran.danatitipan,
     });
@@ -450,9 +450,11 @@ const EditKeterangan = ({ loanrequest, ...props }) => {
                                         (item, index) => (
                                             <tr>
                                                 <th className="px-3 py-3">
-                                                    {dayjs(
-                                                        item.pembayaran_date
-                                                    ).format("DD-MM")}
+                                                    {item.pembayaran_date
+                                                        ? dayjs(
+                                                              item.pembayaran_date
+                                                          ).format("DD-MM")
+                                                        : ""}
                                                 </th>
                                                 <td className="px-3 py-3 whitespace-nowrap">
                                                     <NumericFormat

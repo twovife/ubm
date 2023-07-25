@@ -43,6 +43,8 @@ class Customer extends Model
             $searchTerm = request()->data['search'];
             $q->where('nik', request()->data['search'])->orWhere('no_kk', $searchTerm)
                 ->orWhereRaw('LOWER(`nama`) LIKE ? ', ['%' . strtolower($searchTerm) . '%']);
-        });
+        })
+            ->when(request()->input('nama', []), fn ($que) => $que->likeLower('nama', request()->input('nama')))
+            ->when(request()->input('nik', []), fn ($que) => $que->whereLower('nik', request()->input('nik')));;
     }
 }

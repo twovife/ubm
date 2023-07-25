@@ -169,6 +169,24 @@ export default function Authenticated({ auth, header, children }) {
                             />
 
                             <SideBarDropDown
+                                onClick={() => onClickDropDownHandler(4)}
+                                title={"Buku Transaksi Drop"}
+                                active={route().current("unit.customer.*")}
+                                colapse={colapse}
+                                dropdownId={4}
+                                lists={[
+                                    {
+                                        id: "1",
+                                        href: route("unit.customer.index"),
+                                        name: "Data Customer",
+                                        active: route().current(
+                                            "unit.customer.*"
+                                        ),
+                                    },
+                                ]}
+                            />
+
+                            <SideBarDropDown
                                 onClick={() => onClickDropDownHandler(3)}
                                 title={"Buku Angsuran"}
                                 active={route().current(

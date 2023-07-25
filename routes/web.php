@@ -105,6 +105,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/',  'store')->name('store');
             Route::get('/historykknasabah/{no_kk}',  'historyNasabahByKK')->name('historyNasabahByKK');
+            Route::get('/edit/{customer}',  'edit')->name('edit');
+            Route::put('/edit/{customer}',  'update')->name('update');
         });
         Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
             Route::get('/', [PinjamanController::class, 'pinjaman'])->name('index');
@@ -116,6 +118,9 @@ Route::middleware('auth')->group(function () {
                 Route::get('/', [PinjamanController::class, 'requestPinjaman'])->name('requestPinjaman');
                 Route::get('/buku-transaksi', [PinjamanController::class, 'bukutransaksi'])->name('bukutransaksi');
                 Route::post('/{loanRequest}', [PinjamanController::class, 'actions'])->name('actions');
+                Route::get('/edit/{loanRequest}', [PinjamanController::class, 'edit'])->name('edit');
+                Route::put('/update/{loanRequest}', [PinjamanController::class, 'update'])->name('update');
+                Route::delete('/{loanRequest}', [PinjamanController::class, 'destroy'])->name('destroy');
             });
             Route::prefix('angsuran')->name('angsuran.')->group(function () {
                 Route::get('/', [InstalmentController::class, 'index'])->name('index');

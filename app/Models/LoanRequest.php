@@ -49,17 +49,26 @@ class LoanRequest extends Model
     {
         return $this->belongsTo(Employee::class, 'mantri', 'id');
     }
+    public function getmantri()
+    {
+        return $this->belongsTo(Employee::class, 'mantri', 'id');
+    }
 
     public function scopeWithFilter($query)
     {
-        return $query->when(request()->input('data.kelompok', []), function ($q) {
-            $q->where('kelompok', request()->data['kelompok']);
-        }, function ($q) {
-            $q->where('kelompok', 1);
-        })->when(request()->input('data.hari', []), function ($q) {
-            $q->where('hari', request()->data['hari']);
-        }, function ($q) {
-            $q->where('hari', AppHelper::dateName(Carbon::now()->format('Y-m-d')));
-        });
+        return $query
+            ->when(request()->input('id', []), fn ($que) => $que->where('id', request()->input('id')))
+            ->when(request()->input('kelompok', []), fn ($que) => $que->where('kelompok', request()->input('kelompok')))
+            ->when(request()->input('hari', []), fn ($que) => $que->where('hari', request()->input('hari')))
+            ->when(request()->input('status', []), fn ($que) => $que->where('status', request()->input('status')));
+        // return $query->when(request()->input('data.kelompok', []), function ($q) {
+        //     $q->where('kelompok', request()->data['kelompok']);
+        // }, function ($q) {
+        //     $q->where('kelompok', 1);
+        // })->when(request()->input('data.hari', []), function ($q) {
+        //     $q->where('hari', request()->data['hari']);
+        // }, function ($q) {
+        //     $q->where('hari', AppHelper::dateName(Carbon::now()->format('Y-m-d')));
+        // });
     }
 }

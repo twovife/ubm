@@ -7,7 +7,9 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Branch;
 use App\Models\Employee;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -20,10 +22,31 @@ class CustomerController extends Controller
     public function index()
     {
         $branch = auth()->user()->employee->branch_id;
+        $customer = Customer::with('branch', 'employee')->where('unit_id', $branch)->withFilter()->paginate(20)->withQueryString();
+
+        $data['data'] = collect($customer->items())->map(fn ($que) => [
+            'id' => $que->id,
+            'nama' => $que->nama,
+            'nik' => $que->nik,
+            'no_kk' => $que->no_kk,
+            'alamat' => $que->alamat,
+            'unit' => $que->branch->unit,
+            'mantri' => $que->employee->nama_karyawan,
+            'area' => $que->area,
+        ]);
+
+        $data['link'] = [
+            'first_page' => $customer->url(1),
+            'last' => $customer->url($customer->lastPage()),
+            'previous_page' => $customer->previousPageUrl(),
+            'next_page' => $customer->nextPageUrl(),
+            'total_data' => $customer->total()
+        ];
+
+        // dd($data);
         return Inertia::render('Customer/CustomerGlobal', [
-            'customers' => Customer::with('branch')->paginate(20),
-            'branch' => Branch::find($branch),
-            'employees' => Employee::where('branch_id', $branch)->get()
+            'customers' => $data,
+            'filters' => request()->all()
         ]);
     }
 
@@ -78,7 +101,9 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        return Inertia::render('Customer/EditCustomer', [
+            'customer' => $customer,
+        ]);
     }
 
     /**
@@ -90,7 +115,25 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        //
+        $request->validate([
+            'nama' => ['required'],
+            'nik' => ['required'],
+            'alamat' => ['required'],
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $customer->nama = $request->nama;
+            $customer->nik = $request->nik;
+            $customer->no_kk = $request->no_kk;
+            $customer->alamat = $request->alamat;
+            $customer->save();
+            DB::commit();
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors('Data gagal diubah');
+        }
+
+        return redirect()->route('unit.customer.index')->with('message', 'Data berhasil diubah');
     }
 
     /**

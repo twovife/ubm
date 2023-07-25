@@ -71,7 +71,7 @@ class LoanRequest extends Model
             ->when(request()->input('id', []), fn ($que) => $que->where('id', request()->input('id')))
             ->when(request()->input('kelompok', []), fn ($que) => $que->where('kelompok', request()->input('kelompok')))
             ->when(request()->input('hari', []), fn ($que) => $que->where('hari', request()->input('hari')))
-            ->when(request()->input('status', []), fn ($que) => $que->where('status', request()->input('status')));
+            ->when(request()->input('status', []), fn ($que) => $que->where('status', request()->input('status')))
             ->when(request()->input('tanggal_drop', []), fn ($que) => $que->where('tanggal_drop', request()->input('tanggal_drop')));
         // return $query->when(request()->input('data.kelompok', []), function ($q) {
         //     $q->where('kelompok', request()->data['kelompok']);

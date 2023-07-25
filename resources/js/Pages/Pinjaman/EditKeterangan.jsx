@@ -18,9 +18,21 @@ const EditKeterangan = ({ loanrequest, ...props }) => {
         mantri: loanrequest.mantri,
         tanggal_drop: loanrequest.tanggal_drop,
         pinjaman: loanrequest.pinjaman,
-        pembayaran_date: loanrequest.loan.last_angsuran.pembayaran_date ?? "",
-        jumlah: loanrequest.loan.last_angsuran.jumlah,
-        danatitipan: loanrequest.loan.last_angsuran.danatitipan,
+        pembayaran_date: loanrequest.loan
+            ? loanrequest.loan.last_angsuran
+                ? loanrequest.loan.last_angsuran.pembayaran_date
+                : ""
+            : "",
+        jumlah: loanrequest.loan
+            ? loanrequest.loan.last_angsuran
+                ? loanrequest.loan.last_angsuran.jumlah
+                : ""
+            : "",
+        danatitipan: loanrequest.loan
+            ? loanrequest.loan.last_angsuran
+                ? loanrequest.loan.last_angsuran.danatitipan
+                : ""
+            : "",
     });
 
     const setValue = (e) => {
@@ -168,127 +180,143 @@ const EditKeterangan = ({ loanrequest, ...props }) => {
                                 </ul>
                             </div>
                         </form>
+
                         <form
                             onSubmit={onSubmitRevisi}
                             className="col-span-1 border p-4 shadow rounded relative"
                         >
-                            {/* {loanrequest.loan.last_angsuran && (
-                                <div className="w-full h-full absolute bg-white/20 top-0 left-0 flex justify-center items-center">
-                                    <h1 className="text-3xl">
-                                        Data Tidak Dapat Diubah
+                            {loanrequest.loan && (
+                                <>
+                                    {/* {loanrequest.loan.last_angsuran && (
+                                        <div className="w-full h-full absolute bg-white/20 top-0 left-0 flex justify-center items-center">
+                                            <h1 className="text-3xl">
+                                                Data Tidak Dapat Diubah
+                                            </h1>
+                                        </div>
+                                    )} */}
+                                    <h1 className="mb-3 font-semibold">
+                                        Revisi Drop
                                     </h1>
-                                </div>
-                            )} */}
-                            <h1 className="mb-3 font-semibold">Revisi Drop</h1>
-                            <div className="mb-3">
-                                <InputLabel
-                                    value={"Tanggal Drop"}
-                                    className="mb-1"
-                                />
-                                <CurrencyInput
-                                    name="pinjaman"
-                                    id="pinjaman"
-                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full mt-2`}
-                                    allowDecimals={false}
-                                    prefix="Rp. "
-                                    min={1}
-                                    required
-                                    onValueChange={onHandleCurencyChange}
-                                    value={data.pinjaman}
-                                    placeholder={
-                                        "Inputkan angka tanpa sparator"
-                                    }
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <PrimaryButton
-                                    type="submit"
-                                    title={"Update"}
-                                    className="ml-auto"
-                                />
-                            </div>
-                            <div className="mb-3 text-sm text-gray-400 italic">
-                                NB:
-                                <ul className="list-disc px-4">
-                                    <li>
-                                        Merubah DROP akan mempengaruhi Besar
-                                        Pinjaman.
-                                    </li>
-                                    <li>
-                                        Drop Hanya dapat diubah ketika pinjaman
-                                        belum pernah diangsur.
-                                    </li>
-                                </ul>
-                            </div>
+                                    <div className="mb-3">
+                                        <InputLabel
+                                            value={"Tanggal Drop"}
+                                            className="mb-1"
+                                        />
+                                        <CurrencyInput
+                                            name="pinjaman"
+                                            id="pinjaman"
+                                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full mt-2`}
+                                            allowDecimals={false}
+                                            prefix="Rp. "
+                                            min={1}
+                                            required
+                                            onValueChange={
+                                                onHandleCurencyChange
+                                            }
+                                            value={data.pinjaman}
+                                            placeholder={
+                                                "Inputkan angka tanpa sparator"
+                                            }
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <PrimaryButton
+                                            type="submit"
+                                            title={"Update"}
+                                            className="ml-auto"
+                                        />
+                                    </div>
+                                    <div className="mb-3 text-sm text-gray-400 italic">
+                                        NB:
+                                        <ul className="list-disc px-4">
+                                            <li>
+                                                Merubah DROP akan mempengaruhi
+                                                Besar Pinjaman.
+                                            </li>
+                                            <li>
+                                                Drop Hanya dapat diubah ketika
+                                                pinjaman belum pernah diangsur.
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </>
+                            )}
                         </form>
                         <form
                             onSubmit={onSubmitRevisi}
                             className="col-span-1 border p-4 shadow rounded"
                         >
-                            <h1 className="mb-3 font-semibold">
-                                Revisi Angsuran
-                            </h1>
-                            <div className="mb-3">
-                                <InputLabel
-                                    value={"Tanggal Angsuran"}
-                                    className="mb-1"
-                                />
-                                <TextInput
-                                    name="tanggal_drop"
-                                    type="date"
-                                    disabled
-                                    className="w-full"
-                                    value={data.pembayaran_date}
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <InputLabel
-                                    value={"Tanggal Drop"}
-                                    className="mb-1"
-                                />
-                                <CurrencyInput
-                                    name="jumlah"
-                                    id="jumlah"
-                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full mt-2`}
-                                    allowDecimals={false}
-                                    prefix="Rp. "
-                                    min={1}
-                                    required
-                                    onValueChange={onHandleCurencyChange}
-                                    value={data.jumlah}
-                                    placeholder={
-                                        "Inputkan angka tanpa sparator"
-                                    }
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label className="flex items-center">
-                                    <Checkbox
-                                        name="danatitipan"
-                                        value={data.danatitipan}
-                                        onChange={setValue}
-                                    />
-                                    <span className="ml-2 text-sm text-gray-600">
-                                        Dana Titipan DO?
-                                    </span>
-                                </label>
-                            </div>
-                            <div className="mb-3">
-                                <PrimaryButton
-                                    title={"Update"}
-                                    type="submit"
-                                    className="ml-auto"
-                                />
-                            </div>
-                            <div className="mb-3 text-sm text-gray-400 italic">
-                                NB:
-                                <ul className="list-disc px-4">
-                                    <li>
-                                        Hanya Angsuran Terakhir yang dapat di
-                                        edit.
-                                    </li>
-                                </ul>
-                            </div>
+                            {loanrequest.loan &&
+                                loanrequest.loan.last_angsuran && (
+                                    <>
+                                        <h1 className="mb-3 font-semibold">
+                                            Revisi Angsuran
+                                        </h1>
+                                        <div className="mb-3">
+                                            <InputLabel
+                                                value={"Tanggal Angsuran"}
+                                                className="mb-1"
+                                            />
+                                            <TextInput
+                                                name="tanggal_drop"
+                                                type="date"
+                                                disabled
+                                                className="w-full"
+                                                value={data.pembayaran_date}
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <InputLabel
+                                                value={"Tanggal Drop"}
+                                                className="mb-1"
+                                            />
+                                            <CurrencyInput
+                                                name="jumlah"
+                                                id="jumlah"
+                                                className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full mt-2`}
+                                                allowDecimals={false}
+                                                prefix="Rp. "
+                                                min={1}
+                                                required
+                                                onValueChange={
+                                                    onHandleCurencyChange
+                                                }
+                                                value={data.jumlah}
+                                                placeholder={
+                                                    "Inputkan angka tanpa sparator"
+                                                }
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="flex items-center">
+                                                <Checkbox
+                                                    name="danatitipan"
+                                                    value={data.danatitipan}
+                                                    onChange={setValue}
+                                                />
+                                                <span className="ml-2 text-sm text-gray-600">
+                                                    Dana Titipan DO?
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div className="mb-3">
+                                            <PrimaryButton
+                                                title={"Update"}
+                                                type="submit"
+                                                className="ml-auto"
+                                            />
+                                        </div>
+                                        <div className="mb-3 text-sm text-gray-400 italic">
+                                            NB:
+                                            <ul className="list-disc px-4">
+                                                <li>
+                                                    Hanya Angsuran Terakhir yang
+                                                    dapat di edit.
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </>
+                                )}
                         </form>
                     </div>
                     <div className="grid lg:grid-cols-3 gap-3">
@@ -367,65 +395,72 @@ const EditKeterangan = ({ loanrequest, ...props }) => {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <th className="px-6 py-3">
-                                            Tanggal Drop
-                                        </th>
-                                        <td className="px-6 py-3">
-                                            {loanrequest.loan.tanggal_drop}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th className="px-6 py-3">
-                                            Hari / Kelompok
-                                        </th>
-                                        <td className="px-6 py-3">
-                                            <div>{`${loanrequest.loan.hari} / ${loanrequest.loan.kelompok} `}</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th className="px-6 py-3">
-                                            Jumlah Permintaan Drop
-                                        </th>
-                                        <td className="px-6 py-3 whitespace-nowrap">
-                                            <NumericFormat
-                                                value={loanrequest.loan.drop}
-                                                displayType={"text"}
-                                                thousandSeparator={","}
-                                                prefix={"Rp. "}
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th className="px-6 py-3">
-                                            Jumlah Pinjaman
-                                        </th>
-                                        <td className="px-6 py-3 whitespace-nowrap">
-                                            <NumericFormat
-                                                value={
-                                                    loanrequest.loan.pinjaman
-                                                }
-                                                displayType={"text"}
-                                                thousandSeparator={","}
-                                                prefix={"Rp. "}
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th className="px-6 py-3">
-                                            Saldo Pinjaman
-                                        </th>
-                                        <td className="px-6 py-3 whitespace-nowrap">
-                                            <NumericFormat
-                                                value={loanrequest.loan.saldo}
-                                                displayType={"text"}
-                                                thousandSeparator={","}
-                                                prefix={"Rp. "}
-                                            />
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                {loanrequest.loan && (
+                                    <tbody>
+                                        <tr>
+                                            <th className="px-6 py-3">
+                                                Tanggal Drop
+                                            </th>
+                                            <td className="px-6 py-3">
+                                                {loanrequest.loan.tanggal_drop}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th className="px-6 py-3">
+                                                Hari / Kelompok
+                                            </th>
+                                            <td className="px-6 py-3">
+                                                <div>{`${loanrequest.loan.hari} / ${loanrequest.loan.kelompok} `}</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th className="px-6 py-3">
+                                                Jumlah Permintaan Drop
+                                            </th>
+                                            <td className="px-6 py-3 whitespace-nowrap">
+                                                <NumericFormat
+                                                    value={
+                                                        loanrequest.loan.drop
+                                                    }
+                                                    displayType={"text"}
+                                                    thousandSeparator={","}
+                                                    prefix={"Rp. "}
+                                                />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th className="px-6 py-3">
+                                                Jumlah Pinjaman
+                                            </th>
+                                            <td className="px-6 py-3 whitespace-nowrap">
+                                                <NumericFormat
+                                                    value={
+                                                        loanrequest.loan
+                                                            .pinjaman
+                                                    }
+                                                    displayType={"text"}
+                                                    thousandSeparator={","}
+                                                    prefix={"Rp. "}
+                                                />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th className="px-6 py-3">
+                                                Saldo Pinjaman
+                                            </th>
+                                            <td className="px-6 py-3 whitespace-nowrap">
+                                                <NumericFormat
+                                                    value={
+                                                        loanrequest.loan.saldo
+                                                    }
+                                                    displayType={"text"}
+                                                    thousandSeparator={","}
+                                                    prefix={"Rp. "}
+                                                />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                )}
                             </table>
                         </div>
                         <div className="col-span-1 border p-4 shadow rounded">
@@ -445,49 +480,64 @@ const EditKeterangan = ({ loanrequest, ...props }) => {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {loanrequest.loan.angsuran.map(
-                                        (item, index) => (
-                                            <tr>
-                                                <th className="px-3 py-3">
-                                                    {item.pembayaran_date
-                                                        ? dayjs(
-                                                              item.pembayaran_date
-                                                          ).format("DD-MM")
-                                                        : ""}
-                                                </th>
-                                                <td className="px-3 py-3 whitespace-nowrap">
-                                                    <NumericFormat
-                                                        value={item.jumlah}
-                                                        displayType={"text"}
-                                                        thousandSeparator={","}
-                                                        prefix={"Rp. "}
-                                                    />
-                                                </td>
-                                                <td className="px-3 py-3 whitespace-nowrap">
-                                                    <NumericFormat
-                                                        value={
-                                                            item.total_angsuran
-                                                        }
-                                                        displayType={"text"}
-                                                        thousandSeparator={","}
-                                                        prefix={"Rp. "}
-                                                    />
-                                                </td>
-                                                <td className="px-3 py-3 whitespace-nowrap">
-                                                    <NumericFormat
-                                                        value={
-                                                            item.saldo_terakhir
-                                                        }
-                                                        displayType={"text"}
-                                                        thousandSeparator={","}
-                                                        prefix={"Rp. "}
-                                                    />
-                                                </td>
-                                            </tr>
-                                        )
+                                {loanrequest.loan &&
+                                    loanrequest.loan.last_angsuran && (
+                                        <tbody>
+                                            {loanrequest.loan.angsuran.map(
+                                                (item, index) => (
+                                                    <tr>
+                                                        <th className="px-3 py-3">
+                                                            {dayjs(
+                                                                item.pembayaran_date
+                                                            ).format("DD-MM")}
+                                                        </th>
+                                                        <td className="px-3 py-3 whitespace-nowrap">
+                                                            <NumericFormat
+                                                                value={
+                                                                    item.jumlah
+                                                                }
+                                                                displayType={
+                                                                    "text"
+                                                                }
+                                                                thousandSeparator={
+                                                                    ","
+                                                                }
+                                                                prefix={"Rp. "}
+                                                            />
+                                                        </td>
+                                                        <td className="px-3 py-3 whitespace-nowrap">
+                                                            <NumericFormat
+                                                                value={
+                                                                    item.total_angsuran
+                                                                }
+                                                                displayType={
+                                                                    "text"
+                                                                }
+                                                                thousandSeparator={
+                                                                    ","
+                                                                }
+                                                                prefix={"Rp. "}
+                                                            />
+                                                        </td>
+                                                        <td className="px-3 py-3 whitespace-nowrap">
+                                                            <NumericFormat
+                                                                value={
+                                                                    item.saldo_terakhir
+                                                                }
+                                                                displayType={
+                                                                    "text"
+                                                                }
+                                                                thousandSeparator={
+                                                                    ","
+                                                                }
+                                                                prefix={"Rp. "}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            )}
+                                        </tbody>
                                     )}
-                                </tbody>
                             </table>
                         </div>
                     </div>

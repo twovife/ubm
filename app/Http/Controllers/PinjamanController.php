@@ -322,8 +322,11 @@ class PinjamanController extends Controller
             $loanRequest->mantri = $request->mantri;
             $loanRequest->tanggal_drop = $request->tanggal_drop;
             $loanRequest->pinjaman = $request->pinjaman;
-            $LastAngsuran->jumlah = $request->jumlah;
-            $LastAngsuran->danatitipan = $request->danatitipan;
+
+            if ($LastAngsuran) {
+                $LastAngsuran->jumlah = $request->jumlah;
+                $LastAngsuran->danatitipan = $request->danatitipan;
+            }
 
 
             if ($loanRequest->isDirty('pinjaman')) {
@@ -334,18 +337,26 @@ class PinjamanController extends Controller
                 $loan->pinjaman = $pinjaman;
 
                 $loan->saldo = $loan->saldo - $pinjamanRange;
-                DB::table('instalments')->where('loan_id', $loan->id)->decrement('saldo_terakhir', $pinjamanRange);
+
+                if ($LastAngsuran) {
+                    DB::table('instalments')->where('loan_id', $loan->id)->decrement('saldo_terakhir', $pinjamanRange);
+                }
                 // $angsuran = Instalment::where('loan_id', $loan->id)->get();
             }
 
             if ($loanRequest->isDirty('mantri')) {
                 $loanRequest->kelompok = $area->area;
-                $loan->kelompok = $area->area;
-                $loan->mantri = $area->id;
+
+                if ($loan) {
+                    $loan->kelompok = $area->area;
+                    $loan->mantri = $area->id;
+                }
             }
 
             if ($loanRequest->isDirty('tanggal_drop')) {
-                $loan->tanggal_drop = $request->tanggal_drop;
+                if ($loan) {
+                    $loan->tanggal_drop = $request->tanggal_drop;
+                }
             }
 
             if ($LastAngsuran->isDirty('jumlah')) {

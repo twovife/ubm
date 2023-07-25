@@ -112,13 +112,13 @@ const EditKeterangan = ({ loanrequest, ...props }) => {
                             onSubmit={onSubmitRevisi}
                             className="col-span-1 border p-4 shadow rounded relative"
                         >
-                            {loanrequest.loan.last_angsuran && (
+                            {/* {loanrequest.loan.last_angsuran && (
                                 <div className="w-full h-full absolute bg-white/20 top-0 left-0 flex justify-center items-center">
                                     <h1 className="text-3xl">
                                         Data Tidak Dapat Diubah
                                     </h1>
                                 </div>
-                            )}
+                            )} */}
                             <h1 className="mb-3 font-semibold">Revisi Data</h1>
                             <div className="mb-3">
                                 <InputLabel
@@ -172,13 +172,13 @@ const EditKeterangan = ({ loanrequest, ...props }) => {
                             onSubmit={onSubmitRevisi}
                             className="col-span-1 border p-4 shadow rounded relative"
                         >
-                            {loanrequest.loan.last_angsuran && (
+                            {/* {loanrequest.loan.last_angsuran && (
                                 <div className="w-full h-full absolute bg-white/20 top-0 left-0 flex justify-center items-center">
                                     <h1 className="text-3xl">
                                         Data Tidak Dapat Diubah
                                     </h1>
                                 </div>
-                            )}
+                            )} */}
                             <h1 className="mb-3 font-semibold">Revisi Drop</h1>
                             <div className="mb-3">
                                 <InputLabel

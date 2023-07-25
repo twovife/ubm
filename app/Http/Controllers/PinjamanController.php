@@ -323,17 +323,7 @@ class PinjamanController extends Controller
             $loanRequest->tanggal_drop = $request->tanggal_drop;
             $loanRequest->pinjaman = $request->pinjaman;
 
-            if ($LastAngsuran) {
-                $LastAngsuran->jumlah = $request->jumlah;
-                $LastAngsuran->danatitipan = $request->danatitipan;
 
-                if ($LastAngsuran->isDirty('jumlah')) {
-                    $range = $LastAngsuran->getOriginal('jumlah') - $request->jumlah;
-                    $LastAngsuran->total_angsuran = $LastAngsuran->total_angsuran - $range;
-                    $LastAngsuran->saldo_terakhir = $LastAngsuran->saldo_terakhir + $range;
-                    $loan->saldo = $loan->saldo + $range;
-                }
-            }
 
 
             if ($loanRequest->isDirty('pinjaman')) {
@@ -366,9 +356,27 @@ class PinjamanController extends Controller
                 }
             }
 
+            if ($LastAngsuran) {
+                $LastAngsuran->jumlah = $request->jumlah;
+                $LastAngsuran->danatitipan = $request->danatitipan;
+
+                if ($LastAngsuran->isDirty('jumlah')) {
+                    $range = $LastAngsuran->getOriginal('jumlah') - $request->jumlah;
+                    $LastAngsuran->total_angsuran = $LastAngsuran->total_angsuran - $range;
+                    $LastAngsuran->saldo_terakhir = $LastAngsuran->saldo_terakhir + $range;
+                    $loan->saldo = $loan->saldo + $range;
+                }
+
+                $LastAngsuran->save();
+            }
+
             $loanRequest->save();
-            $loan ?? $loan->save();
-            $LastAngsuran ?? $LastAngsuran->save();
+            if ($loan) {
+                $loan->save();
+            }
+            if ($LastAngsuran) {
+                $LastAngsuran->save();
+            }
             DB::commit();
         } catch (\Exception $e) {
             dd($e);

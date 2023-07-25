@@ -326,6 +326,13 @@ class PinjamanController extends Controller
             if ($LastAngsuran) {
                 $LastAngsuran->jumlah = $request->jumlah;
                 $LastAngsuran->danatitipan = $request->danatitipan;
+
+                if ($LastAngsuran->isDirty('jumlah')) {
+                    $range = $LastAngsuran->getOriginal('jumlah') - $request->jumlah;
+                    $LastAngsuran->total_angsuran = $LastAngsuran->total_angsuran - $range;
+                    $LastAngsuran->saldo_terakhir = $LastAngsuran->saldo_terakhir + $range;
+                    $loan->saldo = $loan->saldo + $range;
+                }
             }
 
 
@@ -359,16 +366,9 @@ class PinjamanController extends Controller
                 }
             }
 
-            if ($LastAngsuran->isDirty('jumlah')) {
-                $range = $LastAngsuran->getOriginal('jumlah') - $request->jumlah;
-                $LastAngsuran->total_angsuran = $LastAngsuran->total_angsuran - $range;
-                $LastAngsuran->saldo_terakhir = $LastAngsuran->saldo_terakhir + $range;
-                $loan->saldo = $loan->saldo + $range;
-            }
-
             $loanRequest->save();
-            $loan->save();
-            $LastAngsuran->save();
+            $loan ?? $loan->save();
+            $LastAngsuran ?? $LastAngsuran->save();
             DB::commit();
         } catch (\Exception $e) {
             dd($e);

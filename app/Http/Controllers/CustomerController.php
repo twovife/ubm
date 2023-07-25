@@ -7,6 +7,8 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Branch;
 use App\Models\Employee;
+use App\Models\Loan;
+use App\Models\LoanRequest;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -127,9 +129,33 @@ class CustomerController extends Controller
             $customer->nik = $request->nik;
             $customer->no_kk = $request->no_kk;
             $customer->alamat = $request->alamat;
+
+
+            if ($customer->isDirty('nik')) {
+                $isExistCustomer = Customer::where('nik', $request->nik)->first();
+                // dd($isExistCustomer);
+                $LoanReqeust = LoanRequest::where('customer_id', $customer->id)->get();
+                foreach ($LoanReqeust as $loanreq) {
+                    // $loanreq->update(['customer_id' => $isExistCustomer->id], ['pinjaman_ke' => LoanRequest::where('customer_id', $isExistCustomer->id)->count('id') + 1]);
+                    $loanreq->customer_id =  $isExistCustomer->id;
+                    $loanreq->pinjaman_ke = LoanRequest::where('customer_id', $isExistCustomer->id)->count('id') + 1;
+                    $loanreq->save();
+                }
+                $loans =  LoanRequest::where('customer_id', $customer->id)->get();
+                foreach ($loans as $loan) {
+                    // $loanreq->update(['customer_id' => $isExistCustomer->id], ['pinjaman_ke' => Loan::where('customer_id', $isExistCustomer->id)->count('id') + 1]);
+                    $loan->customer_id = $isExistCustomer->id;
+                    $loan->pinjaman_ke = Loan::where('customer_id', $isExistCustomer->id)->count('id') + 1;
+                    $loan->save();
+                }
+                $customer->delete();
+                DB::commit();
+                return redirect()->route('unit.customer.index')->with('message', 'Data berhasil diubah');
+            }
             $customer->save();
             DB::commit();
         } catch (Exception $e) {
+            ddd($e);
             return redirect()->back()->withErrors('Data gagal diubah');
         }
 

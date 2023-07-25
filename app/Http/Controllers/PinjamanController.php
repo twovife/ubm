@@ -318,18 +318,24 @@ class PinjamanController extends Controller
             $loan = Loan::where('loan_request_id', $loanRequest->id)->first();
             $LastAngsuran = Instalment::where('loan_id', $loan->id)->latest()->first();
 
+
             $loanRequest->mantri = $request->mantri;
             $loanRequest->tanggal_drop = $request->tanggal_drop;
             $loanRequest->pinjaman = $request->pinjaman;
             $LastAngsuran->jumlah = $request->jumlah;
             $LastAngsuran->danatitipan = $request->danatitipan;
-            $aftersum = $request->pinjaman * 1.3;
 
 
             if ($loanRequest->isDirty('pinjaman')) {
+                $pinjaman = $request->pinjaman * 1.3;
+                $pinjamanRange = $loan->pinjaman - $pinjaman;
+
                 $loan->drop = $request->pinjaman;
-                $loan->pinjaman = $aftersum;
-                $loan->saldo = $aftersum;
+                $loan->pinjaman = $pinjaman;
+
+                $loan->saldo = $loan->saldo - $pinjamanRange;
+                DB::table('instalments')->where('loan_id', $loan->id)->decrement('saldo_terakhir', $pinjamanRange);
+                // $angsuran = Instalment::where('loan_id', $loan->id)->get();
             }
 
             if ($loanRequest->isDirty('mantri')) {
@@ -343,7 +349,7 @@ class PinjamanController extends Controller
             }
 
             if ($LastAngsuran->isDirty('jumlah')) {
-                $range = $LastAngsuran->jumlah - $request->jumlah;
+                $range = $LastAngsuran->getOriginal('jumlah') - $request->jumlah;
                 $LastAngsuran->total_angsuran = $LastAngsuran->total_angsuran - $range;
                 $LastAngsuran->saldo_terakhir = $LastAngsuran->saldo_terakhir + $range;
                 $loan->saldo = $loan->saldo + $range;
@@ -354,6 +360,7 @@ class PinjamanController extends Controller
             $LastAngsuran->save();
             DB::commit();
         } catch (\Exception $e) {
+            dd($e);
             return redirect()->back()->withErrors('Terjadi Kesalahan Saat Mengubah Data');
         }
 
@@ -370,6 +377,7 @@ class PinjamanController extends Controller
             $loanRequest->delete();
             DB::commit();
         } catch (\Throwable $th) {
+
             return redirect()->back()->withErrors('Terjadi Kesalahan Saat Mengubah Data');
         }
 

@@ -141,7 +141,7 @@ class CustomerController extends Controller
             $loanreq->pinjaman_ke = LoanRequest::where('customer_id', $isExistCustomer->id)->count('id') + 1;
             $loanreq->save();
           }
-          $loans =  LoanRequest::where('customer_id', $customer->id)->get();
+          $loans =  Loan::where('customer_id', $customer->id)->get();
           foreach ($loans as $loan) {
             // $loanreq->update(['customer_id' => $isExistCustomer->id], ['pinjaman_ke' => Loan::where('customer_id', $isExistCustomer->id)->count('id') + 1]);
             $loan->customer_id = $isExistCustomer->id;

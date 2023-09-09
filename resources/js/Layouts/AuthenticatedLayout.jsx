@@ -5,8 +5,14 @@ import { BsUiChecksGrid } from "react-icons/bs";
 import { GrClose } from "react-icons/gr";
 import SidebarButton from "@/Components/SidebarButton";
 import SideBarDropDown from "@/Components/SidebarDropDown";
+import Loading from "@/Components/Loading";
 
-export default function Authenticated({ auth, header, children }) {
+export default function Authenticated({
+    auth,
+    header,
+    children,
+    loading = false,
+}) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
@@ -28,6 +34,7 @@ export default function Authenticated({ auth, header, children }) {
 
     return (
         <div className="min-h-screen relative">
+            <Loading show={loading} />
             <nav className="bg-white border-b border-main-100 sticky top-0 z-50">
                 <div className="mx-auto px-4 sm:px-6 lg:px-8 text-main-800">
                     <div className="flex items-center justify-between h-16">

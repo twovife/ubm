@@ -60,19 +60,22 @@ class Employee extends Model
     {
         return $query->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('branch_id', auth()->user()->employee->branch_id);
-        })
-            ->when(request()->input('data.branch_id', []), function ($q) {
-                $q->where('branch_id', request()->data['branch_id']);
-            })->when(request()->input('data.is_active', []), function ($q) {
-                $q->when(request()->data['is_active'] == 1, function ($q) {
-                    $q->whereNull('date_resign');
-                });
-                $q->when(request()->data['is_active'] == 2, function ($q) {
-                    $q->whereNotNull('date_resign');
-                });
-            })->when(request()->input('data.search', []), function ($q) {
-                $searchTerm = request()->data['search'];
-                $q->whereRaw('LOWER(`nama_karyawan`) like ?',  ["%{$searchTerm}%"])->orWhere('nik', request()->data['search']);
-            });
+        })->when(request()->input('branch_id', []), function ($q) {
+            $q->where('branch_id', request()->input('branch_id', []));
+        });
+
+
+        // ->when(request()->input('data.is_active', []), function ($q) {
+        //     $q->when(request()->data['is_active'] == 1, function ($q) {
+        //         $q->whereNull('date_resign');
+        //     });
+
+        //     $q->when(request()->data['is_active'] == 2, function ($q) {
+        //         $q->whereNotNull('date_resign');
+        //     });
+        // })->when(request()->input('data.search', []), function ($q) {
+        //     $searchTerm = request()->data['search'];
+        //     $q->whereRaw('LOWER(`nama_karyawan`) like ?',  ["%{$searchTerm}%"])->orWhere('nik', request()->data['search']);
+        // });
     }
 }

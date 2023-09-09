@@ -28,14 +28,44 @@ class EmployeeController extends Controller
      */
     public function index()
     {
+
+        $filters = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : request()->all();
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
-        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->orderBy('date_resign', 'asc')->orderBy('updated_at', 'desc')->paginate(10)->withQueryString();
-        return Inertia::render('Employee/Employee', [
+
+
+        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->orderBy('date_resign', 'asc')->orderBy('updated_at', 'desc')->get();
+
+        $data = collect($emp)->map(fn ($que) => [
+            'id' => $que->id ?? null,
+            'nama' => $que->nama_karyawan ?? '-',
+            'nik' => $que->nik ?? '-',
+            'alamat' => $que->alamat ?? '-',
+            'hire_date' => $que->hire_date ?? '-',
+            'masa_kerja' => now()->diffInYears(\Carbon\Carbon::parse($que->hire_date)) ?? '-',
+            'jabatan' => $que->jabatan ?? '-',
+            'area' => $que->area ?? '-',
+            'unit' => $que->branch?->unit ?? '-',
+            'wilayah' => $que->branch?->wilayah ?? '-',
+            'janis_jaminan' => $que->janis_jaminan ?? '-',
+            'tanggal_perpindahan' => $que->history?->history_date ?? '-',
+            'history_perpindahan' => $que->history?->record ?? '-',
+            'keterangan_perpindahan' => $que->history?->keterangan ?? '-',
+            'date_resign' => $que->date_resign ?? '-',
+            'resign_status' => $que->resign_status ?? '-',
+            'pencairan_simpanan_date' => $que->pencairan_simpanan_date ?? '-',
+            'pencairan_simpanan_by' => $que->ttdss->nama_karyawan ?? '-',
+            'handover_jaminan' => $que->handover_jaminan ?? '-',
+            'handover_jaminan_by' => $que->ttdjaminan->nama_karyawan ?? '-',
+            'pencairan_simpanan_w_date' => $que->pencairan_simpanan_w_date ?? '-',
+            'pencairan_simpanan_w_by' => $que->ttdsw->pencairan_simpanan_w_by ?? '-',
+
+        ]);
+        return Inertia::render('V2/Employee/Index', [
             'branch' => $branch,
-            'employee' => $emp,
-            'filters' => request()->data ?? null
+            'employee' => $data,
+            'server_filters' => request()->branch_id ?? null
         ]);
     }
 
@@ -232,7 +262,7 @@ class EmployeeController extends Controller
     public function reactive(Request $request, Employee $employee)
     {
         $data = [
-            ['history_date' => $employee->pencairan_simpanan_date ?? $request->history_date, 'keterangan' => 'resign',    'record' => $employee->pencairan_simpanan_date ? 'telah mengambil simpanan' : "simpanan belum pernah diambil"],
+            ['history_date' => $employee->pencairan_simpanan_w_by ?? $request->history_date, 'keterangan' => 'resign',    'record' => $employee->pencairan_simpanan_date ? 'telah mengambil simpanan' : "simpanan belum pernah diambil"],
             ['history_date' => $employee->date_resign, 'keterangan' => 'resign', 'record' => $employee->resign_status . ' dengan alasan ' . $employee->resign_reson],
             ['history_date' => $request->history_date, 'keterangan' => 'resign',    'record' =>  $employee->load('branch')->branch->unit . ' sebagai ' . $employee->getOriginal('jabatan')],
             ['history_date' => $employee->pencairan_simpanan_date ?? $request->history_date, 'keterangan' => 'reactive',    'record' => 'Kembali menjadi karyawan']
@@ -304,5 +334,46 @@ class EmployeeController extends Controller
             "branch_id" => $employee->branch_id ?? null
         ];
         return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'data berhasil diubah');
+    }
+
+
+    // v2 controller
+    public function newindex()
+    {
+        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
+            $q->where('id', auth()->user()->employee->branch_id);
+        })->get();
+        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->orderBy('date_resign', 'asc')->orderBy('updated_at', 'desc')->get();
+
+        $data = collect($emp)->map(fn ($que) => [
+            'id' => $que->id ?? null,
+            'nama' => $que->nama_karyawan ?? '-',
+            'nik' => $que->nik ?? '-',
+            'alamat' => $que->alamat ?? '-',
+            'hire_date' => $que->hire_date ?? '-',
+            'masa_kerja' => now()->diffInYears(\Carbon\Carbon::parse($que->hire_date)) ?? '-',
+            'jabatan' => $que->jabatan ?? '-',
+            'area' => $que->area ?? '-',
+            'unit' => $que->branch?->unit ?? '-',
+            'wilayah' => $que->branch?->wilayah ?? '-',
+            'janis_jaminan' => $que->janis_jaminan ?? '-',
+            'tanggal_perpindahan' => $que->history?->history_date ?? '-',
+            'history_perpindahan' => $que->history?->record ?? '-',
+            'keterangan_perpindahan' => $que->history?->keterangan ?? '-',
+            'date_resign' => $que->date_resign ?? '-',
+            'resign_status' => $que->resign_status ?? '-',
+            'pencairan_simpanan_date' => $que->pencairan_simpanan_date ?? '-',
+            'pencairan_simpanan_by' => $que->ttdss->nama_karyawan ?? '-',
+            'handover_jaminan' => $que->handover_jaminan ?? '-',
+            'handover_jaminan_by' => $que->ttdjaminan->nama_karyawan ?? '-',
+            'pencairan_simpanan_w_date' => $que->pencairan_simpanan_w_date ?? '-',
+            'pencairan_simpanan_w_by' => $que->ttdsw->pencairan_simpanan_w_by ?? '-',
+
+        ]);
+        return Inertia::render('V2/Employee/Index', [
+            'branch' => $branch,
+            'employee' => $data,
+            'filters' => request()->data ?? null
+        ]);
     }
 }

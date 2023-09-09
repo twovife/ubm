@@ -63,6 +63,12 @@ Route::middleware('auth')->group(function () {
         });
     });
 
+    Route::prefix('v2')->name('v2.')->middleware(['auth', 'verified', 'permission:unit|pusat'])->group(function () {
+        Route::prefix('emp')->name('emp.')->controller(EmployeeController::class)->group(function () {
+            Route::get('/', 'newindex')->name('index');
+        });
+    });
+
     Route::prefix('employee')->name('employee.')->middleware(['auth', 'verified', 'permission:unit|pusat'])->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('index');
         Route::get('/exemployee', [EmployeeController::class, 'exemployee'])->name('exemployee');

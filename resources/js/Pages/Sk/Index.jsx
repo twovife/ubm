@@ -1,6 +1,4 @@
-import InputLabel from "@/Components/InputLabel";
 import LinkButton from "@/Components/LinkButton";
-import Paginasi from "@/Components/Paginasi";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import useFilteredComplains from "@/Hooks/useFilteredComplains";
@@ -15,18 +13,12 @@ import {
     AiOutlineSortAscending,
     AiOutlineSortDescending,
 } from "react-icons/ai";
-import { BiRefresh, BiSearch, BiSortDown, BiSortUp } from "react-icons/bi";
+import { BiRefresh } from "react-icons/bi";
 import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 
-const Index = ({ datas, branch, server_filters, ...props }) => {
-    const branchess = branch.map((item) => {
-        return {
-            id: item.id,
-            value: item.id,
-            display: item.unit,
-        };
-    });
+const Index = ({ branch, server_filters, datas, ...props }) => {
+    // console.log(datas);
     const itemsPerPage = 20;
     const {
         filters,
@@ -39,7 +31,6 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
         totalPages,
         handlePageChange,
     } = useFilteredComplains({}, itemsPerPage);
-
     const [showFilter, setShowFilter] = useState("");
     const [addFilter, setAddFilter] = useState({
         column: "",
@@ -54,14 +45,19 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(localStorage.getItem("complainfilter"));
+        const storedFilter = JSON.parse(
+            localStorage.getItem("dashboard_simpanan_karyawan")
+        );
         if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("complainfilter", JSON.stringify(filters));
+        localStorage.setItem(
+            "dashboard_simpanan_karyawan",
+            JSON.stringify(filters)
+        );
     }, [filters]);
 
     useEffect(() => {
@@ -82,6 +78,14 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
         window.addEventListener("click", log);
         return () => {
             window.removeEventListener("click", log);
+        };
+    });
+
+    const branchess = branch.map((item) => {
+        return {
+            id: item.id,
+            value: item.id,
+            display: item.unit,
         };
     });
 
@@ -107,7 +111,6 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
     const decrementFilter = (column) => {
         // Buat salinan dari daftar filter
         const updatedFilters = [...filters];
-        console.log(updatedFilters);
         // Cari indeks filter dengan column yang sesuai
         const decrementFilters = filters.filter(
             (filter) => filter.column !== column
@@ -132,7 +135,7 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
     const onBranchChange = (e) => {
         e.preventDefault();
         setLoading(true);
-        router.visit(route("employee.index"), {
+        router.visit(route("simpanan.index"), {
             data: {
                 branch_id: e.target.value,
             },
@@ -237,99 +240,46 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
             </div>
         );
     };
-
     const headers = [
+        {
+            title: "Wilayah",
+            column: "wilayah",
+        },
+        {
+            title: "Unit",
+            column: "unit",
+            nowrap: true,
+            className: "whitespace-nowrap",
+        },
         {
             title: "Nama Karyawan",
             column: "nama",
-        },
-        {
-            title: "NIK",
-            column: "nik",
-        },
-        {
-            title: "Alamat",
-            column: "alamat",
-        },
-        {
-            title: "Tanggal Masuk",
-            column: "hire_date",
-            format: "date",
-        },
-        {
-            title: "Masa Kerja",
-            column: "masa_kerja",
-            format: "number",
+            nowrap: true,
         },
         {
             title: "Jabatan",
             column: "jabatan",
         },
         {
-            title: "Area",
-            column: "area",
-            format: "number",
-        },
-        {
-            title: "Unit",
-            column: "unit",
-        },
-        {
-            title: "Wilayah",
-            column: "wilayah",
-        },
-        {
-            title: "Jenis Jaminan",
-            column: "janis_jaminan",
-        },
-        {
-            title: "Tanggal Perpindahan",
-            column: "tanggal_perpindahan",
+            title: "Tanggal Tabungan",
+            column: "tanggal_tabungan",
             format: "date",
         },
         {
-            title: "History Perpindahan",
-            column: "history_perpindahan",
+            title: "Simpanan Wajib",
+            column: "saldo_sw",
+            format: "currency",
+            className: "bg-green-200 font-semibold",
         },
         {
-            title: "Keterangan Perpindahan",
-            column: "keterangan_perpindahan",
+            title: "Simpanan Sukarela",
+            column: "saldo_sk",
+            format: "currency",
+            className: "bg-green-200 font-semibold",
         },
         {
-            title: "Tanggal Berhenti",
-            column: "date_resign",
-            format: "date",
-        },
-        {
-            title: "Keterangan Berhenti",
-            column: "resign_status",
-        },
-        {
-            title: "Tgl Pencairan SS",
-            column: "pencairan_simpanan_date",
-            format: "date",
-        },
-        {
-            title: "Petugas",
-            column: "pencairan_simpanan_by",
-        },
-        {
-            title: "Tgl. Pencairan SW",
-            column: "pencairan_simpanan_w_date",
-            format: "date",
-        },
-        {
-            title: "Petugas",
-            column: "pencairan_simpanan_w_by",
-        },
-        {
-            title: "Tgl Pengambilan Jaminan",
-            column: "handover_jaminan",
-            format: "date",
-        },
-        {
-            title: "Petugas",
-            column: "handover_jaminan_by",
+            title: "Status Karyawan",
+            column: "status_karyawan",
         },
     ];
 
@@ -350,12 +300,14 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
                 {displayData.map((item, index) => (
                     <tr
                         key={index}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs"
+                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-sm"
                     >
                         <th className="px-6 py-1">
                             <div className="flex justify-around items-center gap-3">
                                 {(currentPage - 1) * itemsPerPage + index + 1}
-                                <Link href={route("employee.action", item.id)}>
+                                <Link
+                                    href={route("simpanan.transaksi", item.id)}
+                                >
                                     <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
                                 </Link>
                             </div>
@@ -363,8 +315,11 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
                         {headers.map((header, index) => {
                             if (header.format == "date") {
                                 return (
-                                    <td className="px-6 py-1" key={index}>
-                                        <div className="w-64 white whitespace-pre-wrap">
+                                    <td
+                                        className={`px-6 py-1 ${header.className} `}
+                                        key={index}
+                                    >
+                                        <div>
                                             {item[header.column] !== "-"
                                                 ? dayjs(
                                                       item[header.column]
@@ -375,12 +330,29 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
                                 );
                             }
                             if (header.format == "currency") {
+                                if (header.column === "saldo_akhir") {
+                                    return (
+                                        <td
+                                            className={`bg-green-200 px-6 py-1 ${header.className}`}
+                                            key={index}
+                                        >
+                                            <div>
+                                                <NumericFormat
+                                                    value={item[header.column]}
+                                                    displayType={"text"}
+                                                    thousandSeparator={","}
+                                                    prefix={"Rp. "}
+                                                />
+                                            </div>
+                                        </td>
+                                    );
+                                }
                                 return (
-                                    <td className="px-6 py-1" key={index}>
-                                        <div className="w-64 white whitespace-pre-wrap">
-                                            {/* {dayjs(item[header.column]).format(
-                                                "DD-MM-YYYY"
-                                            )} */}
+                                    <td
+                                        className={`px-6 py-1 ${header.className} `}
+                                        key={index}
+                                    >
+                                        <div>
                                             <NumericFormat
                                                 value={item[header.column]}
                                                 displayType={"text"}
@@ -392,10 +364,11 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
                                 );
                             }
                             return (
-                                <td className="px-6 py-1" key={index}>
-                                    <div className="w-64 white whitespace-pre-wrap">
-                                        {item[header.column]}
-                                    </div>
+                                <td
+                                    className={`px-6 py-1 ${header.className} `}
+                                    key={index}
+                                >
+                                    <div>{item[header.column]}</div>
                                 </td>
                             );
                         })}
@@ -407,13 +380,14 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
 
     const onResetPage = () => {
         setLoading(true);
-        localStorage.setItem("complainfilter", null);
+        localStorage.setItem("dashboard_simpanan_karyawan", null);
         setFilters([{ column: "", operators: "1", values: "" }]);
         setOrderData({ column: "", orderby: "" });
         setTimeout(() => {
             setLoading(false);
         }, 500);
     };
+
     return (
         <Authenticated
             loading={loading}
@@ -422,125 +396,108 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Daftar Karyawan
+                        Daftar Simpanan Karyawan
                     </h2>
                     <div className="ml-auto flex items-center"></div>
                 </>
             }
         >
-            <div className="py-3">
-                <div className="mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white relative shadow-sm">
-                        <div className="p-3">
-                            <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
-                                <div>
-                                    <SelectList
-                                        value={server_filters}
-                                        options={branchess}
-                                        nullValue={true}
-                                        onChange={onBranchChange}
-                                    />
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <PrimaryButton
-                                        onClick={onResetPage}
-                                        size={"sm"}
-                                        theme="other"
-                                        icon={<BiRefresh />}
-                                        title={"Reset"}
-                                    />
-
-                                    <LinkButton
-                                        as="a"
-                                        href={route("employee.create")}
-                                        icon={<IoMdAdd />}
-                                        size={"md"}
-                                        title={"Tambah"}
-                                    ></LinkButton>
-                                </div>
-                            </div>
+            <div className="mx-auto sm:px-6 lg:px-8">
+                <div className="p-3 bg-white rounded shadow">
+                    <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
+                        <div>
+                            <SelectList
+                                value={server_filters}
+                                options={branchess}
+                                nullValue={true}
+                                onChange={onBranchChange}
+                            />
                         </div>
-                        <div className="h-[70vh] overflow-auto relative">
-                            {/* filter card */}
-                            <div className="mb-3 inline-block">
-                                {filters &&
-                                    filters.map((item) => {
-                                        if (item.column == "") {
-                                            return null;
-                                        }
-                                        return (
-                                            <div className="flex items-center justify-start mb-2">
-                                                <div className="border rounded flex items-center">
-                                                    <div className="p-2 text-lg bg-green-400 text-white">
-                                                        <AiFillFilter />
-                                                    </div>
-                                                    <div className="px-3 text-sm text-main-500">
-                                                        <span className="mr-1 capitalize ">
-                                                            {item.column}
-                                                        </span>
-                                                        <span className="mr-1 capitalize ">
-                                                            {item.operators == 1
-                                                                ? "Contains"
-                                                                : "="}
-                                                        </span>
-                                                        <span>
-                                                            '{item.values}'
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    className="hover:border hover:bg-gray-300 hover:cursor-pointer rounded p-1 ml-2"
-                                                    onClick={() =>
-                                                        decrementFilter(
-                                                            item.column
-                                                        )
-                                                    }
-                                                >
-                                                    <AiOutlineClose />
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                            </div>
+                        <div className="flex items-center gap-3">
+                            <PrimaryButton
+                                onClick={onResetPage}
+                                size={"sm"}
+                                theme="other"
+                                icon={<BiRefresh />}
+                                title={"Reset"}
+                            />
 
-                            <table className="w-full text-sm text-left text-gray-500">
-                                <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
-                                    <tr>
-                                        <th className="px-6 py-4">Nomor</th>
-                                        {headers.map((header, key) => (
-                                            <th
-                                                key={key}
-                                                data-item={header.column}
-                                                data-format={
-                                                    header.format ?? "text"
-                                                }
-                                                scope="col"
-                                                className="px-6 py-4 hover:bg-main-500 hover:text-white hover:cursor-pointer"
-                                            >
-                                                {header.title}
-                                                {orderData.column ==
-                                                    header.column && (
-                                                    <span className="ml-1 text-blue-400 italic">
-                                                        {orderData.orderby}
-                                                    </span>
-                                                )}
-
-                                                {showFilter.column ==
-                                                    header.column &&
-                                                    filterModal()}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                {tBodyGenerator()}
-                            </table>
+                            <LinkButton
+                                as="button"
+                                href={route("simpanan.create")}
+                                icon={<IoMdAdd />}
+                                size={"md"}
+                                title={"Tambah"}
+                            ></LinkButton>
                         </div>
-                        <Paginasi
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
-                        />
                     </div>
+                    {filters && (
+                        <div className="inline-block mt-3">
+                            {filters.map((item) => {
+                                if (item.column == "") {
+                                    return null;
+                                }
+                                return (
+                                    <div className="flex items-center justify-start space-y-2">
+                                        <div className="border rounded flex items-center">
+                                            <div className="p-2 text-lg bg-green-400 text-white">
+                                                <AiFillFilter />
+                                            </div>
+                                            <div className="px-3 text-sm text-main-500">
+                                                <span className="mr-1 capitalize ">
+                                                    {item.column}
+                                                </span>
+                                                <span className="mr-1 capitalize ">
+                                                    {item.operators == 1
+                                                        ? "Contains"
+                                                        : "="}
+                                                </span>
+                                                <span>'{item.values}'</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="hover:border hover:bg-gray-300 hover:cursor-pointer rounded p-1 ml-2"
+                                            onClick={() =>
+                                                decrementFilter(item.column)
+                                            }
+                                        >
+                                            <AiOutlineClose />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+
+                <div className="h-[70vh] p-3 mt-3 bg-white rounded shadow overflow-auto">
+                    <table className="w-full text-sm text-left text-gray-500">
+                        <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
+                            <tr>
+                                <th className="px-6 py-4">Nomor</th>
+                                {headers.map((header, key) => (
+                                    <th
+                                        key={key}
+                                        data-item={header.column}
+                                        data-format={header.format ?? "text"}
+                                        scope="col"
+                                        className="px-6 py-4 hover:bg-main-500 hover:text-white hover:cursor-pointer"
+                                    >
+                                        {header.title}
+                                        {orderData.column == header.column && (
+                                            <span className="ml-1 text-blue-400 italic">
+                                                {orderData.orderby}
+                                            </span>
+                                        )}
+
+                                        {showFilter.column == header.column &&
+                                            filterModal()}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        {tBodyGenerator()}
+                    </table>
                 </div>
             </div>
         </Authenticated>

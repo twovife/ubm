@@ -25,6 +25,8 @@
         "react-currency-input-field": "^3.6.10",
         "react-icons": "^4.11.0",
         "react-number-format": "^5.1.4",
-        "react-toastify": "^9.1.1"
+        "react-toastify": "^9.1.1",
+        "sweetalert2": "^11.7.28",
+        "sweetalert2-react-content": "^5.0.7"
     }
 }

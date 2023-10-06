@@ -1,8 +1,12 @@
 import { usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 
-function useFilteredComplains(initialFilters, itemsPerPage) {
-    const props = usePage().props;
+function useFilteredComplains(
+    initialFilters,
+    itemsPerPage,
+    passingdata = null
+) {
+    const datas = passingdata ?? usePage().props.datas;
 
     const [filters, setFilters] = useState([
         {
@@ -61,7 +65,7 @@ function useFilteredComplains(initialFilters, itemsPerPage) {
         return itemValue === paramValue;
     };
 
-    const filteredData = props.employee.filter((item) => {
+    const filteredData = datas.filter((item) => {
         for (const filter of filters) {
             if (!applyFilter(item, filter)) {
                 return false;

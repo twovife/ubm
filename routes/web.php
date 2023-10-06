@@ -44,26 +44,30 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/testdump', [PinjamanController::class, 'testdump']);
+// Route::get('/testdump', [PinjamanController::class, 'testdump']);
 
-Route::prefix('simpanan')->name('simpanan.')->group(function () {
-    Route::get('/', [DepositController::class, 'index'])->name('index');
-    Route::get('/create', [DepositController::class, 'create'])->name('create');
-    Route::post('/', [DepositController::class, 'store'])->name('store');
-    Route::get('/transaksi/{deposit}', [DepositController::class, 'transaksi'])->name('transaksi');
-    Route::put('/transaksi/{deposit}', [DepositController::class, 'addtransaksi'])->name('addtransaksi');
 
-    Route::get('/global', [DepositController::class, 'global'])->name('global');
-    Route::get('/detailPerBulan', [DepositController::class, 'detailPerBulan'])->name('detailPerBulan');
-    Route::get('/globalPerBulan', [DepositController::class, 'globalPerBulan'])->name('globalPerBulan');
-    Route::get('/sumallsk', [DepositController::class, 'sumallsk'])->name('sumallsk');
-    Route::get('/sumallsw', [DepositController::class, 'sumallsw'])->name('sumallsw');
-    Route::get('/swperbulan', [DepositController::class, 'sw_perbulan'])->name('sw_perbulan');
-    Route::get('/swglobal', [DepositController::class, 'sw_global'])->name('sw_global');
-});
 
 
 Route::middleware('auth')->group(function () {
+
+    Route::prefix('simpanan')->name('simpanan.')->group(function () {
+        Route::get('/', [DepositController::class, 'index'])->name('index');
+        Route::get('/create', [DepositController::class, 'create'])->name('create');
+        Route::post('/', [DepositController::class, 'store'])->name('store');
+        Route::get('/transaksi/{deposit}', [DepositController::class, 'transaksi'])->name('transaksi');
+        Route::put('/transaksi/{deposit}', [DepositController::class, 'addtransaksi'])->name('addtransaksi');
+
+        Route::get('/global', [DepositController::class, 'global'])->name('global');
+        Route::get('/detailPerBulan', [DepositController::class, 'detailPerBulan'])->name('detailPerBulan');
+        Route::get('/globalPerBulan', [DepositController::class, 'globalPerBulan'])->name('globalPerBulan');
+        Route::get('/sumallsk', [DepositController::class, 'sumallsk'])->name('sumallsk');
+        Route::get('/sumallsw', [DepositController::class, 'sumallsw'])->name('sumallsw');
+        Route::get('/swperbulan', [DepositController::class, 'sw_perbulan'])->name('sw_perbulan');
+        Route::get('/swglobal', [DepositController::class, 'sw_global'])->name('sw_global');
+    });
+
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

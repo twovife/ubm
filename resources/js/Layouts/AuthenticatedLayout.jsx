@@ -151,7 +151,7 @@ export default function Authenticated({
                                     },
                                 ]}
                             />
-                            <SideBarDropDown
+                            {/* <SideBarDropDown
                                 onClick={() => onClickDropDownHandler(2)}
                                 title={"Buku Transaksi Drop"}
                                 active={route().current(
@@ -241,7 +241,7 @@ export default function Authenticated({
                                         ),
                                     },
                                 ]}
-                            />
+                            /> */}
 
                             <SideBarDropDown
                                 onClick={() => onClickDropDownHandler(5)}

@@ -6,6 +6,8 @@ import { GrClose } from "react-icons/gr";
 import SidebarButton from "@/Components/SidebarButton";
 import SideBarDropDown from "@/Components/SidebarDropDown";
 import Loading from "@/Components/Loading";
+import SweetAlert from "@/Components/SweetAlert";
+import { usePage } from "@inertiajs/react";
 
 export default function Authenticated({
     auth,
@@ -32,10 +34,16 @@ export default function Authenticated({
         setShowSidebar(false);
     };
 
+    const { errors, flash } = usePage().props;
+
     return (
-        <div className="min-h-screen relative">
+        <div className="min-h-screen relative bg-gray-50">
+            {Object.keys(errors).length > 0 && <SweetAlert type="error" />}
+            {flash.message && (
+                <SweetAlert type="success" message={flash.message} />
+            )}
             <Loading show={loading} />
-            <nav className="bg-white border-b border-main-100 sticky top-0 z-50">
+            <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
                 <div className="mx-auto px-4 sm:px-6 lg:px-8 text-main-800">
                     <div className="flex items-center justify-between h-16">
                         <BsUiChecksGrid
@@ -136,7 +144,7 @@ export default function Authenticated({
                                 dropdownId={1}
                                 lists={[
                                     {
-                                        id: "em1",
+                                        id: "1",
                                         href: route("employee.index"),
                                         name: "Data Karyawan",
                                         active: route().current("employee.*"),
@@ -153,7 +161,7 @@ export default function Authenticated({
                                 dropdownId={2}
                                 lists={[
                                     {
-                                        id: "trs1",
+                                        id: "1",
                                         href: route(
                                             "unit.pinjaman.request.requestPinjaman"
                                         ),
@@ -163,7 +171,7 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "trs2",
+                                        id: "2",
                                         href: route(
                                             "unit.pinjaman.request.bukutransaksi"
                                         ),
@@ -176,11 +184,11 @@ export default function Authenticated({
                             />
 
                             <SideBarDropDown
-                                onClick={() => onClickDropDownHandler(4)}
-                                title={"Buku Transaksi Drop"}
+                                onClick={() => onClickDropDownHandler(3)}
+                                title={"Data Customer"}
                                 active={route().current("unit.customer.*")}
                                 colapse={colapse}
-                                dropdownId={4}
+                                dropdownId={3}
                                 lists={[
                                     {
                                         id: "1",
@@ -194,16 +202,16 @@ export default function Authenticated({
                             />
 
                             <SideBarDropDown
-                                onClick={() => onClickDropDownHandler(3)}
+                                onClick={() => onClickDropDownHandler(4)}
                                 title={"Buku Angsuran"}
                                 active={route().current(
                                     "unit.pinjaman.angsuran.*"
                                 )}
                                 colapse={colapse}
-                                dropdownId={3}
+                                dropdownId={4}
                                 lists={[
                                     {
-                                        id: "angs1",
+                                        id: "1",
                                         href: route(
                                             "unit.pinjaman.angsuran.index"
                                         ),
@@ -213,7 +221,7 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "angs2",
+                                        id: "2",
                                         href: route(
                                             "unit.pinjaman.angsuran.indexmb"
                                         ),
@@ -223,13 +231,80 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "angs3",
+                                        id: "3",
                                         href: route(
                                             "unit.pinjaman.request.requestPinjaman"
                                         ),
                                         name: "Pembayaran Angsuran ML",
                                         active: route().current(
                                             "unit.pinjaman.request.requestPinjaman"
+                                        ),
+                                    },
+                                ]}
+                            />
+
+                            <SideBarDropDown
+                                onClick={() => onClickDropDownHandler(5)}
+                                title={"SKSW"}
+                                active={route().current("simpanan.*")}
+                                colapse={colapse}
+                                dropdownId={5}
+                                lists={[
+                                    {
+                                        id: "1",
+                                        href: route("simpanan.index"),
+                                        name: "Dashboard Simpanan",
+                                        active: route().current(
+                                            "simpanan.index"
+                                        ),
+                                    },
+                                    {
+                                        id: "2",
+                                        href: route("simpanan.detailPerBulan"),
+                                        name: "SK Perbulan",
+                                        active: route().current(
+                                            "simpanan.detailPerBulan"
+                                        ),
+                                    },
+                                    {
+                                        id: "3",
+                                        href: route("simpanan.globalPerBulan"),
+                                        name: "SK Per Unit",
+                                        active: route().current(
+                                            "simpanan.globalPerBulan"
+                                        ),
+                                    },
+
+                                    {
+                                        id: "4",
+                                        href: route("simpanan.sumallsk"),
+                                        name: "Global Wilayah (SK)",
+                                        active: route().current(
+                                            "simpanan.sumallsk"
+                                        ),
+                                    },
+                                    {
+                                        id: "5",
+                                        href: route("simpanan.sw_perbulan"),
+                                        name: "SW Perbulan",
+                                        active: route().current(
+                                            "simpanan.sw_perbulan"
+                                        ),
+                                    },
+                                    {
+                                        id: "6",
+                                        href: route("simpanan.sw_global"),
+                                        name: "SW Per Unit",
+                                        active: route().current(
+                                            "simpanan.sw_global"
+                                        ),
+                                    },
+                                    {
+                                        id: "7",
+                                        href: route("simpanan.sumallsw"),
+                                        name: "Global Wilayah (SW)",
+                                        active: route().current(
+                                            "simpanan.sumallsw"
                                         ),
                                     },
                                 ]}
@@ -344,7 +419,7 @@ export default function Authenticated({
                 </div>
             </aside>
             {header && (
-                <header className="bg-white">
+                <header className="bg-gray-100/50">
                     <div className="mx-auto py-6 px-4 sm:px-6 lg:px-8 flex items-center">
                         {header}
                     </div>

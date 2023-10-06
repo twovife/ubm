@@ -1,11 +1,9 @@
-import InputLabel from "@/Components/InputLabel";
 import LinkButton from "@/Components/LinkButton";
-import Paginasi from "@/Components/Paginasi";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Link, router } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import {
@@ -15,19 +13,15 @@ import {
     AiOutlineSortAscending,
     AiOutlineSortDescending,
 } from "react-icons/ai";
-import { BiRefresh, BiSearch, BiSortDown, BiSortUp } from "react-icons/bi";
+import { BiRefresh } from "react-icons/bi";
 import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 
-const Index = ({ datas, branch, server_filters, ...props }) => {
-    const branchess = branch.map((item) => {
-        return {
-            id: item.id,
-            value: item.id,
-            display: item.unit,
-        };
-    });
-    const itemsPerPage = 20;
+const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
+    const datas = data.data;
+    console.log(datas);
+
+    const itemsPerPage = 50;
     const {
         filters,
         setFilters,
@@ -38,16 +32,13 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
         displayData,
         totalPages,
         handlePageChange,
-    } = useFilteredComplains({}, itemsPerPage);
-
+    } = useFilteredComplains({}, itemsPerPage, datas);
     const [showFilter, setShowFilter] = useState("");
     const [addFilter, setAddFilter] = useState({
         column: "",
         operators: "1",
         values: "",
     });
-
-    const [loading, setLoading] = useState(false);
 
     const thisonclick = (column, format = "text") => {
         setShowFilter({ column, format });
@@ -129,14 +120,14 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
         });
     };
 
-    const onBranchChange = (e) => {
-        e.preventDefault();
+    const onResetPage = () => {
         setLoading(true);
-        router.visit(route("employee.index"), {
-            data: {
-                branch_id: e.target.value,
-            },
-        });
+        localStorage.setItem("complainfilter", null);
+        setFilters([{ column: "", operators: "1", values: "" }]);
+        setOrderData({ column: "", orderby: "" });
+        setTimeout(() => {
+            setLoading(false);
+        }, 500);
     };
 
     const filterModal = () => {
@@ -237,99 +228,83 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
             </div>
         );
     };
-
     const headers = [
-        {
-            title: "Nama Karyawan",
-            column: "nama",
-        },
-        {
-            title: "NIK",
-            column: "nik",
-        },
-        {
-            title: "Alamat",
-            column: "alamat",
-        },
-        {
-            title: "Tanggal Masuk",
-            column: "hire_date",
-            format: "date",
-        },
-        {
-            title: "Masa Kerja",
-            column: "masa_kerja",
-            format: "number",
-        },
-        {
-            title: "Jabatan",
-            column: "jabatan",
-        },
-        {
-            title: "Area",
-            column: "area",
-            format: "number",
-        },
-        {
-            title: "Unit",
-            column: "unit",
-        },
         {
             title: "Wilayah",
             column: "wilayah",
         },
         {
-            title: "Jenis Jaminan",
-            column: "janis_jaminan",
+            title: "Unit",
+            column: "unit",
+            nowrap: true,
         },
         {
-            title: "Tanggal Perpindahan",
-            column: "tanggal_perpindahan",
-            format: "date",
+            title: "Bulan",
+            column: "bulan",
+            nowrap: true,
         },
         {
-            title: "History Perpindahan",
-            column: "history_perpindahan",
+            title: "Nama Karyawan",
+            column: "nama_karyawan",
+        },
+        // {
+        //     title: "Tanggal Tabungan",
+        //     column: "tanggal_tabungan",
+        //     format: "date",
+        // },
+        {
+            title: "Saldo Sebelumnya",
+            column: "balance_before",
+            format: "currency",
+            backgroundcolumn: "bg-gray-100",
         },
         {
-            title: "Keterangan Perpindahan",
-            column: "keterangan_perpindahan",
+            title: "Debit",
+            column: "debit",
+            format: "currency",
+            backgroundcolumn: "bg-green-200",
         },
         {
-            title: "Tanggal Berhenti",
-            column: "date_resign",
-            format: "date",
+            title: "Kredit",
+            column: "kredit",
+            format: "currency",
+            backgroundcolumn: "bg-red-200",
         },
         {
-            title: "Keterangan Berhenti",
-            column: "resign_status",
+            title: "Saldo",
+            column: "balance",
+            format: "currency",
+            backgroundcolumn: "bg-green-200",
         },
         {
-            title: "Tgl Pencairan SS",
-            column: "pencairan_simpanan_date",
-            format: "date",
+            title: "Setoran (D)",
+            column: "D",
+            format: "currency",
+            backgroundcolumn: "bg-yellow-100",
         },
         {
-            title: "Petugas",
-            column: "pencairan_simpanan_by",
+            title: "Debit Mutasi (D)",
+            column: "DM",
+            format: "currency",
+            backgroundcolumn: "bg-yellow-100",
         },
         {
-            title: "Tgl. Pencairan SW",
-            column: "pencairan_simpanan_w_date",
-            format: "date",
+            title: "Pengambilan (K)",
+            column: "K",
+            format: "currency",
+            backgroundcolumn: "bg-yellow-100",
         },
         {
-            title: "Petugas",
-            column: "pencairan_simpanan_w_by",
+            title: "Kredit Mutasi (K)",
+            column: "KM",
+            format: "currency",
+            backgroundcolumn: "bg-yellow-100",
         },
         {
-            title: "Tgl Pengambilan Jaminan",
-            column: "handover_jaminan",
-            format: "date",
-        },
-        {
-            title: "Petugas",
-            column: "handover_jaminan_by",
+            title: "Kredit Resigm / MD (K)",
+            column: "KRMD",
+            format: "currency",
+            backgroundcolumn: "bg-yellow-100",
         },
     ];
 
@@ -355,16 +330,13 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
                         <th className="px-6 py-1">
                             <div className="flex justify-around items-center gap-3">
                                 {(currentPage - 1) * itemsPerPage + index + 1}
-                                <Link href={route("employee.action", item.id)}>
-                                    <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
-                                </Link>
                             </div>
                         </th>
                         {headers.map((header, index) => {
                             if (header.format == "date") {
                                 return (
-                                    <td className="px-6 py-1" key={index}>
-                                        <div className="w-64 white whitespace-pre-wrap">
+                                    <td className={`px-6 py-1`} key={index}>
+                                        <div className={`whitespace-pre-wrap`}>
                                             {item[header.column] !== "-"
                                                 ? dayjs(
                                                       item[header.column]
@@ -375,9 +347,38 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
                                 );
                             }
                             if (header.format == "currency") {
+                                // if (header.backgroundcolumn === "saldo_akhir") {
+                                //     return (
+                                //         <td
+                                //             className={`bg-green-200 px-6 py-1`}
+                                //             key={index}
+                                //         >
+                                //             <div
+                                //                 className={`whitespace-pre-wrap`}
+                                //             >
+                                //                 {/* {dayjs(item[header.column]).format(
+                                //             "DD-MM-YYYY"
+                                //         )} */}
+                                //                 <NumericFormat
+                                //                     value={item[header.column]}
+                                //                     displayType={"text"}
+                                //                     thousandSeparator={","}
+                                //                     prefix={"Rp. "}
+                                //                 />
+                                //             </div>
+                                //         </td>
+                                //     );
+                                // }
                                 return (
-                                    <td className="px-6 py-1" key={index}>
-                                        <div className="w-64 white whitespace-pre-wrap">
+                                    <td
+                                        className={`px-6 py-1 ${
+                                            header.backgroundcolumn
+                                                ? header.backgroundcolumn
+                                                : ""
+                                        }`}
+                                        key={index}
+                                    >
+                                        <div className={`whitespace-nowrap`}>
                                             {/* {dayjs(item[header.column]).format(
                                                 "DD-MM-YYYY"
                                             )} */}
@@ -392,8 +393,14 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
                                 );
                             }
                             return (
-                                <td className="px-6 py-1" key={index}>
-                                    <div className="w-64 white whitespace-pre-wrap">
+                                <td className={`px-6 py-1`} key={index}>
+                                    <div
+                                        className={`${
+                                            header.nowrap
+                                                ? "whitespace-nowrap"
+                                                : "whitespace-pre-wrap"
+                                        } `}
+                                    >
                                         {item[header.column]}
                                     </div>
                                 </td>
@@ -405,146 +412,99 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
         );
     };
 
-    const onResetPage = () => {
-        setLoading(true);
-        localStorage.setItem("complainfilter", null);
-        setFilters([{ column: "", operators: "1", values: "" }]);
-        setOrderData({ column: "", orderby: "" });
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
-    };
     return (
-        <Authenticated
-            loading={loading}
-            auth={props.auth}
-            errors={props.errors}
-            header={
-                <>
-                    <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Daftar Karyawan
-                    </h2>
-                    <div className="ml-auto flex items-center"></div>
-                </>
-            }
-        >
-            <div className="py-3">
-                <div className="mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white relative shadow-sm">
-                        <div className="p-3">
-                            <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
-                                <div>
-                                    <SelectList
-                                        value={server_filters}
-                                        options={branchess}
-                                        nullValue={true}
-                                        onChange={onBranchChange}
-                                    />
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <PrimaryButton
-                                        onClick={onResetPage}
-                                        size={"sm"}
-                                        theme="other"
-                                        icon={<BiRefresh />}
-                                        title={"Reset"}
-                                    />
-
-                                    <LinkButton
-                                        as="a"
-                                        href={route("employee.create")}
-                                        icon={<IoMdAdd />}
-                                        size={"md"}
-                                        title={"Tambah"}
-                                    ></LinkButton>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="h-[70vh] overflow-auto relative">
-                            {/* filter card */}
-                            <div className="mb-3 inline-block">
-                                {filters &&
-                                    filters.map((item) => {
-                                        if (item.column == "") {
-                                            return null;
-                                        }
-                                        return (
-                                            <div className="flex items-center justify-start mb-2">
-                                                <div className="border rounded flex items-center">
-                                                    <div className="p-2 text-lg bg-green-400 text-white">
-                                                        <AiFillFilter />
-                                                    </div>
-                                                    <div className="px-3 text-sm text-main-500">
-                                                        <span className="mr-1 capitalize ">
-                                                            {item.column}
-                                                        </span>
-                                                        <span className="mr-1 capitalize ">
-                                                            {item.operators == 1
-                                                                ? "Contains"
-                                                                : "="}
-                                                        </span>
-                                                        <span>
-                                                            '{item.values}'
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    className="hover:border hover:bg-gray-300 hover:cursor-pointer rounded p-1 ml-2"
-                                                    onClick={() =>
-                                                        decrementFilter(
-                                                            item.column
-                                                        )
-                                                    }
-                                                >
-                                                    <AiOutlineClose />
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                            </div>
-
-                            <table className="w-full text-sm text-left text-gray-500">
-                                <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
-                                    <tr>
-                                        <th className="px-6 py-4">Nomor</th>
-                                        {headers.map((header, key) => (
-                                            <th
-                                                key={key}
-                                                data-item={header.column}
-                                                data-format={
-                                                    header.format ?? "text"
-                                                }
-                                                scope="col"
-                                                className="px-6 py-4 hover:bg-main-500 hover:text-white hover:cursor-pointer"
-                                            >
-                                                {header.title}
-                                                {orderData.column ==
-                                                    header.column && (
-                                                    <span className="ml-1 text-blue-400 italic">
-                                                        {orderData.orderby}
-                                                    </span>
-                                                )}
-
-                                                {showFilter.column ==
-                                                    header.column &&
-                                                    filterModal()}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                {tBodyGenerator()}
-                            </table>
-                        </div>
-                        <Paginasi
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
+        <>
+            <div className="p-3 bg-white rounded shadow">
+                <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
+                    <div></div>
+                    <div className="flex items-center gap-3">
+                        <PrimaryButton
+                            onClick={onResetPage}
+                            size={"sm"}
+                            theme="other"
+                            icon={<BiRefresh />}
+                            title={"Reset"}
                         />
+
+                        <LinkButton
+                            as="button"
+                            href={route("simpanan.create")}
+                            icon={<IoMdAdd />}
+                            size={"md"}
+                            title={"Tambah"}
+                        ></LinkButton>
                     </div>
                 </div>
+                {filters && (
+                    <div className="inline-block mt-3">
+                        {filters.map((item) => {
+                            if (item.column == "") {
+                                return null;
+                            }
+                            return (
+                                <div className="flex items-center justify-start space-y-2">
+                                    <div className="border rounded flex items-center">
+                                        <div className="p-2 text-lg bg-green-400 text-white">
+                                            <AiFillFilter />
+                                        </div>
+                                        <div className="px-3 text-sm text-main-500">
+                                            <span className="mr-1 capitalize ">
+                                                {item.column}
+                                            </span>
+                                            <span className="mr-1 capitalize ">
+                                                {item.operators == 1
+                                                    ? "Contains"
+                                                    : "="}
+                                            </span>
+                                            <span>'{item.values}'</span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        className="hover:border hover:bg-gray-300 hover:cursor-pointer rounded p-1 ml-2"
+                                        onClick={() =>
+                                            decrementFilter(item.column)
+                                        }
+                                    >
+                                        <AiOutlineClose />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
-        </Authenticated>
+
+            <div className="h-[70vh] p-3 mt-3 bg-white rounded shadow overflow-auto">
+                <table className="w-full text-sm text-left text-gray-500">
+                    <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
+                        <tr>
+                            <th className="px-6 py-4">Nomor</th>
+                            {headers.map((header, key) => (
+                                <th
+                                    key={key}
+                                    data-item={header.column}
+                                    data-format={header.format ?? "text"}
+                                    scope="col"
+                                    className="px-6 py-4 hover:bg-main-500 hover:text-white hover:cursor-pointer"
+                                >
+                                    {header.title}
+                                    {orderData.column == header.column && (
+                                        <span className="ml-1 text-blue-400 italic">
+                                            {orderData.orderby}
+                                        </span>
+                                    )}
+
+                                    {showFilter.column == header.column &&
+                                        filterModal()}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    {tBodyGenerator()}
+                </table>
+            </div>
+        </>
     );
 };
 
-export default Index;
+export default TableGlobalPerbulan;

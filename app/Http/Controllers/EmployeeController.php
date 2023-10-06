@@ -29,7 +29,6 @@ class EmployeeController extends Controller
     public function index()
     {
 
-        $filters = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : request()->all();
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
@@ -64,7 +63,7 @@ class EmployeeController extends Controller
         ]);
         return Inertia::render('V2/Employee/Index', [
             'branch' => $branch,
-            'employee' => $data,
+            'datas' => $data,
             'server_filters' => request()->branch_id ?? null
         ]);
     }

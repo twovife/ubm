@@ -76,7 +76,7 @@ class DepositController extends Controller
     public function store(Request $request)
     {
         $validation = $request->validate([
-            "employee_id" => ['required', 'numeric', 'unique:optional_deposits'],
+            "employee_id" => ['required', 'numeric', 'unique:deposits'],
             "sw_balance" => ['required', 'numeric'],
             "sk_balance" => ['required', 'numeric'],
             "tgl_tabugan" => ['required'],

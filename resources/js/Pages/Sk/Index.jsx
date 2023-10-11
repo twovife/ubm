@@ -132,16 +132,6 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         });
     };
 
-    const onBranchChange = (e) => {
-        e.preventDefault();
-        setLoading(true);
-        router.visit(route("simpanan.index"), {
-            data: {
-                branch_id: e.target.value,
-            },
-        });
-    };
-
     const filterModal = () => {
         return (
             <div
@@ -278,6 +268,12 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             className: "bg-green-200 font-semibold",
         },
         {
+            title: "Total Simpanan",
+            column: "total_saldo",
+            format: "currency",
+            className: "bg-green-200 font-semibold",
+        },
+        {
             title: "Status Karyawan",
             column: "status_karyawan",
         },
@@ -388,6 +384,23 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         }, 500);
     };
 
+    const [serverFilter, setServerFilter] = useState({
+        branch_id: parseInt(server_filters.branch_id) ?? null,
+    });
+
+    const onServerFilterChange = (e) => {
+        const { value, name } = e.target;
+        setServerFilter({ ...serverFilter, [name]: value });
+    };
+    const onBranchChange = (e) => {
+        e.preventDefault();
+        console.log(serverFilter);
+        setLoading(true);
+        router.visit(route("simpanan.index"), {
+            data: { ...serverFilter },
+        });
+    };
+
     return (
         <Authenticated
             loading={loading}
@@ -398,21 +411,42 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
                         Daftar Simpanan Karyawan
                     </h2>
-                    <div className="ml-auto flex items-center"></div>
+                    <form
+                        onSubmit={onBranchChange}
+                        className="ml-auto flex gap-3 items-center"
+                    >
+                        <SelectList
+                            value={serverFilter.branch_id}
+                            name={"branch_id"}
+                            options={branchess}
+                            nullValue={true}
+                            className={"text-sm"}
+                            onChange={onServerFilterChange}
+                        />
+
+                        <PrimaryButton
+                            href={route("simpanan.detailPerBulan")}
+                            title={"Go"}
+                            size={"sm"}
+                            type="submit"
+                            theme="green"
+                        />
+
+                        <LinkButton
+                            href={route("simpanan.detailPerBulan")}
+                            title={"Reset"}
+                            size={"sm"}
+                            theme="other"
+                            type="submit"
+                            icon={<BiRefresh />}
+                        />
+                    </form>
                 </>
             }
         >
             <div className="mx-auto sm:px-6 lg:px-8">
                 <div className="p-3 bg-white rounded shadow">
                     <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
-                        <div>
-                            <SelectList
-                                value={server_filters}
-                                options={branchess}
-                                nullValue={true}
-                                onChange={onBranchChange}
-                            />
-                        </div>
                         <div className="flex items-center gap-3">
                             <PrimaryButton
                                 onClick={onResetPage}

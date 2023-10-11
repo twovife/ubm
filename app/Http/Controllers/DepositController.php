@@ -24,11 +24,19 @@ class DepositController extends Controller
      */
     public function index()
     {
+
+        $getFilter = new \stdClass;
+        $getFilter = (object) request()->all();
+        $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
+        $getFilter->transaction_month = request()->transaction_month ??  Carbon::now()->month;
+        $getFilter->branch_id = $result = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : (request()->branch_id ?? 1);
+        $getFilter->wilayah = -1;
+
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
 
-        $simpanan = Deposit::with('employee', 'branch')->get();
+        $simpanan = Deposit::with('employee', 'branch')->withFilter($getFilter)->get();
 
         $data = collect($simpanan)->map(fn ($que) => [
             'id' => $que->id,
@@ -39,6 +47,7 @@ class DepositController extends Controller
             'tanggal_tabungan' => $que->tgl_tabugan ?? '-',
             'saldo_sw' => $que->sw_balance ?? 0,
             'saldo_sk' => $que->sk_balance ?? 0,
+            'total_saldo' => ($que->sw_balance ?? 0) + ($que->sk_balance ?? 0),
             'isactive' => $que->employee->date_resign ? 1 : 2,
             'status_karyawan' => $que->employee->date_resign ? 'Aktiv' : 'Non Aktiv',
         ])->sortBy('wilayah')->sortBy('unit')->values();
@@ -48,7 +57,7 @@ class DepositController extends Controller
         return Inertia::render('Sk/Index', [
             'datas' => $data,
             'branch' => $branch,
-            'server_filters' => request()->branch_id ?? null
+            'server_filters' => $getFilter ?? null
         ]);
     }
 

@@ -38,12 +38,14 @@ class Deposit extends Model
         return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }
 
-    public function scopeWithFilter($query)
+    public function scopeWithFilter($query, $getFilter)
     {
         return $query->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('branch_id', auth()->user()->employee->branch_id);
-        })->when(request()->input('branch_id', []), function ($q) {
-            $q->where('branch_id', request()->input('branch_id', []));
+        })->when($getFilter->branch_id >= 0, function ($q) use ($getFilter) {
+            $q->whereHas('branch', fn ($qq) => $qq->where('id', $getFilter->branch_id));
+        })->when($getFilter->wilayah >= 0, function ($q) use ($getFilter) {
+            $q->whereHas('branch', fn ($qq) => $qq->where('wilayah', $getFilter->wilayah));
         });
     }
 }

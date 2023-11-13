@@ -1,23 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Database\Seeders;
 
 use App\Models\Inventory;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
 
-class HomeController extends Controller
+class InventarisDataSeeder extends Seeder
 {
-    public function index()
-    {
-        return Inertia::render('Home');
-    }
-
-
-    public function testdump()
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
     {
         $inventaris = json_decode(file_get_contents(storage_path('inventaris.json')), true);
         try {
@@ -33,7 +32,6 @@ class HomeController extends Controller
                     "status_kepemilikan" => $invent['status_kepemilikan'],
                     "isactive" => $invent['isactive'],
                 ]);
-
 
                 $detail =   $inv->vehicle_detail()->create([
                     "plat_nomor" => $invent['plat_nomor'],
@@ -55,7 +53,7 @@ class HomeController extends Controller
                     "pengguna" => $invent['pengguna'],
                 ]);
             });
-            DB::rollBack();
+            DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);

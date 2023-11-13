@@ -43,7 +43,7 @@ class Loan extends Model
 
     public function lastAngsuran()
     {
-        return $this->hasOne(Instalment::class, 'loan_id', 'id')->latest();
+        return $this->hasOne(Instalment::class, 'loan_id', 'id')->latestOfMany();
     }
 
     public function mantri()

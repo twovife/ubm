@@ -49,7 +49,7 @@ class DepositController extends Controller
             'saldo_sk' => $que->sk_balance ?? 0,
             'total_saldo' => ($que->sw_balance ?? 0) + ($que->sk_balance ?? 0),
             'isactive' => $que->employee->date_resign ? 1 : 2,
-            'status_karyawan' => $que->employee->date_resign ? 'Aktiv' : 'Non Aktiv',
+            'status_karyawan' => $que->employee->date_resign ? 'Non Aktiv' : 'Aktiv',
         ])->sortBy('wilayah')->sortBy('unit')->values();
 
 

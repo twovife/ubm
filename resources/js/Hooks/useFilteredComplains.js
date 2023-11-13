@@ -1,5 +1,5 @@
 import { usePage } from "@inertiajs/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function useFilteredComplains(
     initialFilters,
@@ -23,6 +23,11 @@ function useFilteredComplains(
     });
 
     const [currentPage, setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        // Reset the current page to 1 when filters or sorting criteria change
+        setCurrentPage(1);
+    }, [filters, orderData]);
 
     const applyFilter = (item, filter) => {
         const itemValue = item[filter.column];
@@ -93,7 +98,7 @@ function useFilteredComplains(
 
         return 0;
     });
-
+    // console.log(filteredDataWithSorting);
     const totalPages = Math.ceil(filteredDataWithSorting.length / itemsPerPage);
 
     const displayData = filteredDataWithSorting.slice(

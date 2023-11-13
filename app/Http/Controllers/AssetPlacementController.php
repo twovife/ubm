@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\VehicleAsset;
+use App\Models\AssetPlacement;
 use Illuminate\Http\Request;
 
-class VehicleAssetController extends Controller
+class AssetPlacementController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class VehicleAssetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\VehicleAsset  $vehicleAsset
+     * @param  \App\Models\AssetPlacement  $assetPlacement
      * @return \Illuminate\Http\Response
      */
-    public function show(VehicleAsset $vehicleAsset)
+    public function show(AssetPlacement $assetPlacement)
     {
         //
     }
@@ -52,10 +52,10 @@ class VehicleAssetController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\VehicleAsset  $vehicleAsset
+     * @param  \App\Models\AssetPlacement  $assetPlacement
      * @return \Illuminate\Http\Response
      */
-    public function edit(VehicleAsset $vehicleAsset)
+    public function edit(AssetPlacement $assetPlacement)
     {
         //
     }
@@ -64,10 +64,10 @@ class VehicleAssetController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\VehicleAsset  $vehicleAsset
+     * @param  \App\Models\AssetPlacement  $assetPlacement
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, VehicleAsset $vehicleAsset)
+    public function update(Request $request, AssetPlacement $assetPlacement)
     {
         //
     }
@@ -75,10 +75,10 @@ class VehicleAssetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\VehicleAsset  $vehicleAsset
+     * @param  \App\Models\AssetPlacement  $assetPlacement
      * @return \Illuminate\Http\Response
      */
-    public function destroy(VehicleAsset $vehicleAsset)
+    public function destroy(AssetPlacement $assetPlacement)
     {
         //
     }

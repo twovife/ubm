@@ -4,12 +4,15 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InstalmentController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MantriAppController;
 use App\Http\Controllers\OptionalDepositController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Models\Inventory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,10 +47,22 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Route::get('/testdump', [PinjamanController::class, 'testdump']);
+
+Route::get('/testdump', [HomeController::class, 'testdump']);
 
 
-
+Route::prefix('aset')->name('aset.')->group(function () {
+    Route::controller(InventoryController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/taxalert', 'taxalert')->name('taxalert');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::put('/put/{inventory}', 'update')->name('update');
+        Route::get('/show/{inventory}', 'show')->name('show');
+        Route::put('/edit/{inventory}', 'edit')->name('edit');
+        Route::put('/mutating/{inventory}', 'mutating')->name('mutating');
+    });
+})->middleware('auth');
 
 Route::middleware('auth')->group(function () {
 

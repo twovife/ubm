@@ -29,7 +29,7 @@ class DepositController extends Controller
         $getFilter = (object) request()->all();
         $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
         $getFilter->transaction_month = request()->transaction_month ??  Carbon::now()->month;
-        $getFilter->branch_id = $result = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : (request()->branch_id ?? 1);
+        $getFilter->branch_id = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : (request()->branch_id ?? 1);
         $getFilter->wilayah = -1;
 
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {

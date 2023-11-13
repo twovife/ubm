@@ -16,9 +16,9 @@ import {
 import { BiRefresh } from "react-icons/bi";
 import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
+import { ModalHer } from "./ModalHer";
 
-const Index = ({ branch, server_filters, datas, ...props }) => {
-    // console.log(datas);
+const AlertKendaraan = ({ datas, ...props }) => {
     const itemsPerPage = 20;
     const {
         filters,
@@ -45,19 +45,14 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(
-            localStorage.getItem("dashboard_simpanan_karyawan")
-        );
+        const storedFilter = JSON.parse(localStorage.getItem("dashboard_aset"));
         if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem(
-            "dashboard_simpanan_karyawan",
-            JSON.stringify(filters)
-        );
+        localStorage.setItem("dashboard_aset", JSON.stringify(filters));
     }, [filters]);
 
     useEffect(() => {
@@ -78,14 +73,6 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         window.addEventListener("click", log);
         return () => {
             window.removeEventListener("click", log);
-        };
-    });
-
-    const branchess = branch.map((item) => {
-        return {
-            id: item.id,
-            value: item.id,
-            display: item.unit,
         };
     });
 
@@ -129,6 +116,24 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         setAddFilter({
             ...addFilter,
             [name]: convertedValue,
+        });
+    };
+
+    const [modalHer, setModalHer] = useState({
+        show: false,
+        tax: "",
+    });
+
+    const onClickModalHer = (e, data) => {
+        setModalHer({
+            show: true,
+            tax: data,
+        });
+    };
+    const hideModalHer = () => {
+        setModalHer({
+            show: false,
+            tax: "",
         });
     };
 
@@ -230,6 +235,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             </div>
         );
     };
+
     const headers = [
         {
             title: "Wilayah",
@@ -242,40 +248,41 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             className: "whitespace-nowrap",
         },
         {
-            title: "Nama Karyawan",
-            column: "nama",
+            title: "Jabatan",
+            column: "pengguna",
             nowrap: true,
         },
         {
-            title: "Jabatan",
-            column: "jabatan",
+            title: "Jenis Aset",
+            column: "type_aset",
+            className: "whitespace-nowrap",
         },
         {
-            title: "Tanggal Tabungan",
-            column: "tanggal_tabungan",
+            title: "Nama Aset",
+            column: "nama_aset",
+            className: "whitespace-nowrap",
+        },
+        {
+            title: "Nopol",
+            column: "plat_nomor",
+            className: "whitespace-nowrap",
+        },
+        {
+            title: "Masa Berlaku STNK ( Her 5 Tahun )",
+            column: "tanggal_stnk",
             format: "date",
+            className: "whitespace-nowrap",
         },
         {
-            title: "Simpanan Wajib",
-            column: "saldo_sw",
-            format: "currency",
-            className: "bg-green-200 font-semibold",
+            title: "Tanggal Berlaku Pajak ( Her 1 Tahun )",
+            column: "tax_expired",
+            format: "date",
+            className: "whitespace-nowrap",
         },
         {
-            title: "Simpanan Sukarela",
-            column: "saldo_sk",
-            format: "currency",
-            className: "bg-green-200 font-semibold",
-        },
-        {
-            title: "Total Simpanan",
-            column: "total_saldo",
-            format: "currency",
-            className: "bg-green-200 font-semibold",
-        },
-        {
-            title: "Status Karyawan",
-            column: "status_karyawan",
+            title: "Atas Nama STNK",
+            column: "nama_stnk",
+            className: "whitespace-nowrap",
         },
     ];
 
@@ -301,11 +308,13 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         <th className="px-6 py-1">
                             <div className="flex justify-around items-center gap-3">
                                 {(currentPage - 1) * itemsPerPage + index + 1}
-                                <Link
-                                    href={route("simpanan.transaksi", item.id)}
-                                >
-                                    <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
-                                </Link>
+                                <PrimaryButton
+                                    theme="other"
+                                    onClick={(e) => onClickModalHer(e, item)}
+                                    icon={
+                                        <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
+                                    }
+                                />
                             </div>
                         </th>
                         {headers.map((header, index) => {
@@ -374,33 +383,6 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         );
     };
 
-    const onResetPage = () => {
-        setLoading(true);
-        localStorage.setItem("dashboard_simpanan_karyawan", null);
-        setFilters([{ column: "", operators: "1", values: "" }]);
-        setOrderData({ column: "", orderby: "" });
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
-    };
-
-    const [serverFilter, setServerFilter] = useState({
-        branch_id: parseInt(server_filters.branch_id) ?? null,
-    });
-
-    const onServerFilterChange = (e) => {
-        const { value, name } = e.target;
-        setServerFilter({ ...serverFilter, [name]: value });
-    };
-    const onBranchChange = (e) => {
-        e.preventDefault();
-        console.log(serverFilter);
-        setLoading(true);
-        router.visit(route("simpanan.index"), {
-            data: { ...serverFilter },
-        });
-    };
-
     return (
         <Authenticated
             loading={loading}
@@ -411,35 +393,6 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
                         Daftar Simpanan Karyawan
                     </h2>
-                    <form
-                        onSubmit={onBranchChange}
-                        className="ml-auto flex gap-3 items-center"
-                    >
-                        <SelectList
-                            value={serverFilter.branch_id}
-                            name={"branch_id"}
-                            options={branchess}
-                            nullValue={true}
-                            className={"text-sm"}
-                            onChange={onServerFilterChange}
-                        />
-
-                        <PrimaryButton
-                            title={"Go"}
-                            size={"sm"}
-                            type="submit"
-                            theme="green"
-                        />
-
-                        <LinkButton
-                            href={route("simpanan.index")}
-                            title={"Reset"}
-                            size={"sm"}
-                            theme="other"
-                            type="submit"
-                            icon={<BiRefresh />}
-                        />
-                    </form>
                 </>
             }
         >
@@ -448,20 +401,12 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                     <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
                         <div className="flex items-center gap-3">
                             <PrimaryButton
-                                onClick={onResetPage}
+                                // onClick={onResetPage}
                                 size={"sm"}
                                 theme="other"
                                 icon={<BiRefresh />}
-                                title={"Reset Fiter"}
+                                title={"Reset"}
                             />
-
-                            <LinkButton
-                                as="button"
-                                href={route("simpanan.create")}
-                                icon={<IoMdAdd />}
-                                size={"md"}
-                                title={"Tambah"}
-                            ></LinkButton>
                         </div>
                     </div>
                     {filters && (
@@ -502,12 +447,11 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         </div>
                     )}
                 </div>
-
                 <div className="h-[70vh] p-3 mt-3 bg-white rounded shadow overflow-auto">
                     <table className="w-full text-sm text-left text-gray-500">
                         <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
                             <tr>
-                                <th className="px-6 py-4">Nomor</th>
+                                <th className="px-6 py-4">Nomor / Her</th>
                                 {headers.map((header, key) => (
                                     <th
                                         key={key}
@@ -533,8 +477,9 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                     </table>
                 </div>
             </div>
+            <ModalHer datas={modalHer} onClose={hideModalHer} />
         </Authenticated>
     );
 };
 
-export default Index;
+export default AlertKendaraan;

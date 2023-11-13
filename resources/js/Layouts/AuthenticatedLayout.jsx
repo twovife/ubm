@@ -151,6 +151,7 @@ export default function Authenticated({
                                     },
                                 ]}
                             />
+
                             {/* <SideBarDropDown
                                 onClick={() => onClickDropDownHandler(2)}
                                 title={"Buku Transaksi Drop"}
@@ -305,6 +306,29 @@ export default function Authenticated({
                                         name: "Global Wilayah (SW)",
                                         active: route().current(
                                             "simpanan.sumallsw"
+                                        ),
+                                    },
+                                ]}
+                            />
+                            <SideBarDropDown
+                                onClick={() => onClickDropDownHandler(8)}
+                                title={"Aset Kendaraan"}
+                                active={route().current("aset.*")}
+                                colapse={colapse}
+                                dropdownId={8}
+                                lists={[
+                                    {
+                                        id: "1",
+                                        href: route("aset.index"),
+                                        name: "List Aset",
+                                        active: route().current("aset.index"),
+                                    },
+                                    {
+                                        id: "1",
+                                        href: route("aset.taxalert"),
+                                        name: "Peringatan Her",
+                                        active: route().current(
+                                            "aset.taxalert"
                                         ),
                                     },
                                 ]}

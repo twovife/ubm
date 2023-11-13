@@ -1,4 +1,5 @@
 import LinkButton from "@/Components/LinkButton";
+import Paginasi from "@/Components/Paginasi";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import useFilteredComplains from "@/Hooks/useFilteredComplains";
@@ -17,8 +18,7 @@ import { BiRefresh } from "react-icons/bi";
 import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 
-const Index = ({ branch, server_filters, datas, ...props }) => {
-    // console.log(datas);
+const Index = ({ branch, datas, server_filters, ...props }) => {
     const itemsPerPage = 20;
     const {
         filters,
@@ -45,19 +45,14 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(
-            localStorage.getItem("dashboard_simpanan_karyawan")
-        );
+        const storedFilter = JSON.parse(localStorage.getItem("dashboard_aset"));
         if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem(
-            "dashboard_simpanan_karyawan",
-            JSON.stringify(filters)
-        );
+        localStorage.setItem("dashboard_aset", JSON.stringify(filters));
     }, [filters]);
 
     useEffect(() => {
@@ -230,6 +225,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             </div>
         );
     };
+
     const headers = [
         {
             title: "Wilayah",
@@ -242,40 +238,51 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             className: "whitespace-nowrap",
         },
         {
-            title: "Nama Karyawan",
-            column: "nama",
+            title: "Jabatan",
+            column: "pengguna",
             nowrap: true,
         },
         {
-            title: "Jabatan",
-            column: "jabatan",
+            title: "Jenis Aset",
+            column: "type_aset",
+            className: "whitespace-nowrap",
         },
         {
-            title: "Tanggal Tabungan",
-            column: "tanggal_tabungan",
+            title: "Nama Aset",
+            column: "nama_aset",
+            className: "whitespace-nowrap",
+        },
+        {
+            title: "Nopol",
+            column: "plat_nomor",
+            className: "whitespace-nowrap",
+        },
+        {
+            title: "Status Aset",
+            column: "is_inplace",
+            className: "whitespace-nowrap",
+        },
+        {
+            title: "Keterangan",
+            column: "keterangan_keluar",
+            className: "whitespace-nowrap",
+        },
+        {
+            title: "Masa Berlaku STNK",
+            column: "tanggal_stnk",
             format: "date",
+            className: "whitespace-nowrap",
         },
         {
-            title: "Simpanan Wajib",
-            column: "saldo_sw",
-            format: "currency",
-            className: "bg-green-200 font-semibold",
+            title: "Tanggal Pajak Tahunan",
+            column: "tax_expired",
+            format: "date",
+            className: "whitespace-nowrap",
         },
         {
-            title: "Simpanan Sukarela",
-            column: "saldo_sk",
-            format: "currency",
-            className: "bg-green-200 font-semibold",
-        },
-        {
-            title: "Total Simpanan",
-            column: "total_saldo",
-            format: "currency",
-            className: "bg-green-200 font-semibold",
-        },
-        {
-            title: "Status Karyawan",
-            column: "status_karyawan",
+            title: "Atas Nama STNK",
+            column: "nama_stnk",
+            className: "whitespace-nowrap",
         },
     ];
 
@@ -296,13 +303,17 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                 {displayData.map((item, index) => (
                     <tr
                         key={index}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-sm"
+                        className={`${
+                            item.is_inplace == "inactive"
+                                ? `bg-red-200 hover:bg-red-300`
+                                : "bg-white hover:bg-gray-50"
+                        }  border-b  text-sm`}
                     >
                         <th className="px-6 py-1">
                             <div className="flex justify-around items-center gap-3">
                                 {(currentPage - 1) * itemsPerPage + index + 1}
                                 <Link
-                                    href={route("simpanan.transaksi", item.id)}
+                                    href={route("aset.show", item.inventory_id)}
                                 >
                                     <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
                                 </Link>
@@ -376,7 +387,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
 
     const onResetPage = () => {
         setLoading(true);
-        localStorage.setItem("dashboard_simpanan_karyawan", null);
+        localStorage.setItem("dashboard_aset", null);
         setFilters([{ column: "", operators: "1", values: "" }]);
         setOrderData({ column: "", orderby: "" });
         setTimeout(() => {
@@ -394,9 +405,8 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
     };
     const onBranchChange = (e) => {
         e.preventDefault();
-        console.log(serverFilter);
         setLoading(true);
-        router.visit(route("simpanan.index"), {
+        router.visit(route("aset.index"), {
             data: { ...serverFilter },
         });
     };
@@ -409,7 +419,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Daftar Simpanan Karyawan
+                        Daftar Inventaris Motor Kantor
                     </h2>
                     <form
                         onSubmit={onBranchChange}
@@ -432,7 +442,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         />
 
                         <LinkButton
-                            href={route("simpanan.index")}
+                            href={route("aset.index")}
                             title={"Reset"}
                             size={"sm"}
                             theme="other"
@@ -448,16 +458,16 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                     <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
                         <div className="flex items-center gap-3">
                             <PrimaryButton
-                                onClick={onResetPage}
+                                // onClick={onResetPage}
                                 size={"sm"}
                                 theme="other"
                                 icon={<BiRefresh />}
-                                title={"Reset Fiter"}
+                                title={"Reset"}
                             />
 
                             <LinkButton
                                 as="button"
-                                href={route("simpanan.create")}
+                                href={route("aset.create")}
                                 icon={<IoMdAdd />}
                                 size={"md"}
                                 title={"Tambah"}
@@ -502,8 +512,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         </div>
                     )}
                 </div>
-
-                <div className="h-[70vh] p-3 mt-3 bg-white rounded shadow overflow-auto">
+                <div className="h-[70vh] p-3 my-3 bg-white rounded shadow overflow-auto">
                     <table className="w-full text-sm text-left text-gray-500">
                         <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
                             <tr>
@@ -532,6 +541,11 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         {tBodyGenerator()}
                     </table>
                 </div>
+                <Paginasi
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             </div>
         </Authenticated>
     );

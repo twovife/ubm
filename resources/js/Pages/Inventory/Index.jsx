@@ -241,6 +241,7 @@ const Index = ({ branch, datas, server_filters, ...props }) => {
             title: "Jabatan",
             column: "pengguna",
             nowrap: true,
+            className: "whitespace-nowrap",
         },
         {
             title: "Jenis Aset",

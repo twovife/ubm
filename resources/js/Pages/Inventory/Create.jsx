@@ -59,7 +59,6 @@ const Create = ({ branch, employees, title, ...props }) => {
         const filteredObjects = branch
             .filter((obj) => obj.wilayah == value)
             .map(({ id, unit }) => ({ id: id, display: unit, value: id }));
-        console.log(filteredObjects);
         setUnit(filteredObjects);
     };
 

@@ -23,10 +23,10 @@ return new class extends Migration
 
             $table->string('transaction', 255)->nullable();
 
-            $table->integer('balance_before')->nullable();
-            $table->integer('debit')->nullable();
-            $table->integer('kredit')->nullable();
-            $table->integer('balance')->nullable();
+            $table->bigInteger('balance_before')->nullable();
+            $table->bigInteger('debit')->nullable();
+            $table->bigInteger('kredit')->nullable();
+            $table->bigInteger('balance')->nullable();
 
             $table->string('transaction_type', 255)->nullable();
 

@@ -42,7 +42,7 @@ class InventarisDataSeeder extends Seeder
                 if ($requestDate->diffInDays($today) < 365) {
                     $detail->tax()->create([
                         "tax_payment" => $requestDate,
-                        "tax_expired" =>  Carbon::parse($requestDate)->addYear(),
+                        "tax_expired" =>  Carbon::parse($requestDate),
                         "tax_type" => '5 Tahunan',
                     ]);
                 }

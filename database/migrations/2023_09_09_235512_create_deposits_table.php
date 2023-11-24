@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('branch_id')->nullable();
             $table->string('nomor_rekening')->nullable();
             $table->date('tgl_tabugan')->nullable();
-            $table->integer('sw_balance')->nullable();
-            $table->integer('sk_balance')->nullable();
+            $table->bigInteger('sw_balance')->nullable();
+            $table->bigInteger('sk_balance')->nullable();
             $table->timestamps();
         });
     }

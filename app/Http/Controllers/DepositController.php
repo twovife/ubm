@@ -36,7 +36,7 @@ class DepositController extends Controller
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
 
-        $simpanan = Deposit::with('employee', 'branch')->where('sw_balance', ">", 0)->where('sk_balance', ">", 0)->withFilter($getFilter)->get();
+        $simpanan = Deposit::with('employee', 'branch')->where('sw_balance', ">", 0)->orWhere('sk_balance', ">", 0)->withFilter($getFilter)->get();
 
         $data = collect($simpanan)->map(fn ($que) => [
             'id' => $que->id,

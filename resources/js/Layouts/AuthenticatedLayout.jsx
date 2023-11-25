@@ -324,7 +324,7 @@ export default function Authenticated({
                                         active: route().current("aset.index"),
                                     },
                                     {
-                                        id: "1",
+                                        id: "2",
                                         href: route("aset.taxalert"),
                                         name: "Peringatan Her",
                                         active: route().current(

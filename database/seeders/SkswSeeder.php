@@ -21,7 +21,7 @@ class SkswSeeder extends Seeder
     {
         $sksw = json_decode(file_get_contents(storage_path('sksw.json')), true);
         try {
-            $tanggal_masuk = Carbon::now()->startOfMonth();
+            $tanggal_masuk = Carbon::now()->startOfMonth()->subMonth();
             DB::beginTransaction();
             collect($sksw)->each(function ($item) use ($tanggal_masuk) {
                 $depo = Deposit::create([
@@ -33,7 +33,7 @@ class SkswSeeder extends Seeder
                     "sk_balance" => $item['sk_balance'],
                 ]);
 
-                $depo->optionaltrasactions()->create([
+                $depo->mandatorytrasactions()->create([
                     "branch_id" => $item['branch_id'],
                     "transaction_date" => $tanggal_masuk,
                     'transaction_month' => $tanggal_masuk->month,
@@ -48,7 +48,7 @@ class SkswSeeder extends Seeder
                     "transaction_input_user_id" => 1,
                 ]);
 
-                $depo->mandatorytrasactions()->create([
+                $depo->optionaltrasactions()->create([
                     "branch_id" => $item['branch_id'],
                     "transaction_date" => $tanggal_masuk,
                     'transaction_month' => $tanggal_masuk->month,

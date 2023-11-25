@@ -246,6 +246,16 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             column: "nama",
             nowrap: true,
         },
+
+        {
+            title: "Status Karyawan",
+            column: "status_karyawan",
+        },
+        {
+            title: "tanggal_masuk",
+            column: "hiredate",
+            format: "date",
+        },
         {
             title: "Jabatan",
             column: "jabatan",
@@ -272,10 +282,6 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             column: "total_saldo",
             format: "currency",
             className: "bg-green-200 font-semibold",
-        },
-        {
-            title: "Status Karyawan",
-            column: "status_karyawan",
         },
     ];
 

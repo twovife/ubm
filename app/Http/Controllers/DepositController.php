@@ -36,7 +36,7 @@ class DepositController extends Controller
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
 
-        $simpanan = Deposit::with('employee', 'branch')->withFilter($getFilter)->get();
+        $simpanan = Deposit::with('employee', 'branch')->where('sw_balance', ">", 0)->where('sk_balance', ">", 0)->withFilter($getFilter)->get();
 
         $data = collect($simpanan)->map(fn ($que) => [
             'id' => $que->id,
@@ -50,6 +50,7 @@ class DepositController extends Controller
             'total_saldo' => ($que->sw_balance ?? 0) + ($que->sk_balance ?? 0),
             'isactive' => $que->employee->date_resign ? 1 : 2,
             'status_karyawan' => $que->employee->date_resign ? 'Non Aktiv' : 'Aktiv',
+            'hiredate' => $que->employee->hire_date ?? '-',
         ])->sortBy('wilayah')->sortBy('unit')->values();
 
 
@@ -200,6 +201,55 @@ class DepositController extends Controller
         //
     }
 
+    public function swdestroy(MandatoryDepositTransaction $mandatoryDepositTransaction)
+    {
+        try {
+            DB::beginTransaction();
+            if ($mandatoryDepositTransaction->transaction == "D") {
+                // dd("d");
+                $mandatoryDepositTransaction->deposit->sw_balance =  $mandatoryDepositTransaction->deposit->sw_balance - $mandatoryDepositTransaction->debit;
+                $mandatoryDepositTransaction->deposit->save();
+                $mandatoryDepositTransaction->delete();
+            } else if ($mandatoryDepositTransaction->transaction == "K") {
+                // dd("k");
+                $mandatoryDepositTransaction->deposit->sw_balance =  $mandatoryDepositTransaction->deposit->sw_balance + $mandatoryDepositTransaction->debit;
+                $mandatoryDepositTransaction->deposit->save();
+                $mandatoryDepositTransaction->delete();
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            dd($e);
+            return redirect()->back()->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+        }
+        return redirect()->route('simpanan.transaksi', $mandatoryDepositTransaction->deposit->id)->with('message', 'data berhasil di hapuskan');
+    }
+
+    public function skdestroy(OptionalDepositTransaction $optionalDepositTransaction)
+    {
+
+        try {
+            DB::beginTransaction();
+            if ($optionalDepositTransaction->transaction == "D") {
+                // dd("D");
+                $optionalDepositTransaction->deposit->sk_balance =  $optionalDepositTransaction->deposit->sk_balance - $optionalDepositTransaction->debit;
+                $optionalDepositTransaction->deposit->save();
+                $optionalDepositTransaction->delete();
+            } else if ($optionalDepositTransaction->transaction == "K") {
+                // dd("K");
+                $optionalDepositTransaction->deposit->sk_balance =  $optionalDepositTransaction->deposit->sk_balance + $optionalDepositTransaction->debit;
+                $optionalDepositTransaction->deposit->save();
+                $optionalDepositTransaction->delete();
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            dd($e);
+            return redirect()->back()->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+        }
+        return redirect()->route('simpanan.transaksi', $optionalDepositTransaction->deposit->id)->with('message', 'data berhasil di hapuskan');
+    }
+
 
     public function transaksi(Deposit $deposit)
     {
@@ -234,7 +284,7 @@ class DepositController extends Controller
                     $req_sw_balance = $request->saldo_awal_sw;
                     $after_sw_balance = $req_sw_balance + $request->nominal_sw;
                     if ($sw_balance !== $req_sw_balance) {
-                        return redirect()->route('simpanan.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+                        return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
                     }
 
                     $deposit->sw_balance = $after_sw_balance;
@@ -264,7 +314,7 @@ class DepositController extends Controller
                     $req_sk_balance = $request->saldo_awal_sk;
                     $after_sk_balance = $req_sk_balance + $request->nominal_sk;
                     if ($sk_balance !== $req_sk_balance) {
-                        return redirect()->route('simpanan.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+                        return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
                     }
 
                     $deposit->sk_balance = $after_sk_balance;
@@ -298,7 +348,7 @@ class DepositController extends Controller
                     $after_sw_balance = $req_sw_balance - $request->nominal_sw;
 
                     if ($sw_balance !== $req_sw_balance || $after_sw_balance < 0) {
-                        return redirect()->route('simpanan.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+                        return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
                     }
 
                     $deposit->sw_balance = $after_sw_balance;
@@ -322,6 +372,13 @@ class DepositController extends Controller
                         "transaction_type" => $request->transaction_type,
                         "transaction_input_user_id" => auth()->user()->employee_id,
                     ]);
+
+                    if ($request->transaction_type == "KRMD") {
+                        $employee = Employee::find($deposit->employee_id);
+                        $employee->pencairan_simpanan_w_date = $tanggal_tabungan;
+                        $employee->pencairan_simpanan_w_by = auth()->user()->employee_id;
+                        $employee->save();
+                    }
                 }
                 if ($request->nominal_sk > 0) {
                     $sk_balance = $deposit->sk_balance;
@@ -329,7 +386,7 @@ class DepositController extends Controller
                     $after_sk_balance = $req_sk_balance - $request->nominal_sk;
 
                     if ($sk_balance !== $req_sk_balance || $after_sk_balance < 0) {
-                        return redirect()->route('simpanan.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+                        return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
                     }
 
                     $deposit->sk_balance = $after_sk_balance;
@@ -353,6 +410,13 @@ class DepositController extends Controller
                         "transaction_type" => $request->transaction_type,
                         "transaction_input_user_id" =>  auth()->user()->employee_id,
                     ]);
+
+                    if ($request->transaction_type == "KRMD") {
+                        $employee = Employee::find($deposit->employee_id);
+                        $employee->pencairan_simpanan_date = $tanggal_tabungan;
+                        $employee->pencairan_simpanan_by = auth()->user()->employee_id;
+                        $employee->save();
+                    }
                 }
             }
 
@@ -451,9 +515,9 @@ class DepositController extends Controller
         } catch (Exception $e) {
             DB::rollback();
             dd($e);
-            return redirect()->route('simpanan.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+            return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
-        return redirect()->route('simpanan.index')->with('message', 'Data berhasil ditambahkan');
+        return redirect()->route('simpanan.transaksi', $deposit->id)->with('message', 'Data berhasil ditambahkan');
     }
 
 
@@ -635,6 +699,9 @@ class DepositController extends Controller
                 'wilayah' => $data->first()->branch->wilayah,
                 'data' => $data->groupBy('branch_id')->map(function ($quer) {
                     return [
+                        'wilayah' => $quer->first()->branch->wilayah,
+                        'unit' => $quer->first()->branch->unit,
+                        'branch_id' => $quer->first()->branch->branch_id,
                         'bulan' => Carbon::create()->month($quer->first()->transaction_month)->format('F') . " " . $quer->sortByDesc('id')->first()->transaction_year,
                         'balance_before' =>  $quer->groupBy('deposit_id')->map(fn ($q) => $q->first()->balance_before)->values()->sum(),
                         'detail_balance_before' => $quer->groupBy('deposit_id')->map(fn ($q) => $q->first()->balance_before)->values(),

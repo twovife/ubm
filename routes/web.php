@@ -51,6 +51,7 @@ Route::get('/dashboard', function () {
 Route::get('/testdump', [HomeController::class, 'testdump']);
 
 
+
 Route::prefix('aset')->name('aset.')->group(function () {
     Route::controller(InventoryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
@@ -80,6 +81,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/sumallsw', [DepositController::class, 'sumallsw'])->name('sumallsw');
         Route::get('/swperbulan', [DepositController::class, 'sw_perbulan'])->name('sw_perbulan');
         Route::get('/swglobal', [DepositController::class, 'sw_global'])->name('sw_global');
+
+        Route::delete('/destroysk/{optionalDepositTransaction}', [DepositController::class, 'skdestroy'])->name('destroysk');
+        Route::delete('/destroysw/{mandatoryDepositTransaction}', [DepositController::class, 'swdestroy'])->name('destroysw');
     });
 
 

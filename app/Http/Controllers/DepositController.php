@@ -219,7 +219,7 @@ class DepositController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
-            dd($e);
+            // dd($e);
             return redirect()->back()->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
         return redirect()->route('simpanan.transaksi', $mandatoryDepositTransaction->deposit->id)->with('message', 'data berhasil di hapuskan');

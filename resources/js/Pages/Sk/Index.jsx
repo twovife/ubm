@@ -19,7 +19,7 @@ import { NumericFormat } from "react-number-format";
 
 const Index = ({ branch, server_filters, datas, ...props }) => {
     // console.log(datas);
-    const itemsPerPage = 20;
+    const itemsPerPage = 100;
     const {
         filters,
         setFilters,

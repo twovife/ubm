@@ -5,15 +5,14 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { useForm } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import Mutasi from "./Component/Mutasi";
 import { MdDelete } from "react-icons/md";
 
 const Transaksi = ({ branch, employees, deposit, ...props }) => {
-    console.log(deposit);
     const [loading, setLoading] = useState(false);
 
     const { data, setData, put, processing, errors } = useForm({
@@ -83,7 +82,7 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
 
     return (
         <Authenticated
-            loading={processing}
+            loading={processing || loading}
             auth={props.auth}
             errors={props.errors}
             header={
@@ -284,7 +283,21 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                                                             : "-"}
                                                     </td>
                                                     <td className="px-6 py-4 bg-blue-100">
-                                                        <MdDelete />
+                                                        {key ==
+                                                            deposit
+                                                                .mandatorytrasactions
+                                                                .length -
+                                                                1 && (
+                                                            <LinkButton
+                                                                href={route(
+                                                                    "simpanan.destroysw",
+                                                                    item.id
+                                                                )}
+                                                                type="button"
+                                                                method="delete"
+                                                                title={"Delete"}
+                                                            />
+                                                        )}
                                                     </td>
                                                 </tr>
                                             )
@@ -453,7 +466,21 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                                                             : "-"}
                                                     </td>
                                                     <td className="px-6 py-4 bg-blue-100">
-                                                        <MdDelete />
+                                                        {key ==
+                                                            deposit
+                                                                .optionaltrasactions
+                                                                .length -
+                                                                1 && (
+                                                            <LinkButton
+                                                                href={route(
+                                                                    "simpanan.destroysk",
+                                                                    item.id
+                                                                )}
+                                                                type="button"
+                                                                method="delete"
+                                                                title={"Delete"}
+                                                            />
+                                                        )}
                                                     </td>
                                                 </tr>
                                             )

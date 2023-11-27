@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use App\Helpers\AppHelper;
+use App\Models\Deposit;
+use Carbon\Carbon;
 
 class EmployeeController extends Controller
 {
@@ -202,11 +204,13 @@ class EmployeeController extends Controller
         $arrayFilter = [
             "branch_id" => $employee->branch_id ?? null
         ];
+
         return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'data berhasil diubah');
     }
 
     public function mutasi(UpdateEmployeeMutationRequest $request, Employee $employee)
     {
+        $tanggal_tabungan = Carbon::now()->endOfMonth()->format('Y-m-d');
 
         try {
             DB::beginTransaction();
@@ -215,6 +219,89 @@ class EmployeeController extends Controller
             $employee->jabatan = $request->jabatan;
             $employee->area = $request->area ?? 0;
             $employee->save();
+
+            $deposit = Deposit::where('employee_id', $employee->id)->first();
+            $sw_saldo = $deposit->sw_balance;
+            $sk_saldo = $deposit->sk_balance;
+            $branch_asal = $deposit->branch_id;
+            $deposit->branch_id = $request->branch_id;
+
+            $transaksi_sw = [
+                // keluarkan dari branch awal
+                [
+                    "branch_id" => $branch_asal,
+                    "transaction_date" => $tanggal_tabungan,
+                    'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
+                    'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
+                    "transaction" => "K",
+                    "transaction_type" => "KM",
+
+                    "transaction_input_user_id" =>  auth()->user()->employee_id,
+
+                    "balance_before" => $sw_saldo,
+                    "debit" => 0,
+                    "kredit" => $sw_saldo,
+                    "balance" => 0,
+                ],
+                // masukkan ke branch baru
+                [
+                    "branch_id" => $request->branch_id,
+                    "transaction_date" => $tanggal_tabungan,
+                    'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
+                    'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
+                    "transaction" => "D",
+                    "transaction_type" => "DM",
+
+                    "transaction_input_user_id" =>  auth()->user()->employee_id,
+
+                    "balance_before" => 0,
+                    "debit" => $sw_saldo,
+                    "kredit" => 0,
+                    "balance" => $sw_saldo,
+                ]
+            ];
+
+            $transaksi_sk = [
+                // keluarkan dari branch awal buat balance menjadi 0
+                [
+                    "branch_id" => $branch_asal,
+                    "transaction_date" => $tanggal_tabungan,
+                    'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
+                    'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
+                    "transaction" => "K",
+                    "transaction_type" => "KM",
+
+                    "transaction_input_user_id" =>  auth()->user()->employee_id,
+
+                    "balance_before" => $sk_saldo,
+                    "debit" => 0,
+                    "kredit" => $sk_saldo,
+                    "balance" => 0,
+                ],
+
+                // masukkan ke branch baru membuat balance sejumlah kredit
+                [
+                    "branch_id" => $request->branch_id,
+                    "transaction_date" => $tanggal_tabungan,
+                    'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
+                    'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
+                    "transaction" => "D",
+                    "transaction_type" => "DM",
+
+                    "transaction_input_user_id" =>  auth()->user()->employee_id,
+
+                    "balance_before" => 0,
+                    "debit" => $sk_saldo,
+                    "kredit" => 0,
+                    "balance" => $sk_saldo,
+                ]
+            ];
+
+
+            $deposit->mandatorytrasactions()->createMany($transaksi_sw);
+            $deposit->optionaltrasactions()->createMany($transaksi_sk);
+            $deposit->save();
+
 
             $data = [
                 'employee_id' => $request->employee_id,

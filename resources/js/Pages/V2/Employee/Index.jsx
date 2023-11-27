@@ -244,6 +244,10 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
             column: "nama",
         },
         {
+            title: "Status",
+            column: "status_karyawan",
+        },
+        {
             title: "NIK",
             column: "nik",
         },
@@ -350,7 +354,15 @@ const Index = ({ datas, branch, server_filters, ...props }) => {
                 {displayData.map((item, index) => (
                     <tr
                         key={index}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs"
+                        className={`${
+                            item.resign_status == "Pecat"
+                                ? `bg-red-200`
+                                : item.resign_status == "Resign"
+                                ? `bg-yellow-200`
+                                : item.janis_jaminan == "-"
+                                ? `bg-blue-200`
+                                : `bg-white`
+                        } border-b hover:bg-gray-50 text-xs`}
                     >
                         <th className="px-6 py-1">
                             <div className="flex justify-around items-center gap-3">

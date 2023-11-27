@@ -39,6 +39,7 @@ class EmployeeController extends Controller
         $data = collect($emp)->map(fn ($que) => [
             'id' => $que->id ?? null,
             'nama' => $que->nama_karyawan ?? '-',
+            'status_karyawan' => $que->date_resign ? 'off' : ($que->janis_jaminan == null ? 'belum-lengkap' : "on"),
             'nik' => $que->nik ?? '-',
             'alamat' => $que->alamat ?? '-',
             'hire_date' => $que->hire_date ?? '-',
@@ -47,7 +48,7 @@ class EmployeeController extends Controller
             'area' => $que->area ?? '-',
             'unit' => $que->branch?->unit ?? '-',
             'wilayah' => $que->branch?->wilayah ?? '-',
-            'janis_jaminan' => $que->janis_jaminan ?? '-',
+            'janis_jaminan' => !$que->janis_jaminan ? '-' : $que->janis_jaminan,
             'tanggal_perpindahan' => $que->history?->history_date ?? '-',
             'history_perpindahan' => $que->history?->record ?? '-',
             'keterangan_perpindahan' => $que->history?->keterangan ?? '-',

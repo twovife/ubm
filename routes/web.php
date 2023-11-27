@@ -13,6 +13,7 @@ use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Models\Inventory;
+use App\Models\OneMilDeposit;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -84,6 +85,11 @@ Route::middleware('auth')->group(function () {
 
         Route::delete('/destroysk/{optionalDepositTransaction}', [DepositController::class, 'skdestroy'])->name('destroysk');
         Route::delete('/destroysw/{mandatoryDepositTransaction}', [DepositController::class, 'swdestroy'])->name('destroysw');
+    });
+
+    Route::prefix('onemil')->name('onemil.')->group(function () {
+        Route::get('/', [OneMilDeposit::class, 'index'])->name('index');
+        Route::get('/create', [OneMilDeposit::class, 'create'])->name('create');
     });
 
 

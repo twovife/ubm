@@ -86,7 +86,7 @@ class DepositController extends Controller
     public function store(Request $request)
     {
         $validation = $request->validate([
-            "employee_id" => ['required', 'numeric', 'unique:deposits'],
+            "employee_id" => ['required', 'numeric'],
             "sw_balance" => ['required', 'numeric'],
             "sk_balance" => ['required', 'numeric'],
             "tgl_tabugan" => ['required'],
@@ -99,19 +99,32 @@ class DepositController extends Controller
             '*.unique' => ['karyawan sudah mempunyai simpanan sebelumnya'],
         ]);
 
+
         $karyawan = Employee::find($request->employee_id);
         $tanggal_tabungan = Carbon::parse($request->tgl_tabugan)->endOfMonth()->format('Y-m-d');
         try {
             DB::beginTransaction();
 
-            $deposit = Deposit::create([
+            $deposit = Deposit::firstOrCreate([
                 "employee_id" => $request->employee_id,
+            ], [
                 "branch_id" => $karyawan->branch_id,
                 "tgl_tabugan" => $tanggal_tabungan,
                 "sw_balance" => $request->sw_balance,
                 "sk_balance" => $request->sk_balance,
             ]);
 
+
+
+            if (!$deposit->wasRecentlyCreated) {
+                if ($deposit->sk_balance > 0 || $deposit->sw_balance > 0) {
+                    return redirect()->route('simpanan.index')->withErrors('Karyawan masih mempunyai tabungan aktiv');
+                }
+                $deposit->update([
+                    'sw_balance' => $request->sw_balance,
+                    'sk_balance' => $request->sk_balance,
+                ]);
+            }
 
 
             $mandatorytransaction = $deposit->mandatorytrasactions()->create(

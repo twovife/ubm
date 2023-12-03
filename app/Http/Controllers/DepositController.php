@@ -553,6 +553,7 @@ class DepositController extends Controller
         dd($totalBalancePerUnit);
     }
 
+
     public function detailPerBulan()
     {
         $branch = Branch::query()->select('wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
@@ -601,6 +602,8 @@ class DepositController extends Controller
             'server_filters' => $getFilter ?? null
         ]);
     }
+
+
     public function sw_perbulan()
     {
         $branch = Branch::query()->select('wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
@@ -651,6 +654,7 @@ class DepositController extends Controller
         ]);
     }
 
+    // SK PERUNIT
     public function globalPerBulan()
     {
 
@@ -670,6 +674,7 @@ class DepositController extends Controller
                         'unit' => $quer->first()->branch->unit,
                         'branch_id' => $quer->first()->branch->branch_id,
                         'bulan' => Carbon::create()->month($quer->first()->transaction_month)->format('F') . " " . $quer->sortByDesc('id')->first()->transaction_year,
+
                         'balance_before' =>  $quer->groupBy('deposit_id')->map(fn ($q) => $q->first()->balance_before)->values()->sum(),
                         'detail_balance_before' => $quer->groupBy('deposit_id')->map(fn ($q) => $q->first()->balance_before)->values(),
 
@@ -689,13 +694,16 @@ class DepositController extends Controller
             ];
         })->values();
 
-        // dd($groupingPerUnit);
+
+        dd($groupingPerUnit);
 
         return Inertia::render('Sk/GlobalPerBulan', [
             'batch_datas' => $groupingPerUnit,
             'server_filters' => $getFilter ?? null
         ]);
     }
+
+
     public function sw_global()
     {
 
@@ -742,6 +750,7 @@ class DepositController extends Controller
             'server_filters' => $getFilter ?? null
         ]);
     }
+
 
     public function sumallsk()
     {

@@ -695,7 +695,7 @@ class DepositController extends Controller
         })->values();
 
 
-        dd($groupingPerUnit);
+        // dd($groupingPerUnit);
 
         return Inertia::render('Sk/GlobalPerBulan', [
             'batch_datas' => $groupingPerUnit,

@@ -99,7 +99,7 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                 </>
             }
         >
-            <div className="mx-auto sm:px-6 lg:px-8">
+            <div className="mx-auto sm:px-6 lg:px-8 mb-6">
                 <ul className="tab-list flex justify-start gap-3">
                     <li
                         className={`tab ${

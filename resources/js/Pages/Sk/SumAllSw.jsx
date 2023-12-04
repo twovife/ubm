@@ -416,7 +416,7 @@ const SumAllSk = ({ server_filters, datas, ...props }) => {
                 </>
             }
         >
-            <div className="mx-auto sm:px-6 lg:px-8">
+            <div className="mx-auto sm:px-6 lg:px-8 mb-6">
                 <div className="p-3 bg-white rounded shadow">
                     <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
                         <form

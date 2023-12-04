@@ -87,7 +87,7 @@ const SwGlobal = ({ server_filters, batch_datas, ...props }) => {
                 </>
             }
         >
-            <div className="mx-auto sm:px-6 lg:px-8">
+            <div className="mx-auto sm:px-6 lg:px-8 mb-6">
                 {batch_datas.length > 0 ? (
                     <>
                         <ul className="tab-list flex justify-start gap-3">

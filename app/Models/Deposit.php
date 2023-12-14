@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Deposit extends Model
 {
@@ -22,10 +25,19 @@ class Deposit extends Model
     {
         return $this->hasMany(OptionalDepositTransaction::class, 'deposit_id', 'id');
     }
+    public function latest_optionaltrasaction()
+    {
+        return $this->hasOne(OptionalDepositTransaction::class, 'deposit_id', 'id')->ofMany('transaction_month', 'max');
+    }
 
     public function mandatorytrasactions()
     {
         return $this->hasMany(MandatoryDepositTransaction::class, 'deposit_id', 'id');
+    }
+
+    public function latest_mandatorytrasactions()
+    {
+        return $this->hasOne(MandatoryDepositTransaction::class, 'deposit_id', 'id')->latestOfMany();
     }
 
     public function employee()

@@ -41,11 +41,11 @@ class OptionalDepositTransaction extends Model
         return $query->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('branch_id', auth()->user()->employee->branch_id);
         })->when($getFilter->wilayah >= 0, function ($q) use ($getFilter) {
-            $q->whereHas('branch', fn ($qq) => $qq->where('wilayah', $getFilter->wilayah));
+            $q->whereHas('branch', fn ($qq) => $qq->where('branch_id', $getFilter->wilayah));
         })->when($getFilter->transaction_month >= 0, function ($q) use ($getFilter) {
-            $q->where('transaction_month', $getFilter->transaction_month);
+            $q->where('transaction_month', "<=", $getFilter->transaction_month);
         })->when($getFilter->transaction_year >= 0, function ($q) use ($getFilter) {
-            $q->where('transaction_year', $getFilter->transaction_year);
+            $q->where('transaction_year', "<=", $getFilter->transaction_year);
         });
     }
 }

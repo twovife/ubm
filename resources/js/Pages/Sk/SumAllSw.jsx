@@ -139,7 +139,7 @@ const SumAllSk = ({ server_filters, datas, ...props }) => {
         e.preventDefault();
         console.log(serverFilter);
         setLoading(true);
-        router.visit(route("simpanan.sumallsk"), {
+        router.visit(route("simpanan.sumallsw"), {
             data: { ...serverFilter },
         });
     };

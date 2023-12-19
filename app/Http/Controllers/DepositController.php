@@ -998,19 +998,17 @@ class DepositController extends Controller
     $simpenan = MandatoryDepositTransaction::with('deposit.branch', 'deposit.employee', 'branch')->whereIn('id', $queryId)->orderBy('branch_id')->get();
 
 
-
     $groupingPerUnit = $simpenan->groupBy('branch.wilayah')->map(function ($data) use ($getFilter) {
       return [
         'wilayah' => $data->first()->branch->wilayah,
-        'unit' => $data->first()->branch->unit,
-        'branch_id' => $data->first()->branch->branch_id,
-        'bulan' => Carbon::create()->month($data->first()->transaction_month)->format('F') . " " . $data->sortByDesc('id')->first()->transaction_year,
+        'bulan' => Carbon::create()->month($data->max('transaction_month'))->format('F') . " " . $data->max('transaction_year'),
 
-
-
-        'balance_before' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
-          $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->sortBy('id')->first()->balance_before : $q->sortByDesc('id')->first()->balance;
-          return $data;
+        'balance_before' => $data->groupBy('branch_id')->map(function ($q) use ($getFilter) {
+          $dataunit = $q->groupBy('deposit_id')->map(function ($qq) use ($getFilter) {
+            $data = ($qq->first()->transaction_month == $getFilter->transaction_month && $qq->first()->transaction_year == $getFilter->transaction_year) ? $qq->sortBy('id')->first()->balance_before : $qq->sortByDesc('id')->first()->balance;
+            return $data;
+          });
+          return $dataunit->sum();
         })->values()->sum(),
 
 

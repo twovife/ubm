@@ -570,11 +570,13 @@ class DepositController extends Controller
             'debit' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?  $quer->sum('debit') : 0,
             'kredit' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?  $quer->sum('kredit') : 0,
             'balance' => $lastRecord->balance ?? 0,
-            'K' => $quer->where('transaction_type', 'K')->sum('kredit'),
-            'D' => $quer->where('transaction_type', 'D')->sum('debit'),
-            'KM' => $quer->where('transaction_type', 'KM')->sum('kredit'),
-            'DM' => $quer->where('transaction_type', 'DM')->sum('debit'),
-            'KRMD' => $quer->where('transaction_type', 'KRMD')->sum('kredit'),
+
+
+            'K' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?   $quer->where('transaction_type', 'K')->sum('kredit') : 0,
+            'D' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'D')->sum('debit') : 0,
+            'KM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'KM')->sum('kredit') : 0,
+            'DM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'DM')->sum('debit') : 0,
+            'KRMD' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'KRMD')->sum('kredit') : 0,
           ];
         })->values()
       ];
@@ -644,11 +646,11 @@ class DepositController extends Controller
             'kredit' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?  $quer->sum('kredit') : 0,
             'balance' => $lastRecord->balance ?? 0,
 
-            'K' => $quer->where('transaction_type', 'K')->sum('kredit'),
-            'D' => $quer->where('transaction_type', 'D')->sum('debit'),
-            'KM' => $quer->where('transaction_type', 'KM')->sum('kredit'),
-            'DM' => $quer->where('transaction_type', 'DM')->sum('debit'),
-            'KRMD' => $quer->where('transaction_type', 'KRMD')->sum('kredit'),
+            'K' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?   $quer->where('transaction_type', 'K')->sum('kredit') : 0,
+            'D' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'D')->sum('debit') : 0,
+            'KM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'KM')->sum('kredit') : 0,
+            'DM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'DM')->sum('debit') : 0,
+            'KRMD' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'KRMD')->sum('kredit') : 0,
           ];
         })->values()
       ];

@@ -252,6 +252,14 @@ export default function Authenticated({
                                 dropdownId={5}
                                 lists={[
                                     {
+                                        id: "100",
+                                        href: route("sksw.skswglobal"),
+                                        name: "SKSW New",
+                                        active: route().current(
+                                            "sksw.skswglobal"
+                                        ),
+                                    },
+                                    {
                                         id: "1",
                                         href: route("simpanan.index"),
                                         name: "Dashboard Simpanan",

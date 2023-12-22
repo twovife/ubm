@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -47,5 +48,28 @@ class OptionalDepositTransaction extends Model
         })->when($getFilter->transaction_year >= 0, function ($q) use ($getFilter) {
             $q->where('transaction_year', "<=", $getFilter->transaction_year);
         });
+    }
+
+    public static function queryBuilder($getFilter, $isWilayanNeeded = false)
+    {
+
+
+        $queryBuilder = self::query();
+        $queryBuilder->selectRaw('*, RANK() OVER (PARTITION BY deposit_id, branch_id ORDER BY transaction_month DESC) AS ranking')
+            ->where('transaction_month', '<=', $getFilter->transaction_month)
+            ->where('transaction_year', '<=', $getFilter->transaction_year)
+            ->when($isWilayanNeeded, function ($queries) use ($getFilter) {
+                $getBranch = Branch::where('wilayah', $getFilter->wilayah)->pluck('id');
+                $queries->whereIn('branch_id', $getBranch);
+            });
+
+        $queryId = $queryBuilder->getQuery()
+            ->fromSub($queryBuilder, 'a')
+            ->where('a.ranking', '=', 1)
+            ->pluck('id');
+
+
+        $simpenan = self::with('deposit.branch', 'deposit.employee', 'branch')->whereIn('id', $queryId)->orderBy('branch_id')->get();
+        return $simpenan;
     }
 }

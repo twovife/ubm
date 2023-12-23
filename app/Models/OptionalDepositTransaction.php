@@ -50,7 +50,7 @@ class OptionalDepositTransaction extends Model
         });
     }
 
-    public static function queryBuilder($getFilter, $isWilayanNeeded = false)
+    public static function queryBuilder($getFilter)
     {
 
 
@@ -58,7 +58,7 @@ class OptionalDepositTransaction extends Model
         $queryBuilder->selectRaw('*, RANK() OVER (PARTITION BY deposit_id, branch_id ORDER BY transaction_month DESC) AS ranking')
             ->where('transaction_month', '<=', $getFilter->transaction_month)
             ->where('transaction_year', '<=', $getFilter->transaction_year)
-            ->when($isWilayanNeeded, function ($queries) use ($getFilter) {
+            ->when($getFilter->isWilayanNeeded, function ($queries) use ($getFilter) {
                 $getBranch = Branch::where('wilayah', $getFilter->wilayah)->pluck('id');
                 $queries->whereIn('branch_id', $getBranch);
             });

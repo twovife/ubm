@@ -50,7 +50,8 @@ class MandatoryDepositTransaction extends Model
         });
     }
 
-    public static function queryBuilder($getFilter, $isWilayanNeeded = false)
+
+    public static function queryBuilder($getFilter)
     {
 
 
@@ -58,7 +59,7 @@ class MandatoryDepositTransaction extends Model
         $queryBuilder->selectRaw('*, RANK() OVER (PARTITION BY deposit_id, branch_id ORDER BY transaction_month DESC) AS ranking')
             ->where('transaction_month', '<=', $getFilter->transaction_month)
             ->where('transaction_year', '<=', $getFilter->transaction_year)
-            ->when($isWilayanNeeded, function ($queries) use ($getFilter) {
+            ->when($getFilter->isWilayanNeeded, function ($queries) use ($getFilter) {
                 $getBranch = Branch::where('wilayah', $getFilter->wilayah)->pluck('id');
                 $queries->whereIn('branch_id', $getBranch);
             });
@@ -68,8 +69,8 @@ class MandatoryDepositTransaction extends Model
             ->where('a.ranking', '=', 1)
             ->pluck('id');
 
-        $simpenan = self::with('deposit.branch', 'deposit.employee', 'branch')->whereIn('id', $queryId)->orderBy('branch_id')->get();
 
+        $simpenan = self::with('deposit.branch', 'deposit.employee', 'branch')->whereIn('id', $queryId)->orderBy('branch_id')->get();
         return $simpenan;
     }
 }

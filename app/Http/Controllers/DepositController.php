@@ -1070,75 +1070,151 @@ class DepositController extends Controller
 
     public function sksw_global()
     {
-        $isWilayanNeeded = false;
         $getFilter = new \stdClass;
         $getFilter = (object) request()->all();
         $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
-        $getFilter->transaction_month = request()->transaction_month ??   Carbon::now()->month;
-        $getFilter->wilayah = $isWilayanNeeded ? (auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->area : (request()->wilayah ?? 0)) : -1;
+        $getFilter->transaction_month = request()->transaction_month ??   10;
+        $getFilter->isWilayanNeeded = request()->isWilayanNeeded ??  false;
+        // $getFilter->wilayah = $isWilayanNeeded ? (auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->area : (request()->wilayah ?? 0)) : -1;
 
         $sk = OptionalDepositTransaction::queryBuilder($getFilter);
-        $hasilSk = $sk->groupBy('deposit_id')->map(function ($quer) use ($getFilter) {
-            $firstRecord = $quer->sortBy('id')->first();
-            $lastRecord = $quer->sortByDesc('id')->first();
+        $sw = MandatoryDepositTransaction::queryBuilder($getFilter);
+
+        // $global_data_per_area = $marge->groupBy('branch.wilayah')->map(function ($quer) use ($getFilter) {
+        //     $firstRecord = $quer->sortBy('id')->first();
+        //     $lastRecord = $quer->sortByDesc('id')->first();
+        // });
+
+
+        $hasilSk = $sk->groupBy('branch.wilayah')->map(function ($data) use ($getFilter) {
             return [
                 'depo' => 'sk',
-                'wilayah' => $firstRecord->branch->wilayah,
-                'unit' => $firstRecord->branch->unit,
-                'bulan' => Carbon::create()->month($getFilter->transaction_month)->format('F') . " " . $firstRecord->transaction_year,
-                'id_tabungan' => $firstRecord->deposit_id,
-                'nama_karyawan' => $firstRecord->deposit->employee->nama_karyawan,
+                'wilayah' => $data->first()->branch->wilayah,
+                'bulan' => Carbon::create()->month($data->max('transaction_month'))->format('F') . " " . $data->max('transaction_year'),
 
-                'balance_before' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $firstRecord->balance_before : $lastRecord->balance,
-                'debit' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?  $quer->sum('debit') : 0,
-                'kredit' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?  $quer->sum('kredit') : 0,
-                'balance' => $lastRecord->balance ?? 0,
+                'balance_before' => $data->groupBy('branch_id')->map(function ($q) use ($getFilter) {
+                    $dataunit = $q->groupBy('deposit_id')->map(function ($qq) use ($getFilter) {
+                        $data = ($qq->first()->transaction_month == $getFilter->transaction_month && $qq->first()->transaction_year == $getFilter->transaction_year) ? $qq->sortBy('id')->first()->balance_before : $qq->sortByDesc('id')->first()->balance;
+                        return $data;
+                    });
+                    return $dataunit->sum();
+                })->values()->sum(),
 
-                'K' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?   $quer->where('transaction_type', 'K')->sum('kredit') : 0,
-                'D' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'D')->sum('debit') : 0,
-                'KM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'KM')->sum('kredit') : 0,
-                'DM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'DM')->sum('debit') : 0,
-                'KRMD' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'KRMD')->sum('kredit') : 0,
+
+                'debit' =>  $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->sum('debit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+                'kredit' =>  $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->sum('kredit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+
+
+                'balance' =>  $data->groupBy('deposit_id')->map(fn ($q) => $q->sortByDesc('id')->first()->balance)->values()->sum(),
+
+
+                'K' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'K')->sum('kredit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+                'D' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'D')->sum('debit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+                'KM' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'KM')->sum('kredit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+                'DM' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'DM')->sum('debit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+
+                'KRMD' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'KRMD')->sum('kredit') : 0;
+                    return $data;
+                })->values()->sum(),
             ];
         })->values();
 
-
-        $sw = MandatoryDepositTransaction::queryBuilder($getFilter);
-        $hasilSw = $sw->groupBy('deposit_id')->map(function ($quer) use ($getFilter) {
-            $firstRecord = $quer->sortBy('id')->first();
-            $lastRecord = $quer->sortByDesc('id')->first();
+        $hasilSw = $sw->groupBy('branch.wilayah')->map(function ($data) use ($getFilter) {
             return [
                 'depo' => 'sw',
-                'wilayah' => $firstRecord->branch->wilayah,
-                'unit' => $firstRecord->branch->unit,
-                'bulan' => Carbon::create()->month($getFilter->transaction_month)->format('F') . " " . $firstRecord->transaction_year,
-                'id_tabungan' => $firstRecord->deposit_id,
-                'nama_karyawan' => $firstRecord->deposit->employee->nama_karyawan,
+                'wilayah' => $data->first()->branch->wilayah,
+                'bulan' => Carbon::create()->month($data->max('transaction_month'))->format('F') . " " . $data->max('transaction_year'),
 
-                'balance_before' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $firstRecord->balance_before : $lastRecord->balance,
-                'debit' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?  $quer->sum('debit') : 0,
-                'kredit' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?  $quer->sum('kredit') : 0,
-                'balance' => $lastRecord->balance ?? 0,
+                'balance_before' => $data->groupBy('branch_id')->map(function ($q) use ($getFilter) {
+                    $dataunit = $q->groupBy('deposit_id')->map(function ($qq) use ($getFilter) {
+                        $data = ($qq->first()->transaction_month == $getFilter->transaction_month && $qq->first()->transaction_year == $getFilter->transaction_year) ? $qq->sortBy('id')->first()->balance_before : $qq->sortByDesc('id')->first()->balance;
+                        return $data;
+                    });
+                    return $dataunit->sum();
+                })->values()->sum(),
 
-                'K' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?   $quer->where('transaction_type', 'K')->sum('kredit') : 0,
-                'D' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'D')->sum('debit') : 0,
-                'KM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'KM')->sum('kredit') : 0,
-                'DM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'DM')->sum('debit') : 0,
-                'KRMD' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'KRMD')->sum('kredit') : 0,
+
+                'debit' =>  $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->sum('debit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+                'kredit' =>  $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->sum('kredit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+
+
+                'balance' =>  $data->groupBy('deposit_id')->map(fn ($q) => $q->sortByDesc('id')->first()->balance)->values()->sum(),
+
+
+                'K' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'K')->sum('kredit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+                'D' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'D')->sum('debit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+                'KM' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'KM')->sum('kredit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+                'DM' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'DM')->sum('debit') : 0;
+                    return $data;
+                })->values()->sum(),
+
+
+                'KRMD' => $data->groupBy('deposit_id')->map(function ($q) use ($getFilter) {
+                    $data = ($q->first()->transaction_month == $getFilter->transaction_month && $q->first()->transaction_year == $getFilter->transaction_year) ? $q->where('transaction_type', 'KRMD')->sum('kredit') : 0;
+                    return $data;
+                })->values()->sum(),
             ];
         })->values();
 
 
-        // olah data disini
 
-        $merge_data = $hasilSk->concat($hasilSw);
-        $hasil_marge =  $merge_data->groupBy('wilayah')->map(function ($qq) {
+        $merge_data = $hasilSw->concat($hasilSk);
+
+        $hasil_marge =  $merge_data->sortBy('wilayah')->groupBy('wilayah')->map(function ($qq) {
             $firstRecord = $qq->sortBy('id')->first();
             return [
+
+                // 'data' => $qq->values()
                 'wilayah' => $firstRecord['wilayah'],
                 'bulan' => $firstRecord['bulan'],
 
-                'balance_before_sw' => $qq->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['debit'] ?? 0)->values()->sum(),
+                'balance_before_sw' => $qq->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['balance_before'] ?? 0)->values()->sum(),
                 'debit_sw' => $qq->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['debit'] ?? 0)->values()->sum(),
                 'kredit_sw' => $qq->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['kredit'] ?? 0)->values()->sum(),
                 'balance_sw' => $qq->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['balance'] ?? 0)->values()->sum(),
@@ -1158,26 +1234,31 @@ class DepositController extends Controller
                 'KM_sk' => $qq->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['KM'] ?? 0)->values()->sum(),
                 'DM_sk' => $qq->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['DM'] ?? 0)->values()->sum(),
                 'KRMD_sk' => $qq->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['KRMD'] ?? 0)->values()->sum(),
-
             ];
         })->values();
 
+
         $global_data = [
-            'balance_before_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['debit'] ?? 0)->values()->sum(),
+            'balance_before_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['balance_before'] ?? 0)->values()->sum(),
             'debit_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['debit'] ?? 0)->values()->sum(),
             'kredit_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['kredit'] ?? 0)->values()->sum(),
+
             'balance_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['balance'] ?? 0)->values()->sum(),
+
             'K_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['K'] ?? 0)->values()->sum(),
             'D_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['D'] ?? 0)->values()->sum(),
             'KM_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['KM'] ?? 0)->values()->sum(),
             'DM_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['DM'] ?? 0)->values()->sum(),
             'KRMD_sw' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['KRMD'] ?? 0)->values()->sum(),
+
             'saldo_global' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sw')->first()['balance'] ?? 0)->values()->sum() + $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['balance'] ?? 0)->values()->sum(),
 
             'balance_before_sk' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['balance_before'] ?? 0)->values()->sum(),
             'debit_sk' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['debit'] ?? 0)->values()->sum(),
             'kredit_sk' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['kredit'] ?? 0)->values()->sum(),
+
             'balance_sk' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['balance'] ?? 0)->values()->sum(),
+
             'K_sk' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['K'] ?? 0)->values()->sum(),
             'D_sk' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['D'] ?? 0)->values()->sum(),
             'KM_sk' => $merge_data->groupBy('id_tabungan')->map(fn ($queries) => $queries->where('depo', 'sk')->first()['KM'] ?? 0)->values()->sum(),

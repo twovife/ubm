@@ -106,6 +106,16 @@ function useFilteredComplains(
         currentPage * itemsPerPage
     );
 
+    let totals = {};
+
+    displayData.forEach((entry) => {
+        for (let key in entry) {
+            if (key !== "wilayah" && key !== "bulan") {
+                totals[key] = (totals[key] || 0) + entry[key];
+            }
+        }
+    });
+
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
@@ -120,6 +130,7 @@ function useFilteredComplains(
         displayData,
         totalPages,
         handlePageChange,
+        totals,
     };
 }
 

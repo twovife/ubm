@@ -19,7 +19,6 @@ import { NumericFormat } from "react-number-format";
 
 const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
     const datas = data.data;
-    console.log(datas);
 
     const itemsPerPage = 50;
     const {
@@ -32,6 +31,7 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
         displayData,
         totalPages,
         handlePageChange,
+        totals,
     } = useFilteredComplains({}, itemsPerPage, datas);
     const [showFilter, setShowFilter] = useState("");
     const [addFilter, setAddFilter] = useState({
@@ -233,74 +233,133 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
             title: "Wilayah",
             column: "wilayah",
         },
-        // {
-        //     title: "Unit",
-        //     column: "unit",
-        //     nowrap: true,
-        // },
         {
             title: "Bulan",
             column: "bulan",
-            nowrap: true,
+            class_name: "whitespace-nowrap",
         },
-        // {
-        //     title: "Nama Karyawan",
-        //     column: "nama_karyawan",
-        // },
-        // {
-        //     title: "Saldo Sebelumnya",
-        //     column: "balance_before",
-        //     format: "currency",
-        //     backgroundcolumn: "bg-gray-100",
-        // },
-        // {
-        //     title: "Debit",
-        //     column: "debit",
-        //     format: "currency",
-        //     backgroundcolumn: "bg-green-200",
-        // },
-        // {
-        //     title: "Kredit",
-        //     column: "kredit",
-        //     format: "currency",
-        //     backgroundcolumn: "bg-red-200",
-        // },
-        // {
-        //     title: "Saldo",
-        //     column: "balance",
-        //     format: "currency",
-        //     backgroundcolumn: "bg-green-200",
-        // },
-        // {
-        //     title: "Setoran (D)",
-        //     column: "D",
-        //     format: "currency",
-        //     backgroundcolumn: "bg-yellow-100",
-        // },
-        // {
-        //     title: "Debit Mutasi (D)",
-        //     column: "DM",
-        //     format: "currency",
-        //     backgroundcolumn: "bg-yellow-100",
-        // },
-        // {
-        //     title: "Pengambilan (K)",
-        //     column: "K",
-        //     format: "currency",
-        //     backgroundcolumn: "bg-yellow-100",
-        // },
-        // {
-        //     title: "Kredit Mutasi (K)",
-        //     column: "KM",
-        //     format: "currency",
-        //     backgroundcolumn: "bg-yellow-100",
-        // },
-        // {
-        //     title: "Kredit Resigm / MD (K)",
-        //     column: "KRMD",
-        //     format: "currency",
-        //     backgroundcolumn: "bg-yellow-100",
-        // },
+        {
+            title: "Unit",
+            column: "unit",
+            class_name: "whitespace-nowrap",
+        },
+        {
+            title: "Simpanan SW",
+            column: "balance_before_sw",
+            format: "currency",
+            class_name: "bg-gray-100 text-black font-semibold",
+        },
+        {
+            title: "Simpanan SK",
+            column: "balance_before_sk",
+            format: "currency",
+            class_name: "bg-gray-200 text-black font-semibold",
+        },
+        {
+            title: "Debit SW",
+            column: "debit_sw",
+            format: "currency",
+            class_name: "bg-green-100 text-black font-semibold",
+        },
+        {
+            title: "Debit SK",
+            column: "debit_sk",
+            format: "currency",
+            class_name: "bg-green-200 text-black font-semibold",
+        },
+        {
+            title: "Kredit SW",
+            column: "kredit_sw",
+            format: "currency",
+            class_name: "bg-red-100 text-black font-semibold",
+        },
+        {
+            title: "Kredit SK",
+            column: "kredit_sk",
+            format: "currency",
+            class_name: "bg-red-200 text-black font-semibold",
+        },
+        {
+            title: "Saldo SW",
+            column: "balance_sw",
+            format: "currency",
+            class_name: "bg-green-100 text-black font-semibold",
+        },
+        {
+            title: "Saldo SK",
+            column: "balance_sk",
+            format: "currency",
+            class_name: "bg-green-200 text-black font-semibold",
+        },
+        {
+            title: "Saldo Global",
+            column: "saldo_global",
+            format: "currency",
+            class_name: "bg-blue-200 text-black font-semibold",
+        },
+
+        {
+            title: "Setoran SW (D)",
+            column: "D_sw",
+            format: "currency",
+            class_name: "bg-emerald-50",
+        },
+        {
+            title: "Setoran SK (D)",
+            column: "D_sk",
+            format: "currency",
+            class_name: "bg-emerald-50",
+        },
+
+        {
+            title: "Debit Mutasi SW (D)",
+            column: "DM_sw",
+            format: "currency",
+            class_name: "bg-emerald-50",
+        },
+        {
+            title: "Debit Mutasi SK (D)",
+            column: "DM_sk",
+            format: "currency",
+            class_name: "bg-emerald-50",
+        },
+
+        {
+            title: "Pengambilan SW (K)",
+            column: "K_sw",
+            format: "currency",
+            class_name: "bg-rose-50",
+        },
+        {
+            title: "Pengambilan SK (K)",
+            column: "K_sk",
+            format: "currency",
+            class_name: "bg-rose-50",
+        },
+        {
+            title: "Kredit Mutasi SW (K)",
+            column: "KM_sw",
+            format: "currency",
+            class_name: "bg-rose-50",
+        },
+        {
+            title: "Kredit Mutasi SK (K)",
+            column: "KM_sk",
+            format: "currency",
+            class_name: "bg-rose-50",
+        },
+        {
+            title: "Kredit Resign / M SW (K)",
+            column: "KRMD_sw",
+            format: "currency",
+            class_name: "bg-rose-50",
+        },
+        {
+            title: "Kredit Resign / MD SK (K)",
+            column: "KRMD_sk",
+            format: "currency",
+            class_name: "bg-rose-50",
+        },
     ];
 
     const tBodyGenerator = () => {
@@ -317,74 +376,73 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
         }
         return (
             <tbody>
-                {displayData.map((item, index) => (
-                    <tr
-                        key={index}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs"
-                    >
-                        <th className="px-6 py-1">
-                            <div className="flex justify-around items-center gap-3">
-                                {(currentPage - 1) * itemsPerPage + index + 1}
-                            </div>
-                        </th>
-                        {headers.map((header, index) => {
-                            if (header.format == "date") {
+                {displayData.map((item, index) => {
+                    return (
+                        <tr
+                            key={index}
+                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs"
+                        >
+                            <th className="px-6 py-1">
+                                <div className="flex justify-around items-center gap-3">
+                                    {(currentPage - 1) * itemsPerPage +
+                                        index +
+                                        1}
+                                    <Link href="#">
+                                        <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
+                                    </Link>
+                                </div>
+                            </th>
+                            {headers.map((header, index) => {
+                                if (header.format == "date") {
+                                    return (
+                                        <td className={`px-6 py-1`} key={index}>
+                                            <div
+                                                className={`whitespace-pre-wrap`}
+                                            >
+                                                {item[header.column] !== "-"
+                                                    ? dayjs(
+                                                          item[header.column]
+                                                      ).format("DD-MM-YYYY")
+                                                    : "-"}
+                                            </div>
+                                        </td>
+                                    );
+                                }
+                                if (header.format == "currency") {
+                                    return (
+                                        <td
+                                            className={`px-6 py-1 ${header.class_name}`}
+                                            key={index}
+                                        >
+                                            <div
+                                                className={`whitespace-nowrap`}
+                                            >
+                                                <NumericFormat
+                                                    value={item[header.column]}
+                                                    displayType={"text"}
+                                                    thousandSeparator={","}
+                                                    prefix={"Rp. "}
+                                                />
+                                            </div>
+                                        </td>
+                                    );
+                                }
                                 return (
                                     <td className={`px-6 py-1`} key={index}>
-                                        <div className={`whitespace-pre-wrap`}>
-                                            {item[header.column] !== "-"
-                                                ? dayjs(
-                                                      item[header.column]
-                                                  ).format("DD-MM-YYYY")
-                                                : "-"}
+                                        <div
+                                            className={`${header.class_name} `}
+                                        >
+                                            {item[header.column]}
                                         </div>
                                     </td>
                                 );
-                            }
-                            if (header.format == "currency") {
-                                return (
-                                    <td
-                                        className={`px-6 py-1 ${
-                                            header.backgroundcolumn
-                                                ? header.backgroundcolumn
-                                                : ""
-                                        }`}
-                                        key={index}
-                                    >
-                                        <div className={`whitespace-nowrap`}>
-                                            {/* {dayjs(item[header.column]).format(
-                                                "DD-MM-YYYY"
-                                            )} */}
-                                            <NumericFormat
-                                                value={item[header.column]}
-                                                displayType={"text"}
-                                                thousandSeparator={","}
-                                                prefix={"Rp. "}
-                                            />
-                                        </div>
-                                    </td>
-                                );
-                            }
-                            return (
-                                <td className={`px-6 py-1`} key={index}>
-                                    <div
-                                        className={`${
-                                            header.nowrap
-                                                ? "whitespace-nowrap"
-                                                : "whitespace-pre-wrap"
-                                        } `}
-                                    >
-                                        {item[header.column]}
-                                    </div>
-                                </td>
-                            );
-                        })}
-                    </tr>
-                ))}
+                            })}
+                        </tr>
+                    );
+                })}
             </tbody>
         );
     };
-
     return (
         <>
             <div className="p-3 bg-white rounded shadow">
@@ -474,6 +532,209 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
                         </tr>
                     </thead>
                     {tBodyGenerator()}
+                    <tfoot>
+                        <tr className="bg-blue-200 font-semibold text-black">
+                            <td className={`px-6 py-1`} colSpan={4}>
+                                TOTAL
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.balance_before_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.balance_before_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.debit_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.debit_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.kredit_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.kredit_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.balance_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.balance_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.saldo_global}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.D_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.D_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.DM_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.DM_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.K_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.K_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.KM_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.KM_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.KRMD_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.KRMD_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </>

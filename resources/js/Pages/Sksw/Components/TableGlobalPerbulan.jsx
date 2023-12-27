@@ -98,7 +98,7 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
     const decrementFilter = (column) => {
         // Buat salinan dari daftar filter
         const updatedFilters = [...filters];
-        console.log(updatedFilters);
+        // console.log(updatedFilters);
         // Cari indeks filter dengan column yang sesuai
         const decrementFilters = filters.filter(
             (filter) => filter.column !== column

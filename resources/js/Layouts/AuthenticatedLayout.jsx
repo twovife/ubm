@@ -254,9 +254,25 @@ export default function Authenticated({
                                     {
                                         id: "100",
                                         href: route("sksw.skswglobal"),
-                                        name: "SKSW New",
+                                        name: "SKSW Global",
                                         active: route().current(
                                             "sksw.skswglobal"
+                                        ),
+                                    },
+                                    {
+                                        id: "101",
+                                        href: route("sksw.skswwilayah"),
+                                        name: "SKSW Wilayah",
+                                        active: route().current(
+                                            "sksw.skswwilayah"
+                                        ),
+                                    },
+                                    {
+                                        id: "102",
+                                        href: route("sksw.skswunit"),
+                                        name: "SKSW Unit",
+                                        active: route().current(
+                                            "sksw.skswunit"
                                         ),
                                     },
                                     {

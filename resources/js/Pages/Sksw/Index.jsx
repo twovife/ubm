@@ -33,7 +33,7 @@ const Index = ({ server_filters, datas, ...props }) => {
         totals,
     } = useFilteredComplains({}, itemsPerPage);
 
-    console.log(totals);
+    // console.log(totals);
     const [showFilter, setShowFilter] = useState("");
     const [addFilter, setAddFilter] = useState({
         column: "",
@@ -134,9 +134,9 @@ const Index = ({ server_filters, datas, ...props }) => {
     };
     const onBranchChange = (e) => {
         e.preventDefault();
-        console.log(serverFilter);
+        // console.log(serverFilter);
         setLoading(true);
-        router.visit(route("sksw.skswglobal"), {
+        router.visit(route("sksw.skswunit"), {
             data: { ...serverFilter },
         });
     };

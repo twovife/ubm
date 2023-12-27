@@ -40,7 +40,7 @@ const Unit = ({ branch, server_filters, batch_datas, ...props }) => {
     };
     const onBranchChange = (e) => {
         e.preventDefault();
-        console.log(serverFilter);
+        // console.log(serverFilter);
         setLoading(true);
         router.visit(route("sksw.skswunit"), {
             data: { ...serverFilter },

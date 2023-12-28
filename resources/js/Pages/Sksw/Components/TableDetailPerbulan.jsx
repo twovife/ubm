@@ -238,6 +238,11 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
     };
     const headers = [
         {
+            title: "Nama Karyawan",
+            column: "nama_karyawan",
+            class_name: "whitespace-nowrap",
+        },
+        {
             title: "Wilayah",
             column: "wilayah",
         },
@@ -252,8 +257,8 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
             class_name: "whitespace-nowrap",
         },
         {
-            title: "Nama Karyawan",
-            column: "nama_karyawan",
+            title: "Is Active",
+            column: "is_active",
             class_name: "whitespace-nowrap",
         },
 
@@ -394,7 +399,7 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                     return (
                         <tr
                             key={index}
-                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs"
+                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs "
                         >
                             <th className="px-6 py-1">
                                 <div className="flex justify-around items-center gap-3">
@@ -549,7 +554,7 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                     {tBodyGenerator()}
                     <tfoot>
                         <tr className="bg-blue-200 font-semibold text-black">
-                            <td className={`px-6 py-1`} colSpan={5}>
+                            <td className={`px-6 py-1`} colSpan={6}>
                                 TOTAL
                             </td>
                             <td className={`px-6 py-1`}>

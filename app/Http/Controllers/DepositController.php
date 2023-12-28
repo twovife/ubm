@@ -1139,11 +1139,7 @@ class DepositController extends Controller
             })->values();
         })->sortBy('unit')->flatten(1)->values();
 
-
-
         $merge_data = $hasilSw->concat($hasilSk);
-
-
 
         $hasil_marge =  $merge_data->sortBy('branch_id')->groupBy('unit')->map(function ($qq) {
             return [
@@ -1157,7 +1153,7 @@ class DepositController extends Controller
                     'bulan' => $q->first()['bulan'],
 
                     'balance_before_sw' => $q->where('depo', 'sw')->first()['balance_before'] ?? 0,
-                    'debit_sw' => $q->where('depo', 'sw')['debit'] ?? 0,
+                    'debit_sw' => $q->where('depo', 'sw')->first()['debit'] ?? 0,
                     'kredit_sw' => $q->where('depo', 'sw')->first()['kredit'] ?? 0,
                     'balance_sw' => $q->where('depo', 'sw')->first()['balance'] ?? 0,
                     'K_sw' => $q->where('depo', 'sw')->first()['K'] ?? 0,
@@ -1165,6 +1161,7 @@ class DepositController extends Controller
                     'KM_sw' => $q->where('depo', 'sw')->first()['KM'] ?? 0,
                     'DM_sw' => $q->where('depo', 'sw')->first()['DM'] ?? 0,
                     'KRMD_sw' => $q->where('depo', 'sw')->first()['KRMD'] ?? 0,
+
                     'saldo_global' => $q->where('depo', 'sw')->first()['balance'] ?? 0 + $q->where('depo', 'sk')->first()['balance'] ?? 0,
 
                     'balance_before_sk' => $q->where('depo', 'sk')->first()['balance_before'] ?? 0,
@@ -1180,9 +1177,6 @@ class DepositController extends Controller
             ];
         })->values();
 
-
-
-        // dd($hasil_marge);
         return Inertia::render('Sksw/Unit', [
 
             'batch_datas' => $hasil_marge,

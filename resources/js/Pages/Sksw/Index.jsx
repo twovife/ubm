@@ -136,7 +136,7 @@ const Index = ({ server_filters, datas, ...props }) => {
         e.preventDefault();
         // console.log(serverFilter);
         setLoading(true);
-        router.visit(route("sksw.skswunit"), {
+        router.visit(route("sksw.skswglobal"), {
             data: { ...serverFilter },
         });
     };

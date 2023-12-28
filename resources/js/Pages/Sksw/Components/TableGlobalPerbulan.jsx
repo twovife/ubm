@@ -45,14 +45,14 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(localStorage.getItem("complainfilter"));
+        const storedFilter = JSON.parse(localStorage.getItem("sksw_wilayah"));
         if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("complainfilter", JSON.stringify(filters));
+        localStorage.setItem("sksw_wilayah", JSON.stringify(filters));
     }, [filters]);
 
     useEffect(() => {
@@ -122,7 +122,7 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
 
     const onResetPage = () => {
         setLoading(true);
-        localStorage.setItem("complainfilter", null);
+        localStorage.setItem("sksw_wilayah", null);
         setFilters([{ column: "", operators: "1", values: "" }]);
         setOrderData({ column: "", orderby: "" });
         setTimeout(() => {

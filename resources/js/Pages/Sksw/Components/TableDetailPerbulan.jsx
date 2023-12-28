@@ -45,16 +45,14 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(
-            localStorage.getItem("detail_perbulan")
-        );
+        const storedFilter = JSON.parse(localStorage.getItem("sksw_unit"));
         if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("detail_perbulan", JSON.stringify(filters));
+        localStorage.setItem("sksw_unit", JSON.stringify(filters));
     }, [filters]);
 
     useEffect(() => {
@@ -132,7 +130,7 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
 
     const onResetPage = () => {
         setLoading(true);
-        localStorage.setItem("detail_perbulan", null);
+        localStorage.setItem("sksw_unit", null);
         setFilters([{ column: "", operators: "1", values: "" }]);
         setOrderData({ column: "", orderby: "" });
         setTimeout(() => {

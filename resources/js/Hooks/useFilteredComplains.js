@@ -67,7 +67,10 @@ function useFilteredComplains(
     };
 
     const applyEqualityFilter = (itemValue, paramValue) => {
-        return itemValue === paramValue;
+        const toLowerItemValue = itemValue?.toString().toLowerCase();
+        const toLowerParamValue = paramValue?.toString().toLowerCase();
+
+        return toLowerItemValue === toLowerParamValue;
     };
 
     const filteredData = datas.filter((item) => {
@@ -111,7 +114,8 @@ function useFilteredComplains(
     displayData.forEach((entry) => {
         for (let key in entry) {
             if (key !== "wilayah" && key !== "bulan") {
-                totals[key] = (totals[key] || 0) + entry[key];
+                totals[key] =
+                    (parseInt(totals[key]) || 0) + parseInt(entry[key]);
             }
         }
     });

@@ -13,15 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('capital_loan_instalments', function (Blueprint $table) {
+        Schema::create('unit_savings', function (Blueprint $table) {
             $table->id();
-            $table->integer('capital_loan_id')->nullable();
-            $table->integer('one_mil_deposite_id')->nullable();
-            $table->integer('tanggal_angsuran')->nullable();
-            $table->bigInteger('saldo_sebelum')->nullable();
+            $table->date('transaction_date')->nullable();
+            $table->integer('unit_saving_account_id')->nullable();
+            $table->integer('transaction_month')->nullable();
+            $table->integer('transaction_year')->nullable();
             $table->bigInteger('debit')->nullable();
             $table->bigInteger('kredit')->nullable();
             $table->bigInteger('saldo')->nullable();
+            $table->string('transaction')->nullable();
+            $table->string('transaction_type')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('capital_loan_instalments');
+        Schema::dropIfExists('unit_savings');
     }
 };

@@ -11,10 +11,12 @@ use App\Http\Controllers\MantriAppController;
 use App\Http\Controllers\OptionalDepositController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UnitSavingController;
 use App\Http\Controllers\UserController;
 use App\Models\Deposit;
 use App\Models\Inventory;
 use App\Models\OneMilDeposit;
+use App\Models\UnitSaving;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -95,10 +97,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/unit', [DepositController::class, 'sksw_unit'])->name('skswunit');
     });
 
-    Route::prefix('onemil')->name('onemil.')->group(function () {
-        Route::get('/', [OneMilDeposit::class, 'index'])->name('index');
-        Route::get('/create', [OneMilDeposit::class, 'create'])->name('create');
+
+    Route::prefix('unitsaving')->name('unitsaving.')->group(function () {
+        Route::get('/', [UnitSavingController::class, 'index'])->name('index');
+        Route::get('/create', [UnitSavingController::class, 'create'])->name('create');
+        Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });
+
+
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

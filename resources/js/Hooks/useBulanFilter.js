@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 
-function useBulanFilter() {
+function useBulanFilter(
+    server_filters,
+    on_change_link,
+    branch,
+    batch_datas,
+    tabel_type
+) {
+    const [loading, setLoading] = useState(false);
+
+    const [activeTab, setActiveTab] = useState(
+        batch_datas[0]?.[tabel_type] ?? null
+    ); // Mengatur tab pertama sebagai aktif
+
+    const handleTabClick = (tabId) => {
+        setActiveTab(tabId);
+    };
+
     const bulanAngka = [
         { id: 1, display: "Januari", value: 1 },
         { id: 2, display: "Februari", value: 2 },
@@ -22,9 +38,49 @@ function useBulanFilter() {
         { id: 3, display: "2025", value: 2025 },
     ];
 
+    const [serverFilter, setServerFilter] = useState({
+        transaction_month: parseInt(server_filters?.transaction_month) ?? null,
+        transaction_year: parseInt(server_filters?.transaction_year) ?? null,
+    });
+
+    const onServerFilterChange = (e) => {
+        const { value, name } = e.target;
+        setServerFilter({ ...serverFilter, [name]: value });
+    };
+
+    const branchess = branch?.map((item) => {
+        // console.log(item);
+        return {
+            id: item.id,
+            value: item.wilayah,
+            display: `wilayah ${item.wilayah}`,
+        };
+    });
+
+    // console.log(branchess);
+
+    const onBranchChange = (e) => {
+        e.preventDefault();
+        // console.log(serverFilter);
+        setLoading(true);
+        router.visit(on_change_link, {
+            data: { ...serverFilter },
+        });
+    };
+
     return {
         tahunAngka,
         bulanAngka,
+        serverFilter,
+        setServerFilter,
+        onServerFilterChange,
+        onBranchChange,
+        branchess,
+        loading,
+        setLoading,
+        activeTab,
+        setActiveTab,
+        handleTabClick,
     };
 }
 

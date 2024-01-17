@@ -15,4 +15,14 @@ class Branch extends Model
         'isactive',
         'code',
     ];
+
+    public function unit_saving_accounts()
+    {
+        return $this->hasMany(UnitSavingAccount::class, 'unit_saving_account_id', 'id');
+    }
+
+    public function unit_saving_account()
+    {
+        return $this->hasOne(UnitSavingAccount::class, 'unit_saving_account_id', 'id');
+    }
 }

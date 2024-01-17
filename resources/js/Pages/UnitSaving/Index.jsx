@@ -1,10 +1,10 @@
 import LinkButton from "@/Components/LinkButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
+import useBulanFilter from "@/Hooks/useBulanFilter";
 import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Link, router } from "@inertiajs/react";
-import dayjs from "dayjs";
+import { Link } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import {
     AiFillEdit,
@@ -14,11 +14,32 @@ import {
     AiOutlineSortDescending,
 } from "react-icons/ai";
 import { BiRefresh } from "react-icons/bi";
-import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
+import TabelUnit from "./Components/TabelUnit";
+// import { BiRefresh } from "react-icons/bi";
 
-const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
-    const datas = data.data;
+const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
+    // console.log(batch_datas);
+    const {
+        tahunAngka,
+        bulanAngka,
+        serverFilter,
+        setServerFilter,
+        onServerFilterChange,
+        onBranchChange,
+        branchess,
+        loading,
+        setLoading,
+        activeTab,
+        setActiveTab,
+        handleTabClick,
+    } = useBulanFilter(
+        server_filters,
+        route("unitsaving.index"),
+        branch,
+        batch_datas,
+        "wilayah"
+    );
 
     const itemsPerPage = 50;
     const {
@@ -46,14 +67,16 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(localStorage.getItem("sksw_unit"));
+        const storedFilter = JSON.parse(
+            localStorage.getItem("dashboard_unitsaving")
+        );
         if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("sksw_unit", JSON.stringify(filters));
+        localStorage.setItem("dashboard_unitsaving", JSON.stringify(filters));
     }, [filters]);
 
     useEffect(() => {
@@ -74,14 +97,6 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
         window.addEventListener("click", log);
         return () => {
             window.removeEventListener("click", log);
-        };
-    });
-
-    const branchess = branch.map((item) => {
-        return {
-            id: item.wilayah,
-            value: item.wilayah,
-            display: `wilayah ${item.wilayah}`,
         };
     });
 
@@ -107,7 +122,6 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
     const decrementFilter = (column) => {
         // Buat salinan dari daftar filter
         const updatedFilters = [...filters];
-        // console.log(updatedFilters);
         // Cari indeks filter dengan column yang sesuai
         const decrementFilters = filters.filter(
             (filter) => filter.column !== column
@@ -129,15 +143,21 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
         });
     };
 
-    const onResetPage = () => {
-        setLoading(true);
-        localStorage.setItem("sksw_unit", null);
-        setFilters([{ column: "", operators: "1", values: "" }]);
-        setOrderData({ column: "", orderby: "" });
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
-    };
+    const headers = [
+        {
+            title: "Wilayah",
+            column: "wilayah",
+        },
+        {
+            title: "Saldo Tabungan",
+            column: "total",
+            format: "currency",
+        },
+        {
+            title: "Setoran Terakhir",
+            column: "last_month_payment",
+        },
+    ];
 
     const filterModal = () => {
         return (
@@ -237,150 +257,6 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
             </div>
         );
     };
-    const headers = [
-        {
-            title: "Nama Karyawan",
-            column: "nama_karyawan",
-            class_name: "whitespace-nowrap",
-        },
-        {
-            title: "Wilayah",
-            column: "wilayah",
-        },
-        {
-            title: "Unit",
-            column: "unit",
-            class_name: "whitespace-nowrap",
-        },
-        {
-            title: "Bulan",
-            column: "bulan",
-            class_name: "whitespace-nowrap",
-        },
-        {
-            title: "Is Active",
-            column: "is_active",
-            class_name: "whitespace-nowrap",
-        },
-
-        {
-            title: "Simpanan SW",
-            column: "balance_before_sw",
-            format: "currency",
-            class_name: "bg-gray-100 text-black font-semibold",
-        },
-        {
-            title: "Simpanan SK",
-            column: "balance_before_sk",
-            format: "currency",
-            class_name: "bg-gray-200 text-black font-semibold",
-        },
-        {
-            title: "Debit SW",
-            column: "debit_sw",
-            format: "currency",
-            class_name: "bg-green-100 text-black font-semibold",
-        },
-        {
-            title: "Debit SK",
-            column: "debit_sk",
-            format: "currency",
-            class_name: "bg-green-200 text-black font-semibold",
-        },
-        {
-            title: "Kredit SW",
-            column: "kredit_sw",
-            format: "currency",
-            class_name: "bg-red-100 text-black font-semibold",
-        },
-        {
-            title: "Kredit SK",
-            column: "kredit_sk",
-            format: "currency",
-            class_name: "bg-red-200 text-black font-semibold",
-        },
-        {
-            title: "Saldo SW",
-            column: "balance_sw",
-            format: "currency",
-            class_name: "bg-green-100 text-black font-semibold",
-        },
-        {
-            title: "Saldo SK",
-            column: "balance_sk",
-            format: "currency",
-            class_name: "bg-green-200 text-black font-semibold",
-        },
-        {
-            title: "Saldo Global",
-            column: "saldo_global",
-            format: "currency",
-            class_name: "bg-blue-200 text-black font-semibold",
-        },
-
-        {
-            title: "Setoran SW (D)",
-            column: "D_sw",
-            format: "currency",
-            class_name: "bg-emerald-50",
-        },
-        {
-            title: "Setoran SK (D)",
-            column: "D_sk",
-            format: "currency",
-            class_name: "bg-emerald-50",
-        },
-
-        {
-            title: "Debit Mutasi SW (D)",
-            column: "DM_sw",
-            format: "currency",
-            class_name: "bg-emerald-50",
-        },
-        {
-            title: "Debit Mutasi SK (D)",
-            column: "DM_sk",
-            format: "currency",
-            class_name: "bg-emerald-50",
-        },
-
-        {
-            title: "Pengambilan SW (K)",
-            column: "K_sw",
-            format: "currency",
-            class_name: "bg-rose-50",
-        },
-        {
-            title: "Pengambilan SK (K)",
-            column: "K_sk",
-            format: "currency",
-            class_name: "bg-rose-50",
-        },
-        {
-            title: "Kredit Mutasi SW (K)",
-            column: "KM_sw",
-            format: "currency",
-            class_name: "bg-rose-50",
-        },
-        {
-            title: "Kredit Mutasi SK (K)",
-            column: "KM_sk",
-            format: "currency",
-            class_name: "bg-rose-50",
-        },
-        {
-            title: "Kredit Resign / M SW (K)",
-            column: "KRMD_sw",
-            format: "currency",
-            class_name: "bg-rose-50",
-        },
-        {
-            title: "Kredit Resign / MD SK (K)",
-            column: "KRMD_sk",
-            format: "currency",
-            class_name: "bg-rose-50",
-        },
-    ];
 
     const tBodyGenerator = () => {
         if (displayData.length === 0) {
@@ -400,17 +276,10 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                     return (
                         <tr
                             key={index}
-                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs "
+                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs"
                         >
                             <th className="px-6 py-1">
-                                <div className="flex justify-around items-center gap-3">
-                                    {(currentPage - 1) * itemsPerPage +
-                                        index +
-                                        1}
-                                    <Link href="#">
-                                        <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
-                                    </Link>
-                                </div>
+                                {(currentPage - 1) * itemsPerPage + index + 1}
                             </th>
                             {headers.map((header, index) => {
                                 if (header.format == "date") {
@@ -465,28 +334,72 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
     };
 
     return (
-        <>
-            <div className="p-3 bg-white rounded shadow">
-                <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
-                    <div></div>
-                    <div className="flex items-center gap-3">
+        <Authenticated
+            loading={loading}
+            auth={props.auth}
+            errors={props.errors}
+            header={
+                <>
+                    <h2 className="font-semibold text-xl text-main-800 leading-tight">
+                        Daftar Simpanan Sukarela Karyawan
+                    </h2>
+                    <form
+                        // onSubmit={onBranchChange}
+                        className="ml-auto flex gap-3 items-center"
+                    >
+                        <SelectList
+                            value={serverFilter.transaction_month}
+                            options={bulanAngka}
+                            name={"transaction_month"}
+                            nullValue={true}
+                            className={"text-sm"}
+                            onChange={onServerFilterChange}
+                        />
+                        <SelectList
+                            value={serverFilter.transaction_year}
+                            options={tahunAngka}
+                            name={"transaction_year"}
+                            nullValue={true}
+                            className={"text-sm"}
+                            onChange={onServerFilterChange}
+                        />
+                        {/* <SelectList
+                            value={serverFilter.wilayah}
+                            name={"wilayah"}
+                            options={branchess}
+                            nullValue={true}
+                            className={"text-sm"}
+                            onChange={onServerFilterChange}
+                        /> */}
+
                         <PrimaryButton
-                            onClick={onResetPage}
+                            href={route("simpanan.detailPerBulan")}
+                            title={"Go"}
                             size={"sm"}
-                            theme="other"
-                            icon={<BiRefresh />}
-                            title={"Reset"}
+                            type="submit"
+                            theme="green"
+                        />
+                        <LinkButton
+                            href={route("unitsaving.create")}
+                            title={"+ New"}
+                            size={"sm"}
+                            type="button"
+                            theme="yellow"
                         />
 
                         <LinkButton
-                            as="button"
-                            href={route("simpanan.create")}
-                            icon={<IoMdAdd />}
-                            size={"md"}
-                            title={"Tambah"}
-                        ></LinkButton>
-                    </div>
-                </div>
+                            href={route("simpanan.detailPerBulan")}
+                            title={"Reset"}
+                            size={"sm"}
+                            theme="other"
+                            type="submit"
+                            icon={<BiRefresh />}
+                        />
+                    </form>
+                </>
+            }
+        >
+            <div className="mx-auto sm:px-6 lg:px-8 mb-6">
                 {filters && (
                     <div className="inline-block mt-3">
                         {filters.map((item) => {
@@ -525,8 +438,7 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                     </div>
                 )}
             </div>
-
-            <div className="h-[70vh] p-3 mt-3 bg-white rounded shadow overflow-auto">
+            <div className="mx-auto sm:px-6 lg:px-8 mb-6">
                 <table className="w-full text-sm text-left text-gray-500">
                     <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
                         <tr>
@@ -555,211 +467,68 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                     {tBodyGenerator()}
                     <tfoot>
                         <tr className="bg-blue-200 font-semibold text-black">
-                            <td className={`px-6 py-1`} colSpan={6}>
+                            <td className={`px-6 py-1`} colSpan={"2"}>
                                 TOTAL
                             </td>
                             <td className={`px-6 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
-                                        value={totals.balance_before_sw}
+                                        value={totals.total}
                                         displayType={"text"}
                                         thousandSeparator={","}
                                         prefix={"Rp. "}
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.balance_before_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.debit_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.debit_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.kredit_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.kredit_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.balance_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.balance_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.saldo_global}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.D_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.D_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.DM_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.DM_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.K_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.K_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.KM_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.KM_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.KRMD_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-6 py-1`}>
-                                <div className={`whitespace-nowrap`}>
-                                    <NumericFormat
-                                        value={totals.KRMD_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
+                            <td className={`px-6 py-1`}></td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
-        </>
+            <div className="mx-auto sm:px-6 lg:px-8 mb-6">
+                {batch_datas.length > 0 ? (
+                    <>
+                        <ul className="tab-list flex justify-start gap-3 flex-wrap">
+                            {batch_datas.map((item) => (
+                                <li
+                                    key={item.wilayah}
+                                    className={`tab ${
+                                        activeTab === item.wilayah
+                                            ? "active bg-main-400 ring-2 ring-main-500"
+                                            : ""
+                                    } px-3 py-1 border rounded hover:bg-main-400 hover:cursor-pointer`}
+                                    onClick={() => handleTabClick(item.wilayah)}
+                                >
+                                    {item.wilayah}
+                                </li>
+                            ))}
+                        </ul>
+                        <div className="tab-content mt-3">
+                            {batch_datas.map((item) => (
+                                <div
+                                    key={item.wilayah}
+                                    className={
+                                        activeTab === item.wilayah
+                                            ? "active"
+                                            : "hidden"
+                                    }
+                                >
+                                    <TabelUnit
+                                        data={item}
+                                        branch={branch}
+                                        loading={loading}
+                                        setLoading={setLoading}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                ) : (
+                    <div>Belum ada data yang di input di wilayah ini</div>
+                )}
+            </div>
+        </Authenticated>
     );
 };
 
-export default TableDetailPerbulan;
+export default Index;

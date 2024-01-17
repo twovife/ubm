@@ -38,6 +38,7 @@ const Unit = ({ branch, server_filters, batch_datas, ...props }) => {
         const { value, name } = e.target;
         setServerFilter({ ...serverFilter, [name]: value });
     };
+
     const onBranchChange = (e) => {
         e.preventDefault();
         // console.log(serverFilter);

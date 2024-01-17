@@ -276,7 +276,7 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "1",
+                                        id: "103",
                                         href: route("simpanan.index"),
                                         name: "Dashboard Simpanan",
                                         active: route().current(
@@ -284,7 +284,7 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "2",
+                                        id: "104",
                                         href: route("simpanan.detailPerBulan"),
                                         name: "SK Perbulan",
                                         active: route().current(
@@ -292,7 +292,7 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "3",
+                                        id: "105",
                                         href: route("simpanan.globalPerBulan"),
                                         name: "SK Per Unit",
                                         active: route().current(
@@ -301,7 +301,7 @@ export default function Authenticated({
                                     },
 
                                     {
-                                        id: "4",
+                                        id: "106",
                                         href: route("simpanan.sumallsk"),
                                         name: "Global Wilayah (SK)",
                                         active: route().current(
@@ -309,7 +309,7 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "5",
+                                        id: "107",
                                         href: route("simpanan.sw_perbulan"),
                                         name: "SW Perbulan",
                                         active: route().current(
@@ -317,7 +317,7 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "6",
+                                        id: "108",
                                         href: route("simpanan.sw_global"),
                                         name: "SW Per Unit",
                                         active: route().current(
@@ -325,7 +325,7 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "7",
+                                        id: "109",
                                         href: route("simpanan.sumallsw"),
                                         name: "Global Wilayah (SW)",
                                         active: route().current(

@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('capital_loans', function (Blueprint $table) {
+        Schema::create('unit_saving_accounts', function (Blueprint $table) {
             $table->id();
-            $table->integer('nama_peminjam');
-            $table->integer('branch_id');
-            $table->integer('pinjaman');
-            $table->integer('saldo_pinjaman');
-            $table->date('tanggal_pinjaman');
+            $table->integer('branch_id')->nullable();
+            $table->integer('employee_id')->nullable();
+            $table->string('account_type', 255)->nullable();
+            $table->string('note', 4000)->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('capital_loans');
+        Schema::dropIfExists('unit_saving_accounts');
     }
 };

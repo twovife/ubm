@@ -20,7 +20,7 @@ import { NumericFormat } from "react-number-format";
 const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
     const datas = data.data;
 
-    const itemsPerPage = 50;
+    const itemsPerPage = 100;
     const {
         filters,
         setFilters,

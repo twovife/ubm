@@ -34,6 +34,7 @@ class DepositController extends Controller
         $branch = Branch::query()->select('id', 'unit', 'wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
         })->distinct()->get();
+
         $simpanan = Deposit::with('employee', 'branch')->where('sw_balance', ">", 0)->orWhere('sk_balance', ">", 0)->withFilter($getFilter)->get();
 
         $data = collect($simpanan)->map(fn ($que) => [
@@ -209,6 +210,8 @@ class DepositController extends Controller
 
         try {
             DB::beginTransaction();
+            // $divisi_sekarang =
+
             if ($optionalDepositTransaction->transaction == "D") {
                 // dd("D");
                 $optionalDepositTransaction->deposit->sk_balance =  $optionalDepositTransaction->deposit->sk_balance - $optionalDepositTransaction->debit;
@@ -220,6 +223,8 @@ class DepositController extends Controller
                 $optionalDepositTransaction->deposit->save();
                 $optionalDepositTransaction->delete();
             }
+
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();

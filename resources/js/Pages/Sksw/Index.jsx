@@ -19,6 +19,24 @@ import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 
 const Index = ({ server_filters, datas, ...props }) => {
+    const {
+        tahunAngka,
+        bulanAngka,
+        serverFilter,
+        setServerFilter,
+        onServerFilterChange,
+        onBranchChange,
+        loading,
+        setLoading,
+        handleTabClick,
+    } = useBulanFilter(
+        server_filters,
+        route("sksw.skswglobal"),
+        null,
+        datas,
+        "unit"
+    );
+
     const itemsPerPage = 100;
     const {
         filters,
@@ -40,8 +58,6 @@ const Index = ({ server_filters, datas, ...props }) => {
         operators: "1",
         values: "",
     });
-
-    const [loading, setLoading] = useState(false);
 
     const thisonclick = (column, format = "text") => {
         setShowFilter({ column, format });
@@ -119,25 +135,6 @@ const Index = ({ server_filters, datas, ...props }) => {
         setAddFilter({
             ...addFilter,
             [name]: convertedValue,
-        });
-    };
-
-    const { bulanAngka, tahunAngka } = useBulanFilter();
-    const [serverFilter, setServerFilter] = useState({
-        transaction_month: parseInt(server_filters.transaction_month) ?? null,
-        transaction_year: parseInt(server_filters.transaction_year) ?? null,
-    });
-
-    const onServerFilterChange = (e) => {
-        const { value, name } = e.target;
-        setServerFilter({ ...serverFilter, [name]: value });
-    };
-    const onBranchChange = (e) => {
-        e.preventDefault();
-        // console.log(serverFilter);
-        setLoading(true);
-        router.visit(route("sksw.skswglobal"), {
-            data: { ...serverFilter },
         });
     };
 

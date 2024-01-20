@@ -467,8 +467,43 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
     return (
         <>
             <div className="p-3 bg-white rounded shadow">
-                <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
-                    <div></div>
+                <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-3">
+                    <div className="inline-block">
+                        {filters &&
+                            filters.map((item) => {
+                                if (item.column == "") {
+                                    return null;
+                                }
+                                return (
+                                    <div className="flex items-center justify-start space-y-2">
+                                        <div className="border rounded flex items-center">
+                                            <div className="p-2 text-lg bg-green-400 text-white">
+                                                <AiFillFilter />
+                                            </div>
+                                            <div className="px-3 text-sm text-main-500">
+                                                <span className="mr-1 capitalize ">
+                                                    {item.column}
+                                                </span>
+                                                <span className="mr-1 capitalize ">
+                                                    {item.operators == 1
+                                                        ? "Contains"
+                                                        : "="}
+                                                </span>
+                                                <span>'{item.values}'</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="hover:border hover:bg-gray-300 hover:cursor-pointer rounded p-1 ml-2"
+                                            onClick={() =>
+                                                decrementFilter(item.column)
+                                            }
+                                        >
+                                            <AiOutlineClose />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                    </div>
                     <div className="flex items-center gap-3">
                         <PrimaryButton
                             onClick={onResetPage}
@@ -487,46 +522,9 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                         ></LinkButton>
                     </div>
                 </div>
-                {filters && (
-                    <div className="inline-block mt-3">
-                        {filters.map((item) => {
-                            if (item.column == "") {
-                                return null;
-                            }
-                            return (
-                                <div className="flex items-center justify-start space-y-2">
-                                    <div className="border rounded flex items-center">
-                                        <div className="p-2 text-lg bg-green-400 text-white">
-                                            <AiFillFilter />
-                                        </div>
-                                        <div className="px-3 text-sm text-main-500">
-                                            <span className="mr-1 capitalize ">
-                                                {item.column}
-                                            </span>
-                                            <span className="mr-1 capitalize ">
-                                                {item.operators == 1
-                                                    ? "Contains"
-                                                    : "="}
-                                            </span>
-                                            <span>'{item.values}'</span>
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="hover:border hover:bg-gray-300 hover:cursor-pointer rounded p-1 ml-2"
-                                        onClick={() =>
-                                            decrementFilter(item.column)
-                                        }
-                                    >
-                                        <AiOutlineClose />
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
             </div>
 
-            <div className="h-[70vh] p-3 mt-3 bg-white rounded shadow overflow-auto">
+            <div className="h-[70vh] mt-3 bg-white rounded shadow overflow-auto">
                 <table className="w-full text-sm text-left text-gray-500">
                     <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
                         <tr>

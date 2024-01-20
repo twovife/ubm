@@ -1,3 +1,4 @@
+import { router } from "@inertiajs/react";
 import React, { useState } from "react";
 
 function useBulanFilter(
@@ -5,12 +6,12 @@ function useBulanFilter(
     on_change_link,
     branch,
     batch_datas,
-    tabel_type
+    tabel_type = null
 ) {
     const [loading, setLoading] = useState(false);
 
     const [activeTab, setActiveTab] = useState(
-        batch_datas[0]?.[tabel_type] ?? null
+        tabel_type ? batch_datas[0]?.[tabel_type] ?? null : null
     ); // Mengatur tab pertama sebagai aktif
 
     const handleTabClick = (tabId) => {
@@ -50,11 +51,22 @@ function useBulanFilter(
 
     const branchess = branch?.map((item) => {
         // console.log(item);
-        return {
-            id: item.id,
-            value: item.wilayah,
-            display: `wilayah ${item.wilayah}`,
-        };
+
+        if (tabel_type == "wilayah") {
+            return {
+                id: item.id,
+                value: item.wilayah,
+                display: `wilayah ${item.wilayah}`,
+            };
+        }
+
+        if (tabel_type == "unit") {
+            return {
+                id: item.id,
+                value: item.unit,
+                display: `${item.unit}`,
+            };
+        }
     });
 
     // console.log(branchess);

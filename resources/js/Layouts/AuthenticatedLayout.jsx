@@ -252,6 +252,14 @@ export default function Authenticated({
                                 dropdownId={5}
                                 lists={[
                                     {
+                                        id: "103",
+                                        href: route("simpanan.index"),
+                                        name: "Dashboard SKSW",
+                                        active: route().current(
+                                            "simpanan.index"
+                                        ),
+                                    },
+                                    {
                                         id: "100",
                                         href: route("sksw.skswglobal"),
                                         name: "SKSW Global",
@@ -273,63 +281,6 @@ export default function Authenticated({
                                         name: "SKSW Unit",
                                         active: route().current(
                                             "sksw.skswunit"
-                                        ),
-                                    },
-                                    {
-                                        id: "103",
-                                        href: route("simpanan.index"),
-                                        name: "Dashboard Simpanan",
-                                        active: route().current(
-                                            "simpanan.index"
-                                        ),
-                                    },
-                                    {
-                                        id: "104",
-                                        href: route("simpanan.detailPerBulan"),
-                                        name: "SK Perbulan",
-                                        active: route().current(
-                                            "simpanan.detailPerBulan"
-                                        ),
-                                    },
-                                    {
-                                        id: "105",
-                                        href: route("simpanan.globalPerBulan"),
-                                        name: "SK Per Unit",
-                                        active: route().current(
-                                            "simpanan.globalPerBulan"
-                                        ),
-                                    },
-
-                                    {
-                                        id: "106",
-                                        href: route("simpanan.sumallsk"),
-                                        name: "Global Wilayah (SK)",
-                                        active: route().current(
-                                            "simpanan.sumallsk"
-                                        ),
-                                    },
-                                    {
-                                        id: "107",
-                                        href: route("simpanan.sw_perbulan"),
-                                        name: "SW Perbulan",
-                                        active: route().current(
-                                            "simpanan.sw_perbulan"
-                                        ),
-                                    },
-                                    {
-                                        id: "108",
-                                        href: route("simpanan.sw_global"),
-                                        name: "SW Per Unit",
-                                        active: route().current(
-                                            "simpanan.sw_global"
-                                        ),
-                                    },
-                                    {
-                                        id: "109",
-                                        href: route("simpanan.sumallsw"),
-                                        name: "Global Wilayah (SW)",
-                                        active: route().current(
-                                            "simpanan.sumallsw"
                                         ),
                                     },
                                 ]}

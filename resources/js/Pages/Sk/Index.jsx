@@ -18,7 +18,7 @@ import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 
 const Index = ({ branch, server_filters, datas, ...props }) => {
-    // console.log(datas);
+    console.log(branch);
     const itemsPerPage = 100;
     const {
         filters,
@@ -31,6 +31,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         totalPages,
         handlePageChange,
     } = useFilteredComplains({}, itemsPerPage);
+
     const [showFilter, setShowFilter] = useState("");
     const [addFilter, setAddFilter] = useState({
         column: "",

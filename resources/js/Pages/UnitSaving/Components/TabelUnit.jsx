@@ -274,6 +274,7 @@ const TabelUnit = ({ data, branch, loading, setLoading }) => {
         return (
             <tbody>
                 {displayData.map((item, index) => {
+                    // console.log(item);
                     return (
                         <tr
                             key={index}
@@ -284,9 +285,29 @@ const TabelUnit = ({ data, branch, loading, setLoading }) => {
                                     {(currentPage - 1) * itemsPerPage +
                                         index +
                                         1}
-                                    <Link href="#">
-                                        <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" />
-                                    </Link>
+                                    {item.total == 0 ? (
+                                        <Link
+                                            href={route(
+                                                "unitsaving.create",
+                                                item.branch_id
+                                            )}
+                                            className="px-2 py-1 rounded-lg bg-green-500 text-white"
+                                        >
+                                            Setoran Baru
+                                            {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                        </Link>
+                                    ) : (
+                                        <Link
+                                            href={route(
+                                                "unitsaving.savingdetails",
+                                                item.id
+                                            )}
+                                            className="px-2 py-1 rounded-lg bg-indigo-500 text-white"
+                                        >
+                                            Setor
+                                            {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                        </Link>
+                                    )}
                                 </div>
                             </th>
                             {headers.map((header, index) => {
@@ -354,14 +375,6 @@ const TabelUnit = ({ data, branch, loading, setLoading }) => {
                             icon={<BiRefresh />}
                             title={"Reset"}
                         />
-
-                        <LinkButton
-                            as="button"
-                            href={route("simpanan.create")}
-                            icon={<IoMdAdd />}
-                            size={"md"}
-                            title={"Tambah"}
-                        ></LinkButton>
                     </div>
                 </div>
                 {filters && (

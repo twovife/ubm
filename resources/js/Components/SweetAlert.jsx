@@ -1,15 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 const SweetAlert = ({ type, message }) => {
     const MySwal = withReactContent(Swal);
+
     useEffect(() => {
         if (type === "error") {
             MySwal.fire({
                 position: "top-end",
                 icon: "error",
-                title: "Terjadi Kesalahan Silahkan hub IT.",
+                title: message || "Terjadi Kesalahan Silahkan hub IT.",
                 showConfirmButton: false,
                 timer: 1500,
             });

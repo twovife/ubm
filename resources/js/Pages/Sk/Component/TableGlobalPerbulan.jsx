@@ -21,7 +21,7 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
     const datas = data.data;
     console.log(datas);
 
-    const itemsPerPage = 50;
+    const itemsPerPage = 100;
     const {
         filters,
         setFilters,

@@ -1,24 +1,47 @@
 import LinkButton from "@/Components/LinkButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
+import useBulanFilter from "@/Hooks/useBulanFilter";
 import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Link, router } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import {
+    AiFillCheckCircle,
     AiFillEdit,
     AiFillFilter,
+    AiFillFolderOpen,
+    AiOutlineCheck,
     AiOutlineClose,
     AiOutlineSortAscending,
     AiOutlineSortDescending,
 } from "react-icons/ai";
 import { BiRefresh } from "react-icons/bi";
-import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
+// import { BiRefresh } from "react-icons/bi";
 
-const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
-    const datas = data.data;
+const Index = ({ branch, server_filters, datas, ...props }) => {
+    const {
+        tahunAngka,
+        bulanAngka,
+        serverFilter,
+        setServerFilter,
+        onServerFilterChange,
+        onBranchChange,
+        branchess,
+        loading,
+        setLoading,
+        activeTab,
+        setActiveTab,
+        handleTabClick,
+    } = useBulanFilter(
+        server_filters,
+        route("unitsaving.index"),
+        branch,
+        datas,
+        "wilayah"
+    );
 
     const itemsPerPage = 100;
     const {
@@ -31,7 +54,9 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
         displayData,
         totalPages,
         handlePageChange,
+        totals,
     } = useFilteredComplains({}, itemsPerPage, datas);
+
     const [showFilter, setShowFilter] = useState("");
     const [addFilter, setAddFilter] = useState({
         column: "",
@@ -44,16 +69,14 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(
-            localStorage.getItem("detail_perbulan")
-        );
+        const storedFilter = JSON.parse(localStorage.getItem("bonpanjer_1"));
         if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("detail_perbulan", JSON.stringify(filters));
+        localStorage.setItem("bonpanjer_1", JSON.stringify(filters));
     }, [filters]);
 
     useEffect(() => {
@@ -74,14 +97,6 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
         window.addEventListener("click", log);
         return () => {
             window.removeEventListener("click", log);
-        };
-    });
-
-    const branchess = branch.map((item) => {
-        return {
-            id: item.wilayah,
-            value: item.wilayah,
-            display: `wilayah ${item.wilayah}`,
         };
     });
 
@@ -107,7 +122,6 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
     const decrementFilter = (column) => {
         // Buat salinan dari daftar filter
         const updatedFilters = [...filters];
-        console.log(updatedFilters);
         // Cari indeks filter dengan column yang sesuai
         const decrementFilters = filters.filter(
             (filter) => filter.column !== column
@@ -129,20 +143,76 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
         });
     };
 
-    const onResetPage = () => {
-        setLoading(true);
-        localStorage.setItem("detail_perbulan", null);
-        setFilters([{ column: "", operators: "1", values: "" }]);
-        setOrderData({ column: "", orderby: "" });
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
-    };
+    // jabatan;
+    // tanggal_pinjaman;
+
+    // keterangan;
+
+    const headers = [
+        {
+            title: "Wilayah",
+            column: "wilayah",
+        },
+        {
+            title: "Unit",
+            column: "branch",
+            class_name: "whitespace-nowrap",
+        },
+        {
+            title: "Nama Karyawan",
+            column: "nama_karyawan",
+            class_name: "whitespace-nowrap",
+        },
+        {
+            title: "Jabatan",
+            column: "jabatan",
+        },
+        {
+            title: "Tanggal Pinjam",
+            column: "tanggal_pinjaman",
+            format: "date",
+        },
+
+        {
+            title: "Keterangan",
+            column: "keterangan",
+        },
+        {
+            title: "Nominal Bon",
+            column: "nominal_pinjaman",
+            format: "currency",
+        },
+        // {
+        //     title: "Total Angsuran Sebelumnya",
+        //     column: "setoran_bulan_lalu",
+        //     format: "currency",
+        // },
+        {
+            title: "Saldo Terakhir",
+            column: "saldo_bulan_lalu",
+            format: "currency",
+        },
+        {
+            title: "Angsuran",
+            column: "setoran_bulan_ini",
+            format: "currency",
+        },
+        {
+            title: "Total Angsuran",
+            column: "total_setoran",
+            format: "currency",
+        },
+        {
+            title: "Saldo",
+            column: "saldo",
+            format: "currency",
+        },
+    ];
 
     const filterModal = () => {
         return (
             <div
-                className="fixed text-white top-1/2 left-1/2 -translate-x-1/2"
+                className="fixed text-white top-1/2 left-1/2 -translate-x-1/2 "
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="bg-white border border-gray-300 rounded-lg shadow-lg">
@@ -237,85 +307,6 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
             </div>
         );
     };
-    const headers = [
-        {
-            title: "Wilayah",
-            column: "wilayah",
-        },
-        {
-            title: "Unit",
-            column: "unit",
-            nowrap: true,
-        },
-        {
-            title: "Bulan",
-            column: "bulan",
-            nowrap: true,
-        },
-        {
-            title: "Nama Karyawan",
-            column: "nama_karyawan",
-        },
-        // {
-        //     title: "Tanggal Tabungan",
-        //     column: "tanggal_tabungan",
-        //     format: "date",
-        // },
-        {
-            title: "Saldo Sebelumnya",
-            column: "balance_before",
-            format: "currency",
-            backgroundcolumn: "bg-gray-100",
-        },
-        {
-            title: "Debit",
-            column: "debit",
-            format: "currency",
-            backgroundcolumn: "bg-green-200",
-        },
-        {
-            title: "Kredit",
-            column: "kredit",
-            format: "currency",
-            backgroundcolumn: "bg-red-200",
-        },
-        {
-            title: "Saldo",
-            column: "balance",
-            format: "currency",
-            backgroundcolumn: "bg-green-200",
-        },
-        {
-            title: "Setoran (D)",
-            column: "D",
-            format: "currency",
-            backgroundcolumn: "bg-yellow-100",
-        },
-        {
-            title: "Debit Mutasi (D)",
-            column: "DM",
-            format: "currency",
-            backgroundcolumn: "bg-yellow-100",
-        },
-        {
-            title: "Pengambilan (K)",
-            column: "K",
-            format: "currency",
-            backgroundcolumn: "bg-yellow-100",
-        },
-        {
-            title: "Kredit Mutasi (K)",
-            column: "KM",
-            format: "currency",
-            backgroundcolumn: "bg-yellow-100",
-        },
-        {
-            title: "Kredit Resigm / MD (K)",
-            column: "KRMD",
-            format: "currency",
-            backgroundcolumn: "bg-yellow-100",
-        },
-    ];
 
     const tBodyGenerator = () => {
         if (displayData.length === 0) {
@@ -331,128 +322,155 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
         }
         return (
             <tbody>
-                {displayData.map((item, index) => (
-                    <tr
-                        key={index}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs"
-                    >
-                        <th className="px-6 py-1">
-                            <div className="flex justify-around items-center gap-3">
+                {displayData.map((item, index) => {
+                    return (
+                        <tr
+                            key={index}
+                            className="bg-white border-b hover:bg-blue-50 text-xs even:bg-gray-100"
+                        >
+                            <th className="px-6 flex items-center justify-start gap-3">
                                 {(currentPage - 1) * itemsPerPage + index + 1}
-                                {/* {console.log(item)} */}
-                                <Link
-                                    href={route(
-                                        "simpanan.transaksi",
-                                        item.id_tabungan
-                                    )}
-                                >
-                                    <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
-                                </Link>
-                            </div>
-                        </th>
-                        {headers.map((header, index) => {
-                            if (header.format == "date") {
+                                {item.keterangan == "unpaid" ? (
+                                    <Link
+                                        href={route(
+                                            "bonpanjer.bon_panjer_show",
+                                            item.id
+                                        )}
+                                        className="px-2 py-1 rounded-lg bg-red-500 text-white"
+                                    >
+                                        Bayar
+                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                    </Link>
+                                ) : (
+                                    <Link
+                                        as="button"
+                                        disabled
+                                        className="px-2 py-1 rounded-lg bg-white text-green-500"
+                                    >
+                                        {/* <AiOutlineCheck /> */}
+                                        <AiFillCheckCircle />
+                                    </Link>
+                                )}
+                            </th>
+                            {headers.map((header, index) => {
+                                if (header.format == "date") {
+                                    return (
+                                        <td className={`px-6 py-1`} key={index}>
+                                            <div
+                                                className={`whitespace-pre-wrap`}
+                                            >
+                                                {item[header.column] !== "-"
+                                                    ? dayjs(
+                                                          item[header.column]
+                                                      ).format("DD-MM-YYYY")
+                                                    : "-"}
+                                            </div>
+                                        </td>
+                                    );
+                                }
+                                if (header.format == "currency") {
+                                    return (
+                                        <td
+                                            className={`px-6 py-1 ${header.class_name}`}
+                                            key={index}
+                                        >
+                                            <div
+                                                className={`whitespace-nowrap`}
+                                            >
+                                                <NumericFormat
+                                                    value={item[header.column]}
+                                                    displayType={"text"}
+                                                    thousandSeparator={","}
+                                                    prefix={"Rp. "}
+                                                />
+                                            </div>
+                                        </td>
+                                    );
+                                }
                                 return (
                                     <td className={`px-6 py-1`} key={index}>
-                                        <div className={`whitespace-pre-wrap`}>
-                                            {item[header.column] !== "-"
-                                                ? dayjs(
-                                                      item[header.column]
-                                                  ).format("DD-MM-YYYY")
-                                                : "-"}
+                                        <div
+                                            className={`${header.class_name} `}
+                                        >
+                                            {item[header.column]}
                                         </div>
                                     </td>
                                 );
-                            }
-                            if (header.format == "currency") {
-                                // if (header.backgroundcolumn === "saldo_akhir") {
-                                //     return (
-                                //         <td
-                                //             className={`bg-green-200 px-6 py-1`}
-                                //             key={index}
-                                //         >
-                                //             <div
-                                //                 className={`whitespace-pre-wrap`}
-                                //             >
-                                //                 {/* {dayjs(item[header.column]).format(
-                                //             "DD-MM-YYYY"
-                                //         )} */}
-                                //                 <NumericFormat
-                                //                     value={item[header.column]}
-                                //                     displayType={"text"}
-                                //                     thousandSeparator={","}
-                                //                     prefix={"Rp. "}
-                                //                 />
-                                //             </div>
-                                //         </td>
-                                //     );
-                                // }
-                                return (
-                                    <td
-                                        className={`px-6 py-1 ${
-                                            header.backgroundcolumn
-                                                ? header.backgroundcolumn
-                                                : ""
-                                        }`}
-                                        key={index}
-                                    >
-                                        <div className={`whitespace-nowrap`}>
-                                            {/* {dayjs(item[header.column]).format(
-                                                "DD-MM-YYYY"
-                                            )} */}
-                                            <NumericFormat
-                                                value={item[header.column]}
-                                                displayType={"text"}
-                                                thousandSeparator={","}
-                                                prefix={"Rp. "}
-                                            />
-                                        </div>
-                                    </td>
-                                );
-                            }
-                            return (
-                                <td className={`px-6 py-1`} key={index}>
-                                    <div
-                                        className={`${
-                                            header.nowrap
-                                                ? "whitespace-nowrap"
-                                                : "whitespace-pre-wrap"
-                                        } `}
-                                    >
-                                        {item[header.column]}
-                                    </div>
-                                </td>
-                            );
-                        })}
-                    </tr>
-                ))}
+                            })}
+                        </tr>
+                    );
+                })}
             </tbody>
         );
     };
 
     return (
-        <>
-            <div className="p-3 bg-white rounded shadow">
-                <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
-                    <div></div>
-                    <div className="flex items-center gap-3">
+        <Authenticated
+            loading={loading}
+            auth={props.auth}
+            errors={props.errors}
+            header={
+                <>
+                    <h2 className="font-semibold text-xl text-main-800 leading-tight">
+                        Bon Panjer
+                    </h2>
+                    <form
+                        // onSubmit={onBranchChange}
+                        className="ml-auto flex gap-3 items-center"
+                    >
+                        <SelectList
+                            value={serverFilter.transaction_month}
+                            options={bulanAngka}
+                            name={"transaction_month"}
+                            nullValue={true}
+                            className={"text-sm"}
+                            onChange={onServerFilterChange}
+                        />
+                        <SelectList
+                            value={serverFilter.transaction_year}
+                            options={tahunAngka}
+                            name={"transaction_year"}
+                            nullValue={true}
+                            className={"text-sm"}
+                            onChange={onServerFilterChange}
+                        />
+                        {/* <SelectList
+                            value={serverFilter.wilayah}
+                            name={"wilayah"}
+                            options={branchess}
+                            nullValue={true}
+                            className={"text-sm"}
+                            onChange={onServerFilterChange}
+                        /> */}
+
                         <PrimaryButton
-                            onClick={onResetPage}
+                            href={route("simpanan.detailPerBulan")}
+                            title={"Go"}
                             size={"sm"}
-                            theme="other"
-                            icon={<BiRefresh />}
-                            title={"Reset"}
+                            type="submit"
+                            theme="green"
+                        />
+                        <LinkButton
+                            href={route("bonpanjer.bon_panjer_create")}
+                            title={"+ New"}
+                            size={"sm"}
+                            type="button"
+                            theme="yellow"
                         />
 
                         <LinkButton
-                            as="button"
-                            href={route("simpanan.create")}
-                            icon={<IoMdAdd />}
-                            size={"md"}
-                            title={"Tambah"}
-                        ></LinkButton>
-                    </div>
-                </div>
+                            href={route("simpanan.detailPerBulan")}
+                            title={"Reset"}
+                            size={"sm"}
+                            theme="other"
+                            type="submit"
+                            icon={<BiRefresh />}
+                        />
+                    </form>
+                </>
+            }
+        >
+            <div className="mx-auto sm:px-6 lg:px-8 mb-6">
                 {filters && (
                     <div className="inline-block mt-3">
                         {filters.map((item) => {
@@ -491,8 +509,7 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                     </div>
                 )}
             </div>
-
-            <div className="h-[70vh] p-3 mt-3 bg-white rounded shadow overflow-auto">
+            <div className="mx-auto sm:px-6 lg:px-8 mb-6 overflow-auto">
                 <table className="w-full text-sm text-left text-gray-500">
                     <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
                         <tr>
@@ -519,10 +536,77 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                         </tr>
                     </thead>
                     {tBodyGenerator()}
+                    <tfoot>
+                        <tr className="bg-blue-200 font-semibold text-black">
+                            <td className={`px-6 py-1`} colSpan={"7"}>
+                                TOTAL
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.nominal_pinjaman}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            {/* <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.setoran_bulan_lalu}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td> */}
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.saldo_bulan_lalu}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.setoran_bulan_ini}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.total_setoran}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                            <td className={`px-6 py-1`}>
+                                <div className={`whitespace-nowrap`}>
+                                    <NumericFormat
+                                        value={totals.saldo}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
-        </>
+        </Authenticated>
     );
 };
 
-export default TableDetailPerbulan;
+export default Index;

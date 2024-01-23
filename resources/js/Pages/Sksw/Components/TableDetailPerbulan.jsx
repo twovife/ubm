@@ -400,7 +400,7 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                     return (
                         <tr
                             key={index}
-                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-xs "
+                            className="bg-white border-b hover:bg-gray-50 text-xs "
                         >
                             <th className="px-6 py-1">
                                 <div className="flex justify-around items-center gap-3">

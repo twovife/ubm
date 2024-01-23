@@ -19,7 +19,6 @@ import TabelUnit from "./Components/TabelUnit";
 // import { BiRefresh } from "react-icons/bi";
 
 const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
-    // console.log(batch_datas);
     const {
         tahunAngka,
         bulanAngka,
@@ -379,13 +378,13 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                             type="submit"
                             theme="green"
                         />
-                        <LinkButton
+                        {/* <LinkButton
                             href={route("unitsaving.create")}
                             title={"+ New"}
                             size={"sm"}
                             type="button"
                             theme="yellow"
-                        />
+                        /> */}
 
                         <LinkButton
                             href={route("simpanan.detailPerBulan")}

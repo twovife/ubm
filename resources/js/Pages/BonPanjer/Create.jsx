@@ -14,9 +14,7 @@ const Create = ({ branch, employees, ...props }) => {
 
     const { data, setData, post, processing, errors } = useForm({
         employee_id: "",
-        sw_balance: 0,
-        sk_balance: 0,
-        tgl_tabugan: "",
+        besar_pinjaman: 1000000,
     });
 
     const [unit, setUnit] = useState();
@@ -39,7 +37,6 @@ const Create = ({ branch, employees, ...props }) => {
         const filteredObjects = branch
             .filter((obj) => obj.wilayah == value)
             .map(({ id, unit }) => ({ id: id, display: unit, value: id }));
-        console.log(filteredObjects);
         setUnit(filteredObjects);
         setEmployee(null);
     };
@@ -67,8 +64,7 @@ const Create = ({ branch, employees, ...props }) => {
 
     const onSubmitForm = (e) => {
         e.preventDefault();
-        // console.log(data);
-        post(route("simpanan.store"));
+        post(route("bonpanjer.bon_panjer_store"));
     };
     return (
         <Authenticated
@@ -78,24 +74,21 @@ const Create = ({ branch, employees, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Tambah Baru Simpanan Sukarela
+                        Buat Tabungan Untuk Unit Baru
                     </h2>
                     <div className="ml-auto flex items-center">
                         <LinkButton
-                            href={route("simpanan.index")}
+                            href={route("bonpanjer.bon_panjer")}
                             title={"Halaman Utama"}
                         />
                     </div>
                 </>
             }
         >
-            <div className="mx-auto sm:px-6 lg:px-8">
-                <div className="p-3 bg-white rounded shadow">
-                    <form
-                        onSubmit={onSubmitForm}
-                        className="lg:grid lg:grid-cols-2 gap-3"
-                    >
-                        <div className="col-span-1 w-full">
+            <div className="sm:px-6 lg:px-8">
+                <div className="p-3 bg-white rounded shadow w-1/2 mx-auto">
+                    <form onSubmit={onSubmitForm} className="w-full">
+                        <div className="lg:flex gap-3 w-full">
                             <div className="mb-2">
                                 <InputLabel
                                     value={"Wilayah"}
@@ -140,75 +133,29 @@ const Create = ({ branch, employees, ...props }) => {
                                 </div>
                             )}
                         </div>
-
-                        <div className="col-span-1 w-full">
-                            <div className="mb-2">
-                                <InputLabel
-                                    value={"Tanggal Setor"}
-                                    className="mb-1"
-                                />
-                                <TextInput
-                                    type="month"
-                                    onChange={onInputChange}
-                                    name={"tgl_tabugan"}
-                                />
-                                <InputError
-                                    message={errors.tgl_tabugan}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div className="mb-2">
-                                <InputLabel
-                                    value={"Setor Awal Simpanan Wajib"}
-                                    className="mb-1"
-                                />
-                                <CurrencyInput
-                                    name="sw_balance"
-                                    id="sw_balance"
-                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                    allowDecimals={false}
-                                    prefix="Rp. "
-                                    min={1}
-                                    required
-                                    onValueChange={onHandleCurencyChange}
-                                    value={data.sw_balance}
-                                    placeholder={
-                                        "Inputkan angka tanpa sparator"
-                                    }
-                                />
-                                <InputError
-                                    message={errors.sw_balance}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div className="mb-2">
-                                <InputLabel
-                                    value={"Setor Awal Simpanan Sukarela"}
-                                    className="mb-1"
-                                />
-                                <CurrencyInput
-                                    name="sk_balance"
-                                    id="sk_balance"
-                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                    allowDecimals={false}
-                                    prefix="Rp. "
-                                    min={1}
-                                    required
-                                    onValueChange={onHandleCurencyChange}
-                                    value={data.sk_balance}
-                                    placeholder={
-                                        "Inputkan angka tanpa sparator"
-                                    }
-                                />
-                                <InputError
-                                    message={errors.sk_balance}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div className="mb-2 flex items-end justify-end">
-                                <PrimaryButton type="submit" title={"Submit"} />
-                            </div>
+                        <div className="mb-2">
+                            <InputLabel
+                                value={"Setor Awal Simpanan Wajib"}
+                                className="mb-1"
+                            />
+                            <CurrencyInput
+                                name="besar_pinjaman"
+                                id="besar_pinjaman"
+                                className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
+                                allowDecimals={false}
+                                prefix="Rp. "
+                                min={1}
+                                required
+                                onValueChange={onHandleCurencyChange}
+                                value={data.besar_pinjaman}
+                                placeholder={"Inputkan angka tanpa sparator"}
+                            />
+                            <InputError
+                                message={errors.besar_pinjaman}
+                                className="mt-2"
+                            />
                         </div>
+                        <PrimaryButton type="submit" title={"submit"} />
                     </form>
                 </div>
             </div>

@@ -100,8 +100,20 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('unitsaving')->name('unitsaving.')->group(function () {
         Route::get('/', [UnitSavingController::class, 'index'])->name('index');
-        Route::get('/create', [UnitSavingController::class, 'create'])->name('create');
+        Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
+        Route::get('/savingdetails/{unitSavingAccount}', [UnitSavingController::class, 'savingdetails'])->name('savingdetails');
+        Route::post('/savingdetails/{unitSavingAccount}', [UnitSavingController::class, 'savingdetailspost'])->name('savingdetailspost');
         Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
+    });
+
+    Route::prefix('bonpanjer')->name('bonpanjer.')->group(function () {
+        Route::get('/', [UnitSavingController::class, 'bon_panjer'])->name('bon_panjer');
+        Route::get('/create', [UnitSavingController::class, 'bon_panjer_create'])->name('bon_panjer_create');
+        Route::post('/', [UnitSavingController::class, 'bon_panjer_store'])->name('bon_panjer_store');
+        Route::get('/bon_panjer_show/{unitSavingAccount}', [UnitSavingController::class, 'bon_panjer_show'])->name('bon_panjer_show');
+        Route::post('/bon_panjer_post/{unitSavingAccount}', [UnitSavingController::class, 'bon_panjer_post'])->name('bon_panjer_post');
+        // Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
+        // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });
 
 

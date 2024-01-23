@@ -21,7 +21,7 @@ class UnitSavingAccount extends Model
     }
     public function unitssaving()
     {
-        return $this->hasMany(UnitSaving::class, 'unit_saving_account_id', 'id');
+        return $this->hasMany(UnitSaving::class, 'unit_saving_account_id', 'id')->orderBy('transaction_date', 'asc');
     }
 
     public function employee()
@@ -29,7 +29,7 @@ class UnitSavingAccount extends Model
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
     }
 
-    public function Branch()
+    public function branch()
     {
         return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }

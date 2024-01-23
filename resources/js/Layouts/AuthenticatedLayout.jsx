@@ -38,7 +38,9 @@ export default function Authenticated({
 
     return (
         <div className="min-h-screen relative bg-gray-50">
-            {Object.keys(errors).length > 0 && <SweetAlert type="error" />}
+            {Object.keys(errors).length > 0 && (
+                <SweetAlert type="error" message={errors[0]} />
+            )}
             {flash.message && (
                 <SweetAlert type="success" message={flash.message} />
             )}
@@ -137,11 +139,13 @@ export default function Authenticated({
                         // jika bukan mantri
                         <div className="mt-3">
                             <SideBarDropDown
-                                onClick={() => onClickDropDownHandler(1)}
+                                onClick={() =>
+                                    onClickDropDownHandler("data_karyawan")
+                                }
                                 title={"Data Karyawan"}
                                 active={route().current("employee.*")}
                                 colapse={colapse}
-                                dropdownId={1}
+                                dropdownId={"data_karyawan"}
                                 lists={[
                                     {
                                         id: "1",
@@ -245,11 +249,11 @@ export default function Authenticated({
                             /> */}
 
                             <SideBarDropDown
-                                onClick={() => onClickDropDownHandler(5)}
+                                onClick={() => onClickDropDownHandler("sksw")}
                                 title={"SKSW"}
                                 active={route().current("simpanan.*")}
                                 colapse={colapse}
-                                dropdownId={5}
+                                dropdownId={"sksw"}
                                 lists={[
                                     {
                                         id: "103",
@@ -285,12 +289,13 @@ export default function Authenticated({
                                     },
                                 ]}
                             />
+
                             <SideBarDropDown
-                                onClick={() => onClickDropDownHandler(8)}
+                                onClick={() => onClickDropDownHandler("aset")}
                                 title={"Aset Kendaraan"}
                                 active={route().current("aset.*")}
                                 colapse={colapse}
-                                dropdownId={8}
+                                dropdownId={"aset"}
                                 lists={[
                                     {
                                         id: "1",
@@ -304,6 +309,50 @@ export default function Authenticated({
                                         name: "Peringatan Her",
                                         active: route().current(
                                             "aset.taxalert"
+                                        ),
+                                    },
+                                ]}
+                            />
+
+                            <SideBarDropDown
+                                onClick={() =>
+                                    onClickDropDownHandler("simpanan_sejuta")
+                                }
+                                title={"Tabungan 1Jt"}
+                                active={route().current("simpanan.*")}
+                                colapse={colapse}
+                                dropdownId={"simpanan_sejuta"}
+                                lists={[
+                                    {
+                                        id: "103",
+                                        href: route("unitsaving.index"),
+                                        name: "Dashboard Tabungan",
+                                        active: route().current(
+                                            "unitsaving.index"
+                                        ),
+                                    },
+                                    {
+                                        id: "100",
+                                        href: route("sksw.skswglobal"),
+                                        name: "SKSW Global",
+                                        active: route().current(
+                                            "sksw.skswglobal"
+                                        ),
+                                    },
+                                    {
+                                        id: "101",
+                                        href: route("sksw.skswwilayah"),
+                                        name: "SKSW Wilayah",
+                                        active: route().current(
+                                            "sksw.skswwilayah"
+                                        ),
+                                    },
+                                    {
+                                        id: "102",
+                                        href: route("sksw.skswunit"),
+                                        name: "SKSW Unit",
+                                        active: route().current(
+                                            "sksw.skswunit"
                                         ),
                                     },
                                 ]}

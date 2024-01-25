@@ -57,8 +57,7 @@ class MandatoryDepositTransaction extends Model
 
         $queryBuilder = self::query();
         $queryBuilder->selectRaw('*, RANK() OVER (PARTITION BY deposit_id, branch_id ORDER BY transaction_month DESC) AS ranking')
-            ->where('transaction_month', '<=', $getFilter->transaction_month)
-            ->where('transaction_year', '<=', $getFilter->transaction_year)
+            ->where('transaction_date', '<=', $getFilter->tanggal)
             ->when($getFilter->isWilayanNeeded, function ($queries) use ($getFilter) {
                 $getBranch = Branch::where('wilayah', $getFilter->wilayah)->pluck('id');
                 $queries->whereIn('branch_id', $getBranch);

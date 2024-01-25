@@ -99,6 +99,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::prefix('unitsaving')->name('unitsaving.')->group(function () {
+        Route::get('/dashboard', [UnitSavingController::class, 'dashboard'])->name('dashboard');
         Route::get('/', [UnitSavingController::class, 'index'])->name('index');
         Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
         Route::get('/savingdetails/{unitSavingAccount}', [UnitSavingController::class, 'savingdetails'])->name('savingdetails');
@@ -112,6 +113,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [UnitSavingController::class, 'bon_panjer_store'])->name('bon_panjer_store');
         Route::get('/bon_panjer_show/{unitSavingAccount}', [UnitSavingController::class, 'bon_panjer_show'])->name('bon_panjer_show');
         Route::post('/bon_panjer_post/{unitSavingAccount}', [UnitSavingController::class, 'bon_panjer_post'])->name('bon_panjer_post');
+        // Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
+        // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
+    });
+
+    Route::prefix('pinjamanmodal')->name('pinjamanmodal.')->group(function () {
+        Route::get('/', [UnitSavingController::class, 'pinjaman_modal'])->name('pinjaman_modal');
+        Route::get('/create', [UnitSavingController::class, 'pinjaman_modal_create'])->name('pinjaman_modal_create');
+        Route::post('/', [UnitSavingController::class, 'pinjaman_modal_store'])->name('pinjaman_modal_store');
+        Route::get('/pinjaman_modal_show/{unitSavingAccount}', [UnitSavingController::class, 'pinjaman_modal_show'])->name('pinjaman_modal_show');
+        Route::post('/pinjaman_modal_post/{unitSavingAccount}', [UnitSavingController::class, 'pinjaman_modal_post'])->name('pinjaman_modal_post');
         // Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
         // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });

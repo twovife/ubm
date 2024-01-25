@@ -15,6 +15,51 @@ use Inertia\Inertia;
 class UnitSavingController extends Controller
 {
 
+    public function dashboard()
+    {
+        $getFilter = new \stdClass;
+        $getFilter = (object) request()->all();
+        $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
+        $getFilter->transaction_month = request()->transaction_month ??  Carbon::now()->month;
+        $getFilter->tanggal = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->endOfMonth()->format('Y-m-d');
+        $getFilter->tanggal_start = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->startOfMonth()->format('Y-m-d');
+        $getFilter->branch_id = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : (request()->branch_id ?? 1);
+        $getFilter->wilayah = -1;
+
+        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
+            $q->where('id', auth()->user()->employee->branch_id);
+        })->get();
+
+        $data = UnitSaving::with('savingaccount')->whereBetween('transaction_date', [$getFilter->tanggal_start, $getFilter->tanggal])->orderBy('transaction_date')->get();
+        $data_before = UnitSaving::with('savingaccount')->where('transaction_date', "<", $getFilter->tanggal_start)->select('debit', 'kredit')->get();
+        $saldo_before = $data_before->sum('debit') - $data_before->sum('kredit');
+        $saldo = $saldo_before;
+        $data_bulanan = $data->map(function ($item) use (&$saldo) {
+            $saldo_before_counting = $saldo;
+            $saldo = $saldo + ($item->debit - $item->kredit);
+            // dd($item->savingaccount->employee);
+            return [
+                'id' => $item->id,
+                'bulan' => Carbon::create($item->transaction_date)->format('M Y'),
+                'transaction_date' => Carbon::create($item->transaction_date)->format('Y-m-d'),
+                'type_transaksi' => $item->transaction_type == "TB" ? "TABUNGAN 1JT" : ($item->transaction_type == "BP" ? "Bon Panjer" : "Pinjaman Modal"),
+                'wilayah' => $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->wilayah : $item->savingaccount->branch->wilayah,
+                'unit' =>  $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->unit : $item->savingaccount->branch->unit,
+                'nama_karyawan' => $item->transaction_type == "BP" ? $item->savingaccount->employee->nama_karyawan : null,
+                'saldo_sebelumya' => $saldo_before_counting,
+                'debit' => $item->debit,
+                'kredit' => $item->kredit,
+                'saldo' => $saldo,
+            ];
+        })->values();
+        // dd($data_bulanan);
+
+        return Inertia::render('UnitSaving/Dashboard', [
+            'datas' => $data_bulanan,
+            'branch' => $branch,
+            'server_filters' => $getFilter ?? null
+        ]);
+    }
     public function index()
     {
         $getFilter = new \stdClass;
@@ -239,6 +284,7 @@ class UnitSavingController extends Controller
     }
 
 
+
     public function bon_panjer()
     {
         $getFilter = new \stdClass;
@@ -426,5 +472,196 @@ class UnitSavingController extends Controller
         }
 
         return redirect()->route('bonpanjer.bon_panjer_show', $unitSavingAccount->id)->with('message', 'Data berhasil ditambahkan');
+    }
+
+
+    //
+
+    public function pinjaman_modal()
+    {
+        $getFilter = new \stdClass;
+        $getFilter = (object) request()->all();
+        $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
+        $getFilter->transaction_month = request()->transaction_month ??  Carbon::now()->month;
+        $getFilter->tanggal =    Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->endOfMonth()->format('Y-m-d');
+        $getFilter->tanggal_awal =    Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->startOfMonth()->format('Y-m-d');
+        $getFilter->branch_id = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : (request()->branch_id ?? 1);
+        $getFilter->wilayah = -1;
+
+        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
+            $q->where('id', auth()->user()->employee->branch_id);
+        })->get();
+
+        $data = UnitSavingAccount::with('unitssaving', 'branch', 'employee')->where('account_type', 'PM')->whereNull('note')->whereHas('unitsaving', function ($query) use ($getFilter) {
+            $query->where('transaction_date', "<=", $getFilter->tanggal);
+        })->get();
+
+
+
+        $data_per_pic = $data->map(function ($queries) use ($getFilter) {
+            $jumlah_pinjam = $queries->unitssaving->where('transaction', 'K')->where('transaction_type', 'PM')->first()->kredit;
+            $tanggal_pinjaman = $queries->unitssaving->where('transaction', 'K')->where('transaction_type', 'PM')->first()->transaction_date;
+            $setoran_bulan_lalu = $queries->unitssaving->where('transaction', 'D')->where('transaction_type', 'PM')->where('transaction_date', "<", $getFilter->tanggal_awal)->sum('debit');
+            $setoran_bulan_ini =  $queries->unitssaving->where('transaction', 'D')->where('transaction_type', 'PM')->whereBetween('transaction_date', [$getFilter->tanggal_awal, $getFilter->tanggal])->sum('debit') ?? 0;
+            $pinjaman_bulan_ini =  $queries->unitssaving->where('transaction', 'K')->where('transaction_type', 'PM')->whereBetween('transaction_date', [$getFilter->tanggal_awal, $getFilter->tanggal])->sum('kredit') ?? 0;
+            $keterangan = $setoran_bulan_ini + $pinjaman_bulan_ini == 0 ? 'unpaid' : 'nihil';
+            return [
+                'id' => $queries['id'],
+                'branch_id' => $queries->employee->branch->id,
+                'wilayah' => $queries->employee->branch->wilayah,
+                'branch' =>  $queries->employee->branch->unit,
+                'nama_karyawan' =>  $queries->employee->nama_karyawan,
+                'jabatan' =>  $queries->employee->jabatan,
+                'tanggal_pinjaman' => $tanggal_pinjaman,
+                'nominal_pinjaman' => $jumlah_pinjam,
+                'saldo_bulan_lalu' => $jumlah_pinjam - $setoran_bulan_lalu,
+                'setoran_bulan_lalu' => $setoran_bulan_lalu,
+                'setoran_bulan_ini' => $setoran_bulan_ini,
+                'total_setoran' => $setoran_bulan_ini + $setoran_bulan_lalu,
+                'saldo' => ($jumlah_pinjam - $setoran_bulan_lalu) - $setoran_bulan_ini,
+                'keterangan' => $keterangan
+            ];
+        })->values()->sortBy('wilayah')->sortBy('branch');
+
+        return Inertia::render('PinjamanModal/Index', [
+            'datas' => $data_per_pic,
+            'branch' => $branch,
+            'server_filters' => $getFilter ?? null
+        ]);
+    }
+
+
+
+    public function pinjaman_modal_create()
+    {
+        $branches = Branch::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('id', auth()->user()->employee->branch_id))->get();
+        $employee = Employee::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('branch_id', auth()->user()->employee->branch_id))->get();
+
+        return Inertia::render('PinjamanModal/Create', [
+            'branch' => $branches,
+            'employees' => $employee
+        ]);
+    }
+
+
+    public function pinjaman_modal_store(Request $request)
+    {
+
+        $branch = Employee::find($request->employee_id);
+        // dd($branch);
+        $currentDate = Carbon::now();
+        $request->validate([
+            'besar_pinjaman' => ['required', 'integer', 'min:1'],
+            'employee_id' => ['required', 'integer',],
+        ]);
+
+
+        $isExist = UnitSavingAccount::where('employee_id', $request->employee_id)->whereNull('note')->count();
+
+        if ($isExist > 0) {
+            return redirect()->route('pinjamanmodal.pinjaman_modal_create')->withErrors('Karyawan masih mempunyai pinjaman yang belum Lunas');
+            // dd('asd');
+        }
+
+
+        try {
+            DB::beginTransaction();
+            $unitAccount = UnitSavingAccount::create([
+                "branch_id" => $branch->id,
+                "account_type" => 'PM',
+            ]);
+
+
+            $unitsaving = $unitAccount->unitssaving()->create([
+                "transaction_date" => $currentDate->format('Y-m-d'),
+                "transaction_month" => $currentDate->month,
+                "transaction_year" => $currentDate->year,
+
+                "debit" => 0,
+                "kredit" => $request->besar_pinjaman,
+                "transaction" => "K",
+                "transaction_type" => "PM"
+            ]);
+
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+
+            return redirect()->route('pinjamanmodal.pinjaman_modal')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+        }
+
+        return redirect()->route('pinjamanmodal.pinjaman_modal')->with('message', 'Data berhasil ditambahkan');
+    }
+
+
+
+
+    public function pinjaman_modal_show(UnitSavingAccount $unitSavingAccount)
+    {
+        $saving = $unitSavingAccount->unitssaving;
+
+        $nominal_pinjaman = 0;
+        $enableToAdd = true;
+
+        $data = $saving->map(function ($item) use ($unitSavingAccount, &$nominal_pinjaman, &$enableToAdd) {
+
+            $saldo = $nominal_pinjaman - ($item->debit - $item->kredit);
+            $enableToAdd = Carbon::create($item->transaction_date)->format('Y-m') == Carbon::now()->format('Y-m') ? false : true;
+            $saldo_sebelum = $nominal_pinjaman;
+            $nominal_pinjaman = $saldo;
+            return [
+                'wilayah' => $unitSavingAccount->employee->branch->wilayah,
+                'unit' => $unitSavingAccount->employee->branch->unit,
+                'nama_karyawan' => $unitSavingAccount->employee->nama_karyawan,
+                'jabatan' => $unitSavingAccount->employee->jabatan,
+                'transaction_date' => $item->transaction_date,
+                'saldo_sebelum' => $saldo_sebelum,
+                'pinjaman' => $item->kredit,
+                'angsuran' => $item->debit,
+                'saldo' => $saldo
+            ];
+        });
+
+
+        return Inertia::render('PinjamanModal/Detail', [
+            'details' => $data,
+            'curent_unit' => ['id' => $unitSavingAccount->id, 'wilayah' => $unitSavingAccount->employee->branch->wilayah, 'unit' => $unitSavingAccount->employee->branch->unit, 'nama_karyawan' => $unitSavingAccount->employee->nama_karyawan, 'now' => Carbon::now()->format('Y-m'), 'editable' => $enableToAdd]
+        ]);
+    }
+
+
+    public function pinjaman_modal_post(UnitSavingAccount $unitSavingAccount, Request $request)
+    {
+        $currentDate = Carbon::now();
+        $request->validate([
+            'debit' => ['required', 'integer']
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+
+            $unitsaving = $unitSavingAccount->unitssaving()->create([
+                "transaction_date" => $currentDate->format('Y-m-d'),
+                "transaction_month" => $currentDate->month,
+                "transaction_year" => $currentDate->year,
+
+                "debit" => $request->debit,
+                "kredit" => 0,
+                "transaction" => "D",
+                "transaction_type" => "PM"
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+
+            return redirect()->route('pinjamanmodal.pinjaman_modal_show', $unitSavingAccount->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+        }
+
+        return redirect()->route('pinjamanmodal.pinjaman_modal_show', $unitSavingAccount->id)->with('message', 'Data berhasil ditambahkan');
     }
 }

@@ -1082,6 +1082,9 @@ class DepositController extends Controller
         $getFilter = (object) request()->all();
         $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
         $getFilter->transaction_month = request()->transaction_month ??   Carbon::now()->month;
+        $getFilter->tanggal = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->endOfMonth()->format('Y-m-d');
+        $getFilter->tanggal_start = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->startOfMonth()->format('Y-m-d');
+
         $getFilter->isWilayanNeeded = request()->isWilayanNeeded ??  true;
 
         $tanggal = Carbon::create($getFilter->transaction_year, $getFilter->transaction_month)->format('F Y');
@@ -1207,6 +1210,8 @@ class DepositController extends Controller
         $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
         $getFilter->transaction_month = request()->transaction_month ??   Carbon::now()->month;
         $getFilter->isWilayanNeeded = request()->isWilayanNeeded ??  false;
+        $getFilter->tanggal = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->endOfMonth()->format('Y-m-d');
+        $getFilter->tanggal_start = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->startOfMonth()->format('Y-m-d');
 
         $tanggal = Carbon::create($getFilter->transaction_year, $getFilter->transaction_month)->format('F Y');
         // $getFilter->wilayah = $isWilayanNeeded ? (auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->area : (request()->wilayah ?? 0)) : -1;
@@ -1389,6 +1394,8 @@ class DepositController extends Controller
         $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
         $getFilter->transaction_month = request()->transaction_month ??   Carbon::now()->month;
         $getFilter->isWilayanNeeded = request()->isWilayanNeeded ??  false;
+        $getFilter->tanggal = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->endOfMonth()->format('Y-m-d');
+        $getFilter->tanggal_start = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->startOfMonth()->format('Y-m-d');
 
         $tanggal = Carbon::create($getFilter->transaction_year, $getFilter->transaction_month)->format('F Y');
 

@@ -319,40 +319,44 @@ export default function Authenticated({
                                     onClickDropDownHandler("simpanan_sejuta")
                                 }
                                 title={"Tabungan 1Jt"}
-                                active={route().current("simpanan.*")}
+                                active={
+                                    route().current("unitsaving.*") ||
+                                    route().current("bonpanjer.*") ||
+                                    route().current("pinjamanmodal.*")
+                                }
                                 colapse={colapse}
                                 dropdownId={"simpanan_sejuta"}
                                 lists={[
                                     {
                                         id: "103",
-                                        href: route("unitsaving.index"),
+                                        href: route("unitsaving.dashboard"),
                                         name: "Dashboard Tabungan",
+                                        active: route().current(
+                                            "unitsaving.dashboard"
+                                        ),
+                                    },
+                                    {
+                                        id: "100",
+                                        href: route("unitsaving.index"),
+                                        name: "Tabungan 1Jt",
                                         active: route().current(
                                             "unitsaving.index"
                                         ),
                                     },
                                     {
-                                        id: "100",
-                                        href: route("sksw.skswglobal"),
-                                        name: "SKSW Global",
-                                        active: route().current(
-                                            "sksw.skswglobal"
-                                        ),
-                                    },
-                                    {
                                         id: "101",
-                                        href: route("sksw.skswwilayah"),
-                                        name: "SKSW Wilayah",
-                                        active: route().current(
-                                            "sksw.skswwilayah"
-                                        ),
+                                        href: route("bonpanjer.bon_panjer"),
+                                        name: "Bon Panjer",
+                                        active: route().current("bonpanjer.*"),
                                     },
                                     {
                                         id: "102",
-                                        href: route("sksw.skswunit"),
-                                        name: "SKSW Unit",
+                                        href: route(
+                                            "pinjamanmodal.pinjaman_modal"
+                                        ),
+                                        name: "Pinjaman Modal",
                                         active: route().current(
-                                            "sksw.skswunit"
+                                            "pinjamanmodal.pinjaman_modal"
                                         ),
                                     },
                                 ]}

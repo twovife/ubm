@@ -444,7 +444,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         /> */}
 
                         <PrimaryButton
-                            href={route("simpanan.detailPerBulan")}
+                            href={route("bonpanjer.bon_panjer")}
                             title={"Go"}
                             size={"sm"}
                             type="submit"
@@ -459,7 +459,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         />
 
                         <LinkButton
-                            href={route("simpanan.detailPerBulan")}
+                            href={route("bonpanjer.bon_panjer")}
                             title={"Reset"}
                             size={"sm"}
                             theme="other"

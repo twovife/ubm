@@ -340,7 +340,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Daftar Simpanan Sukarela Karyawan
+                        Simpanan 1Jt
                     </h2>
                     <form
                         // onSubmit={onBranchChange}

@@ -61,7 +61,7 @@ const Create = ({ branch, employees, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Buat Tabungan Untuk Unit Baru
+                        Buat Pinjaman Baru
                     </h2>
                     <div className="ml-auto flex items-center">
                         <LinkButton

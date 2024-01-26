@@ -403,7 +403,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Bon Panjer
+                        Pinjaman Modal
                     </h2>
                     <form
                         // onSubmit={onBranchChange}

@@ -40,7 +40,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Detail Tabungan 1Juta Unit
+                        Detail Pinjaman Modal
                     </h2>
                     <div className="ml-auto flex items-center">
                         <LinkButton

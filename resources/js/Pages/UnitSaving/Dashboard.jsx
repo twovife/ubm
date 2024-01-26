@@ -177,6 +177,10 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
             column: "wilayah",
         },
         {
+            title: "Unit",
+            column: "branch",
+        },
+        {
             title: "Nama Karyawan",
             column: "nama_karyawan",
         },
@@ -406,7 +410,7 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Bon Panjer
+                        Dashboard Simpanan 1Jt
                     </h2>
                     <form
                         // onSubmit={onBranchChange}

@@ -1090,10 +1090,11 @@ class DepositController extends Controller
         $tanggal = Carbon::create($getFilter->transaction_year, $getFilter->transaction_month)->format('F Y');
         // $getFilter->wilayah = 0;
         $getFilter->wilayah = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->area : (request()->wilayah ?? 0);
-
+        // dd($getFilter);
         $sk = OptionalDepositTransaction::queryBuilder($getFilter);
         $sw = MandatoryDepositTransaction::queryBuilder($getFilter);
 
+        // dd();
         $hasilSk = $sk->groupBy('branch_id')->map(function ($data) use ($getFilter) {
             return $data->groupBy('deposit_id')->map(function ($quer) use ($getFilter) {
                 $firstRecord = $quer->first();
@@ -1112,8 +1113,8 @@ class DepositController extends Controller
                     'kredit' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?  $quer->sum('kredit') : 0,
                     'balance' => $lastRecord->balance ?? 0,
 
-
-                    'K' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ?   $quer->where('transaction_type', 'K')->sum('kredit') : 0,
+                    // ->where('transaction_date', '<=', $getFilter->tanggal)
+                    'K' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'K')->sum('kredit') : 0,
                     'D' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'D')->sum('debit') : 0,
                     'KM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'KM')->sum('kredit') : 0,
                     'DM' => ($firstRecord->transaction_month == $getFilter->transaction_month &&  $firstRecord->transaction_year == $getFilter->transaction_year) ? $quer->where('transaction_type', 'DM')->sum('debit') : 0,
@@ -1121,6 +1122,8 @@ class DepositController extends Controller
                 ];
             })->values();
         })->sortBy('unit')->flatten(1)->values();
+        // dd([$hasilSk->where('id_tabungan', 2), $sk->where('deposit_id', 2)]);
+
 
         $hasilSw = $sw->groupBy('branch_id')->map(function ($data) use ($getFilter) {
             return $data->groupBy('deposit_id')->map(function ($quer) use ($getFilter) {
@@ -1149,6 +1152,8 @@ class DepositController extends Controller
                 ];
             })->values();
         })->sortBy('unit')->flatten(1)->values();
+
+        // dd([$hasilSk->where('id_tabungan', 2), $hasilSw->where('id_tabungan', 2)]);
 
         $merge_data = $hasilSw->concat($hasilSk);
 

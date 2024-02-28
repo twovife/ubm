@@ -24,6 +24,7 @@ return new class extends Migration
             $table->bigInteger('saldo')->nullable();
             $table->string('transaction')->nullable();
             $table->string('transaction_type')->nullable();
+            $table->bigInteger('jasa_modal')->nullable();
             $table->timestamps();
         });
     }

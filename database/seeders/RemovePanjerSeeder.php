@@ -16,6 +16,7 @@ class RemovePanjerSeeder extends Seeder
      */
     public function run()
     {
+
         Schema::dropIfExists('one_mil_deposits');
         Schema::dropIfExists('panjer_loans');
         Schema::dropIfExists('panjer_instalments');

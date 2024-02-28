@@ -15,6 +15,7 @@ const Create = ({ branch, employees, ...props }) => {
     const { data, setData, post, processing, errors } = useForm({
         branch_id: "",
         setoran_awal: 1000000,
+        source: "",
     });
 
     const [unit, setUnit] = useState();
@@ -48,6 +49,10 @@ const Create = ({ branch, employees, ...props }) => {
         setData(name, value);
     };
 
+    const SumberDana = [
+        { id: 1, value: "PM", display: "TB 1 Juta" },
+        { id: 2, value: "PO", display: "Bpk Hartawan" },
+    ];
     const onSubmitForm = (e) => {
         e.preventDefault();
         // console.log(data);
@@ -78,6 +83,25 @@ const Create = ({ branch, employees, ...props }) => {
                         <div className="lg:flex gap-3 w-full">
                             <div className="mb-2 flex-1">
                                 <InputLabel
+                                    value={"Sumber Dana"}
+                                    className="mb-1"
+                                />
+                                <SelectList
+                                    onChange={onInputChange}
+                                    options={SumberDana}
+                                    nullValue={true}
+                                    required
+                                    name={"source"}
+                                    className={"w-full"}
+                                    value={data.source}
+                                />
+                                <InputError
+                                    message={errors.wilayah}
+                                    className="mt-2"
+                                />
+                            </div>
+                            <div className="mb-2 flex-1">
+                                <InputLabel
                                     value={"Wilayah"}
                                     className="mb-1"
                                 />
@@ -85,6 +109,7 @@ const Create = ({ branch, employees, ...props }) => {
                                     onChange={onWilayahChange}
                                     options={wilayah}
                                     nullValue={true}
+                                    required
                                     className={"w-full"}
                                 />
                                 <InputError

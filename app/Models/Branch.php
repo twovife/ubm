@@ -18,11 +18,11 @@ class Branch extends Model
 
     public function unit_saving_accounts()
     {
-        return $this->hasMany(UnitSavingAccount::class, 'unit_saving_account_id', 'id');
+        return $this->hasMany(UnitSavingAccount::class, 'branch_id', 'id');
     }
 
     public function unit_saving_account()
     {
-        return $this->hasOne(UnitSavingAccount::class, 'unit_saving_account_id', 'id');
+        return $this->hasOne(UnitSavingAccount::class, 'branch_id', 'id');
     }
 }

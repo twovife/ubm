@@ -93,6 +93,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('sksw')->name('sksw.')->group(function () {
         Route::get('/', [DepositController::class, 'sksw_global'])->name('skswglobal');
+        Route::get('/aa', [DepositController::class, 'aa'])->name('skswglobal');
         Route::get('/wilayah', [DepositController::class, 'sksw_wilayah'])->name('skswwilayah');
         Route::get('/unit', [DepositController::class, 'sksw_unit'])->name('skswunit');
     });

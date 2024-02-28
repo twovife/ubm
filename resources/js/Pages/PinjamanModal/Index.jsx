@@ -158,46 +158,79 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             column: "branch",
             class_name: "whitespace-nowrap",
         },
-        {
-            title: "Tanggal Pinjam",
-            column: "tanggal_pinjaman",
-            format: "date",
-        },
 
         {
-            title: "Keterangan",
-            column: "keterangan",
+            title: "Action",
+            column: "id_pinjaman_owner",
+            class_name: "bg-green-100 whitespace-nowrap",
+            format: "action",
         },
         {
-            title: "Nominal Bon",
-            column: "nominal_pinjaman",
+            title: "Tanggal Transaksi Terakhir",
+            column: "transaksi_terakhir_owner",
+            class_name: "bg-green-100 whitespace-nowrap",
+            format: "date",
+        },
+        {
+            title: "Total Pinjaman",
+            column: "nominal_pinjaman_owner",
+            class_name: "bg-green-100 whitespace-nowrap",
+            format: "currency",
+        },
+        {
+            title: "Total Setoran Pinjaman",
+            column: "total_setoran_pinjaman_owner",
+            class_name: "bg-green-100 whitespace-nowrap",
+            format: "currency",
+        },
+        {
+            title: "Saldo Pinjaman",
+            column: "saldo_pinjaman_owner",
+            class_name: "bg-green-100 whitespace-nowrap",
+            format: "currency",
+        },
+        {
+            title: "Action",
+            column: "id_pinjaman_pusat",
+            class_name: "bg-yellow-100 whitespace-nowrap",
+            format: "action",
+        },
+        {
+            title: "Tanggal Transaksi Terakhir",
+            column: "transaksi_terakhir_pusat",
+            class_name: "bg-yellow-100 whitespace-nowrap",
+            format: "date",
+        },
+        {
+            title: "Total Pinjaman",
+            column: "nominal_pinjaman_pusat",
+            class_name: "bg-yellow-100 whitespace-nowrap",
+            format: "currency",
+        },
+        {
+            title: "Total Setoran Pinjaman",
+            column: "total_setoran_pinjaman_pusat",
+            class_name: "bg-yellow-100 whitespace-nowrap",
+            format: "currency",
+        },
+        {
+            title: "Saldo Pinjaman",
+            column: "saldo_pinjaman_pusat",
+            class_name: "bg-yellow-100 whitespace-nowrap",
             format: "currency",
         },
         // {
-        //     title: "Total Angsuran Sebelumnya",
-        //     column: "setoran_bulan_lalu",
+        //     title: "Total Pinjaman",
+        //     column: "total_pinjaman",
+        //     class_name: "bg-blue-100 whitespace-nowrap",
         //     format: "currency",
         // },
-        {
-            title: "Saldo Terakhir",
-            column: "saldo_bulan_lalu",
-            format: "currency",
-        },
-        {
-            title: "Angsuran",
-            column: "setoran_bulan_ini",
-            format: "currency",
-        },
-        {
-            title: "Total Angsuran",
-            column: "total_setoran",
-            format: "currency",
-        },
-        {
-            title: "Saldo",
-            column: "saldo",
-            format: "currency",
-        },
+        // {
+        //     title: "Total Saldo",
+        //     column: "total_saldo_pinjaman",
+        //     class_name: "bg-blue-100 whitespace-nowrap",
+        //     format: "currency",
+        // },
     ];
 
     const filterModal = () => {
@@ -319,37 +352,50 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                             key={index}
                             className="bg-white border-b hover:bg-blue-50 text-xs even:bg-gray-100"
                         >
-                            <th className="px-6 flex items-center justify-start gap-3">
+                            <th className="px-6 py-1">
                                 {(currentPage - 1) * itemsPerPage + index + 1}
-                                {item.keterangan == "unpaid" ? (
-                                    <Link
-                                        href={route(
-                                            "pinjamanmodal.pinjaman_modal_show",
-                                            item.id
-                                        )}
-                                        className="px-2 py-1 rounded-lg bg-red-500 text-white"
-                                    >
-                                        Bayar
-                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
-                                    </Link>
-                                ) : (
-                                    <Link
-                                        as="button"
-                                        disabled
-                                        className="px-2 py-1 rounded-lg bg-white text-green-500"
-                                    >
-                                        {/* <AiOutlineCheck /> */}
-                                        <AiFillCheckCircle />
-                                    </Link>
-                                )}
                             </th>
                             {headers.map((header, index) => {
+                                if (header.format == "action") {
+                                    return (
+                                        <td
+                                            className={`px-6 py-1  ${header.class_name}`}
+                                            key={index}
+                                        >
+                                            <div className={`px-6 py-1`}>
+                                                {item[header.column] == "-" ? (
+                                                    <Link
+                                                        href={route(
+                                                            "pinjamanmodal.pinjaman_modal_create"
+                                                        )}
+                                                        className="px-2 py-1 rounded-lg bg-red-500 text-white"
+                                                    >
+                                                        Pinjam
+                                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                    </Link>
+                                                ) : (
+                                                    <Link
+                                                        href={route(
+                                                            "pinjamanmodal.pinjaman_modal_show",
+                                                            item[header.column]
+                                                        )}
+                                                        className="px-2 py-1 rounded-lg bg-blue-500 text-white"
+                                                    >
+                                                        Bayar
+                                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                    </Link>
+                                                )}
+                                            </div>
+                                        </td>
+                                    );
+                                }
                                 if (header.format == "date") {
                                     return (
-                                        <td className={`px-6 py-1`} key={index}>
-                                            <div
-                                                className={`whitespace-pre-wrap`}
-                                            >
+                                        <td
+                                            className={`px-6 py-1 ${header.class_name}`}
+                                            key={index}
+                                        >
+                                            <div className={`px-6 py-1 `}>
                                                 {item[header.column] !== "-"
                                                     ? dayjs(
                                                           item[header.column]

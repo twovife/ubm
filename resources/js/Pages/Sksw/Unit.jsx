@@ -43,7 +43,7 @@ const Unit = ({ branch, server_filters, batch_datas, ...props }) => {
         e.preventDefault();
         // console.log(serverFilter);
         setLoading(true);
-        router.visit(route("sksw.skswunit"), {
+        router.visit(route("sksw.unit"), {
             data: { ...serverFilter },
         });
     };
@@ -88,7 +88,7 @@ const Unit = ({ branch, server_filters, batch_datas, ...props }) => {
                         />
 
                         <PrimaryButton
-                            href={route("simpanan.detailPerBulan")}
+                            href={route("sksw.unit")}
                             title={"Go"}
                             size={"sm"}
                             type="submit"
@@ -96,7 +96,7 @@ const Unit = ({ branch, server_filters, batch_datas, ...props }) => {
                         />
 
                         <LinkButton
-                            href={route("simpanan.detailPerBulan")}
+                            href={route("sksw.unit")}
                             title={"Reset"}
                             size={"sm"}
                             theme="other"

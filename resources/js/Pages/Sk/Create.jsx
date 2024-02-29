@@ -68,7 +68,7 @@ const Create = ({ branch, employees, ...props }) => {
     const onSubmitForm = (e) => {
         e.preventDefault();
         // console.log(data);
-        post(route("simpanan.store"));
+        post(route("sksw.store"));
     };
     return (
         <Authenticated

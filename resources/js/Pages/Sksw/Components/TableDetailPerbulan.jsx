@@ -397,6 +397,7 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
         return (
             <tbody>
                 {displayData.map((item, index) => {
+                    console.log(item);
                     return (
                         <tr
                             key={index}
@@ -407,7 +408,12 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
                                     {(currentPage - 1) * itemsPerPage +
                                         index +
                                         1}
-                                    <Link href="#">
+                                    <Link
+                                        href={route(
+                                            "sksw.transaksi",
+                                            item.id_tabungan
+                                        )}
+                                    >
                                         <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
                                     </Link>
                                 </div>

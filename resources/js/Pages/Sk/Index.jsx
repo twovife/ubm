@@ -308,9 +308,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         <th className="px-6 py-1">
                             <div className="flex justify-around items-center gap-3">
                                 {(currentPage - 1) * itemsPerPage + index + 1}
-                                <Link
-                                    href={route("simpanan.transaksi", item.id)}
-                                >
+                                <Link href={route("sksw.transaksi", item.id)}>
                                     <AiFillEdit className="text-blue-500 hover:cursor-pointer" />
                                 </Link>
                             </div>
@@ -403,7 +401,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         e.preventDefault();
         console.log(serverFilter);
         setLoading(true);
-        router.visit(route("sksw.skswdashboard"), {
+        router.visit(route("sksw.dashboard"), {
             data: { ...serverFilter },
         });
     };
@@ -439,7 +437,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         />
 
                         <LinkButton
-                            href={route("sksw.skswdashboard")}
+                            href={route("sksw.dashboard")}
                             title={"Reset"}
                             size={"sm"}
                             theme="other"
@@ -464,7 +462,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
 
                             <LinkButton
                                 as="button"
-                                href={route("simpanan.create")}
+                                href={route("sksw.create")}
                                 icon={<IoMdAdd />}
                                 size={"md"}
                                 title={"Tambah"}

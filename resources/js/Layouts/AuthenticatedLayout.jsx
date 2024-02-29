@@ -257,35 +257,29 @@ export default function Authenticated({
                                 lists={[
                                     {
                                         id: "103",
-                                        href: route("sksw.skswdashboard"),
+                                        href: route("sksw.dashboard"),
                                         name: "Dashboard SKSW",
                                         active: route().current(
-                                            "sksw.skswdashboard"
+                                            "sksw.dashboard"
                                         ),
                                     },
                                     {
                                         id: "100",
-                                        href: route("sksw.skswglobal"),
+                                        href: route("sksw.global"),
                                         name: "SKSW Global",
-                                        active: route().current(
-                                            "sksw.skswglobal"
-                                        ),
+                                        active: route().current("sksw.global"),
                                     },
                                     {
                                         id: "101",
-                                        href: route("sksw.skswwilayah"),
+                                        href: route("sksw.wilayah"),
                                         name: "SKSW Wilayah",
-                                        active: route().current(
-                                            "sksw.skswwilayah"
-                                        ),
+                                        active: route().current("sksw.wilayah"),
                                     },
                                     {
                                         id: "102",
-                                        href: route("sksw.skswunit"),
+                                        href: route("sksw.unit"),
                                         name: "SKSW Unit",
-                                        active: route().current(
-                                            "sksw.skswunit"
-                                        ),
+                                        active: route().current("sksw.unit"),
                                     },
                                 ]}
                             />

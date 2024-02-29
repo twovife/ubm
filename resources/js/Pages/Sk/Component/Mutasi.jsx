@@ -6,7 +6,7 @@ import { useForm, usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 
 const Mutasi = () => {
-    const { branch, deposit } = usePage().props;
+    const { branch, deposit, validating } = usePage().props;
     const [unit, setUnit] = useState();
     const [employee, setEmployee] = useState();
 
@@ -45,7 +45,7 @@ const Mutasi = () => {
 
     const onSubmitForm = (e) => {
         e.preventDefault();
-        put(route("simpanan.addtransaksi", deposit.id));
+        put(route("sksw.addtransaksi", deposit.id));
     };
 
     return (
@@ -58,6 +58,8 @@ const Mutasi = () => {
                         <TextInput
                             type={"month"}
                             required
+                            max={validating.max_date}
+                            min={validating.min_date}
                             onChange={(e) =>
                                 setData(e.target.name, e.target.value)
                             }

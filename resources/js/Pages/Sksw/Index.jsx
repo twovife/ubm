@@ -31,7 +31,7 @@ const Index = ({ server_filters, datas, ...props }) => {
         handleTabClick,
     } = useBulanFilter(
         server_filters,
-        route("sksw.skswglobal"),
+        route("sksw.global"),
         null,
         datas,
         "unit"
@@ -64,14 +64,16 @@ const Index = ({ server_filters, datas, ...props }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(localStorage.getItem("dashboard_sksw"));
+        const storedFilter = JSON.parse(
+            localStorage.getItem("sksw_global_dashboard")
+        );
         if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("dashboard_sksw", JSON.stringify(filters));
+        localStorage.setItem("sksw_global_dashboard", JSON.stringify(filters));
     }, [filters]);
 
     useEffect(() => {
@@ -486,7 +488,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                             />
 
                             <PrimaryButton
-                                href={route("simpanan.detailPerBulan")}
+                                href={route("sksw.global")}
                                 title={"Go"}
                                 size={"sm"}
                                 type="submit"
@@ -494,7 +496,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                             />
 
                             <LinkButton
-                                href={route("simpanan.detailPerBulan")}
+                                href={route("sksw.global")}
                                 title={"Reset"}
                                 size={"sm"}
                                 theme="other"

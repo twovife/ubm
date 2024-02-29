@@ -162,7 +162,7 @@ class DepositController extends Controller
 
             if (!$deposit->wasRecentlyCreated) {
                 if ($deposit->sk_balance > 0 || $deposit->sw_balance > 0) {
-                    return redirect()->route('simpanan.index')->withErrors('Karyawan masih mempunyai tabungan aktiv');
+                    return redirect()->route('sksw.index')->withErrors('Karyawan masih mempunyai tabungan aktiv');
                 }
                 $deposit->update([
                     'sw_balance' => $request->sw_balance,
@@ -192,10 +192,9 @@ class DepositController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
-            dd($e);
-            return redirect()->route('simpanan.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+            return redirect()->route('sksw.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
-        return redirect()->route('simpanan.transaksi', $deposit->id)->with('message', 'Data berhasil ditambahkan');
+        return redirect()->route('sksw.transaksi', $deposit->id)->with('message', 'Data berhasil ditambahkan');
     }
 
     public function show(Deposit $deposit)
@@ -278,12 +277,64 @@ class DepositController extends Controller
     public function transaksi(Deposit $deposit)
     {
 
-
-        $branch = Branch::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('id', auth()->user()->employee->branch_id))->get();
+        $branch = Branch::where('id', '!=', $deposit->branch_id)->get();
         $employee = Employee::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('branch_id', auth()->user()->employee->branch_id))->get();
+        $deposit = $deposit->load('deposit_transactions.branch', 'branch', 'employee');
+        $data_deposit = [
+            'id' => $deposit->id,
+            'sk_balance' => ($deposit->deposit_transactions->sum('sk_debit') - $deposit->deposit_transactions->sum('sk_kredit')),
+            'sw_balance' => ($deposit->deposit_transactions->sum('sw_debit') - $deposit->deposit_transactions->sum('sw_kredit')),
+            'nama_karyawan' => $deposit->employee->nama_karyawan,
+            'unit' => $deposit->branch->unit,
+        ];
+        // dd($data_deposit);
+        $sw_balance = 0;
+        $sk_balance = 0;
+
+        $data = $deposit->deposit_transactions->map(function ($query) use (&$sw_balance, &$sk_balance) {
+            $sw_transaction = $query->sw_debit - $query->sw_kredit;
+            $sw_balance_before = $sw_balance;
+            $sw_balance = $sw_balance_before + $sw_transaction;
+
+            $sk_transaction = $query->sk_debit - $query->sk_kredit;
+            $sk_balance_before = $sk_balance;
+            $sk_balance = $sk_balance_before + $sk_transaction;
+            return [
+                'wilayah' => $query->branch->wilayah,
+                'unit' => $query->branch->unit,
+                'transaction_date' => $query->transaction_date,
+
+                'sw_balance_before' => $sw_balance_before,
+                'sw_debit' => $query->sw_debit,
+                'sw_kredit' => $query->sw_kredit,
+                'sw_saldo' => $sw_balance,
+
+                'K_sw' => $query->sw_transaction_type == 'K' ? $query->sw_kredit : 0,
+                'D_sw' => $query->sw_transaction_type == 'D' ? $query->sw_debit : 0,
+                'KM_sw' => $query->sw_transaction_type == 'KM' ? $query->sw_kredit : 0,
+                'DM_sw' => $query->sw_transaction_type == 'DM' ? $query->sw_debit : 0,
+                'KRMD_sw' => $query->sw_transaction_type == 'KRMD' ? $query->sw_kredit : 0,
+
+
+
+                'sk_balance_before' => $sk_balance_before,
+                'sk_debit' => $query->sk_debit,
+                'sk_kredit' => $query->sk_kredit,
+                'sk_saldo' => $sk_balance,
+
+                'K_sk' => $query->sk_transaction_type == 'K' ? $query->sk_kredit : 0,
+                'D_sk' => $query->sk_transaction_type == 'D' ? $query->sk_debit : 0,
+                'KM_sk' => $query->sk_transaction_type == 'KM' ? $query->sk_kredit : 0,
+                'DM_sk' => $query->sk_transaction_type == 'DM' ? $query->sk_debit : 0,
+                'KRMD_sk' => $query->sk_transaction_type == 'KRMD' ? $query->sk_kredit : 0,
+            ];
+        });
+        $mindate = $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->transaction_date;
         return Inertia::render('Sk/Transaksi', [
-            'deposit' => $deposit->load('optionaltrasactions.branch', 'mandatorytrasactions.branch', 'branch', 'employee'),
+            'deposit' => $data_deposit,
+            'datas' => $data,
             'branch' => $branch,
+            'validating' => ['min_date' => Carbon::create($mindate)->format('Y-m'), 'max_date' => Carbon::now()->lastOfMonth()->format('Y-m')],
             'employees' => $employee
         ]);
     }
@@ -298,144 +349,97 @@ class DepositController extends Controller
             'transaction_type' => ['required']
         ]);
 
-        $tanggal_tabungan = Carbon::parse($request->transaction_date)->endOfMonth()->format('Y-m-d');
+        $tanggal_tabungan = Carbon::parse($request->transaction_date)->startOfMonth()->format('Y-m-d');
         // dd($tanggal_tabungan);
         try {
             DB::beginTransaction();
             if ($request->transaction == "D") {
                 if ($request->nominal_sw > 0) {
-                    $sw_balance = $deposit->sw_balance;
+
+                    $sk_balance = ($deposit->deposit_transactions->sum('sk_debit') - $deposit->deposit_transactions->sum('sk_kredit'));
+                    $sw_balance = ($deposit->deposit_transactions->sum('sw_debit') - $deposit->deposit_transactions->sum('sw_kredit'));
+
+
                     $req_sw_balance = $request->saldo_awal_sw;
-                    $after_sw_balance = $req_sw_balance + $request->nominal_sw;
-                    if ($sw_balance !== $req_sw_balance) {
-                        return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
-                    }
-
-                    $deposit->sw_balance = $after_sw_balance;
-
-                    $deposit->mandatorytrasactions()->create([
-                        "branch_id" => $deposit->branch_id,
-                        "transaction_date" => $tanggal_tabungan,
-
-                        'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-                        'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-
-
-                        "transaction" => $request->transaction,
-
-                        "balance_before" => $sw_balance,
-
-                        "debit" => $request->nominal_sw,
-                        "kredit" => 0,
-                        "balance" => $after_sw_balance,
-
-                        "transaction_type" => $request->transaction_type,
-                        "transaction_input_user_id" => auth()->user()->employee_id,
-                    ]);
-                }
-                if ($request->nominal_sk > 0) {
-                    $sk_balance = $deposit->sk_balance;
                     $req_sk_balance = $request->saldo_awal_sk;
+
+                    $after_sw_balance = $req_sw_balance + $request->nominal_sw;
                     $after_sk_balance = $req_sk_balance + $request->nominal_sk;
-                    if ($sk_balance !== $req_sk_balance) {
-                        return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+
+                    if ($sw_balance !== $req_sw_balance || $sk_balance !== $req_sk_balance) {
+                        return redirect()->route('sksw.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
                     }
 
-                    $deposit->sk_balance = $after_sk_balance;
 
-                    $deposit->optionaltrasactions()->create([
+                    $deposit->deposit_transactions()->create([
                         "branch_id" => $deposit->branch_id,
                         "transaction_date" => $tanggal_tabungan,
+                        "sw_transaction" =>  $request->transaction,
+                        "sw_transaction_type" => $request->transaction_type,
+                        "sw_debit" => $request->nominal_sw,
+                        "sw_kredit" => 0,
 
-                        'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-                        'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-
-
-                        "transaction" => $request->transaction,
-
-                        "balance_before" => $sk_balance,
-
-                        "debit" => $request->nominal_sk,
-                        "kredit" => 0,
-                        "balance" => $after_sk_balance,
-
-                        "transaction_type" => $request->transaction_type,
-                        "transaction_input_user_id" =>  auth()->user()->employee_id,
+                        "sk_transaction" => $request->transaction,
+                        "sk_transaction_type" => $request->transaction_type,
+                        "sk_debit" => $request->nominal_sk,
+                        "sk_kredit" => 0,
+                        "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
+                        "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
                     ]);
                 }
             }
 
             if ($request->transaction == "K") {
-                if ($request->nominal_sw > 0) {
-                    $sw_balance = $deposit->sw_balance;
-                    $req_sw_balance = $request->saldo_awal_sw;
-                    $after_sw_balance = $req_sw_balance - $request->nominal_sw;
-
-                    if ($sw_balance !== $req_sw_balance || $after_sw_balance < 0) {
-                        return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
-                    }
-
-                    $deposit->sw_balance = $after_sw_balance;
-
-                    $deposit->mandatorytrasactions()->create([
-                        "branch_id" => $deposit->branch_id,
-                        "transaction_date" => $tanggal_tabungan,
-
-                        'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-                        'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
 
 
-                        "transaction" => $request->transaction,
+                $sk_balance = ($deposit->deposit_transactions->sum('sk_debit') - $deposit->deposit_transactions->sum('sk_kredit'));
+                $sw_balance = ($deposit->deposit_transactions->sum('sw_debit') - $deposit->deposit_transactions->sum('sw_kredit'));
 
-                        "balance_before" => $sw_balance,
 
-                        "kredit" => $request->nominal_sw,
-                        "debit" => 0,
-                        "balance" => $after_sw_balance,
+                $req_sw_balance = $request->saldo_awal_sw;
+                $req_sk_balance = $request->saldo_awal_sk;
 
-                        "transaction_type" => $request->transaction_type,
-                        "transaction_input_user_id" => auth()->user()->employee_id,
-                    ]);
+                $after_sw_balance = $req_sw_balance + $request->nominal_sw;
+                $after_sk_balance = $req_sk_balance + $request->nominal_sk;
 
-                    if ($request->transaction_type == "KRMD") {
+
+
+                if ($sw_balance !== $req_sw_balance || $sk_balance !== $req_sk_balance) {
+                    return redirect()->route('sksw.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+                }
+
+                if ($sk_balance - $request->nominal_sk < 0 || $sw_balance - $request->nominal_sw < 0) {
+                    return redirect()->route('sksw.transaksi', $deposit->id)->withErrors('Saldo Tidak Boleh Mines');
+                }
+
+                $deposit->deposit_transactions()->create([
+                    "branch_id" => $deposit->branch_id,
+                    "transaction_date" => $tanggal_tabungan,
+                    "sw_transaction" =>  $request->transaction,
+                    "sw_transaction_type" => $request->transaction_type,
+                    "sw_debit" => 0,
+                    "sw_kredit" => $request->nominal_sw,
+
+                    "sk_transaction" => $request->transaction,
+                    "sk_transaction_type" => $request->transaction_type,
+                    "sk_debit" => 0,
+
+                    "sk_kredit" => $request->nominal_sk,
+                    "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
+                    "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
+                ]);
+
+
+                if ($request->transaction_type == "KRMD") {
+                    if ($request->nominal_sw > 0) {
                         $employee = Employee::find($deposit->employee_id);
                         $employee->pencairan_simpanan_w_date = $tanggal_tabungan;
                         $employee->pencairan_simpanan_w_by = auth()->user()->employee_id;
                         $employee->save();
                     }
-                }
-                if ($request->nominal_sk > 0) {
-                    $sk_balance = $deposit->sk_balance;
-                    $req_sk_balance = $request->saldo_awal_sk;
-                    $after_sk_balance = $req_sk_balance - $request->nominal_sk;
 
-                    if ($sk_balance !== $req_sk_balance || $after_sk_balance < 0) {
-                        return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
-                    }
+                    if ($request->nominal_sk > 0) {
 
-                    $deposit->sk_balance = $after_sk_balance;
-
-                    $deposit->optionaltrasactions()->create([
-                        "branch_id" => $deposit->branch_id,
-                        "transaction_date" => $tanggal_tabungan,
-
-                        'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-                        'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-
-
-                        "transaction" => $request->transaction,
-
-                        "balance_before" => $sk_balance,
-
-                        "kredit" => $request->nominal_sk,
-                        "debit" => 0,
-                        "balance" => $after_sk_balance,
-
-                        "transaction_type" => $request->transaction_type,
-                        "transaction_input_user_id" =>  auth()->user()->employee_id,
-                    ]);
-
-                    if ($request->transaction_type == "KRMD") {
                         $employee = Employee::find($deposit->employee_id);
                         $employee->pencairan_simpanan_date = $tanggal_tabungan;
                         $employee->pencairan_simpanan_by = auth()->user()->employee_id;
@@ -449,99 +453,62 @@ class DepositController extends Controller
                     'branch_id' => ['required']
                 ]);
 
-                $sw_saldo = $deposit->sw_balance;
-                $sk_saldo = $deposit->sk_balance;
+                $sk_balance = ($deposit->deposit_transactions->sum('sk_debit') - $deposit->deposit_transactions->sum('sk_kredit'));
+                $sw_balance = ($deposit->deposit_transactions->sum('sw_debit') - $deposit->deposit_transactions->sum('sw_kredit'));
                 $branch_asal = $deposit->branch_id;
+                // dd([$sk_balance, $sw_balance]);
 
                 // change id, deposit_id, branch_id, transaction_date, transaction_month, transaction_year, transaction, balance_before, debit, kredit, balance, transaction_type, transaction_input_user_id, created_at, updated_at
 
 
                 // change deposit
-                $deposit->branch_id = $request->branch_id;
 
                 $transaksi_sw = [
                     // keluarkan dari branch awal
                     [
-                        "branch_id" => $branch_asal,
+                        "branch_id" =>  $branch_asal,
                         "transaction_date" => $tanggal_tabungan,
-                        'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-                        'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-                        "transaction" => "K",
-                        "transaction_type" => "KM",
+                        "sw_transaction" =>  'K',
+                        "sw_transaction_type" => 'KM',
+                        "sw_debit" => 0,
+                        "sw_kredit" => $sw_balance,
 
-                        "transaction_input_user_id" =>  auth()->user()->employee_id,
-
-                        "balance_before" => $sw_saldo,
-                        "debit" => 0,
-                        "kredit" => $sw_saldo,
-                        "balance" => 0,
-                    ],
-                    // masukkan ke branch baru
-                    [
-                        "branch_id" => $request->branch_id,
-                        "transaction_date" => $tanggal_tabungan,
-                        'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-                        'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-                        "transaction" => "D",
-                        "transaction_type" => "DM",
-
-                        "transaction_input_user_id" =>  auth()->user()->employee_id,
-
-                        "balance_before" => 0,
-                        "debit" => $sw_saldo,
-                        "kredit" => 0,
-                        "balance" => $sw_saldo,
-                    ]
-                ];
-
-                $transaksi_sk = [
-                    // keluarkan dari branch awal buat balance menjadi 0
-                    [
-                        "branch_id" => $branch_asal,
-                        "transaction_date" => $tanggal_tabungan,
-                        'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-                        'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-                        "transaction" => "K",
-                        "transaction_type" => "KM",
-
-                        "transaction_input_user_id" =>  auth()->user()->employee_id,
-
-                        "balance_before" => $sk_saldo,
-                        "debit" => 0,
-                        "kredit" => $sk_saldo,
-                        "balance" => 0,
+                        "sw_transaction" =>  'K',
+                        "sw_transaction_type" => 'KM',
+                        "sk_debit" => 0,
+                        "sk_kredit" => $sk_balance,
+                        "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
+                        "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
                     ],
 
-                    // masukkan ke branch baru membuat balance sejumlah kredit
                     [
-                        "branch_id" => $request->branch_id,
+                        "branch_id" => $deposit->branch_id,
                         "transaction_date" => $tanggal_tabungan,
-                        'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-                        'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-                        "transaction" => "D",
-                        "transaction_type" => "DM",
+                        "sw_transaction" =>  'D',
+                        "sw_transaction_type" => 'DM',
+                        "sw_debit" => $sw_balance,
+                        "sw_kredit" => 0,
 
-                        "transaction_input_user_id" =>  auth()->user()->employee_id,
-
-                        "balance_before" => 0,
-                        "debit" => $sk_saldo,
-                        "kredit" => 0,
-                        "balance" => $sk_saldo,
-                    ]
+                        "sk_transaction" => 'D',
+                        "sk_transaction_type" => 'DM',
+                        "sk_debit" => $sk_balance,
+                        "sk_kredit" => 0,
+                        "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
+                        "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
+                    ],
                 ];
 
 
-                $deposit->mandatorytrasactions()->createMany($transaksi_sw);
-                $deposit->optionaltrasactions()->createMany($transaksi_sk);
+                $deposit->deposit_transactions()->createMany($transaksi_sw);
             }
             $deposit->save();
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
             dd($e);
-            return redirect()->route('simpanan.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+            return redirect()->route('sksw.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
-        return redirect()->route('simpanan.transaksi', $deposit->id)->with('message', 'Data berhasil ditambahkan');
+        return redirect()->route('sksw.transaksi', $deposit->id)->with('message', 'Data berhasil ditambahkan');
     }
 
 
@@ -1137,11 +1104,12 @@ class DepositController extends Controller
                 'unit' => $data->first()->branch->unit,
                 'data' =>  $data->groupBy('deposit_id')->map(function ($quer) use ($getFilter, $all_transaction) {
                     $first_data = $quer->first();
-                    $transbefore =  $all_transaction->where('idx_transaction', $first_data->idx_transaction)->where('transaction_date', '<', $first_data->transaction_date);
+                    $transbefore =  $all_transaction->where('idx_transaction', $first_data->idx_transaction)->where('transaction_date', '<', $getFilter->tanggal_start);
                     $sksaldo_before = $transbefore->sum('sk_debit') - $transbefore->sum('sk_kredit');
-                    $balance_sk = $sksaldo_before + ($quer->sum('sk_debit') - $quer->sum('sk_kredit')) ?? 0;
+                    $trans_now = $quer->where('transaction_date', $getFilter->tanggal_start);
+                    $balance_sk = $sksaldo_before + ($trans_now->sum('sk_debit') - $trans_now->sum('sk_kredit')) ?? 0;
                     $swsaldo_before =  $transbefore->sum('sw_debit') - $transbefore->sum('sw_kredit');
-                    $balance_sw = $swsaldo_before + ($quer->sum('sw_debit') - $quer->sum('sw_kredit')) ?? 0;
+                    $balance_sw = $swsaldo_before + ($trans_now->sum('sw_debit') - $trans_now->sum('sw_kredit')) ?? 0;
                     return [
                         'id_tabungan' => $first_data->deposit_id,
                         'wilayah' => $first_data->branch->wilayah,
@@ -1151,27 +1119,27 @@ class DepositController extends Controller
                         'bulan' => $getFilter->tanggal,
 
                         'balance_before_sw' => $swsaldo_before ?? 0,
-                        'debit_sw' => $quer->sum('sw_debit') ?? 0,
-                        'kredit_sw' => $quer->sum('sw_kredit') ?? 0,
+                        'debit_sw' => $trans_now->sum('sw_debit') ?? 0,
+                        'kredit_sw' => $trans_now->sum('sw_kredit') ?? 0,
                         'balance_sw' => $balance_sw,
-                        'K_sw' => $quer->where('sw_transaction_type', 'K')->sum('sw_kredit') ?? 0,
-                        'D_sw' => $quer->where('sw_transaction_type', 'D')->sum('sw_debit') ?? 0,
-                        'KM_sw' => $quer->where('sw_transaction_type', 'KM')->sum('sw_kredit') ?? 0,
-                        'DM_sw' => $quer->where('sw_transaction_type', 'DM')->sum('sw_debit') ?? 0,
-                        'KRMD_sw' => $quer->where('sw_transaction_type', 'KRMD')->sum('sw_kredit') ?? 0,
+                        'K_sw' => $trans_now->where('sw_transaction_type', 'K')->sum('sw_kredit') ?? 0,
+                        'D_sw' => $trans_now->where('sw_transaction_type', 'D')->sum('sw_debit') ?? 0,
+                        'KM_sw' => $trans_now->where('sw_transaction_type', 'KM')->sum('sw_kredit') ?? 0,
+                        'DM_sw' => $trans_now->where('sw_transaction_type', 'DM')->sum('sw_debit') ?? 0,
+                        'KRMD_sw' => $trans_now->where('sw_transaction_type', 'KRMD')->sum('sw_kredit') ?? 0,
 
                         // 'isvisible' => ($q->where('depo', 'sw')->first()['balance'] ?? 0) + ($q->where('depo', 'sk')->first()['balance'] ?? 0) + ($q->where('depo', 'sw')->first()['balance_before'] ?? 0) + ($q->where('depo', 'sk')->first()['balance_before'] ?? 0),
                         'saldo_global' => $balance_sk + $balance_sw,
 
                         'balance_before_sk' => $sksaldo_before ?? 0,
-                        'debit_sk' => $quer->sum('sk_debit') ?? 0,
-                        'kredit_sk' => $quer->sum('sk_kredit') ?? 0,
+                        'debit_sk' => $trans_now->sum('sk_debit') ?? 0,
+                        'kredit_sk' => $trans_now->sum('sk_kredit') ?? 0,
                         'balance_sk' => $balance_sk,
-                        'K_sk' => $quer->where('sk_transaction_type', 'K')->sum('sk_kredit') ?? 0,
-                        'D_sk' => $quer->where('sk_transaction_type', 'D')->sum('sk_debit') ?? 0,
-                        'KM_sk' => $quer->where('sk_transaction_type', 'KM')->sum('sk_kredit') ?? 0,
-                        'DM_sk' => $quer->where('sk_transaction_type', 'DM')->sum('sk_debit') ?? 0,
-                        'KRMD_sk' => $quer->where('sk_transaction_type', 'KRMD')->sum('sk_kredit') ?? 0,
+                        'K_sk' => $trans_now->where('sk_transaction_type', 'K')->sum('sk_kredit') ?? 0,
+                        'D_sk' => $trans_now->where('sk_transaction_type', 'D')->sum('sk_debit') ?? 0,
+                        'KM_sk' => $trans_now->where('sk_transaction_type', 'KM')->sum('sk_kredit') ?? 0,
+                        'DM_sk' => $trans_now->where('sk_transaction_type', 'DM')->sum('sk_debit') ?? 0,
+                        'KRMD_sk' => $trans_now->where('sk_transaction_type', 'KRMD')->sum('sk_kredit') ?? 0,
 
                     ];
                 })->values()
@@ -1212,11 +1180,12 @@ class DepositController extends Controller
                 'data' => $data->groupBy('branch_id')->map(function ($query) use ($getFilter, $all_transaction) {
                     $first_data = $query->first();
 
-                    $transbefore =  $all_transaction->where('branch_id', $first_data->branch_id)->where('transaction_date', '<', $first_data->transaction_date);
+                    $transbefore =  $all_transaction->where('branch_id', $first_data->branch_id)->where('transaction_date', '<', $getFilter->tanggal_start);
+                    $trans_now = $query->where('transaction_date', $getFilter->tanggal_start);
                     $sksaldo_before = $transbefore->sum('sk_debit') - $transbefore->sum('sk_kredit');
-                    $balance_sk = $sksaldo_before + ($query->sum('sk_debit') - $query->sum('sk_kredit')) ?? 0;
+                    $balance_sk = $sksaldo_before + ($trans_now->sum('sk_debit') - $trans_now->sum('sk_kredit')) ?? 0;
                     $swsaldo_before =  $transbefore->sum('sw_debit') - $transbefore->sum('sw_kredit');
-                    $balance_sw = $swsaldo_before + ($query->sum('sw_debit') - $query->sum('sw_kredit')) ?? 0;
+                    $balance_sw = $swsaldo_before + ($trans_now->sum('sw_debit') - $trans_now->sum('sw_kredit')) ?? 0;
                     return [
                         'wilayah' => $first_data->branch->wilayah,
                         'unit' => $first_data->branch->unit,
@@ -1224,27 +1193,27 @@ class DepositController extends Controller
                         'bulan' => $getFilter->tanggal,
 
                         'balance_before_sw' => $swsaldo_before ?? 0,
-                        'debit_sw' => $query->sum('sw_debit') ?? 0,
-                        'kredit_sw' => $query->sum('sw_kredit') ?? 0,
+                        'debit_sw' => $trans_now->sum('sw_debit') ?? 0,
+                        'kredit_sw' => $trans_now->sum('sw_kredit') ?? 0,
                         'balance_sw' => $balance_sw,
-                        'K_sw' => $query->where('sw_transaction_type', 'K')->sum('sw_kredit') ?? 0,
-                        'D_sw' => $query->where('sw_transaction_type', 'D')->sum('sw_debit') ?? 0,
-                        'KM_sw' => $query->where('sw_transaction_type', 'KM')->sum('sw_kredit') ?? 0,
-                        'DM_sw' => $query->where('sw_transaction_type', 'DM')->sum('sw_debit') ?? 0,
-                        'KRMD_sw' => $query->where('sw_transaction_type', 'KRMD')->sum('sw_kredit') ?? 0,
+                        'K_sw' => $trans_now->where('sw_transaction_type', 'K')->sum('sw_kredit') ?? 0,
+                        'D_sw' => $trans_now->where('sw_transaction_type', 'D')->sum('sw_debit') ?? 0,
+                        'KM_sw' => $trans_now->where('sw_transaction_type', 'KM')->sum('sw_kredit') ?? 0,
+                        'DM_sw' => $trans_now->where('sw_transaction_type', 'DM')->sum('sw_debit') ?? 0,
+                        'KRMD_sw' => $trans_now->where('sw_transaction_type', 'KRMD')->sum('sw_kredit') ?? 0,
 
                         // 'isvisible' => ($q->where('depo', 'sw')->first()['balance'] ?? 0) + ($q->where('depo', 'sk')->first()['balance'] ?? 0) + ($q->where('depo', 'sw')->first()['balance_before'] ?? 0) + ($q->where('depo', 'sk')->first()['balance_before'] ?? 0),
                         'saldo_global' => $balance_sk + $balance_sw,
 
                         'balance_before_sk' => $sksaldo_before ?? 0,
-                        'debit_sk' => $query->sum('sk_debit') ?? 0,
-                        'kredit_sk' => $query->sum('sk_kredit') ?? 0,
+                        'debit_sk' => $trans_now->sum('sk_debit') ?? 0,
+                        'kredit_sk' => $trans_now->sum('sk_kredit') ?? 0,
                         'balance_sk' => $balance_sk,
-                        'K_sk' => $query->where('sk_transaction_type', 'K')->sum('sk_kredit') ?? 0,
-                        'D_sk' => $query->where('sk_transaction_type', 'D')->sum('sk_debit') ?? 0,
-                        'KM_sk' => $query->where('sk_transaction_type', 'KM')->sum('sk_kredit') ?? 0,
-                        'DM_sk' => $query->where('sk_transaction_type', 'DM')->sum('sk_debit') ?? 0,
-                        'KRMD_sk' => $query->where('sk_transaction_type', 'KRMD')->sum('sk_kredit') ?? 0,
+                        'K_sk' => $trans_now->where('sk_transaction_type', 'K')->sum('sk_kredit') ?? 0,
+                        'D_sk' => $trans_now->where('sk_transaction_type', 'D')->sum('sk_debit') ?? 0,
+                        'KM_sk' => $trans_now->where('sk_transaction_type', 'KM')->sum('sk_kredit') ?? 0,
+                        'DM_sk' => $trans_now->where('sk_transaction_type', 'DM')->sum('sk_debit') ?? 0,
+                        'KRMD_sk' => $trans_now->where('sk_transaction_type', 'KRMD')->sum('sk_kredit') ?? 0,
 
 
                     ];
@@ -1278,41 +1247,43 @@ class DepositController extends Controller
 
         $ranked_partition = DepositTransaction::queryBuilder($getFilter)->get(['idx_transaction']);
         $ranked_sksw = DepositTransaction::queryBuilder($getFilter)->with('deposit.branch', 'deposit.employee', 'branch')->get();
+
         $all_transaction = DepositTransaction::whereIn('idx_transaction', $ranked_partition->toArray())->with('branch')->get(['idx_transaction', 'branch_id', 'transaction_date', 'sw_kredit', 'sw_debit', 'sk_kredit', 'sk_debit']);
 
         $maping_sksw = $ranked_sksw->groupBy('branch.wilayah')->map(function ($data) use ($getFilter, $all_transaction) {
             $first_data = $data->first();
-            $transbefore =  $all_transaction->where('branch.wilayah', $first_data->branch->wilayah)->where('transaction_date', '<', $first_data->transaction_date);
+            $transbefore =  $all_transaction->where('branch.wilayah', $first_data->branch->wilayah)->where('transaction_date', '<', $getFilter->tanggal_start);
+            $trans_now = $data->where('transaction_date', $getFilter->tanggal_start);
             $sksaldo_before = $transbefore->sum('sk_debit') - $transbefore->sum('sk_kredit');
-            $balance_sk = $sksaldo_before + ($data->sum('sk_debit') - $data->sum('sk_kredit')) ?? 0;
+            $balance_sk = $sksaldo_before + ($trans_now->sum('sk_debit') - $trans_now->sum('sk_kredit')) ?? 0;
             $swsaldo_before =  $transbefore->sum('sw_debit') - $transbefore->sum('sw_kredit');
-            $balance_sw = $swsaldo_before + ($data->sum('sw_debit') - $data->sum('sw_kredit')) ?? 0;
+            $balance_sw = $swsaldo_before + ($trans_now->sum('sw_debit') - $trans_now->sum('sw_kredit')) ?? 0;
             return [
                 'wilayah' => $first_data->branch->wilayah,
                 'bulan' => $getFilter->tanggal,
 
                 'balance_before_sw' => $swsaldo_before ?? 0,
-                'debit_sw' => $data->sum('sw_debit') ?? 0,
-                'kredit_sw' => $data->sum('sw_kredit') ?? 0,
+                'debit_sw' => $trans_now->sum('sw_debit') ?? 0,
+                'kredit_sw' => $trans_now->sum('sw_kredit') ?? 0,
                 'balance_sw' => $balance_sw,
-                'K_sw' => $data->where('sw_transaction_type', 'K')->sum('sw_kredit') ?? 0,
-                'D_sw' => $data->where('sw_transaction_type', 'D')->sum('sw_debit') ?? 0,
-                'KM_sw' => $data->where('sw_transaction_type', 'KM')->sum('sw_kredit') ?? 0,
-                'DM_sw' => $data->where('sw_transaction_type', 'DM')->sum('sw_debit') ?? 0,
-                'KRMD_sw' => $data->where('sw_transaction_type', 'KRMD')->sum('sw_kredit') ?? 0,
+                'K_sw' => $trans_now->where('sw_transaction_type', 'K')->sum('sw_kredit') ?? 0,
+                'D_sw' => $trans_now->where('sw_transaction_type', 'D')->sum('sw_debit') ?? 0,
+                'KM_sw' => $trans_now->where('sw_transaction_type', 'KM')->sum('sw_kredit') ?? 0,
+                'DM_sw' => $trans_now->where('sw_transaction_type', 'DM')->sum('sw_debit') ?? 0,
+                'KRMD_sw' => $trans_now->where('sw_transaction_type', 'KRMD')->sum('sw_kredit') ?? 0,
 
                 // 'isvisible' => ($q->where('depo', 'sw')->first()['balance'] ?? 0) + ($q->where('depo', 'sk')->first()['balance'] ?? 0) + ($q->where('depo', 'sw')->first()['balance_before'] ?? 0) + ($q->where('depo', 'sk')->first()['balance_before'] ?? 0),
                 'saldo_global' => $balance_sk + $balance_sw,
 
                 'balance_before_sk' => $sksaldo_before ?? 0,
-                'debit_sk' => $data->sum('sk_debit') ?? 0,
-                'kredit_sk' => $data->sum('sk_kredit') ?? 0,
+                'debit_sk' => $trans_now->sum('sk_debit') ?? 0,
+                'kredit_sk' => $trans_now->sum('sk_kredit') ?? 0,
                 'balance_sk' => $balance_sk,
-                'K_sk' => $data->where('sk_transaction_type', 'K')->sum('sk_kredit') ?? 0,
-                'D_sk' => $data->where('sk_transaction_type', 'D')->sum('sk_debit') ?? 0,
-                'KM_sk' => $data->where('sk_transaction_type', 'KM')->sum('sk_kredit') ?? 0,
-                'DM_sk' => $data->where('sk_transaction_type', 'DM')->sum('sk_debit') ?? 0,
-                'KRMD_sk' => $data->where('sk_transaction_type', 'KRMD')->sum('sk_kredit') ?? 0,
+                'K_sk' => $trans_now->where('sk_transaction_type', 'K')->sum('sk_kredit') ?? 0,
+                'D_sk' => $trans_now->where('sk_transaction_type', 'D')->sum('sk_debit') ?? 0,
+                'KM_sk' => $trans_now->where('sk_transaction_type', 'KM')->sum('sk_kredit') ?? 0,
+                'DM_sk' => $trans_now->where('sk_transaction_type', 'DM')->sum('sk_debit') ?? 0,
+                'KRMD_sk' => $trans_now->where('sk_transaction_type', 'KRMD')->sum('sk_kredit') ?? 0,
 
             ];
         })->sortBy('wilayah')->values();

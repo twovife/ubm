@@ -68,7 +68,7 @@ const Wilayah = ({ server_filters, batch_datas, ...props }) => {
                         />
 
                         <PrimaryButton
-                            href={route("simpanan.detailPerBulan")}
+                            href={route("sksw.wilayah")}
                             title={"Go"}
                             size={"sm"}
                             type="submit"
@@ -76,7 +76,7 @@ const Wilayah = ({ server_filters, batch_datas, ...props }) => {
                         />
 
                         <LinkButton
-                            href={route("simpanan.detailPerBulan")}
+                            href={route("sksw.wilayah")}
                             title={"Reset"}
                             size={"sm"}
                             theme="other"

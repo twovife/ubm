@@ -76,8 +76,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [DepositController::class, 'index'])->name('index');
         Route::get('/create', [DepositController::class, 'create'])->name('create');
         Route::post('/', [DepositController::class, 'store'])->name('store');
-        Route::get('/transaksi/{deposit}', [DepositController::class, 'transaksi'])->name('transaksi');
-        Route::put('/transaksi/{deposit}', [DepositController::class, 'addtransaksi'])->name('addtransaksi');
 
         Route::get('/global', [DepositController::class, 'global'])->name('global');
         Route::get('/detailPerBulan', [DepositController::class, 'detailPerBulan'])->name('detailPerBulan');
@@ -92,10 +90,17 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('sksw')->name('sksw.')->group(function () {
-        Route::get('/', [DepositController::class, 'dashboard'])->name('skswdashboard');
-        Route::get('/global', [DepositController::class, 'sksw_global'])->name('skswglobal');
-        Route::get('/wilayah', [DepositController::class, 'sksw_wilayah'])->name('skswwilayah');
-        Route::get('/unit', [DepositController::class, 'sksw_unit'])->name('skswunit');
+        Route::get('/', [DepositController::class, 'dashboard'])->name('dashboard');
+        Route::get('/create', [DepositController::class, 'create'])->name('create');
+        Route::post('/', [DepositController::class, 'store'])->name('store');
+
+
+        Route::get('/transaksi/{deposit}', [DepositController::class, 'transaksi'])->name('transaksi'); //detail transaksi
+        Route::put('/transaksi/{deposit}', [DepositController::class, 'addtransaksi'])->name('addtransaksi'); //adding transaksi
+
+        Route::get('/global', [DepositController::class, 'sksw_global'])->name('global');
+        Route::get('/wilayah', [DepositController::class, 'sksw_wilayah'])->name('wilayah');
+        Route::get('/unit', [DepositController::class, 'sksw_unit'])->name('unit');
     });
 
 

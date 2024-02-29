@@ -5,17 +5,25 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Link, useForm } from "@inertiajs/react";
+import { Link, router, useForm, usePage } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import Mutasi from "./Component/Mutasi";
 import { MdDelete } from "react-icons/md";
+import { NumericFormat } from "react-number-format";
 
-const Transaksi = ({ branch, employees, deposit, ...props }) => {
+const Transaksi = ({
+    branch,
+    datas,
+    employees,
+    deposit,
+    validating,
+    ...props
+}) => {
     const [loading, setLoading] = useState(false);
 
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, put, processing, errors, reset } = useForm({
         saldo_awal_sk: deposit.sk_balance,
         nominal_sk: 0,
         saldo_awal_sw: deposit.sw_balance,
@@ -71,13 +79,18 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
     const onSubmitForm = (e) => {
         e.preventDefault();
         console.log(data);
-        put(route("simpanan.addtransaksi", deposit.id));
-    };
-
-    const [activeTab, setActiveTab] = useState(1); // Mengatur tab pertama sebagai aktif
-
-    const handleTabClick = (tabId) => {
-        setActiveTab(tabId);
+        put(route("sksw.addtransaksi", deposit.id), {
+            onFinish: () => {
+                router.visit(
+                    route("sksw.transaksi", deposit.id),
+                    {
+                        only: ["deposit"],
+                    },
+                    { preserveState: true }
+                );
+                reset();
+            },
+        });
     };
 
     return (
@@ -92,15 +105,327 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                     </h2>
                     <div className="ml-auto flex items-center">
                         <LinkButton
-                            href={route("simpanan.index")}
+                            href={route("sksw.dashboard")}
                             title={"Halaman Utama"}
                         />
                     </div>
                 </>
             }
         >
+            <div className="p-5 mt-3 bg-gray-50 rounded shadow overflow-auto">
+                <table className="w-full text-sm text-left text-gray-500 shadow rounded">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap"
+                            >
+                                Wilayah
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap"
+                            >
+                                Unit
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap"
+                            >
+                                Bulan
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap"
+                            >
+                                Tanggal Transaksi
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                            >
+                                Saldo SW Sebelumnya
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                            >
+                                Debit SW
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                            >
+                                Kredit SW
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                            >
+                                Saldo SW
+                            </th>
+
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                            >
+                                Setoran SW(D)
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                            >
+                                Debit Mutasi SW(D)
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                            >
+                                Pengambilan SW(K)
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                            >
+                                Kredit Mutasi SW(K)
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                            >
+                                Kredit Resign / MD SW(K)
+                            </th>
+
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                            >
+                                Saldo SK Sebelumnya
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                            >
+                                Debit SK
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                            >
+                                Kredit SK
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                            >
+                                Saldo SK
+                            </th>
+
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                            >
+                                Setoran SK(D)
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                            >
+                                Debit Mutasi SK(D)
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                            >
+                                Pengambilan SK(K)
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                            >
+                                Kredit Mutasi SK(K)
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                            >
+                                Kredit Resign / MD SK(K)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {datas.map((item, key) => (
+                            <tr
+                                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                key={key}
+                            >
+                                <td className="px-6 py-4">{item.wilayah}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    {item.unit}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {dayjs(item?.transaction_date).format(
+                                        "MMM"
+                                    )}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {dayjs(item?.transaction_date).format(
+                                        "DD-MM-YYYY"
+                                    )}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-gray-100">
+                                    <NumericFormat
+                                        value={item.sw_balance_before}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-green-100 text-black">
+                                    <NumericFormat
+                                        value={item.sw_debit}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+
+                                <td className="px-6 py-4 whitespace-nowrap bg-red-100 text-black">
+                                    <NumericFormat
+                                        value={item.sw_kredit}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-green-200 text-black font-semibold">
+                                    <NumericFormat
+                                        value={item.sw_saldo}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.K_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.D_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.KM_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.DM_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.KRMD_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+
+                                <td className="px-6 py-4 whitespace-nowrap bg-gray-50">
+                                    <NumericFormat
+                                        value={item.sk_balance_before}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-green-100 text-black">
+                                    <NumericFormat
+                                        value={item.sk_debit}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-red-100 text-black">
+                                    <NumericFormat
+                                        value={item.sk_kredit}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-green-200 text-black font-semibold">
+                                    <NumericFormat
+                                        value={item.sk_saldo}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.K_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.D_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.KM_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.DM_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.KRMD_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             <div className="mx-auto sm:px-6 lg:px-8 mb-6">
-                <ul className="tab-list flex justify-start gap-3">
+                {/* <ul className="tab-list flex justify-start gap-3">
                     <li
                         className={`tab ${
                             activeTab === 1
@@ -290,7 +615,7 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                                                                 1 && (
                                                             <LinkButton
                                                                 href={route(
-                                                                    "simpanan.destroysw",
+                                                                    "sksw.destroysw",
                                                                     item.id
                                                                 )}
                                                                 type="button"
@@ -473,7 +798,7 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                                                                 1 && (
                                                             <LinkButton
                                                                 href={route(
-                                                                    "simpanan.destroysk",
+                                                                    "sksw.destroysk",
                                                                     item.id
                                                                 )}
                                                                 type="button"
@@ -490,7 +815,7 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="p-3 bg-white rounded shadow mt-3">
                     <div className="lg:flex justify-start items-start gap-3">
@@ -499,7 +824,7 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                             <TextInput
                                 type={"text"}
                                 disabled
-                                value={deposit.employee.nama_karyawan}
+                                value={deposit.nama_karyawan}
                                 name="transaction_date"
                                 className="w-full uppercase"
                             />
@@ -509,7 +834,7 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                             <TextInput
                                 type={"text"}
                                 disabled
-                                value={deposit.branch.unit}
+                                value={deposit.unit}
                                 name="transaction_date"
                                 className="w-full"
                             />
@@ -518,6 +843,7 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                         <div className="mb-3 flex-1"></div>
                     </div>
                 </div>
+
                 <div className="p-3 bg-white rounded shadow mt-3">
                     <form onSubmit={onSubmitForm}>
                         <span className="font-semibold mb-3">Transaksi</span>
@@ -527,6 +853,8 @@ const Transaksi = ({ branch, employees, deposit, ...props }) => {
                                 <TextInput
                                     type={"month"}
                                     required
+                                    max={validating.max_date}
+                                    min={validating.min_date}
                                     onChange={onInputChange}
                                     name="transaction_date"
                                     className="w-full"

@@ -463,24 +463,24 @@ class DepositController extends Controller
 
                 // change deposit
 
-                $transaksi_sw = [
-                    // keluarkan dari branch awal
-                    [
-                        "branch_id" =>  $branch_asal,
-                        "transaction_date" => $tanggal_tabungan,
-                        "sw_transaction" =>  'K',
-                        "sw_transaction_type" => 'KM',
-                        "sw_debit" => 0,
-                        "sw_kredit" => $sw_balance,
 
-                        "sw_transaction" =>  'K',
-                        "sw_transaction_type" => 'KM',
-                        "sk_debit" => 0,
-                        "sk_kredit" => $sk_balance,
-                        "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
-                        "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
-                    ],
+                $deposit->deposit_transactions()->create([
+                    "branch_id" =>  $branch_asal,
+                    "transaction_date" => $tanggal_tabungan,
+                    "sw_transaction" =>  'K',
+                    "sw_transaction_type" => 'KM',
+                    "sw_debit" => 0,
+                    "sw_kredit" => $sw_balance,
 
+                    "sw_transaction" =>  'K',
+                    "sw_transaction_type" => 'KM',
+                    "sk_debit" => 0,
+                    "sk_kredit" => $sk_balance,
+                    "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
+                    "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
+                ]);
+
+                $deposit_mutation = $deposit->deposit_transactions()->create(
                     [
                         "branch_id" => $deposit->branch_id,
                         "transaction_date" => $tanggal_tabungan,
@@ -495,11 +495,11 @@ class DepositController extends Controller
                         "sk_kredit" => 0,
                         "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
                         "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
-                    ],
-                ];
+                    ]
+                );
 
-
-                $deposit->deposit_transactions()->createMany($transaksi_sw);
+                $deposit_mutation->idx_transaction = $deposit_mutation->id;
+                $deposit_mutation->save();
             }
             $deposit->save();
             DB::commit();

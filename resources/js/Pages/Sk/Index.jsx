@@ -403,7 +403,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         e.preventDefault();
         console.log(serverFilter);
         setLoading(true);
-        router.visit(route("simpanan.index"), {
+        router.visit(route("sksw.skswdashboard"), {
             data: { ...serverFilter },
         });
     };
@@ -439,7 +439,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                         />
 
                         <LinkButton
-                            href={route("simpanan.index")}
+                            href={route("sksw.skswdashboard")}
                             title={"Reset"}
                             size={"sm"}
                             theme="other"

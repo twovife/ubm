@@ -50,6 +50,11 @@ class Deposit extends Model
         return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }
 
+    public function deposit_transactions()
+    {
+        return $this->hasMany(DepositTransaction::class, 'deposit_id', 'id');
+    }
+
     public function scopeWithFilter($query, $getFilter)
     {
         return $query->when(auth()->user()->hasPermissionTo('unit'), function ($q) {

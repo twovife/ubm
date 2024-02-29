@@ -257,10 +257,10 @@ export default function Authenticated({
                                 lists={[
                                     {
                                         id: "103",
-                                        href: route("simpanan.index"),
+                                        href: route("sksw.skswdashboard"),
                                         name: "Dashboard SKSW",
                                         active: route().current(
-                                            "simpanan.index"
+                                            "sksw.skswdashboard"
                                         ),
                                     },
                                     {

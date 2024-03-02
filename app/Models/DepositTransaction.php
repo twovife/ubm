@@ -22,6 +22,7 @@ class DepositTransaction extends Model
         'sk_debit',
         'sk_kredit',
         'transaction_input_user_id',
+        'idx_transaction',
     ];
 
     public function deposit()

@@ -472,8 +472,8 @@ class DepositController extends Controller
                     "sw_debit" => 0,
                     "sw_kredit" => $sw_balance,
 
-                    "sw_transaction" =>  'K',
-                    "sw_transaction_type" => 'KM',
+                    "sk_transaction" =>  'K',
+                    "sk_transaction_type" => 'KM',
                     "sk_debit" => 0,
                     "sk_kredit" => $sk_balance,
                     "transaction_input_user_id" => auth()->user()->employee_id ?? 1,

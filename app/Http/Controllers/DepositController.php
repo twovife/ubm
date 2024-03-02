@@ -354,39 +354,37 @@ class DepositController extends Controller
         try {
             DB::beginTransaction();
             if ($request->transaction == "D") {
-                if ($request->nominal_sw > 0) {
 
-                    $sk_balance = ($deposit->deposit_transactions->sum('sk_debit') - $deposit->deposit_transactions->sum('sk_kredit'));
-                    $sw_balance = ($deposit->deposit_transactions->sum('sw_debit') - $deposit->deposit_transactions->sum('sw_kredit'));
-
-
-                    $req_sw_balance = $request->saldo_awal_sw;
-                    $req_sk_balance = $request->saldo_awal_sk;
-
-                    $after_sw_balance = $req_sw_balance + $request->nominal_sw;
-                    $after_sk_balance = $req_sk_balance + $request->nominal_sk;
-
-                    if ($sw_balance !== $req_sw_balance || $sk_balance !== $req_sk_balance) {
-                        return redirect()->route('sksw.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
-                    }
+                $sk_balance = ($deposit->deposit_transactions->sum('sk_debit') - $deposit->deposit_transactions->sum('sk_kredit'));
+                $sw_balance = ($deposit->deposit_transactions->sum('sw_debit') - $deposit->deposit_transactions->sum('sw_kredit'));
 
 
-                    $deposit->deposit_transactions()->create([
-                        "branch_id" => $deposit->branch_id,
-                        "transaction_date" => $tanggal_tabungan,
-                        "sw_transaction" =>  $request->transaction,
-                        "sw_transaction_type" => $request->transaction_type,
-                        "sw_debit" => $request->nominal_sw,
-                        "sw_kredit" => 0,
+                $req_sw_balance = $request->saldo_awal_sw;
+                $req_sk_balance = $request->saldo_awal_sk;
 
-                        "sk_transaction" => $request->transaction,
-                        "sk_transaction_type" => $request->transaction_type,
-                        "sk_debit" => $request->nominal_sk,
-                        "sk_kredit" => 0,
-                        "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
-                        "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
-                    ]);
+                $after_sw_balance = $req_sw_balance + $request->nominal_sw;
+                $after_sk_balance = $req_sk_balance + $request->nominal_sk;
+
+                if ($sw_balance !== $req_sw_balance || $sk_balance !== $req_sk_balance) {
+                    return redirect()->route('sksw.transaksi', $deposit->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
                 }
+
+
+                $deposit->deposit_transactions()->create([
+                    "branch_id" => $deposit->branch_id,
+                    "transaction_date" => $tanggal_tabungan,
+                    "sw_transaction" =>  $request->transaction,
+                    "sw_transaction_type" => $request->transaction_type,
+                    "sw_debit" => $request->nominal_sw,
+                    "sw_kredit" => 0,
+
+                    "sk_transaction" => $request->transaction,
+                    "sk_transaction_type" => $request->transaction_type,
+                    "sk_debit" => $request->nominal_sk,
+                    "sk_kredit" => 0,
+                    "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
+                    "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
+                ]);
             }
 
             if ($request->transaction == "K") {
@@ -482,7 +480,7 @@ class DepositController extends Controller
 
                 $deposit_mutation = $deposit->deposit_transactions()->create(
                     [
-                        "branch_id" => $deposit->branch_id,
+                        "branch_id" => $request->branch_id,
                         "transaction_date" => $tanggal_tabungan,
                         "sw_transaction" =>  'D',
                         "sw_transaction_type" => 'DM',
@@ -497,7 +495,8 @@ class DepositController extends Controller
                         "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
                     ]
                 );
-
+                $deposit->branch_id = $request->branch_id;
+                $deposit->save();
                 $deposit_mutation->idx_transaction = $deposit_mutation->id;
                 $deposit_mutation->save();
             }

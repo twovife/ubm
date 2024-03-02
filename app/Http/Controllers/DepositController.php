@@ -162,7 +162,7 @@ class DepositController extends Controller
 
             if (!$deposit->wasRecentlyCreated) {
                 if ($deposit->sk_balance > 0 || $deposit->sw_balance > 0) {
-                    return redirect()->route('sksw.index')->withErrors('Karyawan masih mempunyai tabungan aktiv');
+                    return redirect()->route('sksw.dashboard')->withErrors('Karyawan masih mempunyai tabungan aktiv');
                 }
                 $deposit->update([
                     'sw_balance' => $request->sw_balance,
@@ -192,7 +192,7 @@ class DepositController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('sksw.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+            return redirect()->route('sksw.dashboard')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
         return redirect()->route('sksw.transaksi', $deposit->id)->with('message', 'Data berhasil ditambahkan');
     }

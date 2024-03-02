@@ -31,7 +31,7 @@ const Wilayah = ({ server_filters, batch_datas, ...props }) => {
         e.preventDefault();
         // console.log(serverFilter);
         setLoading(true);
-        router.visit(route("sksw.skswwilayah"), {
+        router.visit(route("sksw.wilayah"), {
             data: { ...serverFilter },
         });
     };

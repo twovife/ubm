@@ -383,7 +383,7 @@ class DepositController extends Controller
                     "sk_debit" => $request->nominal_sk,
                     "sk_kredit" => 0,
                     "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
-                    "idx_transaction" => $deposit->deposit_transactions->sortByDesc('id')->first()->idx_transaction,
+                    "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->sortByDesc('id')->first()->idx_transaction,
                 ]);
             }
 
@@ -424,7 +424,7 @@ class DepositController extends Controller
 
                     "sk_kredit" => $request->nominal_sk,
                     "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
-                    "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
+                    "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->sortByDesc('id')->first()->idx_transaction,
                 ]);
 
 
@@ -475,7 +475,7 @@ class DepositController extends Controller
                     "sk_debit" => 0,
                     "sk_kredit" => $sk_balance,
                     "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
-                    "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->first()->idx_transaction,
+                    "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->sortByDesc('id')->first()->idx_transaction,
                 ]);
 
                 $deposit_mutation = $deposit->deposit_transactions()->create(
@@ -492,7 +492,6 @@ class DepositController extends Controller
                         "sk_debit" => $sk_balance,
                         "sk_kredit" => 0,
                         "transaction_input_user_id" => auth()->user()->employee_id ?? 1,
-                        "idx_transaction" => $deposit->deposit_transactions->sortByDesc('transaction_date')->sortByDesc('id')->first()->idx_transaction,
                     ]
                 );
                 $deposit->branch_id = $request->branch_id;

@@ -328,7 +328,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                             key={index}
                             className="bg-white border-b hover:bg-blue-50 text-xs even:bg-gray-100"
                         >
-                            <th className="px-6 flex items-center justify-start gap-3">
+                            <th className="px-6 flex items-center justify-between gap-3">
                                 {(currentPage - 1) * itemsPerPage + index + 1}
                                 {item.keterangan == "unpaid" ? (
                                     <Link

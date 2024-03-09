@@ -226,7 +226,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                     />
                                     <TextInput
                                         className="block w-full"
-                                        type="month"
+                                        type="date"
                                         disabled
                                         value={curent_unit.now}
                                     />

@@ -17,14 +17,10 @@ return new class extends Migration
             $table->id();
             $table->date('transaction_date')->nullable();
             $table->integer('unit_saving_account_id')->nullable();
-            $table->integer('transaction_month')->nullable();
-            $table->integer('transaction_year')->nullable();
-            $table->bigInteger('debit')->nullable();
-            $table->bigInteger('kredit')->nullable();
-            $table->bigInteger('saldo')->nullable();
+            $table->bigInteger('nominal')->nullable();
+            $table->bigInteger('jasa_modal')->nullable();
             $table->string('transaction')->nullable();
             $table->string('transaction_type')->nullable();
-            $table->bigInteger('jasa_modal')->nullable();
             $table->timestamps();
         });
     }

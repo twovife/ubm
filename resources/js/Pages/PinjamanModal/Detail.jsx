@@ -221,6 +221,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                 <TextInput
                                     className="block w-full"
                                     type="date"
+                                    required
                                     name="transaction_date"
                                     min={curent_unit.awalbulan}
                                     max={curent_unit.akhirbulan}
@@ -263,8 +264,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                     className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
                                     allowDecimals={false}
                                     prefix="Rp. "
-                                    min={1}
-                                    required
+                                    min={0}
                                     onValueChange={onHandleCurencyChange}
                                     value={data.jasa}
                                     placeholder={

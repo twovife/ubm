@@ -11,11 +11,8 @@ class UnitSaving extends Model
     protected $fillable = [
         "transaction_date",
         "unit_saving_account_id",
-        "transaction_month",
-        "transaction_year",
-        "debit",
-        "kredit",
-        "saldo",
+        "nominal",
+        "jasa_modal",
         "transaction",
         "transaction_type"
     ];

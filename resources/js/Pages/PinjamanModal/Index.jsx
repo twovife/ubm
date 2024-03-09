@@ -143,11 +143,6 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         });
     };
 
-    // jabatan;
-    // tanggal_pinjaman;
-
-    // keterangan;
-
     const headers = [
         {
             title: "Wilayah",
@@ -162,61 +157,80 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
         {
             title: "Action",
             column: "id_pinjaman_owner",
-            class_name: "bg-green-100 whitespace-nowrap",
+            class_name: "bg-green-100/80 whitespace-nowrap",
             format: "action",
         },
         {
             title: "Tanggal Transaksi Terakhir",
             column: "transaksi_terakhir_owner",
-            class_name: "bg-green-100 whitespace-nowrap",
+            class_name: "bg-green-100/80 whitespace-nowrap",
             format: "date",
         },
         {
             title: "Total Pinjaman",
             column: "nominal_pinjaman_owner",
-            class_name: "bg-green-100 whitespace-nowrap",
+            class_name: "bg-green-100/80 whitespace-nowrap",
             format: "currency",
         },
         {
             title: "Total Setoran Pinjaman",
             column: "total_setoran_pinjaman_owner",
-            class_name: "bg-green-100 whitespace-nowrap",
+            class_name: "bg-green-100/80 whitespace-nowrap",
             format: "currency",
         },
         {
             title: "Saldo Pinjaman",
             column: "saldo_pinjaman_owner",
-            class_name: "bg-green-100 whitespace-nowrap",
+            class_name: "bg-green-100/80 whitespace-nowrap",
             format: "currency",
         },
+
         {
             title: "Action",
             column: "id_pinjaman_pusat",
-            class_name: "bg-yellow-100 whitespace-nowrap",
+            class_name: "bg-yellow-100/60 whitespace-nowrap",
             format: "action",
         },
         {
             title: "Tanggal Transaksi Terakhir",
             column: "transaksi_terakhir_pusat",
-            class_name: "bg-yellow-100 whitespace-nowrap",
+            class_name: "bg-yellow-100/60 whitespace-nowrap",
             format: "date",
         },
         {
             title: "Total Pinjaman",
             column: "nominal_pinjaman_pusat",
-            class_name: "bg-yellow-100 whitespace-nowrap",
+            class_name: "bg-yellow-100/60 whitespace-nowrap",
             format: "currency",
         },
         {
             title: "Total Setoran Pinjaman",
             column: "total_setoran_pinjaman_pusat",
-            class_name: "bg-yellow-100 whitespace-nowrap",
+            class_name: "bg-yellow-100/60 whitespace-nowrap",
             format: "currency",
         },
         {
             title: "Saldo Pinjaman",
             column: "saldo_pinjaman_pusat",
-            class_name: "bg-yellow-100 whitespace-nowrap",
+            class_name: "bg-yellow-100/60 whitespace-nowrap",
+            format: "currency",
+        },
+        {
+            title: "Total Pinjaman",
+            column: "total_pinjaman",
+            class_name: "bg-blue-100 whitespace-nowrap",
+            format: "currency",
+        },
+        {
+            title: "Total Saldo Pinjaman",
+            column: "total_saldo_pinjaman",
+            class_name: "bg-blue-100 whitespace-nowrap",
+            format: "currency",
+        },
+        {
+            title: "Total Jasa Modala",
+            column: "jasa_modal_owner",
+            class_name: "bg-blue-100 whitespace-nowrap",
             format: "currency",
         },
         // {

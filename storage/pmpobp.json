@@ -1,0 +1,2602 @@
+[
+  {
+    "branch_id": 8,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 8,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 10,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 10,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 17,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 150000000
+  },
+  {
+    "branch_id": 18,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 18,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 18,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 19,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 20,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 20,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 20,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 70000000
+  },
+  {
+    "branch_id": 20,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 30000000
+  },
+  {
+    "branch_id": 20,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 150000000
+  },
+  {
+    "branch_id": 20,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 7000000
+  },
+  {
+    "branch_id": 21,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 175000000
+  },
+  {
+    "branch_id": 21,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 75000000
+  },
+  {
+    "branch_id": 24,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 150000000
+  },
+  {
+    "branch_id": 25,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 450000000
+  },
+  {
+    "branch_id": 25,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 36408000
+  },
+  {
+    "branch_id": 26,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 27,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 425000000
+  },
+  {
+    "branch_id": 27,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 60000000
+  },
+  {
+    "branch_id": 27,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 10550000
+  },
+  {
+    "branch_id": 28,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 32,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 40000000
+  },
+  {
+    "branch_id": 32,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 32,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 70000000
+  },
+  {
+    "branch_id": 33,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 33,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 33,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 80000000
+  },
+  {
+    "branch_id": 33,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 33,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 34,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 35,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 37,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 41,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 41,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 350000000
+  },
+  {
+    "branch_id": 41,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 41582000
+  },
+  {
+    "branch_id": 42,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 450000000
+  },
+  {
+    "branch_id": 42,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 61582000
+  },
+  {
+    "branch_id": 47,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 150000000
+  },
+  {
+    "branch_id": 48,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 48,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 49,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 49,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 50,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 50,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 50,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 50,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 51,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 51,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 51,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 85000000
+  },
+  {
+    "branch_id": 51,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 150000000
+  },
+  {
+    "branch_id": 51,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 53,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 53,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 55,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 55,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 57,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 57,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 250000000
+  },
+  {
+    "branch_id": 57,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 57,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 58,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 58,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 58,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 300000000
+  },
+  {
+    "branch_id": 60,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 512352000
+  },
+  {
+    "branch_id": 60,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 61,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 517952000
+  },
+  {
+    "branch_id": 61,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 63,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 521852000
+  },
+  {
+    "branch_id": 64,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 522452000
+  },
+  {
+    "branch_id": 66,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 67,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 489915000
+  },
+  {
+    "branch_id": 67,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 67,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 72,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 73,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 485858000
+  },
+  {
+    "branch_id": 73,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 74,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 508437000
+  },
+  {
+    "branch_id": 74,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 75,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 77,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 450000000
+  },
+  {
+    "branch_id": 78,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 78,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 496874000
+  },
+  {
+    "branch_id": 78,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 166987000
+  },
+  {
+    "branch_id": 79,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 450000000
+  },
+  {
+    "branch_id": 80,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 500352000
+  },
+  {
+    "branch_id": 83,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 85,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 86,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 200000000
+  },
+  {
+    "branch_id": 86,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 87,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PM",
+    "nominal": 200000000
+  },
+  {
+    "branch_id": 89,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 192539000
+  },
+  {
+    "branch_id": 89,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 300000000
+  },
+  {
+    "branch_id": 89,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 90,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 514539000
+  },
+  {
+    "branch_id": 90,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 92,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 517324000
+  },
+  {
+    "branch_id": 92,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 93,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 504324000
+  },
+  {
+    "branch_id": 93,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 94,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 409000000
+  },
+  {
+    "branch_id": 94,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 80000000
+  },
+  {
+    "branch_id": 95,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 409000000
+  },
+  {
+    "branch_id": 95,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 80000000
+  },
+  {
+    "branch_id": 96,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 35000000
+  },
+  {
+    "branch_id": 96,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 38074000
+  },
+  {
+    "branch_id": 96,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 400000000
+  },
+  {
+    "branch_id": 96,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 97,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 484074000
+  },
+  {
+    "branch_id": 97,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 98,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 232900000
+  },
+  {
+    "branch_id": 98,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 150000000
+  },
+  {
+    "branch_id": 98,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 150000000
+  },
+  {
+    "branch_id": 99,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 250550000
+  },
+  {
+    "branch_id": 99,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 200000000
+  },
+  {
+    "branch_id": 99,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 100,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 483650000
+  },
+  {
+    "branch_id": 101,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 350000000
+  },
+  {
+    "branch_id": 101,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 150000000
+  },
+  {
+    "branch_id": 102,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 350000000
+  },
+  {
+    "branch_id": 102,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 150000000
+  },
+  {
+    "branch_id": 103,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 28000000
+  },
+  {
+    "branch_id": 103,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 502250000
+  },
+  {
+    "branch_id": 104,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 533050000
+  },
+  {
+    "branch_id": 105,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 200000000
+  },
+  {
+    "branch_id": 105,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 100000000
+  },
+  {
+    "branch_id": 105,
+    "employee_id": "",
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "PO",
+    "nominal": 200000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2574,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 4000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 374,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1023,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 12000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 516,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1137,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 117,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 285,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 8000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 185,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 399,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 400,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 341,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2558,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 340,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 7000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 508,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 70,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 81,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 80,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2564,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 166,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 370,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 120,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 509,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 7000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1067,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 887,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 349,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 557,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 968,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1114,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 43451000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 41,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 2250000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2568,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 190,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 6000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 369,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 7500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 373,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 7500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 397,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5250000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 4521,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 3500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 195,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2429,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 698,
+    "transaction_date": "2023-12-30",
+    "transaction": "K",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2574,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 374,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1023,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 4000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1137,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 117,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 509,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1067,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 887,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 349,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 557,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 968,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1114,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2568,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 190,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 369,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 373,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 397,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1750000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 195,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2429,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 698,
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": 8,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 35000000
+  },
+  {
+    "branch_id": 8,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 30000000
+  },
+  {
+    "branch_id": 8,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": 10,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 15000000
+  },
+  {
+    "branch_id": 17,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 380032000
+  },
+  {
+    "branch_id": 18,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 110000000
+  },
+  {
+    "branch_id": 19,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 25000000
+  },
+  {
+    "branch_id": 20,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 200000000
+  },
+  {
+    "branch_id": 20,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 24,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 70000000
+  },
+  {
+    "branch_id": 24,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": 26,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 28,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": 32,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 155000000
+  },
+  {
+    "branch_id": 32,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": 33,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 120000000
+  },
+  {
+    "branch_id": 33,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 37,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 37,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": 41,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 425000000
+  },
+  {
+    "branch_id": 41,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 66582000
+  },
+  {
+    "branch_id": 42,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 480000000
+  },
+  {
+    "branch_id": 42,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 31582000
+  },
+  {
+    "branch_id": 47,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 65000000
+  },
+  {
+    "branch_id": 47,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": 48,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": 48,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 49,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 40000000
+  },
+  {
+    "branch_id": 49,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 50,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 110000000
+  },
+  {
+    "branch_id": 51,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 45000000
+  },
+  {
+    "branch_id": 51,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 53,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 30000000
+  },
+  {
+    "branch_id": 53,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 57,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 30000000
+  },
+  {
+    "branch_id": 58,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 58,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 60,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 190000000
+  },
+  {
+    "branch_id": 60,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 40000000
+  },
+  {
+    "branch_id": 61,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 380000000
+  },
+  {
+    "branch_id": 61,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 15000000
+  },
+  {
+    "branch_id": 63,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 160852000
+  },
+  {
+    "branch_id": 63,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 25000000
+  },
+  {
+    "branch_id": 64,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 355100000
+  },
+  {
+    "branch_id": 64,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": 66,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 40000000
+  },
+  {
+    "branch_id": 67,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 538218000
+  },
+  {
+    "branch_id": 67,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 26753000
+  },
+  {
+    "branch_id": 72,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": 72,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 73,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 442156000
+  },
+  {
+    "branch_id": 73,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 53702000
+  },
+  {
+    "branch_id": 74,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 423722000
+  },
+  {
+    "branch_id": 74,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": 77,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 26138000
+  },
+  {
+    "branch_id": 77,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 256875000
+  },
+  {
+    "branch_id": 78,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 404666000
+  },
+  {
+    "branch_id": 78,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 34817000
+  },
+  {
+    "branch_id": 79,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 110480000
+  },
+  {
+    "branch_id": 79,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 38210000
+  },
+  {
+    "branch_id": 80,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": 86,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 152290000
+  },
+  {
+    "branch_id": 86,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 12443000
+  },
+  {
+    "branch_id": 87,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": 92,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 200549000
+  },
+  {
+    "branch_id": 92,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 26870000
+  },
+  {
+    "branch_id": 93,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 77300000
+  },
+  {
+    "branch_id": 93,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 14770000
+  },
+  {
+    "branch_id": 94,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 270000000
+  },
+  {
+    "branch_id": 94,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 70000000
+  },
+  {
+    "branch_id": 95,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 200000000
+  },
+  {
+    "branch_id": 95,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 96,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 135850000
+  },
+  {
+    "branch_id": 98,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 30000000
+  },
+  {
+    "branch_id": 100,
+    "employee_id": "",
+    "transaction_date": "2023-12-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 68600000
+  },
+  {
+    "branch_id": 17,
+    "employee_id": "",
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2574,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 374,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1023,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 4000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 516,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1137,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 117,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 285,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 4000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 185,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 399,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 400,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 341,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2558,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 340,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 508,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 70,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 81,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 80,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 166,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 370,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 120,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1067,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 887,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 349,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 557,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 968,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 1114,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2568,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 190,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2000000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 369,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 373,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 2500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 397,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1750000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 195,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 1500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 2429,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3500000
+  },
+  {
+    "branch_id": "",
+    "employee_id": 698,
+    "transaction_date": "2024-01-01",
+    "transaction": "D",
+    "transaction_type": "BP",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": 25,
+    "employee_id": "",
+    "transaction_date": "2024-01-02",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 270544000
+  },
+  {
+    "branch_id": 87,
+    "employee_id": "",
+    "transaction_date": "2024-01-02",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": 33,
+    "employee_id": "",
+    "transaction_date": "2024-01-12",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 115000000
+  },
+  {
+    "branch_id": 35,
+    "employee_id": "",
+    "transaction_date": "2024-01-12",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 80000000
+  },
+  {
+    "branch_id": 34,
+    "employee_id": "",
+    "transaction_date": "2024-01-13",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 72500000
+  },
+  {
+    "branch_id": 35,
+    "employee_id": "",
+    "transaction_date": "2024-01-18",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": 57,
+    "employee_id": "",
+    "transaction_date": "2024-01-22",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 2800000
+  },
+  {
+    "branch_id": 89,
+    "employee_id": "",
+    "transaction_date": "2024-01-22",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 428507000
+  },
+  {
+    "branch_id": 34,
+    "employee_id": "",
+    "transaction_date": "2024-01-23",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 99,
+    "employee_id": "",
+    "transaction_date": "2024-01-24",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 90000000
+  },
+  {
+    "branch_id": 33,
+    "employee_id": "",
+    "transaction_date": "2024-01-25",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": 90,
+    "employee_id": "",
+    "transaction_date": "2024-01-25",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 471060000
+  },
+  {
+    "branch_id": 10,
+    "employee_id": "",
+    "transaction_date": "2024-01-26",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 5000000
+  },
+  {
+    "branch_id": 96,
+    "employee_id": "",
+    "transaction_date": "2024-01-26",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 60000000
+  },
+  {
+    "branch_id": 97,
+    "employee_id": "",
+    "transaction_date": "2024-01-26",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 233000000
+  },
+  {
+    "branch_id": 101,
+    "employee_id": "",
+    "transaction_date": "2024-01-26",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 102,
+    "employee_id": "",
+    "transaction_date": "2024-01-26",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 50000000
+  },
+  {
+    "branch_id": 50,
+    "employee_id": "",
+    "transaction_date": "2024-01-29",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 66,
+    "employee_id": "",
+    "transaction_date": "2024-01-29",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 8800000
+  },
+  {
+    "branch_id": 18,
+    "employee_id": "",
+    "transaction_date": "2024-01-30",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 29700000
+  },
+  {
+    "branch_id": 19,
+    "employee_id": "",
+    "transaction_date": "2024-01-30",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 89,
+    "employee_id": "",
+    "transaction_date": "2024-01-30",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 28317000
+  },
+  {
+    "branch_id": 98,
+    "employee_id": "",
+    "transaction_date": "2024-01-30",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 60000000
+  },
+  {
+    "branch_id": 25,
+    "employee_id": "",
+    "transaction_date": "2024-01-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 25683000
+  },
+  {
+    "branch_id": 26,
+    "employee_id": "",
+    "transaction_date": "2024-01-31",
+    "transaction": "D",
+    "transaction_type": "PM",
+    "nominal": 20000000
+  },
+  {
+    "branch_id": 27,
+    "employee_id": "",
+    "transaction_date": "2024-01-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 37550000
+  },
+  {
+    "branch_id": 90,
+    "employee_id": "",
+    "transaction_date": "2024-01-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 99,
+    "employee_id": "",
+    "transaction_date": "2024-01-31",
+    "transaction": "D",
+    "transaction_type": "PO",
+    "nominal": 40000000
+  }
+]

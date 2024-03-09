@@ -178,7 +178,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                         className="mb-1"
                                     />
                                     <TextInput
-                                        type="month"
+                                        type="date"
                                         disabled
                                         value={curent_unit.now}
                                     />

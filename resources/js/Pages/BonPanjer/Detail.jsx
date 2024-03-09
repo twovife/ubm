@@ -15,7 +15,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
 
     const { data, setData, post, processing, errors } = useForm({
         debit: 10000,
-        transaction_date: curent_unit.now,
+        transaction_date: "",
     });
 
     const onInputChange = (e) => {
@@ -227,8 +227,12 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                     <TextInput
                                         className="block w-full"
                                         type="date"
-                                        disabled
-                                        value={curent_unit.now}
+                                        required
+                                        name="transaction_date"
+                                        min={curent_unit.awalbulan}
+                                        max={curent_unit.akhirbulan}
+                                        value={data.transaction_date}
+                                        onChange={onInputChange}
                                     />
                                 </div>
                             </div>

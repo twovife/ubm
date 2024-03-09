@@ -148,6 +148,9 @@ class UnitSavingController extends Controller
         $saving = $unitSavingAccount->load('unitssaving');
         $saldo_before = 0;
         $enableToAdd = true;
+        $awalBulanIni = $unitSavingAccount->load('unitssaving')->unitssaving()->max('transaction_date');
+        $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
+
         $data = $saving->unitssaving->map(function ($item) use (&$saldo_before, $saving, &$enableToAdd) {
             // dd($item->nominal);
             $saldo = $saldo_before + $item->nominal;
@@ -167,7 +170,7 @@ class UnitSavingController extends Controller
 
         return Inertia::render('UnitSaving/Detail', [
             'details' => $data,
-            'curent_unit' => ['id' => $unitSavingAccount->id, 'wilayah' => $saving->load('branch')->branch->wilayah, 'unit' => $saving->load('branch')->branch->unit, 'now' => Carbon::now()->format('Y-m-d'), 'editable' => $enableToAdd]
+            'curent_unit' => ['id' => $unitSavingAccount->id, 'wilayah' => $saving->load('branch')->branch->wilayah, 'unit' => $saving->load('branch')->branch->unit, 'awalbulan' => $awalBulanIni, 'akhirbulan' => $akhirBulanIni, 'editable' => $enableToAdd]
         ]);
     }
 
@@ -401,6 +404,8 @@ class UnitSavingController extends Controller
 
     public function bon_panjer_show(UnitSavingAccount $unitSavingAccount)
     {
+        $awalBulanIni = $unitSavingAccount->load('unitssaving')->unitssaving()->max('transaction_date');
+        $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
         $saving = $unitSavingAccount->unitssaving;
 
         $nominal_pinjaman = 0;
@@ -428,7 +433,7 @@ class UnitSavingController extends Controller
 
         return Inertia::render('BonPanjer/Detail', [
             'details' => $data,
-            'curent_unit' => ['id' => $unitSavingAccount->id, 'wilayah' => $unitSavingAccount->employee->branch->wilayah, 'unit' => $unitSavingAccount->employee->branch->unit, 'nama_karyawan' => $unitSavingAccount->employee->nama_karyawan, 'now' => Carbon::now()->format('Y-m-d'), 'editable' => $enableToAdd]
+            'curent_unit' => ['id' => $unitSavingAccount->id, 'wilayah' => $unitSavingAccount->employee->branch->wilayah, 'unit' => $unitSavingAccount->employee->branch->unit, 'nama_karyawan' => $unitSavingAccount->employee->nama_karyawan, 'awalbulan' => $awalBulanIni, 'akhirbulan' => $akhirBulanIni, 'editable' => $enableToAdd]
         ]);
     }
 
@@ -577,23 +582,30 @@ class UnitSavingController extends Controller
         ]);
 
 
-        $isExistPm = UnitSavingAccount::where('branch_id', $request->branch_id)->where('account_type', 'PM')->whereNull('note')->count();
-        $isExistPo = UnitSavingAccount::where('branch_id', $request->branch_id)->where('account_type', 'PO')->whereNull('note')->count();
+        // $isExistPm = UnitSavingAccount::where('branch_id', $request->branch_id)->where('account_type', 'PM')->whereNull('note')->count();
+        // $isExistPo = UnitSavingAccount::where('branch_id', $request->branch_id)->where('account_type', 'PO')->whereNull('note')->count();
 
-        if ($isExistPm > 0 && $request->source == "PM") {
-            return redirect()->route('pinjamanmodal.pinjaman_modal_create')->withErrors('Karyawan masih mempunyai pinjaman yang belum Lunas');
-        }
-        if ($isExistPo > 0 && $request->source == "PO") {
-            return redirect()->route('pinjamanmodal.pinjaman_modal_create')->withErrors('Karyawan masih mempunyai pinjaman yang belum Lunas');
-        }
+        // if ($isExistPm > 0 && $request->source == "PM") {
+        //     return redirect()->route('pinjamanmodal.pinjaman_modal_create')->withErrors('Karyawan masih mempunyai pinjaman yang belum Lunas');
+        // }
+        // if ($isExistPo > 0 && $request->source == "PO") {
+        //     return redirect()->route('pinjamanmodal.pinjaman_modal_create')->withErrors('Karyawan masih mempunyai pinjaman yang belum Lunas');
+        // }
 
 
         try {
             DB::beginTransaction();
-            $unitAccount = UnitSavingAccount::create([
-                "branch_id" => $branch->id,
-                "account_type" => 'PM',
-            ]);
+            $unitAccount = UnitSavingAccount::firstOrCreate(
+                [
+                    "branch_id" => $branch->id,
+                    "account_type" =>  $request->source
+                ],
+                [
+                    'branch_id' => $branch->id,
+                    'employee_id' => null,
+                    'account_type' =>   $request->source
+                ]
+            );
 
 
             $unitsaving = $unitAccount->unitssaving()->create([

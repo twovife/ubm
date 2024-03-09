@@ -21,7 +21,13 @@ import { BiRefresh } from "react-icons/bi";
 import { NumericFormat } from "react-number-format";
 // import { BiRefresh } from "react-icons/bi";
 
-const Dashboard = ({ branch, server_filters, datas, ...props }) => {
+const Dashboard = ({
+    branch,
+    server_filters,
+    datas,
+    saldo_akhir,
+    ...props
+}) => {
     const {
         tahunAngka,
         bulanAngka,
@@ -43,7 +49,7 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
         "wilayah"
     );
 
-    const itemsPerPage = 100;
+    const itemsPerPage = 1000;
     const {
         filters,
         setFilters,
@@ -178,7 +184,7 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
         },
         {
             title: "Unit",
-            column: "branch",
+            column: "unit",
         },
         {
             title: "Nama Karyawan",
@@ -189,21 +195,25 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
             title: "Saldo Sebelumnya",
             column: "saldo_sebelumya",
             format: "currency",
+            class_name: "whitespace-nowrap bg-gray-100",
         },
         {
             title: "Debit",
             column: "debit",
             format: "currency",
+            class_name: "whitespace-nowrap bg-green-100",
         },
         {
             title: "Kredit",
             column: "kredit",
             format: "currency",
+            class_name: "whitespace-nowrap bg-red-100",
         },
         {
             title: "Saldo",
             column: "saldo",
             format: "currency",
+            class_name: "whitespace-nowrap bg-blue-100",
         },
     ];
 
@@ -432,14 +442,6 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
                             className={"text-sm"}
                             onChange={onServerFilterChange}
                         />
-                        {/* <SelectList
-                            value={serverFilter.wilayah}
-                            name={"wilayah"}
-                            options={branchess}
-                            nullValue={true}
-                            className={"text-sm"}
-                            onChange={onServerFilterChange}
-                        /> */}
 
                         <PrimaryButton
                             href={route("simpanan.detailPerBulan")}
@@ -543,7 +545,7 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
                     {tBodyGenerator()}
                     <tfoot>
                         <tr className="bg-blue-200 font-semibold text-black">
-                            <td className={`px-6 py-1`} colSpan={"6"}>
+                            <td className={`px-6 py-1`} colSpan={"7"}>
                                 TOTAL
                             </td>
                             <td className={`px-6 py-1`}>
@@ -579,7 +581,7 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
                             <td className={`px-6 py-1`}>
                                 <div className={`whitespace-nowrap text-right`}>
                                     <NumericFormat
-                                        value={totals.saldo}
+                                        value={saldo_akhir}
                                         displayType={"text"}
                                         thousandSeparator={","}
                                         prefix={"Rp. "}

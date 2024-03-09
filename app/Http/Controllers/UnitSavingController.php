@@ -31,13 +31,14 @@ class UnitSavingController extends Controller
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
 
-        $data = UnitSaving::with('savingaccount')->whereBetween('transaction_date', [$getFilter->tanggal_start, $getFilter->tanggal])->orderBy('transaction_date')->get();
-        $data_before = UnitSaving::with('savingaccount')->where('transaction_date', "<", $getFilter->tanggal_start)->select('debit', 'kredit')->get();
-        $saldo_before = $data_before->sum('debit') - $data_before->sum('kredit');
+        $data = UnitSaving::with('savingaccount')->whereBetween('transaction_date', [$getFilter->tanggal_start, $getFilter->tanggal])->whereNot('transaction_type', 'PO')->orderBy('transaction_date')->get();
+        $data_before = UnitSaving::with('savingaccount')->where('transaction_date', "<", $getFilter->tanggal_start)->whereNot('transaction_type', 'PO')->get();
+        // dd($data_before);
+        $saldo_before = $data_before->where('transaction', 'D')->sum('nominal') - $data_before->where('transaction', 'K')->sum('nominal');
         $saldo = $saldo_before;
         $data_bulanan = $data->map(function ($item) use (&$saldo) {
             $saldo_before_counting = $saldo;
-            $saldo = $saldo + ($item->debit - $item->kredit);
+            $saldo = $item->transaction == "D" ? $saldo + $item->nominal : $saldo - $item->nominal;
             // dd($item->savingaccount->employee);
             return [
                 'id' => $item->id,
@@ -48,8 +49,8 @@ class UnitSavingController extends Controller
                 'unit' =>  $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->unit : $item->savingaccount->branch->unit,
                 'nama_karyawan' => $item->transaction_type == "BP" ? $item->savingaccount->employee->nama_karyawan : null,
                 'saldo_sebelumya' => $saldo_before_counting,
-                'debit' => $item->debit,
-                'kredit' => $item->kredit,
+                'debit' => $item->transaction == "D" ? $item->nominal : 0,
+                'kredit' => $item->transaction == "K" ? $item->nominal : 0,
                 'saldo' => $saldo,
             ];
         })->values();
@@ -58,6 +59,7 @@ class UnitSavingController extends Controller
         return Inertia::render('UnitSaving/Dashboard', [
             'datas' => $data_bulanan,
             'branch' => $branch,
+            'saldo_akhir' => $saldo,
             'server_filters' => $getFilter ?? null
         ]);
     }

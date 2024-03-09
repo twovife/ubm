@@ -435,22 +435,32 @@ class UnitSavingController extends Controller
 
     public function bon_panjer_post(UnitSavingAccount $unitSavingAccount, Request $request)
     {
+        $pinjaman = $unitSavingAccount->load('unitssaving')->unitssaving()->where('transaction', 'K')->sum('nominal');
+        $total_angsuran = $unitSavingAccount->load('unitssaving')->unitssaving()->where('transaction', 'D')->sum('nominal');
+        $saldo = $pinjaman - $total_angsuran;
+
+        if ($saldo - $request->debit < 0) {
+            return redirect()->route('bonpanjer.bon_panjer_show', $unitSavingAccount->id)->withErrors('Saldo Tidak Boleh lebih dari 0');
+        }
+
         $currentDate = Carbon::now();
         $request->validate([
             'debit' => ['required', 'integer']
         ]);
-
         try {
             DB::beginTransaction();
-
-
             $unitsaving = $unitSavingAccount->unitssaving()->create([
                 "transaction_date" => $currentDate->format('Y-m-d'),
-
                 "nominal" => $request->debit,
                 "transaction" => "D",
                 "transaction_type" => "BP"
             ]);
+
+            $tanggal_awal =    Carbon::now()->startOfMonth()->format('Y-m-d');
+            if ($saldo - $request->debit == 0) {
+                $unitSavingAccount->note = $tanggal_awal;
+                $unitSavingAccount->save();
+            }
 
             DB::commit();
         } catch (Exception $e) {
@@ -611,6 +621,7 @@ class UnitSavingController extends Controller
 
     public function pinjaman_modal_show(UnitSavingAccount $unitSavingAccount)
     {
+
         $saving = $unitSavingAccount->unitssaving;
         $awalBulanIni = $unitSavingAccount->load('unitssaving')->unitssaving()->max('transaction_date');
         $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');

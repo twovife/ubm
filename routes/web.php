@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BonPrivateController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DepositController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InstalmentController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MantriAppController;
+use App\Http\Controllers\OperationalBookController;
 use App\Http\Controllers\OptionalDepositController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
@@ -121,6 +123,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/bon_panjer_post/{unitSavingAccount}', [UnitSavingController::class, 'bon_panjer_post'])->name('bon_panjer_post');
         // Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
         // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
+    });
+
+    Route::controller(OperationalBookController::class)->group(function () {
+        Route::prefix('bonpriv')->name('bonpriv.')->group(function () {
+            Route::get('/', 'index_bonpriv')->name('index_bonpriv');
+            Route::get('/create', 'create_bonpriv')->name('create_bonpriv');
+            Route::post('/', 'store')->name('store');
+        });
+        Route::prefix('bop')->name('bop.')->group(function () {
+            //
+        });
     });
 
     Route::prefix('pinjamanmodal')->name('pinjamanmodal.')->group(function () {

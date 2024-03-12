@@ -31,7 +31,7 @@ class UnitSavingController extends Controller
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
 
-        $data = UnitSaving::with('savingaccount')->whereBetween('transaction_date', [$getFilter->tanggal_start, $getFilter->tanggal])->whereNot('transaction_type', 'PO')->orderBy('transaction_date')->get();
+        $data = UnitSaving::with('savingaccount')->whereBetween('transaction_date', [$getFilter->tanggal_start, $getFilter->tanggal])->whereNot('transaction_type', 'PO')->get();
         $data_before = UnitSaving::with('savingaccount')->where('transaction_date', "<", $getFilter->tanggal_start)->whereNot('transaction_type', 'PO')->get();
         // dd($data_before);
         $saldo_before = $data_before->where('transaction', 'D')->sum('nominal') - $data_before->where('transaction', 'K')->sum('nominal');

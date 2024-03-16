@@ -103,11 +103,11 @@ class UnitSavingController extends Controller
                         'branch_id' => $saving_perwilayah['branch_id'],
                         'total' => $saving_perwilayah['total'],
                         'lastmont' => Carbon::createFromDate($saving_perwilayah['last_year_payment'], $saving_perwilayah['last_month_payment'], 1)->format('Y-m'),
-                        'thismont' => Carbon::createFromDate($getFilter->transaction_year, $getFilter->transaction_month, 1)->format('Y-m'),
+                        'thismont' => Carbon::createFromDate($getFilter->tanggal, 1)->endOfMonth()->format('Y-m'),
                         'last_month_payment' => $saving_perwilayah['total'] == 0 ? 1
-                            : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->format('Y-m') == Carbon::createFromDate($getFilter->transaction_year, $getFilter->transaction_month, 1)->format('Y-m') ? 0 : 1),
+                            : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($getFilter->tanggal, 1)->endOfMonth()->format('Y-m') ? 0 : 1),
                         'tanggungan' => $saving_perwilayah['total'] == 0 ? 'Belum Ada Transaksi'
-                            : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->format('Y-m') == Carbon::createFromDate($getFilter->transaction_year, $getFilter->transaction_month, 1)->format('Y-m') ? 'Nihil' : 'Ada Tanggungan'),
+                            : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($getFilter->tanggal, 1)->endOfMonth()->format('Y-m') ? 'Nihil' : 'Ada Tanggungan'),
                     ];
                 })->values(),
             ];
@@ -181,13 +181,15 @@ class UnitSavingController extends Controller
     {
         $currentDate = Carbon::now();
         $request->validate([
-            'debit' => ['required', 'integer']
+            'debit' => ['required', 'integer'],
+            'transaction_date' => ['required', 'date']
         ]);
 
         try {
             DB::beginTransaction();
             $unitsaving = $unitSavingAccount->unitssaving()->create([
-                "transaction_date" => $currentDate->format('Y-m-d'),
+                // "transaction_date" => $currentDate->format('Y-m-d'),
+                "transaction_date" => $request->transaction_date,
                 "nominal" => $request->debit,
                 "transaction" => "D",
                 "transaction_type" => "TB"
@@ -677,6 +679,9 @@ class UnitSavingController extends Controller
             'jasa' => ['required', 'integer'],
             'transaction_date' => ['required', 'date'],
         ]);
+
+        // dd($request->transaction_date);
+
         $date = Carbon::create($request->transaction_date);
 
         try {

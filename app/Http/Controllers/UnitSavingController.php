@@ -156,7 +156,7 @@ class UnitSavingController extends Controller
         $data = $saving->unitssaving->map(function ($item) use (&$saldo_before, $saving, &$enableToAdd) {
             // dd($item->nominal);
             $saldo = $saldo_before + $item->nominal;
-            $enableToAdd = Carbon::create($item->transaction_date)->format('Y-m') == Carbon::now()->format('Y-m') ? false : true;
+            $enableToAdd = Carbon::create($item->transaction_date)->format('Y-m') == Carbon::now()->subMonth(1)->format('Y-m') ? false : true;
             $saldo_sebelum = $saldo_before;
             $saldo_before = $saldo;
             return [
@@ -223,7 +223,7 @@ class UnitSavingController extends Controller
 
 
             $unitsaving = $unitAccount->unitssaving()->create([
-                "transaction_date" => $currentDate->format('Y-m-d'),
+                "transaction_date" => $currentDate->subMonths(1)->endOfMonth()->format('Y-m-d'),
                 "transaction_month" => $currentDate->month,
                 "transaction_year" => $currentDate->year,
 
@@ -614,7 +614,6 @@ class UnitSavingController extends Controller
 
             $unitsaving = $unitAccount->unitssaving()->create([
                 "transaction_date" => $currentDate->format('Y-m-d'),
-
                 "nominal" => $request->setoran_awal,
                 "transaction" => "K",
                 "transaction_type" => $request->source
@@ -689,7 +688,6 @@ class UnitSavingController extends Controller
 
             $unitsaving = $unitSavingAccount->unitssaving()->create([
                 "transaction_date" => $request->transaction_date,
-
                 "nominal" => $request->debit,
                 "jasa_modal" => $request->jasa,
                 "transaction" => "D",

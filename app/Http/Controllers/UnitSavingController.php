@@ -156,7 +156,7 @@ class UnitSavingController extends Controller
         $data = $saving->unitssaving->map(function ($item) use (&$saldo_before, $saving, &$enableToAdd) {
             // dd($item->nominal);
             $saldo = $saldo_before + $item->nominal;
-            $enableToAdd = Carbon::create($item->transaction_date)->format('Y-m') == Carbon::now()->subMonth(1)->format('Y-m') ? false : true;
+            $enableToAdd = Carbon::create($item->transaction_date)->format('Y-m') == Carbon::now()->format('Y-m') ? false : true;
             $saldo_sebelum = $saldo_before;
             $saldo_before = $saldo;
             return [
@@ -179,7 +179,6 @@ class UnitSavingController extends Controller
 
     public function savingdetailspost(UnitSavingAccount $unitSavingAccount, Request $request)
     {
-        $currentDate = Carbon::now();
         $request->validate([
             'debit' => ['required', 'integer'],
             'transaction_date' => ['required', 'date']
@@ -188,7 +187,6 @@ class UnitSavingController extends Controller
         try {
             DB::beginTransaction();
             $unitsaving = $unitSavingAccount->unitssaving()->create([
-                // "transaction_date" => $currentDate->format('Y-m-d'),
                 "transaction_date" => $request->transaction_date,
                 "nominal" => $request->debit,
                 "transaction" => "D",
@@ -223,7 +221,7 @@ class UnitSavingController extends Controller
 
 
             $unitsaving = $unitAccount->unitssaving()->create([
-                "transaction_date" => $currentDate->subMonths(1)->endOfMonth()->format('Y-m-d'),
+                "transaction_date" => $currentDate->format('Y-m-d'),
                 "transaction_month" => $currentDate->month,
                 "transaction_year" => $currentDate->year,
 
@@ -243,46 +241,6 @@ class UnitSavingController extends Controller
         }
 
         return redirect()->route('unitsaving.index')->with('message', 'Data berhasil ditambahkan');
-    }
-
-
-    public function show(UnitSaving $unitSaving)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\UnitSaving  $unitSaving
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(UnitSaving $unitSaving)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UnitSaving  $unitSaving
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, UnitSaving $unitSaving)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\UnitSaving  $unitSaving
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(UnitSaving $unitSaving)
-    {
-        //
     }
 
 
@@ -586,15 +544,6 @@ class UnitSavingController extends Controller
         ]);
 
 
-        // $isExistPm = UnitSavingAccount::where('branch_id', $request->branch_id)->where('account_type', 'PM')->whereNull('note')->count();
-        // $isExistPo = UnitSavingAccount::where('branch_id', $request->branch_id)->where('account_type', 'PO')->whereNull('note')->count();
-
-        // if ($isExistPm > 0 && $request->source == "PM") {
-        //     return redirect()->route('pinjamanmodal.pinjaman_modal_create')->withErrors('Karyawan masih mempunyai pinjaman yang belum Lunas');
-        // }
-        // if ($isExistPo > 0 && $request->source == "PO") {
-        //     return redirect()->route('pinjamanmodal.pinjaman_modal_create')->withErrors('Karyawan masih mempunyai pinjaman yang belum Lunas');
-        // }
 
 
         try {

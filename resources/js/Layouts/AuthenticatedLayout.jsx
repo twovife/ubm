@@ -156,98 +156,6 @@ export default function Authenticated({
                                 ]}
                             />
 
-                            {/* <SideBarDropDown
-                                onClick={() => onClickDropDownHandler(2)}
-                                title={"Buku Transaksi Drop"}
-                                active={route().current(
-                                    "unit.pinjaman.request.*"
-                                )}
-                                colapse={colapse}
-                                dropdownId={2}
-                                lists={[
-                                    {
-                                        id: "1",
-                                        href: route(
-                                            "unit.pinjaman.request.requestPinjaman"
-                                        ),
-                                        name: "Transaksi Drop",
-                                        active: route().current(
-                                            "unit.pinjaman.request.requestPinjaman"
-                                        ),
-                                    },
-                                    {
-                                        id: "2",
-                                        href: route(
-                                            "unit.pinjaman.request.bukutransaksi"
-                                        ),
-                                        name: "Rekap Transaksi Drop",
-                                        active: route().current(
-                                            "unit.pinjaman.request.bukutransaksi"
-                                        ),
-                                    },
-                                ]}
-                            />
-
-                            <SideBarDropDown
-                                onClick={() => onClickDropDownHandler(3)}
-                                title={"Data Customer"}
-                                active={route().current("unit.customer.*")}
-                                colapse={colapse}
-                                dropdownId={3}
-                                lists={[
-                                    {
-                                        id: "1",
-                                        href: route("unit.customer.index"),
-                                        name: "Data Customer",
-                                        active: route().current(
-                                            "unit.customer.*"
-                                        ),
-                                    },
-                                ]}
-                            />
-
-                            <SideBarDropDown
-                                onClick={() => onClickDropDownHandler(4)}
-                                title={"Buku Angsuran"}
-                                active={route().current(
-                                    "unit.pinjaman.angsuran.*"
-                                )}
-                                colapse={colapse}
-                                dropdownId={4}
-                                lists={[
-                                    {
-                                        id: "1",
-                                        href: route(
-                                            "unit.pinjaman.angsuran.index"
-                                        ),
-                                        name: "Data Storting",
-                                        active: route().current(
-                                            "unit.pinjaman.angsuran.index"
-                                        ),
-                                    },
-                                    {
-                                        id: "2",
-                                        href: route(
-                                            "unit.pinjaman.angsuran.indexmb"
-                                        ),
-                                        name: "Data Storting MB",
-                                        active: route().current(
-                                            "unit.pinjaman.angsuran.indexmb"
-                                        ),
-                                    },
-                                    {
-                                        id: "3",
-                                        href: route(
-                                            "unit.pinjaman.request.requestPinjaman"
-                                        ),
-                                        name: "Pembayaran Angsuran ML",
-                                        active: route().current(
-                                            "unit.pinjaman.request.requestPinjaman"
-                                        ),
-                                    },
-                                ]}
-                            /> */}
-
                             <SideBarDropDown
                                 onClick={() => onClickDropDownHandler("sksw")}
                                 title={"SKSW"}
@@ -256,7 +164,7 @@ export default function Authenticated({
                                 dropdownId={"sksw"}
                                 lists={[
                                     {
-                                        id: "103",
+                                        id: "1",
                                         href: route("sksw.dashboard"),
                                         name: "Dashboard SKSW",
                                         active: route().current(
@@ -264,19 +172,19 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "100",
+                                        id: "2",
                                         href: route("sksw.global"),
                                         name: "SKSW Global",
                                         active: route().current("sksw.global"),
                                     },
                                     {
-                                        id: "101",
+                                        id: "3",
                                         href: route("sksw.wilayah"),
                                         name: "SKSW Wilayah",
                                         active: route().current("sksw.wilayah"),
                                     },
                                     {
-                                        id: "102",
+                                        id: "4",
                                         href: route("sksw.unit"),
                                         name: "SKSW Unit",
                                         active: route().current("sksw.unit"),
@@ -322,7 +230,7 @@ export default function Authenticated({
                                 dropdownId={"simpanan_sejuta"}
                                 lists={[
                                     {
-                                        id: "103",
+                                        id: "1",
                                         href: route("unitsaving.dashboard"),
                                         name: "Dashboard Tabungan",
                                         active: route().current(
@@ -330,7 +238,7 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "100",
+                                        id: "2",
                                         href: route("unitsaving.index"),
                                         name: "Tabungan 1Jt",
                                         active: route().current(
@@ -338,13 +246,13 @@ export default function Authenticated({
                                         ),
                                     },
                                     {
-                                        id: "101",
+                                        id: "3",
                                         href: route("bonpanjer.bon_panjer"),
                                         name: "Bon Panjer",
                                         active: route().current("bonpanjer.*"),
                                     },
                                     {
-                                        id: "102",
+                                        id: "4",
                                         href: route(
                                             "pinjamanmodal.pinjaman_modal"
                                         ),
@@ -356,110 +264,39 @@ export default function Authenticated({
                                 ]}
                             />
 
-                            {/* <SideBarDropDown
-                                  onClick={() => onClickDropDownHandler(2)}
-                                  title={"Data Administrasi"}
-                                  active={route().current("unit.pinjaman*")}
-                                  colapse={colapse}
-                                  dropdownId={2}
-                                  lists={[
-                                      {
-                                          id: 1,
-                                          href: route(
-                                              "unit.pinjaman.request.requestPinjaman"
-                                          ),
-                                          name: "Buku Transaksi",
-                                          active: route().current(
-                                              "unit.pinjaman.request.*"
-                                          ),
-                                      },
-                                      {
-                                          id: 2,
-                                          href: route("unit.pinjaman.index"),
-                                          name: "Buku Storting",
-                                          active: route().current(
-                                              "unit.pinjaman.index"
-                                          ),
-                                      },
-                                      {
-                                          id: 3,
-                                          href: route("unit.pinjaman.angsuran.index"),
-                                          name: "Data Storting",
-                                          active: route().current(
-                                              "unit.pinjaman.angsuran.*"
-                                          ),
-                                      },
-                                  ]}
-                              /> */}
-                            {/* <SideBarDropDown
-                                  onClick={() => onClickDropDownHandler(2)}
-                                  title={"Administrator"}
-                                  active={route().current("administrator.*")}
-                                  colapse={colapse}
-                                  dropdownId={2}
-                                  lists={[
-                                      {
-                                          id: 1,
-                                          href: route("administrator.user.index"),
-                                          name: "User Management",
-                                          active: route().current(
-                                              "administrator.user.*"
-                                          ),
-                                      },
-                                      {
-                                          id: 2,
-                                          href: route("administrator.branches.index"),
-                                          name: "Managemen Unit",
-                                          active: route().current(
-                                              "administrator.branches.*"
-                                          ),
-                                      },
-                                  ]}
-                              /> */}
-
-                            {/* <SideBarDropDown
-                                  onClick={() => onClickDropDownHandler(3)}
-                                  title={"Administrasi Pusat"}
-                                  active={route().current("cabang-utama.*")}
-                                  colapse={colapse}
-                                  dropdownId={3}
-                                  lists={[
-                                      {
-                                          id: 1,
-                                          href: route("cabangutama.customer.index"),
-                                          name: "Data Customer",
-                                          active: route().current(
-                                              "cabangutama.customer.*"
-                                          ),
-                                      },
-                                  ]}
-                              /> */}
-
-                            {/* <SideBarDropDown
-                                  onClick={() => onClickDropDownHandler(4)}
-                                  title={"Administrasi Unit"}
-                                  active={route().current("cabang-utama.*")}
-                                  colapse={colapse}
-                                  dropdownId={4}
-                                  lists={[
-                                      {
-                                          id: 1,
-                                          href: route("cabangutama.customer.index"),
-                                          name: "Data Customer",
-                                          active: route().current(
-                                              "cabangutama.customer.*"
-                                          ),
-                                      },
-                                      {
-                                          id: 2,
-                                          href: route("unit.requestloan.index"),
-                                          name: "Data Customer",
-                                          active: route().current(
-                                              "unit.requestloan.index*"
-                                          ),
-                                      },
-                                  ]}
-                              /> */}
+                            <SideBarDropDown
+                                onClick={() =>
+                                    onClickDropDownHandler("BOP_Pusat")
+                                }
+                                title={"BOP Pusat"}
+                                active={
+                                    route().current("bop.*") ||
+                                    route().current("bonpriv.*") ||
+                                    route().current("mutation.*")
+                                }
+                                colapse={colapse}
+                                dropdownId={"BOP_Pusat"}
+                                lists={[
+                                    {
+                                        id: "1",
+                                        href: route("mutation.index"),
+                                        name: "Dashboard Mutasi BOP",
+                                        active: route().current("mutation.*"),
+                                    },
+                                    {
+                                        id: "2",
+                                        href: route("bop.index"),
+                                        name: "Setoran BOP",
+                                        active: route().current("bop.*"),
+                                    },
+                                    {
+                                        id: "3",
+                                        href: route("bonpriv.index"),
+                                        name: "Bon Prive",
+                                        active: route().current("bonpriv.*"),
+                                    },
+                                ]}
+                            />
                         </div>
                     )}
                 </div>

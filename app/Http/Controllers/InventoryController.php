@@ -72,27 +72,31 @@ class InventoryController extends Controller
         $nowTime = Carbon::now()->addMonths(1);
         $unitaset = Inventory::with('vehicle_detail.tax', 'aset_placement.branch')
             ->whereHas('vehicle_detail.tax', function ($query) use ($nowTime) {
-                $query->whereYear('tax_expired', '<=', $nowTime->year)
-                    ->whereMonth('tax_expired', '<=', $nowTime->month);
-            })
-            ->get();
+                $query->where('tax_expired', '<=', $nowTime);
+            })->get();
 
-        $data = collect($unitaset)->map(fn ($que) => [
+        // dd($unitaset->first()->aset_placement);
 
-            'id' => $que->id,
-            'unit' => $que->aset_placement->branch->unit,
-            'wilayah' => $que->aset_placement->branch->wilayah,
-            'pengguna' => $que->aset_placement->pengguna,
+        $data = collect($unitaset)->map(function ($que) {
+            // dd($que);
+            return [
 
-            'nama_aset' => $que->nama_aset,
-            'type_aset' => $que->type_aset,
-            'plat_nomor' => $que->vehicle_detail->plat_nomor,
-            'nama_stnk' => $que->vehicle_detail->nama_stnk,
 
-            'expired_date' => $que->vehicle_detail->tax->tax_expired,
-            'tanggal_stnk' => $que->vehicle_detail->tanggal_stnk,
-            'type_pajak' => Carbon::parse($que->vehicle_detail->tanggal_stnk)->format('Y-m') == Carbon::parse($que->vehicle_detail->tax->expired_date)->format('Y-m') ? "5 Tahunan" : "Tahunan",
-        ])->sortBy('id')->sortBy('unit')->values();
+                'id' => $que->id,
+                'unit' => $que->aset_placement->branch->unit,
+                'wilayah' => $que->aset_placement->branch->wilayah,
+                'pengguna' => $que->aset_placement->pengguna,
+
+                'nama_aset' => $que->nama_aset,
+                'type_aset' => $que->type_aset,
+                'plat_nomor' => $que->vehicle_detail->plat_nomor,
+                'nama_stnk' => $que->vehicle_detail->nama_stnk,
+
+                'expired_date' => $que->vehicle_detail->tax->tax_expired,
+                'tanggal_stnk' => $que->vehicle_detail->tanggal_stnk,
+                'type_pajak' => Carbon::parse($que->vehicle_detail->tanggal_stnk)->format('Y-m') == Carbon::parse($que->vehicle_detail->tax->expired_date)->format('Y-m') ? "5 Tahunan" : "Tahunan",
+            ];
+        })->sortBy('id')->sortBy('unit')->values();
 
         // dd($data);
 
@@ -329,13 +333,14 @@ class InventoryController extends Controller
                 '*.required' => ['wajib diisi'],
             ]
         );
+
         $tax_expired = $inventory->vehicle_detail->tax->tax_expired;
         $tanggal_stnk = $inventory->vehicle_detail->tax->tanggal_stnk;
 
         try {
             DB::beginTransaction();
             if ($request->type_pajak == 1) {
-                $dataSet =   $inventory->vehicle_detail->tax()->create([
+                $dataSet =   $inventory->vehicle_detail->taxes()->create([
                     "tax_payment" => $tax_expired,
                     "tax_expired" => Carbon::parse($tax_expired)->addYears(1)->format('Y-m-d'),
                     "tax_type" => $request->tax_type,
@@ -347,7 +352,7 @@ class InventoryController extends Controller
                 $inventory->vehicle_detail->tanggal_stnk = Carbon::parse($tanggal_stnk)->addYears(5)->format('Y-m-d');
                 $inventory->vehicle_detail->save(); // Simpan perubahan tanggal_stnk
 
-                $dataSet = $inventory->vehicle_detail->tax()->create([
+                $dataSet = $inventory->vehicle_detail->taxes()->create([
                     "tax_payment" => $tax_expired,
                     "tax_expired" => Carbon::parse($tax_expired)->addYears(1)->format('Y-m-d'),
                     "tax_type" => $request->tax_type,
@@ -358,10 +363,10 @@ class InventoryController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->route('aset.taxalert')->withErrors('input gagal silahkan refresh page terlebih dahulu');
         }
 
-        return redirect()->route('aset.taxalert');
+        return redirect()->route('aset.taxalert')->with('message', 'Data berhasil ditambahkan');
     }
 
     /**

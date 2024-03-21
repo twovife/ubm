@@ -27,12 +27,11 @@ class VehicleDetail extends Model
 
     public function taxes()
     {
-        return $this->hasMany(VehicleTax::class, 'vehicle_detail_id', 'id');
+        return $this->hasMany(VehicleTax::class, 'vehicle_detail_id', 'id')->orderBy('tax_payment', 'desc');
     }
-
 
     public function tax()
     {
-        return $this->hasOne(VehicleTax::class, 'vehicle_detail_id', 'id')->latestOfMany();
+        return $this->hasOne(VehicleTax::class, 'vehicle_detail_id', 'id')->ofMany('tax_payment', 'max');
     }
 }

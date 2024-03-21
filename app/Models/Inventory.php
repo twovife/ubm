@@ -28,9 +28,10 @@ class Inventory extends Model
     {
         return $this->hasMany(AssetPlacement::class, 'inventory_id', 'id');
     }
+
     public function aset_placement()
     {
-        return $this->hasOne(AssetPlacement::class, 'inventory_id', 'id')->latestOfMany();
+        return $this->hasOne(AssetPlacement::class, 'inventory_id', 'id')->ofMany('tanggal_masuk', 'max');
     }
 
     public function scopeWithFilter($query, $getFilter)

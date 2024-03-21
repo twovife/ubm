@@ -8,19 +8,19 @@ import React from "react";
 
 export const ModalHer = ({ datas, onClose }) => {
     const { tax, show } = datas;
-    console.log(tax);
     const { data, setData, put, processing, errors, reset } = useForm({
         type_pajak: "",
     });
-
+    console.log(errors);
     const onChangeHandler = (e) => {
         const { value, name } = e.target;
         setData(name, value);
     };
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
-        put(route("aset.update", tax?.id));
+        await put(route("aset.update", tax?.id));
+        closedModal();
     };
 
     const closedModal = () => {

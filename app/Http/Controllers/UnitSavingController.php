@@ -208,9 +208,10 @@ class UnitSavingController extends Controller
     {
         $currentDate = Carbon::now();
         $request->validate([
-            'branch_id' => ['required', 'integer', 'unique:unit_saving_accounts'],
+            'branch_id' => ['required', 'integer'],
             'setoran_awal' => ['required', 'integer']
         ]);
+
 
         try {
             DB::beginTransaction();

@@ -25,4 +25,9 @@ class Branch extends Model
     {
         return $this->hasOne(UnitSavingAccount::class, 'branch_id', 'id');
     }
+
+    public function bop_accounts()
+    {
+        return $this->hasMany(BopAccountTransaction::class, 'branch_id', 'id');
+    }
 }

@@ -191,7 +191,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                             </div>
                             <div className="mb-2">
                                 <InputLabel
-                                    value={"Setor Awal Simpanan Wajib"}
+                                    value={"Setoran Simpanan Wajib"}
                                     className="mb-1"
                                 />
                                 <CurrencyInput

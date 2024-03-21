@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BonPrivateController;
+use App\Http\Controllers\BopTransactionController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DepositController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UnitSavingController;
 use App\Http\Controllers\UserController;
+use App\Models\BopTransaction;
 use App\Models\Deposit;
 use App\Models\Inventory;
 use App\Models\OneMilDeposit;
@@ -125,16 +127,6 @@ Route::middleware('auth')->group(function () {
         // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });
 
-    Route::controller(OperationalBookController::class)->group(function () {
-        Route::prefix('bonpriv')->name('bonpriv.')->group(function () {
-            Route::get('/', 'index_bonpriv')->name('index_bonpriv');
-            Route::get('/create', 'create_bonpriv')->name('create_bonpriv');
-            Route::post('/', 'store')->name('store');
-        });
-        Route::prefix('bop')->name('bop.')->group(function () {
-            //
-        });
-    });
 
     Route::prefix('pinjamanmodal')->name('pinjamanmodal.')->group(function () {
         Route::get('/', [UnitSavingController::class, 'pinjaman_modal'])->name('pinjaman_modal');
@@ -146,6 +138,27 @@ Route::middleware('auth')->group(function () {
         // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });
 
+    Route::controller(BopTransactionController::class)->group(function () {
+        Route::prefix('bonpriv')->name('bonpriv.')->group(function () {
+            Route::get('/', 'index_bonpriv')->name('index');
+            Route::get('/create', 'create_bonpriv')->name('create');
+            Route::post('/', 'store_bonpriv')->name('store');
+            Route::get('/{bopAccountTransaction}', 'show_bonpriv')->name('show');
+            Route::post('/{bopAccountTransaction}', 'update_bonpriv')->name('update');
+        });
+        Route::prefix('bop')->name('bop.')->group(function () {
+            Route::get('/', 'index_bop')->name('index');
+            Route::get('/create/{branch}', 'create_bop')->name('create');
+            Route::post('/', 'store_bop')->name('store');
+            Route::get('/{bopAccountTransaction}', 'show_bop')->name('show');
+            Route::post('/{bopAccountTransaction}', 'update_bop')->name('update');
+        });
+        Route::prefix('mutation')->name('mutation.')->group(function () {
+            Route::get('/', 'index_mutation')->name('index');
+            Route::get('/create', 'create_mutation')->name('create');
+            Route::post('/', 'store_mutation')->name('store');
+        });
+    });
 
 
 

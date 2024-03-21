@@ -19,7 +19,7 @@ import { NumericFormat } from "react-number-format";
 import { ModalHer } from "./ModalHer";
 
 const AlertKendaraan = ({ datas, ...props }) => {
-    const itemsPerPage = 20;
+    const itemsPerPage = 1000;
     const {
         filters,
         setFilters,

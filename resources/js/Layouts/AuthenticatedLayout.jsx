@@ -126,7 +126,7 @@ export default function Authenticated({
                         />
                     </div>
                     {auth.user.permissions.some(
-                        (item) => item.name === "area"
+                        (item) => item.name === "unit"
                     ) ? (
                         // jika mantri
                         <div className="mt-3">

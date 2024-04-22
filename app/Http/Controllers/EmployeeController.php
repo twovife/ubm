@@ -354,10 +354,9 @@ class EmployeeController extends Controller
     public function reactive(Request $request, Employee $employee)
     {
         $data = [
-            ['history_date' => $employee->pencairan_simpanan_w_by ?? $request->history_date, 'keterangan' => 'resign',    'record' => $employee->pencairan_simpanan_date ? 'telah mengambil simpanan' : "simpanan belum pernah diambil"],
             ['history_date' => $employee->date_resign, 'keterangan' => 'resign', 'record' => $employee->resign_status . ' dengan alasan ' . $employee->resign_reson],
             ['history_date' => $request->history_date, 'keterangan' => 'resign',    'record' =>  $employee->load('branch')->branch->unit . ' sebagai ' . $employee->getOriginal('jabatan')],
-            ['history_date' => $employee->pencairan_simpanan_date ?? $request->history_date, 'keterangan' => 'reactive',    'record' => 'Kembali menjadi karyawan']
+            ['history_date' => $request->history_date, 'keterangan' => 'reactive',    'record' => 'Kembali menjadi karyawan']
         ];
 
         try {

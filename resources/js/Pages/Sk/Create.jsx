@@ -39,7 +39,7 @@ const Create = ({ branch, employees, ...props }) => {
         const filteredObjects = branch
             .filter((obj) => obj.wilayah == value)
             .map(({ id, unit }) => ({ id: id, display: unit, value: id }));
-        console.log(filteredObjects);
+        // console.log(filteredObjects);
         setUnit(filteredObjects);
         setEmployee(null);
     };

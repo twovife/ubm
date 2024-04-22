@@ -18,7 +18,7 @@ import { IoMdAdd } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 
 const Index = ({ branch, server_filters, datas, ...props }) => {
-    console.log(branch);
+    // console.log(branch);
     const itemsPerPage = 100;
     const {
         filters,
@@ -399,7 +399,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
     };
     const onBranchChange = (e) => {
         e.preventDefault();
-        console.log(serverFilter);
+        // console.log(serverFilter);
         setLoading(true);
         router.visit(route("sksw.dashboard"), {
             data: { ...serverFilter },

@@ -26,7 +26,7 @@ class DepositController extends Controller
     {
         $branch = Branch::query()->select('wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
-        })->distinct()->get();
+        })->distinct()->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
 
 
         $getFilter = new \stdClass;
@@ -38,7 +38,7 @@ class DepositController extends Controller
 
         $branch = Branch::query()->select('id', 'unit', 'wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
-        })->distinct()->get();
+        })->distinct()->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
 
         $simpanan = Deposit::with('employee', 'branch', 'deposit_transactions')->withFilter($getFilter)->get();
         // dd($simpanan);
@@ -74,54 +74,13 @@ class DepositController extends Controller
     }
     public function index()
     {
-
-        // dd('asd');
-        // $sksw = json_decode(file_get_contents(storage_path('sksw2.json')), true);
-        // dd($sksw);
-
-
-
-        // $getFilter = new \stdClass;
-        // $getFilter = (object) request()->all();
-        // $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
-        // $getFilter->transaction_month = request()->transaction_month ??  Carbon::now()->month;
-        // $getFilter->branch_id = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : (request()->branch_id ?? 1);
-        // $getFilter->wilayah = -1;
-
-        // $branch = Branch::query()->select('id', 'unit', 'wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-        //     $q->where('id', auth()->user()->employee->branch_id);
-        // })->distinct()->get();
-
-        // $simpanan = Deposit::with('employee', 'branch')->where('sw_balance', ">", 0)->orWhere('sk_balance', ">", 0)->withFilter($getFilter)->get();
-
-        // $data = collect($simpanan)->map(fn ($que) => [
-        //     'id' => $que->id,
-        //     'wilayah' => $que->branch->wilayah ?? '-',
-        //     'unit' => $que->branch->unit ?? '-',
-        //     'nama' => $que->employee->nama_karyawan ?? '-',
-        //     'jabatan' => $que->employee->jabatan ?? '-',
-        //     'tanggal_tabungan' => $que->tgl_tabugan ?? '-',
-        //     'saldo_sw' => $que->sw_balance ?? 0,
-        //     'saldo_sk' => $que->sk_balance ?? 0,
-        //     'total_saldo' => ($que->sw_balance ?? 0) + ($que->sk_balance ?? 0),
-        //     'isactive' => $que->employee->date_resign ? 1 : 2,
-        //     'status_karyawan' => $que->employee->date_resign ? 'Non Aktiv' : 'Aktiv',
-        //     'hiredate' => $que->employee->hire_date ?? '-',
-        // ])->sortBy('wilayah')->sortBy('unit')->values();
-
-
-        // // dd($data);
-        // return Inertia::render('Sk/Index', [
-        //     'datas' => $data,
-        //     'branch' => $branch,
-        //     'server_filters' => $getFilter ?? null
-        // ]);
+        //
     }
 
 
     public function create()
     {
-        $branch = Branch::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('id', auth()->user()->employee->branch_id))->get();
+        $branch = Branch::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('id', auth()->user()->employee->branch_id))->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
         $employee = Employee::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('branch_id', auth()->user()->employee->branch_id))->get();
         return Inertia::render('Sk/Create', [
             'branch' => $branch,
@@ -197,28 +156,6 @@ class DepositController extends Controller
         return redirect()->route('sksw.transaksi', $deposit->id)->with('message', 'Data berhasil ditambahkan');
     }
 
-    public function show(Deposit $deposit)
-    {
-        //
-    }
-
-
-    public function edit(Deposit $deposit)
-    {
-        //
-    }
-
-
-    public function update(Request $request, Deposit $deposit)
-    {
-        //
-    }
-
-
-    public function destroy(Deposit $deposit)
-    {
-        //
-    }
 
     public function swdestroy(MandatoryDepositTransaction $mandatoryDepositTransaction)
     {
@@ -277,7 +214,7 @@ class DepositController extends Controller
     public function transaksi(Deposit $deposit)
     {
 
-        $branch = Branch::where('id', '!=', $deposit->branch_id)->get();
+        $branch = Branch::where('id', '!=', $deposit->branch_id)->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
         $employee = Employee::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('branch_id', auth()->user()->employee->branch_id))->get();
         $deposit = $deposit->load('deposit_transactions.branch', 'branch', 'employee');
         $data_deposit = [
@@ -287,7 +224,7 @@ class DepositController extends Controller
             'nama_karyawan' => $deposit->employee->nama_karyawan,
             'unit' => $deposit->branch->unit,
         ];
-        // dd($data_deposit);
+
         $sw_balance = 0;
         $sk_balance = 0;
 
@@ -514,7 +451,7 @@ class DepositController extends Controller
     {
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
-        })->get();
+        })->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
 
         $simpanan = Deposit::with('employee', 'branch')->withFilter()->get();
 
@@ -535,7 +472,7 @@ class DepositController extends Controller
     {
         $branch = Branch::query()->select('wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
-        })->distinct()->get();
+        })->distinct()->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
 
         $getFilter = new \stdClass;
         $getFilter = (object) request()->all();
@@ -609,7 +546,7 @@ class DepositController extends Controller
     {
         $branch = Branch::query()->select('wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
-        })->distinct()->get();
+        })->distinct()->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
 
 
 
@@ -1081,7 +1018,7 @@ class DepositController extends Controller
 
         $branch = Branch::query()->select('wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
-        })->distinct()->get();
+        })->distinct()->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
 
         $getFilter = new \stdClass;
         $getFilter = (object) request()->all();
@@ -1157,7 +1094,7 @@ class DepositController extends Controller
     {
         $branch = Branch::query()->select('wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
-        })->distinct()->get();
+        })->distinct()->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
 
         $getFilter = new \stdClass;
         $getFilter = (object) request()->all();
@@ -1232,7 +1169,7 @@ class DepositController extends Controller
     {
         $branch = Branch::query()->select('wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
-        })->distinct()->get();
+        })->distinct()->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
 
         $getFilter = new \stdClass;
         $getFilter = (object) request()->all();

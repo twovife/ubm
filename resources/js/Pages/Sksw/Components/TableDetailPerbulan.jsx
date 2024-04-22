@@ -397,7 +397,6 @@ const TableDetailPerbulan = ({ data, branch, loading, setLoading }) => {
         return (
             <tbody>
                 {displayData.map((item, index) => {
-                    console.log(item);
                     return (
                         <tr
                             key={index}

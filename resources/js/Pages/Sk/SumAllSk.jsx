@@ -137,7 +137,7 @@ const SumAllSk = ({ server_filters, datas, ...props }) => {
     };
     const onBranchChange = (e) => {
         e.preventDefault();
-        console.log(serverFilter);
+        // console.log(serverFilter);
         setLoading(true);
         router.visit(route("simpanan.sumallsk"), {
             data: { ...serverFilter },

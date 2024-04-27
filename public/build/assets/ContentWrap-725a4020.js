@@ -1,1 +1,0 @@
-import{a as t}from"./app-a86ff94c.js";function o({className:a,children:r}){return t("div",{className:`bg-white dark:bg-gray-800 mx-auto text-gray-600 dark:text-gray-300 shadow-md p-4 rounded ${a}`,children:r})}export{o as C};

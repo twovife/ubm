@@ -308,23 +308,7 @@ const Transaksi = ({
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
                                     <NumericFormat
-                                        value={item.K_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
-                                    <NumericFormat
                                         value={item.D_sw}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
-                                    <NumericFormat
-                                        value={item.KM_sw}
                                         displayType={"text"}
                                         thousandSeparator={","}
                                         prefix={"Rp. "}
@@ -338,6 +322,23 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.K_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.KM_sw}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+
                                 <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
                                     <NumericFormat
                                         value={item.KRMD_sw}
@@ -381,14 +382,6 @@ const Transaksi = ({
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
                                     <NumericFormat
-                                        value={item.K_sk}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
-                                    <NumericFormat
                                         value={item.D_sk}
                                         displayType={"text"}
                                         thousandSeparator={","}
@@ -397,7 +390,7 @@ const Transaksi = ({
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
                                     <NumericFormat
-                                        value={item.KM_sk}
+                                        value={item.DM_sk}
                                         displayType={"text"}
                                         thousandSeparator={","}
                                         prefix={"Rp. "}
@@ -405,7 +398,15 @@ const Transaksi = ({
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
                                     <NumericFormat
-                                        value={item.DM_sk}
+                                        value={item.K_sk}
+                                        displayType={"text"}
+                                        thousandSeparator={","}
+                                        prefix={"Rp. "}
+                                    />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                    <NumericFormat
+                                        value={item.KM_sk}
                                         displayType={"text"}
                                         thousandSeparator={","}
                                         prefix={"Rp. "}

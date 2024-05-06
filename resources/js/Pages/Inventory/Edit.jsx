@@ -102,7 +102,7 @@ const Edit = ({ aset, branch, employees, title, ...props }) => {
             header={
                 <>
                     <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Tambah Baru Simpanan Sukarela
+                        Detail Kendaraan
                     </h2>
                     <div className="ml-auto flex items-center">
                         <LinkButton

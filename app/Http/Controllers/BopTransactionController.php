@@ -303,7 +303,7 @@ class BopTransactionController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-
+            dd($e);
             return redirect()->route('bop.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
 

@@ -25,7 +25,6 @@ export default function UpdatePasswordForm({ className }) {
     });
 
     const updatePassword = (e) => {
-        console.log("ditutul");
         e.preventDefault();
 
         put(route("password.update"), {

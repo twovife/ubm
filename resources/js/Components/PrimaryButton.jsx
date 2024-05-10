@@ -19,8 +19,8 @@ export default function PrimaryButton({
     if (theme == "primary") {
         themeclass =
             `${
-                active || disabled ? `bg-main-900` : `bg-main-500`
-            } disabled:hover:bg-main-800 hover:bg-main-700 focus:bg-main-600 focus:ring-main-500 text-white border border-transparent` +
+                active || disabled ? `bg-roman-900` : `bg-roman-500`
+            } disabled:hover:bg-roman-800 hover:bg-roman-700 focus:bg-roman-600 focus:ring-roman-500 text-white border border-transparent` +
             className;
     } else if (theme == "secondary") {
         themeclass =

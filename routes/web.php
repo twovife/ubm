@@ -76,6 +76,10 @@ Route::prefix('aset')->name('aset.')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
+    Route::controller(EmployeeController::class)->prefix('emp')->name('emp.')->group(function () {
+        Route::get('/', 'index')->name('index');
+    });
+
     Route::prefix('simpanan')->name('simpanan.')->group(function () {
         Route::get('/', [DepositController::class, 'index'])->name('index');
         Route::get('/create', [DepositController::class, 'create'])->name('create');

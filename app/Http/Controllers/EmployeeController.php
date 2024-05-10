@@ -28,7 +28,55 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
+
+    {
+        // dd(request()->branch_id);
+
+        $branch = Branch::orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
+        // dd($branch);
+        $emp = Employee::with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->when(request()->filled('branch_id'), function ($q) {
+            $q->where('branch_id', request()->branch_id);
+        })->limit(10)->get();
+
+
+        $data = collect($emp)->map(fn ($que) => [
+            'id' => $que->id,
+            'nama' => $que->nama_karyawan ?? '-',
+            'status' => $que->date_resign ? 3 : ($que->janis_jaminan == null ? 1 : 2),
+            'status_karyawan' => $que->date_resign ? $que->resign_status : ($que->janis_jaminan == null ? 'belum-lengkap' : "Aktif"),
+            'nik' => $que->nik ?? '-',
+            'alamat' => $que->alamat ?? '-',
+            'hire_date' => $que->hire_date ?? '-',
+            'masa_kerja' => now()->diffInYears(\Carbon\Carbon::parse($que->hire_date)) ?? '-',
+            'jabatan' => $que->jabatan == "mantri" ? "$que->jabatan - $que->area" : $que->jabatan ?? "-",
+            'area' => $que->area ?? '-',
+            'unit' => $que->branch?->unit ?? '-',
+            'wilayah' => $que->branch?->wilayah ?? '-',
+            'janis_jaminan' => !$que->janis_jaminan ? '-' : $que->janis_jaminan,
+            'tanggal_perpindahan' => $que->history?->history_date ?? null,
+            'history_perpindahan' => $que->history?->record ?? '-',
+            'keterangan_perpindahan' => $que->history?->keterangan ?? '-',
+            'date_resign' => $que->date_resign ?? null,
+            'resign_status' => $que->resign_status ?? '-',
+            'pencairan_simpanan_date' => $que->pencairan_simpanan_date ?? null,
+            'pencairan_simpanan_by' => $que->ttdss->nama_karyawan ?? '-',
+            'handover_jaminan' => $que->handover_jaminan ?? null,
+            'handover_jaminan_by' => $que->ttdjaminan->nama_karyawan ?? '-',
+            'pencairan_simpanan_w_date' => $que->pencairan_simpanan_w_date ?? null,
+            'pencairan_simpanan_w_by' => $que->ttdsw->pencairan_simpanan_w_by ?? '-',
+        ])->sortBy('status')->sortBy('unit')->sortBy('wilayah')->values();
+
+        // dd($data);
+
+        return Inertia::render('NewPage/Emp/Index', [
+            'employees' => $data,
+            'server_filter' => ['wilayah' => request()->filled('branch_id') ? $emp->first()->branch->wilayah : null, 'branch_id' => request()->branch_id, 'branch' => $branch]
+        ]);
+    }
+
+    public function indexx()
     {
 
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {

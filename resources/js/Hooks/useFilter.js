@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 
 function useFilter({ employees }) {
-    const [filterData, setFilterData] = useState({
-        name: "",
-        data_type: "",
-    });
-    const [showFilter, setShowFilter] = useState();
+    const [showFilter, setShowFilter] = useState(false);
+    const [filter, setFilter] = useState([]);
+    const [addFilter, setAddFilter] = useState({});
 
     useEffect(() => {
         const log = (e) => {
             if (e.target.classList.contains("filterthis")) {
                 setShowFilter(true);
-                setFilterData({
+                setAddFilter({
                     name: e.target.getAttribute("data-name"),
                     data_type: e.target.getAttribute("data-type"),
                 });
@@ -22,13 +20,12 @@ function useFilter({ employees }) {
             window.removeEventListener("click", log);
         };
     });
-    const [addFilter, setAddFilter] = useState({});
-    const employeeAfterFilter = employees.filter(item=>item.);
+    // const employeeAfterFilter = employees.filter(item=>item.);
     return {
-        filterData,
-        setFilterData,
         showFilter,
         setShowFilter,
+        filter,
+        setFilter,
         addFilter,
         setAddFilter,
     };

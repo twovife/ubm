@@ -2,42 +2,40 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import useServerFilter from "@/Hooks/useServerFilter";
 import { useForm } from "@inertiajs/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const Search = ({ branchFilled }) => {
+const Search = ({ loading, setLoading }) => {
     const {
-        dataWilayah,
-        branches,
-        filteredBranch,
+        wilayah,
         selectedWilayah,
-        selectedBranch_id,
+        setSelectedWilayah,
+        filteredBranch,
+        selectedBranch,
     } = useServerFilter();
+
     const { data, setData, get, processing, recentlySuccessful } = useForm({
-        branch_id: selectedBranch_id || "",
+        branch_id: selectedBranch ?? "",
     });
-
-    const [wilayah, setWilayah] = useState(selectedWilayah);
-    const [optBranch, setOptBranch] = useState(filteredBranch);
-
-    const onWilayahChange = (e) => {
-        const { value } = e.target;
-        setWilayah(value);
-
-        const branch = branches?.filter((item) => {
-            return item.wilayah == value;
-        });
-        setOptBranch(branch);
-        setData("branch_id", "");
-    };
 
     const onSearchChange = (e) => {
         const { name, value } = e.target;
         setData(name, value);
     };
+
+    const onOptWilayahChange = (e) => {
+        const { value } = e.target;
+        setSelectedWilayah(value);
+        setData({ branch_id: "" });
+    };
+
     const onSubmitSearch = (e) => {
         e.preventDefault();
         get(route("emp.index"), { only: ["employees", "server_filter"] });
     };
+
+    useEffect(() => {
+        setLoading(processing);
+    }, [processing]);
     return (
         <form
             onSubmit={onSubmitSearch}
@@ -45,17 +43,17 @@ const Search = ({ branchFilled }) => {
         >
             <SelectList
                 name="wilayah"
-                value={wilayah}
+                value={selectedWilayah}
                 nullValue={true}
-                options={dataWilayah}
-                onChange={onWilayahChange}
+                options={wilayah}
+                onChange={onOptWilayahChange}
             />
-            {wilayah >= 0 && (
+            {selectedWilayah !== "" && (
                 <SelectList
                     name="branch_id"
                     value={data.branch_id}
                     nullValue={true}
-                    options={optBranch}
+                    options={filteredBranch}
                     onChange={onSearchChange}
                 />
             )}

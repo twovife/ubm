@@ -1,9 +1,10 @@
-import { usePage } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
+import { useEffect, useState } from "react";
 
 function useServerFilter() {
     const { server_filter } = usePage().props;
 
-    const dataWilayah = [
+    const wilayah = [
         { id: 0, display: "Pusat", value: 0 },
         { id: 1, display: "Wilayah 1", value: 1 },
         { id: 2, display: "Wilayah 2", value: 2 },
@@ -25,19 +26,29 @@ function useServerFilter() {
             wilayah: item.wilayah,
         };
     });
-    const selectedWilayah = server_filter?.wilayah ?? null;
-    const selectedBranch_id = server_filter?.branch_id ?? null;
 
-    const filteredBranch = branches?.filter((item) => {
-        return item.wilayah == selectedWilayah;
-    });
+    const [selectedWilayah, setSelectedWilayah] = useState(
+        server_filter?.wilayah ?? ""
+    );
+    const selectedBranch = server_filter?.branch_id ?? "";
+    const [filteredBranch, setFilteredBranch] = useState();
+
+    useEffect(() => {
+        const branchFiltered =
+            selectedWilayah !== ""
+                ? branches?.filter((item) => {
+                      return item.wilayah == selectedWilayah;
+                  })
+                : "";
+        setFilteredBranch(branchFiltered);
+    }, [selectedWilayah]);
 
     return {
-        dataWilayah,
-        branches,
+        wilayah,
         selectedWilayah,
-        selectedBranch_id,
+        setSelectedWilayah,
         filteredBranch,
+        selectedBranch,
     };
 }
 

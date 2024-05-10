@@ -6,20 +6,21 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import React, { useEffect, useState } from "react";
 import Search from "./Component/Search";
 import { Link } from "@inertiajs/react";
-import { AiFillEdit } from "react-icons/ai";
+import { AiFillEdit, AiFillFilter } from "react-icons/ai";
 import dayjs from "dayjs";
 import TextInput from "@/Components/TextInput";
 import InputLabel from "@/Components/InputLabel";
 import FilterBox from "./Component/FilterBox";
 import useFilter from "@/Hooks/useFilter";
+import { IoMdCloseCircle } from "react-icons/io";
 
 const Index = ({ server_filter, employees, ...props }) => {
-    console.log(employees);
+    const [loading, setLoading] = useState(false);
     const {
-        filterData,
-        setFilterData,
         showFilter,
         setShowFilter,
+        filter,
+        setFilter,
         addFilter,
         setAddFilter,
     } = useFilter({
@@ -27,23 +28,28 @@ const Index = ({ server_filter, employees, ...props }) => {
     });
 
     return (
-        <Authenticated>
+        <Authenticated loading={loading}>
             <FilterBox
                 show={showFilter}
                 setShow={setShowFilter}
-                filterData={filterData}
-                setFilterData={setFilterData}
+                filter={filter}
+                setFilter={setFilter}
                 addFilter={addFilter}
                 setAddFilter={setAddFilter}
             />
             <Card judul="Daftar Karyawan">
                 <Card.subTitle>
-                    <div className="flex justify-end gap-3 items-center">
-                        <Search />
-                        <PrimaryButton
-                            className="block"
-                            title={"Tambah Baru"}
-                        />
+                    <div className="flex justify-between gap-3 items-center">
+                        <Card.startContent className={`flex-wrap`}>
+                            <Card.filterItem filter={filter} />
+                        </Card.startContent>
+                        <Card.endContent>
+                            <Search loading={loading} setLoading={setLoading} />
+                            <PrimaryButton
+                                className="block"
+                                title={"Tambah Baru"}
+                            />
+                        </Card.endContent>
                     </div>
                 </Card.subTitle>
                 <div className="overflow-auto max-h-[50vh] lg:max-h-[70vh]">

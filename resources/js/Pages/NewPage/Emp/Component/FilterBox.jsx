@@ -3,29 +3,16 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useLayoutEffect, useState } from "react";
 
 const FilterBox = ({
     show = false,
     setShow,
-    filterData,
-    setFilterData,
+    filter,
+    setFilter,
     addFilter,
     setAddFilter,
 }) => {
-    const [operatorData, setOperatorData] = useState("");
-    const [values, setValues] = useState("");
-
-    const onOperatorDataChange = (e) => {
-        const { value } = e.target;
-        setOperatorData(value);
-    };
-    const onClosedModal = () => {
-        setFilterData({ name: "", data_type: "" });
-        setOperatorData("");
-        setShow(false);
-    };
-
     const filterOperator = [
         { id: 1, value: 1, display: "Seperti", grouping: 3 },
         { id: 2, value: 2, display: "Sama Dengan", grouping: 2 },
@@ -35,19 +22,54 @@ const FilterBox = ({
     ];
 
     const operator = filterOperator.filter((item) => {
-        if (filterData?.data_type == "date") {
+        if (addFilter?.data_type == "date") {
             return item.grouping < 3;
         }
-        if (filterData?.data_type == "text") {
+        if (addFilter?.data_type == "text") {
             return item.grouping > 1;
         }
-        if (filterData?.data_type == "number") {
+        if (addFilter?.data_type == "number") {
             return item.grouping < 3;
         }
+        return item.grouping > 0;
     });
 
-    const onCariClick = () => {
-        setAddFilter({ ...addFilter, [filterData?.name]: values });
+    const [onChangeValues, setOnChangeValues] = useState({
+        name: "",
+        data_type: "",
+        operator: "",
+        values: "",
+    });
+
+    useLayoutEffect(() => {
+        setOnChangeValues({
+            ...onChangeValues,
+
+            name: addFilter?.name,
+            data_type: addFilter?.data_type,
+            operator: operator[0]?.value,
+        });
+    }, [show]);
+
+    const onChangeChangeValues = (e) => {
+        const { name, value } = e.target;
+        setOnChangeValues({ ...onChangeValues, [name]: value });
+    };
+
+    const onCariClick = (e) => {
+        e.preventDefault();
+        setFilter([...filter, { ...onChangeValues, id: filter.length + 1 }]);
+    };
+
+    const onClosedModal = () => {
+        setOnChangeValues({
+            name: "",
+            data_type: "",
+            operator: "",
+            values: "",
+        });
+        setAddFilter({ name: "", data_type: "" });
+        setShow(false);
     };
 
     return (
@@ -66,7 +88,8 @@ const FilterBox = ({
                     className="flex justify-center h-full items-center"
                     onClick={onClosedModal}
                 >
-                    <div
+                    <form
+                        onSubmit={onCariClick}
                         className="flex justify-between gap-3 bg-white py-3 px-6 shadow border"
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -75,47 +98,33 @@ const FilterBox = ({
                             <TextInput
                                 readOnly
                                 className={"mt-1"}
-                                value={filterData?.name}
+                                value={addFilter.name}
                             />
                         </div>
                         <div>
                             <InputLabel value={"."} />
                             <SelectList
                                 className={"mt-1"}
+                                onChange={onChangeChangeValues}
                                 options={operator}
-                                onChange={onOperatorDataChange}
+                                value={addFilter.operator}
                             />
                         </div>
                         <div>
                             <InputLabel value={"Kata Kunci"} />
                             <div className="flex items-center gap-2">
                                 <TextInput
-                                    name="value1"
+                                    required
+                                    name="search_key"
+                                    onChange={onChangeChangeValues}
                                     className={"mt-1"}
-                                    type={filterData?.data_type ?? "text"}
-                                    onChange={(e) => setValues(e.target.value)}
+                                    value={addFilter.search_key}
+                                    type={addFilter?.data_type ?? "text"}
                                 />
-                                {operatorData == 3 ? (
-                                    <>
-                                        <span>Sampai</span>
-                                        <TextInput
-                                            name="value2"
-                                            className={"mt-1"}
-                                            type={
-                                                filterData?.data_type ?? "text"
-                                            }
-                                        />
-                                    </>
-                                ) : (
-                                    ""
-                                )}
-                                <PrimaryButton
-                                    title={"Cari"}
-                                    onClick={onCariClick}
-                                />
+                                <PrimaryButton title={"Cari"} type="submit" />
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </Transition>

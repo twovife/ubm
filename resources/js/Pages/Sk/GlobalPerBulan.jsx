@@ -1,6 +1,6 @@
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import React, { useState } from "react";
-import TableGlobalPerbulan from "./Component/TableGlobalPerbulan";
+import TableGlobalPerbulan from "../NewPage/SKSW/Components/TableGlobalPerbulan";
 import useBulanFilter from "@/Hooks/useBulanFilter";
 import SelectList from "@/Components/SelectList";
 import PrimaryButton from "@/Components/PrimaryButton";

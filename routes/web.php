@@ -78,28 +78,18 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(EmployeeController::class)->prefix('emp')->name('emp.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/{employee}', 'show')->name('show');
+        Route::put('/{employee}', 'perpindahan_karyawan')->name('perpindahan_karyawan');
+        Route::put('/{employee}/resign', 'resign_karyawan')->name('resign_karyawan');
+        Route::put('/{employee}/kembalimasuk', 'kembali_karyawan')->name('kembali_karyawan');
     });
 
-    Route::prefix('simpanan')->name('simpanan.')->group(function () {
-        Route::get('/', [DepositController::class, 'index'])->name('index');
-        Route::get('/create', [DepositController::class, 'create'])->name('create');
-        Route::post('/', [DepositController::class, 'store'])->name('store');
 
-        Route::get('/global', [DepositController::class, 'global'])->name('global');
-        Route::get('/detailPerBulan', [DepositController::class, 'detailPerBulan'])->name('detailPerBulan');
-        Route::get('/globalPerBulan', [DepositController::class, 'globalPerBulan'])->name('globalPerBulan');
-        Route::get('/sumallsk', [DepositController::class, 'sumallsk'])->name('sumallsk');
-        Route::get('/sumallsw', [DepositController::class, 'sumallsw'])->name('sumallsw');
-        Route::get('/swperbulan', [DepositController::class, 'sw_perbulan'])->name('sw_perbulan');
-        Route::get('/swglobal', [DepositController::class, 'sw_global'])->name('sw_global');
 
-        Route::delete('/destroysk/{optionalDepositTransaction}', [DepositController::class, 'skdestroy'])->name('destroysk');
-        Route::delete('/destroysw/{mandatoryDepositTransaction}', [DepositController::class, 'swdestroy'])->name('destroysw');
-    });
 
     Route::prefix('sksw')->name('sksw.')->group(function () {
         Route::get('/', [DepositController::class, 'dashboard'])->name('dashboard');
-        Route::get('/create', [DepositController::class, 'create'])->name('create');
+        // Route::get('/create', [DepositController::class, 'create'])->name('create');
         Route::post('/', [DepositController::class, 'store'])->name('store');
 
 
@@ -110,6 +100,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/wilayah', [DepositController::class, 'sksw_wilayah'])->name('wilayah');
         Route::get('/unit', [DepositController::class, 'sksw_unit'])->name('unit');
     });
+
 
 
     Route::prefix('unitsaving')->name('unitsaving.')->group(function () {
@@ -193,60 +184,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/{employee}/handover', [EmployeeController::class, 'handover'])->name('handover');
         Route::put('/{employee}/reactive', [EmployeeController::class, 'reactive'])->name('reactive');
         Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('destroy');
-    });
-
-    Route::controller(MantriAppController::class)->prefix('mantriapps')->name('mantriapps.')->middleware('can:area')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
-            Route::get('/request-drop', 'requestDrop')->name('requestDrop');
-            Route::post('/', 'store')->name('store');
-            Route::post('/new-customer-drop', 'newCustomerDropStore')->name('newCustomerDropStore');
-            Route::post('/old-customer-drop', 'oldCustomerDropStore')->name('oldCustomerDropStore');
-        });
-        Route::prefix('drop')->name('drop.')->group((function () {
-            Route::get('/drop', 'mantriDrop')->name('mantriDrop');
-            Route::get('/calondrop', 'calonDrop')->name('calonDrop');
-            Route::put('/drop/{loanRequest}', 'storeMantriDrop')->name('storeMantriDrop');
-            Route::get('/{loan}', 'detaildrop')->name('detaildrop');
-        }));
-        Route::prefix('angsur')->name('angsur.')->group((function () {
-            Route::get('/storting', 'storting')->name('storting');
-            // Route::get('/{nik}', 'angsur')->name('angsur');
-            Route::get('/update/{loan}', 'updateAngsur')->name('updateangsur');
-        }));
-    });
-
-
-    // routing untuk aplikasi unit
-    Route::prefix('unit')->middleware(['auth', 'verified'])->name('unit.')->group(function () {
-        Route::controller(CustomerController::class)->prefix('/customer')->name('customer.')->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::post('/',  'store')->name('store');
-            Route::get('/historykknasabah/{no_kk}',  'historyNasabahByKK')->name('historyNasabahByKK');
-            Route::get('/edit/{customer}',  'edit')->name('edit');
-            Route::put('/edit/{customer}',  'update')->name('update');
-        });
-        Route::prefix('pinjaman')->name('pinjaman.')->group(function () {
-            Route::get('/', [PinjamanController::class, 'pinjaman'])->name('index');
-            Route::get('/create', [PinjamanController::class, 'create'])->name('create');
-            Route::post('/', [PinjamanController::class, 'store'])->name('store');
-            Route::put('/notes/{loan}', [PinjamanController::class, 'editNotes'])->name('editNotes');
-
-            Route::prefix('request')->name('request.')->group(function () {
-                Route::get('/', [PinjamanController::class, 'requestPinjaman'])->name('requestPinjaman');
-                Route::get('/buku-transaksi', [PinjamanController::class, 'bukutransaksi'])->name('bukutransaksi');
-                Route::post('/{loanRequest}', [PinjamanController::class, 'actions'])->name('actions');
-                Route::get('/edit/{loanRequest}', [PinjamanController::class, 'edit'])->name('edit');
-                Route::put('/update/{loanRequest}', [PinjamanController::class, 'update'])->name('update');
-                Route::delete('/{loanRequest}', [PinjamanController::class, 'destroy'])->name('destroy');
-            });
-            Route::prefix('angsuran')->name('angsuran.')->group(function () {
-                Route::get('/', [InstalmentController::class, 'index'])->name('index');
-                Route::get('/mb', [InstalmentController::class, 'indexMb'])->name('indexmb');
-                Route::get('/ml', [InstalmentController::class, 'indexMl'])->name('indexml');
-                Route::put('/{loan}', [InstalmentController::class, 'bayar'])->name('bayar');
-            });
-        });
     });
 });
 

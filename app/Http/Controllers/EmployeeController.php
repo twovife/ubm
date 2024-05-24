@@ -38,7 +38,7 @@ class EmployeeController extends Controller
         // dd($branch);
         $emp = Employee::with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->when(request()->filled('branch_id'), function ($q) {
             $q->where('branch_id', request()->branch_id);
-        })->limit(10)->get();
+        })->get();
 
 
         $data = collect($emp)->map(fn ($que) => [
@@ -71,10 +71,140 @@ class EmployeeController extends Controller
         // dd($data);
 
         return Inertia::render('NewPage/Emp/Index', [
-            'employees' => $data,
+            'datas' => $data,
             'server_filter' => ['wilayah' => request()->filled('branch_id') ? $emp->first()->branch->wilayah : null, 'branch_id' => request()->branch_id, 'branch' => $branch]
         ]);
     }
+
+    public function show(Employee $employee)
+    {
+        $branches = Branch::all();
+        $emp = $employee->load('branch', 'histories');
+        $sksw = Deposit::with('deposit_transactions')->where('employee_id', $emp->id)->first();
+        $saldo_sw = $sksw?->deposit_transactions?->sum('sw_debit') - $sksw?->deposit_transactions?->sum('sw_kredit');
+        $saldo_sk = $sksw?->deposit_transactions?->sum('sk_debit') - $sksw?->deposit_transactions?->sum('sk_kredit');
+        $deposit_sksw = [
+            'deposit_id' => $sksw->id ?? null,
+            'saldo_sk' => $saldo_sk ?? 0,
+            'saldo_sw' => $saldo_sw ?? 0,
+            'max_tanggal' => $sksw?->deposit_transactions->max('transaction_date') ?? null
+        ];
+        return Inertia::render('NewPage/Emp/Show', [
+            'employee' => $emp,
+            'deposit_sksw' => $deposit_sksw,
+            'server_filter' => ['branch' => $branches]
+        ]);
+    }
+
+    public function perpindahan_karyawan(Employee $employee, Request $request)
+    {
+        // dd([$employee, $request->all()]);
+        $validate = $request->validate([
+            "branch_id" => ['required'],
+            "tanggal_mutasi" => ['required'],
+            "status_kontrak" => ['required'],
+            "jabatan" => ['required'],
+            "area" => ['required'],
+        ], [
+            "*.required" => "Wajib Diisi"
+        ]);
+        // dd($request->all());
+
+        $oldUnit = $employee->branch->unit;
+        $keterangan = AppHelper::typeMutasi($request->typeMutasi);
+        $area = $employee->area == 0 ? "" : " - $employee->area";
+
+        try {
+            DB::beginTransaction();
+            $history = [
+                "employee_id" => $employee->id,
+                "history_date" => $request->tanggal_mutasi,
+                "keterangan" => $keterangan,
+                "record" => "dari unit $oldUnit sebagai $employee->jabatan$area"
+            ];
+
+            $employee->branch_id = $request->branch_id;
+            $employee->jabatan = $request->jabatan;
+            $employee->area = $request->area;
+            $employee->area = $request->area;
+            $employee->status_kontrak = $request->status_kontrak;
+
+            if ($employee->isDirty('status_kontrak')) {
+                $history_kontrak = [
+                    "employee_id" => $employee->id,
+                    "history_date" => $request->tanggal_mutasi,
+                    "keterangan" => "Ubah Kontrak",
+                    "record" => "Mengubah Kontrak ke $request->status_kontrak"
+                ];
+                $employee->histories()->create($history_kontrak);
+            }
+
+            $employee->histories()->create($history);
+            $employee->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back()->withErrors('Terjadi Kesalahan saat input coba hubungi IT');
+        }
+
+        return redirect()->route('emp.show', $employee->id)->with('message', 'data berhasil di update');
+    }
+
+    public function resign_karyawan(Employee $employee, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $employee->resign_status = $request->resign_status == 4 ? "Pecat" : "Resign";
+            $employee->date_resign = $request->date_resign;
+            $employee->resign_reson = $request->resign_reson;
+            $employee->save();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
+        }
+        return redirect()->route('emp.show', $employee->id)->with('message', 'data berhasil di update');
+    }
+
+    public function kembali_karyawan(Employee $employee, Request $request)
+    {
+        $branch_asal = $employee->branch->unit;
+        $data = [
+            ['history_date' => $employee->date_resign, 'keterangan' => $employee->resign_status, 'record' => "$employee->resign_status dengan alasan $employee->resign_reson"],
+            ['history_date' => $employee->date_resign, 'keterangan' => $employee->resign_status,    'record' =>  "$employee->resign_status dari $branch_asal sebagai $employee->jabatan"],
+            ['history_date' => $employee->tanggal_kembali, 'keterangan' => 'Kembali Masuk',    'record' => 'Kembali menjadi Karyawan']
+        ];
+
+        try {
+            DB::beginTransaction();
+            $employee->date_resign = null;
+            $employee->resign_status = null;
+            $employee->resign_reson = null;
+            $employee->pencairan_simpanan_date = null;
+            $employee->pencairan_simpanan_by = null;
+            $employee->handover_jaminan = null;
+            $employee->handover_jaminan_by = null;
+
+            $employee->hire_date = $request->tanggal_kembali;
+            $employee->jabatan =  $request->jabatan;
+            $employee->area = $request->area ?? 0;
+            $employee->branch_id = $request->branch_id;
+            $employee->janis_jaminan = $request->jenis_jaminan;
+            $employee->save();
+
+            $employee->histories()->createMany($data);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
+        }
+
+        return redirect()->route('emp.show', $employee->id)->with('message', 'data berhasil di update');
+    }
+
 
     public function indexx()
     {
@@ -178,9 +308,7 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee)
-    {
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -206,9 +334,11 @@ class EmployeeController extends Controller
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
+
         $countCustomer = Customer::whereHas('employee', function ($q) use ($employee) {
             $q->where('mantri', $employee->id);
         })->count();
+
         $countLoan = Loan::whereHas('mantri', function ($q) use ($employee) {
             $q->where('mantri', $employee->id);
         })->count();
@@ -231,6 +361,7 @@ class EmployeeController extends Controller
             'deletable' => $isDeletable == 0 ? true : false
         ]);
     }
+
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
         // dd($employee);
@@ -267,93 +398,6 @@ class EmployeeController extends Controller
             $employee->jabatan = $request->jabatan;
             $employee->area = $request->area ?? 0;
             $employee->save();
-
-            // $deposit = Deposit::where('employee_id', $employee->id)->first();
-            // if ($deposit) {
-            //     if ($request->branch_id !== $deposit->branch_id) {
-            //         $sw_saldo = $deposit->sw_balance;
-            //         $sk_saldo = $deposit->sk_balance;
-            //         $branch_asal = $deposit->branch_id;
-            //         $deposit->branch_id = $request->branch_id;
-
-            //         $transaksi_sw = [
-            //             // keluarkan dari branch awal
-            //             [
-            //                 "branch_id" => $branch_asal,
-            //                 "transaction_date" => $tanggal_tabungan,
-            //                 'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-            //                 'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-            //                 "transaction" => "K",
-            //                 "transaction_type" => "KM",
-
-            //                 "transaction_input_user_id" =>  auth()->user()->employee_id,
-
-            //                 "balance_before" => $sw_saldo,
-            //                 "debit" => 0,
-            //                 "kredit" => $sw_saldo,
-            //                 "balance" => 0,
-            //             ],
-            //             // masukkan ke branch baru
-            //             [
-            //                 "branch_id" => $request->branch_id,
-            //                 "transaction_date" => $tanggal_tabungan,
-            //                 'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-            //                 'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-            //                 "transaction" => "D",
-            //                 "transaction_type" => "DM",
-
-            //                 "transaction_input_user_id" =>  auth()->user()->employee_id,
-
-            //                 "balance_before" => 0,
-            //                 "debit" => $sw_saldo,
-            //                 "kredit" => 0,
-            //                 "balance" => $sw_saldo,
-            //             ]
-            //         ];
-
-            //         $transaksi_sk = [
-            //             // keluarkan dari branch awal buat balance menjadi 0
-            //             [
-            //                 "branch_id" => $branch_asal,
-            //                 "transaction_date" => $tanggal_tabungan,
-            //                 'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-            //                 'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-            //                 "transaction" => "K",
-            //                 "transaction_type" => "KM",
-
-            //                 "transaction_input_user_id" =>  auth()->user()->employee_id,
-
-            //                 "balance_before" => $sk_saldo,
-            //                 "debit" => 0,
-            //                 "kredit" => $sk_saldo,
-            //                 "balance" => 0,
-            //             ],
-
-            //             // masukkan ke branch baru membuat balance sejumlah kredit
-            //             [
-            //                 "branch_id" => $request->branch_id,
-            //                 "transaction_date" => $tanggal_tabungan,
-            //                 'transaction_month' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->month,
-            //                 'transaction_year' => Carbon::createFromFormat('Y-m-d', $tanggal_tabungan)->year,
-            //                 "transaction" => "D",
-            //                 "transaction_type" => "DM",
-
-            //                 "transaction_input_user_id" =>  auth()->user()->employee_id,
-
-            //                 "balance_before" => 0,
-            //                 "debit" => $sk_saldo,
-            //                 "kredit" => 0,
-            //                 "balance" => $sk_saldo,
-            //             ]
-            //         ];
-
-
-            //         $deposit->mandatorytrasactions()->createMany($transaksi_sw);
-            //         $deposit->optionaltrasactions()->createMany($transaksi_sk);
-            //         $deposit->save();
-            //     }
-            // }
-
 
 
             $data = [

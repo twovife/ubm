@@ -19,8 +19,10 @@ const SidebarMenuButton = ({
         <div className="relative mb-3">
             <button
                 {...params}
-                className={`hover:bg-gray-100 focus:bg-gray-200 w-full text-start px-3 py-1.5 font-thin flex gap-3 items-center justify-between text-gray-600 ${
-                    active ? `rounded-t-lg bg-gray-300` : ""
+                className={`hover:bg-gray-100 focus:bg-gray-200 w-full text-start px-3 py-1.5 font-thin flex gap-3 items-center justify-between border border-transparent ${
+                    active
+                        ? `rounded-t-lg bg-roman-500 text-white hover:text-roman-500 hover:border-roman-500 hover:border hover:bg-gray-100 duration-300 transition-all`
+                        : "text-gray-600"
                 }`}
             >
                 <div className="flex gap-3 items-center justify-start">
@@ -41,14 +43,14 @@ const SidebarMenuButton = ({
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
             >
-                <div className="bg-gray-100 rounded-b-lg text-sm font-light text-gray-500 overflow-hidden divide-y divide-gray-300">
+                <div className="bg-white rounded-b-lg text-sm font-light text-gray-500 overflow-hidden divide-y divide-gray-300">
                     {lists?.map((item, key) => (
                         <Link
                             href={item.href}
                             key={key}
                             className={`group hover:cursor-pointer ${
                                 item.active
-                                    ? `bg-gray-200 font-semibold`
+                                    ? `bg-white font-semibold text-roman-500`
                                     : "bg-gray-100"
                             } hover:bg-gray-200 px-6 py-2 w-full text-start flex items-center justify-start`}
                         >

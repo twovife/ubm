@@ -29,11 +29,12 @@ class Employee extends Model
         'pencairan_simpanan_w_by',
         'handover_jaminan',
         'handover_jaminan_by',
+        'status_kontrak',
     ];
 
     public function histories()
     {
-        return $this->hasMany(EmployeeHistory::class, 'employee_id', 'id');
+        return $this->hasMany(EmployeeHistory::class, 'employee_id', 'id')->orderByDesc('id');
     }
     public function history()
     {

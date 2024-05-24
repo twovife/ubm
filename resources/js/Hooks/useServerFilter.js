@@ -4,6 +4,23 @@ import { useEffect, useState } from "react";
 function useServerFilter() {
     const { server_filter } = usePage().props;
 
+    const [selectedWilayah, setSelectedWilayah] = useState(
+        server_filter?.wilayah ?? ""
+    );
+
+    // dipakai jika hanya tanpa mengganti request branch_id
+    const [selectedBranch_id, setSelectedBranch_id] = useState(
+        server_filter?.branch_id ?? ""
+    );
+    // dipakai jika hanya tanpa mengganti request branch_id
+    const [selectedBulan, setSelectedBulan] = useState(
+        server_filter?.bulan ?? ""
+    );
+
+    const [selectedEmployee, setSelectedEmployee] = useState(
+        server_filter?.employee_id ?? ""
+    );
+
     const wilayah = [
         { id: 0, display: "Pusat", value: 0 },
         { id: 1, display: "Wilayah 1", value: 1 },
@@ -18,37 +35,85 @@ function useServerFilter() {
         { id: 10, display: "Wilayah 10", value: 10 },
     ];
 
-    const branches = server_filter?.branch?.map((item) => {
-        return {
-            id: item.id,
-            display: item.unit,
-            value: item.id,
-            wilayah: item.wilayah,
-        };
-    });
-
-    const [selectedWilayah, setSelectedWilayah] = useState(
-        server_filter?.wilayah ?? ""
-    );
-    const selectedBranch = server_filter?.branch_id ?? "";
     const [filteredBranch, setFilteredBranch] = useState();
+    const [filteredEmps, setFilteredEmps] = useState();
+
+    // dipakai jika hanya tanpa mengganti request branch_id
+    const onWilayahChangeHandler = (e) => {
+        const { value } = e.target;
+        setSelectedWilayah(value);
+    };
+
+    const onBranchChangeHandler = (e) => {
+        const { value } = e.target;
+        setSelectedBranch_id(value);
+    };
+
+    const onEmployeeChangeHandler = (e) => {
+        const { value } = e.target;
+        setSelectedBranch_id(value);
+    };
 
     useEffect(() => {
         const branchFiltered =
             selectedWilayah !== ""
-                ? branches?.filter((item) => {
-                      return item.wilayah == selectedWilayah;
-                  })
+                ? server_filter?.branch
+                      ?.filter((item) => {
+                          return item.wilayah == selectedWilayah;
+                      })
+                      ?.map((mapitem) => {
+                          return {
+                              id: mapitem.id,
+                              display: mapitem.unit,
+                              value: mapitem.id,
+                              wilayah: mapitem.wilayah,
+                          };
+                      })
                 : "";
         setFilteredBranch(branchFiltered);
     }, [selectedWilayah]);
 
+    useEffect(() => {
+        const employeeFiltered =
+            selectedBranch_id !== ""
+                ? server_filter?.employees
+                      ?.filter((item) => {
+                          return item.branch_id == selectedBranch_id;
+                      })
+                      ?.map((mapitem) => {
+                          return {
+                              id: mapitem.id,
+                              display: `${mapitem.nama_karyawan} ${
+                                  mapitem.date_resign ? " - Resign" : ""
+                              } `,
+                              value: mapitem.id,
+                              className: mapitem.date_resign
+                                  ? "bg-red-200"
+                                  : "",
+                          };
+                      })
+                : "";
+        setFilteredEmps(employeeFiltered);
+    }, [selectedBranch_id]);
+
+    // fungsi ini dipakai jika yang dicari adalah employee
+
     return {
-        wilayah,
         selectedWilayah,
         setSelectedWilayah,
+        selectedBranch_id,
+        setSelectedBranch_id,
+        selectedEmployee,
+        setSelectedEmployee,
+        selectedBulan,
+        setSelectedBulan,
+
+        wilayah,
         filteredBranch,
-        selectedBranch,
+        filteredEmps,
+
+        onWilayahChangeHandler,
+        onBranchChangeHandler,
     };
 }
 

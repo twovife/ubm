@@ -38,11 +38,11 @@ class DepositTransaction extends Model
     public static function queryBuilder($getFilter)
     {
 
-
         $queryBuilder = self::query();
         $queryBuilder->selectRaw('*, RANK() OVER (PARTITION BY deposit_id ORDER BY transaction_date DESC) AS ranking')
-            ->where('transaction_date', '<=', $getFilter->tanggal)
+            ->where('transaction_date', '<=', $getFilter->endOfMonth)
             ->when($getFilter->isWilayanNeeded, function ($queries) use ($getFilter) {
+                // dd($getFilter->wilayah);
                 $getBranch = Branch::where('wilayah', $getFilter->wilayah)->pluck('id');
                 $queries->whereIn('branch_id', $getBranch);
             });

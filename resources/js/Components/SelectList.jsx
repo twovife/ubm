@@ -29,6 +29,7 @@ export default function SelectList({
                     ) : null}
                     {options.map((opt) => (
                         <option
+                            className={opt.className}
                             key={opt.id}
                             value={opt.value}
                             // selected={opt.selected || false}

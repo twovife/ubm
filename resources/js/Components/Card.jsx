@@ -14,12 +14,14 @@ const Card = ({ judul = "Judul", children }) => {
 };
 
 const CardSubTitle = ({ children }) => {
-    return <div className="px-4 py-2">{children}</div>;
+    return <div className="lg:px-4 px-0 py-2">{children}</div>;
 };
 
 const CardEndContent = ({ className, children }) => {
     return (
-        <div className={`flex justify-end gap-3 items-center ${className}`}>
+        <div
+            className={`flex lg:flex-row flex-col justify-end gap-3 items-center flex-1 w-full ${className}`}
+        >
             {children}
         </div>
     );
@@ -27,27 +29,49 @@ const CardEndContent = ({ className, children }) => {
 
 const CardStartContent = ({ className, children }) => {
     return (
-        <div className={`flex justify-start gap-3 items-center ${className}`}>
+        <div
+            className={`flex lg:justify-start gap-3 items-center flex-1 w-full ${className}`}
+        >
             {children}
         </div>
     );
 };
 
-const CardFilterItem = ({ children, filter }) => {
+const CardFilterItem = ({ children, filter, removeFilter }) => {
+    const onClosed = (e) => {
+        removeFilter(e);
+    };
     return (
         <>
             {filter &&
-                filter.map((item) => (
-                    <div className="flex justify-start items-center gap-1 border border-roman-500 rounded-md shadow px-1 py-1">
+                filter.map((item, key) => (
+                    <div
+                        key={key}
+                        className="flex justify-start items-center gap-1 border border-roman-500 rounded-md shadow px-1 py-1"
+                    >
                         <div className="p-1 border  rounded-l text-green-500">
                             <AiFillFilter />
                         </div>
-                        <div className="p-1 border text-xs">
-                            Nama Kolon Seperti Value Kolom
+                        <div className="p-1 border text-xs capitalize">
+                            {`${item.name} ${
+                                item.operator == 1
+                                    ? `Mempunyai`
+                                    : item.operator == 2
+                                    ? "="
+                                    : item.operator == 4
+                                    ? "Lebih Dari"
+                                    : item.operator == 5
+                                    ? "Kurang Dari"
+                                    : "Antara"
+                            } "${item.search_key}"`}
                         </div>
-                        <div className="p-1 border  rounded-r text-roman-500">
+                        <button
+                            className="p-1 border  rounded-r text-roman-500 hover:bg-roman-500 hover:text-white
+                        "
+                            onClick={() => onClosed(item.id)}
+                        >
                             <IoMdCloseCircle />
-                        </div>
+                        </button>
                     </div>
                 ))}
         </>

@@ -29,7 +29,7 @@ class UnitSavingController extends Controller
         $data = UnitSaving::with('savingaccount')->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->whereNot('transaction_type', 'PO')->orderBy('transaction_date', 'asc')->get();
         $data_before = UnitSaving::with('savingaccount')->where('transaction_date', "<", $requestFilter->startOfMonth)->whereNot('transaction_type', 'PO')->get();
 
-        $saldo_before = $data_before->where('transaction', 'D')->sum('nominal') ?? 0 - $data_before->where('transaction', 'K')->sum('nominal') ?? 0;
+        $saldo_before = $data_before->where('transaction', 'D')->sum('nominal')  - $data_before->where('transaction', 'K')->sum('nominal');
         $saldo = $saldo_before;
 
         $additional_array = [

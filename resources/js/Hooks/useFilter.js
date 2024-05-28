@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 function useFilter(data, itemsPerPage, local_name) {
     const savedFilter = localStorage.getItem(local_name);
+
     const { oldFilter, oldPage } = savedFilter
         ? JSON.parse(savedFilter)
         : { oldFilter: [], oldPage: 1 };

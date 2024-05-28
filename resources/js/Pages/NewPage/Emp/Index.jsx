@@ -2,7 +2,7 @@ import Card from "@/Components/Card";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import React, { useEffect, useState } from "react";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import dayjs from "dayjs";
 import useFilter from "@/Hooks/useFilter";
 import DefaultTable from "@/Components/DefaultTable";
@@ -27,7 +27,7 @@ const Index = ({ server_filter, datas, ...props }) => {
     } = useFilter(datas, 10, "employee_index");
 
     return (
-        <Authenticated loading={loading}>
+        <Authenticated loading={loading} judul="Daftar Karyawan">
             <FilterBox
                 show={showFilter}
                 setShow={setShowFilter}

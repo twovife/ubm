@@ -73,7 +73,7 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
             type: "default",
             headers: {
                 filterable: "no",
-                name: "BOP",
+                name: "TB 1jt",
                 column: "bop",
                 format: "currency",
                 class_name: "whitespace-nowrap bg-gray-100",

@@ -7,7 +7,7 @@ import SidebarButton from "@/Components/SidebarButton";
 import SideBarDropDown from "@/Components/SidebarDropDown";
 import Loading from "@/Components/Loading";
 import SweetAlert from "@/Components/SweetAlert";
-import { usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import { AiFillFire } from "react-icons/ai";
 import { BiAlignJustify } from "react-icons/bi";
 import Sidebar from "@/Components/Sidebar";

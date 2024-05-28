@@ -1,13 +1,5 @@
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import React, { useState } from "react";
-import useBulanFilter from "@/Hooks/useBulanFilter";
-import SelectList from "@/Components/SelectList";
-import PrimaryButton from "@/Components/PrimaryButton";
-import LinkButton from "@/Components/LinkButton";
-import { BiRefresh } from "react-icons/bi";
-import { router } from "@inertiajs/react";
-import FilterBox from "@/Components/FilterBox";
-import useFilter from "@/Hooks/useFilter";
 import Card from "@/Components/Card";
 import Search from "@/Components/Search";
 import TableGlobalPerbulan from "./Components/TableGlobalPerbulan";

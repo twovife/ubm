@@ -91,7 +91,6 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-
     Route::controller(DepositController::class)->prefix('sksw')->name('sksw.')->group(function () {
         Route::get('/',  'dashboard')->name('dashboard');
         Route::get('/sksw_non_active',  'sksw_non_active')->name('dashboard_nonaktif');
@@ -102,8 +101,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/wilayah',  'sksw_wilayah')->name('wilayah');
         Route::get('/unit',  'sksw_unit')->name('unit');
     });
-
-
 
     Route::prefix('unitsaving')->name('unitsaving.')->group(function () {
 
@@ -134,7 +131,6 @@ Route::middleware('auth')->group(function () {
         // Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
         // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });
-
 
     Route::controller(BopTransactionController::class)->group(function () {
         Route::prefix('bonpriv')->name('bonpriv.')->group(function () {

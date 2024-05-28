@@ -27,7 +27,6 @@ const Search = ({
     // console.log(selectedBulan);
 
     const { data, setData, get, processing } = useForm({});
-    console.log(data);
 
     const onSearchChange = (e) => {
         const { name, value } = e.target;

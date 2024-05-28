@@ -374,7 +374,14 @@ class BopTransactionController extends Controller
         // dd($branch);
         try {
             DB::beginTransaction();
-            $bopAccount = BopAccountTransaction::create([
+
+
+
+
+            $bopAccount = BopAccountTransaction::firstOrcreate([
+                "branch_id" => $request->branch_id,
+                "account_type" => 'BOP',
+            ], [
                 "branch_id" => $request->branch_id,
                 "transaction_type" => 'BOP',
                 "mark" => 'BOP Unit ' . $branch->unit,

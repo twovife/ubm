@@ -6,7 +6,7 @@ import { NumericFormat } from "react-number-format";
 
 const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
     const datas = data.data;
-    const { returnedData, totals } = useFilter(datas, 100, "sksw_wilayah");
+    const { returnedData, totals } = useFilter(datas, 100, "sksw_wilayahh");
 
     const headers = [
         {

@@ -196,6 +196,7 @@ class EmployeeController extends Controller
 
             $employee->histories()->createMany($data);
 
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

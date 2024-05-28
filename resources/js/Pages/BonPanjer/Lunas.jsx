@@ -1,31 +1,15 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
 import LinkButton from "@/Components/LinkButton";
-import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
-import SelectList from "@/Components/SelectList";
-import useBulanFilter from "@/Hooks/useBulanFilter";
 import useFilter from "@/Hooks/useFilter";
-import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
-import {
-    AiFillCheckCircle,
-    AiFillEdit,
-    AiFillFilter,
-    AiFillFolderOpen,
-    AiOutlineCheck,
-    AiOutlineClose,
-    AiOutlineSortAscending,
-    AiOutlineSortDescending,
-} from "react-icons/ai";
-import { BiRefresh } from "react-icons/bi";
 import { NumericFormat } from "react-number-format";
-// import { BiRefresh } from "react-icons/bi";
 
-const Index = ({ branch, server_filters, datas, ...props }) => {
+const Lunas = ({ branch, server_filters, datas, ...props }) => {
     const [loading, setLoading] = useState(false);
     const { filter, removeFilter, returnedData, totals } = useFilter(
         datas,
@@ -90,8 +74,8 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
             type: "default",
             headers: {
                 filterable: "no",
-                name: "Keterangan",
-                column: "keterangan",
+                name: "Tanggal Lunas",
+                column: "note",
             },
         },
         {
@@ -143,7 +127,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
 
     return (
         <Authenticated loading={loading}>
-            <Card judul="Bon Panjer">
+            <Card judul="Bon Panjer Lunas">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
@@ -152,23 +136,9 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                                 removeFilter={removeFilter}
                             />
                         </Card.startContent>
-                        <Card.endContent className={`flex-wrap`}>
-                            <Search
-                                loading={loading}
-                                setLoading={setLoading}
-                                urlLink={route("bonpanjer.bon_panjer")}
-                                localState={"bon_panjer"}
-                                availableMonth={true}
-                            >
-                                <LinkButton
-                                    href={route("bonpanjer.bon_panjer_create")}
-                                    title={"Tambah"}
-                                    size={"sm"}
-                                    type="button"
-                                    theme="green"
-                                />
-                            </Search>
-                        </Card.endContent>
+                        <Card.endContent
+                            className={`flex-wrap`}
+                        ></Card.endContent>
                     </div>
                 </Card.subTitle>
                 <DefaultTable>
@@ -186,27 +156,15 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                             <DefaultTable.tr key={index}>
                                 <DefaultTable.td className={`text-center`}>
                                     <span className="mr-2">{index + 1}</span>
-                                    {item.keterangan == "unpaid" ? (
-                                        <Link
-                                            href={route(
-                                                "bonpanjer.bon_panjer_show",
-                                                item.id
-                                            )}
-                                            className="px-2 py-1 rounded-lg bg-red-500 text-white"
-                                        >
-                                            Bayar
-                                        </Link>
-                                    ) : (
-                                        <Link
-                                            href={route(
-                                                "bonpanjer.bon_panjer_show",
-                                                item.id
-                                            )}
-                                            className="px-2 py-1 rounded-lg bg-green-500 text-white"
-                                        >
-                                            Lihat
-                                        </Link>
-                                    )}
+                                    <Link
+                                        href={route(
+                                            "bonpanjer.bon_panjer_show",
+                                            item.id
+                                        )}
+                                        className="px-2 py-1 rounded-lg bg-blue-500 text-white"
+                                    >
+                                        Detail
+                                    </Link>
                                 </DefaultTable.td>
                                 <DefaultTable.td className={`text-center`}>
                                     {item.wilayah}
@@ -226,7 +184,7 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
                                     )}
                                 </DefaultTable.td>
                                 <DefaultTable.td className={`text-center`}>
-                                    {item.keterangan}
+                                    {dayjs(item.note).format("DD/MM/YYYY")}
                                 </DefaultTable.td>
 
                                 <DefaultTable.td className={`text-end`}>
@@ -330,4 +288,4 @@ const Index = ({ branch, server_filters, datas, ...props }) => {
     );
 };
 
-export default Index;
+export default Lunas;

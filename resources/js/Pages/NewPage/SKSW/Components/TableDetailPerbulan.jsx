@@ -1,5 +1,6 @@
 import DefaultTable from "@/Components/DefaultTable";
 import useFilter from "@/Hooks/useFilter";
+import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -7,7 +8,7 @@ import { NumericFormat } from "react-number-format";
 const TableDetailPerbulan = ({ data }) => {
     const datas = data.data;
     // console.log(datas);
-    const { returnedData, totals } = useFilter(datas, 100, "sksw_wilayah");
+    const { returnedData, totals } = useFilter(datas, 100, "sksw_unit");
 
     const headers = [
         {
@@ -269,7 +270,16 @@ const TableDetailPerbulan = ({ data }) => {
                 {returnedData?.map((item, key) => (
                     <DefaultTable.tr key={key}>
                         <DefaultTable.td className={`text-center`}>
-                            {key + 1}
+                            <Link
+                                href={route("sksw.transaksi", item.id_tabungan)}
+                                // href={route("emp.show", item.id)}
+                                className="text-blue-500 hover:bg-blue-500 hover:text-white  focus:bg-blue-500 focus:text-white text-center px-1 py-0.5 rounded"
+                            >
+                                <span>{key + 1}</span>
+                                <span className="hidden lg:inline-block ml-2">
+                                    Edit
+                                </span>
+                            </Link>
                         </DefaultTable.td>
                         <DefaultTable.td
                             className={`text-center whitespace-nowrap`}

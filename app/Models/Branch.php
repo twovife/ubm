@@ -30,4 +30,9 @@ class Branch extends Model
     {
         return $this->hasMany(BopAccountTransaction::class, 'branch_id', 'id');
     }
+
+    public function karyawan()
+    {
+        return $this->hasMany(Employee::class, 'branch_id', 'id');
+    }
 }

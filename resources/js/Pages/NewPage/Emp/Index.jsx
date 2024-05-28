@@ -45,7 +45,14 @@ const Index = ({ server_filter, datas, ...props }) => {
                             />
                         </Card.startContent>
                         <Card.endContent className={`flex-wrap`}>
-                            <Search loading={loading} setLoading={setLoading} />
+                            <Search
+                                loading={loading}
+                                setLoading={setLoading}
+                                urlLink={route("emp.index")}
+                                localState={"emp.index"}
+                                availableBranch={true}
+                            />
+                            {/* <Search loading={loading} setLoading={setLoading} /> */}
                             <PrimaryButton
                                 className="block"
                                 title={"Tambah Baru"}

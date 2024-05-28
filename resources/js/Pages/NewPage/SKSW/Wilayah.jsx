@@ -24,10 +24,10 @@ const Wilayah = ({ server_filter, batch_datas, ...props }) => {
             <Card judul="SKSW Per Wilayah">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
-                        <div className="flex flex-wrap items-center justify-around">
+                        <div className="flex flex-wrap items-center justify-around flex-1">
                             {batch_datas.length > 0 ? (
                                 <>
-                                    <ul className="tab-list flex justify-start gap-3">
+                                    <ul className="tab-list flex justify-start gap-3 flex-wrap w-full">
                                         {batch_datas.map((item) => (
                                             <li
                                                 key={item.wilayah}

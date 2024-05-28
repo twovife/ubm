@@ -1,245 +1,189 @@
 import DefaultTable from "@/Components/DefaultTable";
 import useFilter from "@/Hooks/useFilter";
+import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 
-const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
+const PinjamanModalTable = ({ data, loading, setLoading }) => {
     const datas = data.data;
-    const { returnedData, totals } = useFilter(datas, 100, "sksw_wilayah");
+    const { returnedData, totals } = useFilter(datas, 100, "pinjaman_modal");
 
     const headers = [
         {
             type: "default",
             headers: {
-                filterable: "no",
+                filteranble: "no",
                 name: "Nomor",
-                column: "no",
-                type_date: "text",
+                column: "wilayah",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
+                filteranble: "no",
+                name: "Unit",
+                column: "branch",
+                class_name: "whitespace-nowrap",
+            },
+        },
+        {
+            type: "default",
+            headers: {
+                filteranble: "no",
                 name: "Wilayah",
                 column: "wilayah",
-                type_date: "text",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Bulan",
-                column: "bulan",
-                class_name: "whitespace-nowrap",
-                type_date: "text",
+                filteranble: "no",
+                name: "Action Pinjaman Owner",
+                column: "id_pinjaman_owner",
+                class_name: "bg-green-100/80 whitespace-nowrap",
+                format: "action",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Unit",
-                column: "unit",
-                class_name: "whitespace-nowrap",
-                type_date: "text",
+                filteranble: "no",
+                name: "Tanggal Transaksi Terakhir",
+                column: "transaksi_terakhir_owner",
+                class_name: "bg-green-100/80 whitespace-nowrap",
+                format: "date",
+            },
+        },
+        {
+            type: "default",
+            headers: {
+                filteranble: "no",
+                name: "Total Pinjaman",
+                column: "nominal_pinjaman_owner",
+                class_name: "bg-green-100/80 whitespace-nowrap",
+                format: "currency",
+            },
+        },
+        {
+            type: "default",
+            headers: {
+                filteranble: "no",
+                name: "Total Setoran Pinjaman",
+                column: "total_setoran_pinjaman_owner",
+                class_name: "bg-green-100/80 whitespace-nowrap",
+                format: "currency",
+            },
+        },
+        {
+            type: "default",
+            headers: {
+                filteranble: "no",
+                name: "Saldo Pinjaman",
+                column: "saldo_pinjaman_owner",
+                class_name: "bg-green-100/80 whitespace-nowrap",
+                format: "currency",
             },
         },
 
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Simpanan SW",
-                column: "balance_before_sw",
-                format: "currency",
-                class_name: "bg-gray-100 text-black font-semibold",
+                filteranble: "no",
+                name: "Action Pinjaman Pusat",
+                column: "id_pinjaman_pusat",
+                class_name: "bg-yellow-100/60 whitespace-nowrap",
+                format: "action",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Simpanan SK",
-                column: "balance_before_sk",
-                format: "currency",
-                class_name: "bg-gray-200 text-black font-semibold",
+                filteranble: "no",
+                name: "Tanggal Transaksi Terakhir",
+                column: "transaksi_terakhir_pusat",
+                class_name: "bg-yellow-100/60 whitespace-nowrap",
+                format: "date",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Debit SW",
-                column: "debit_sw",
+                filteranble: "no",
+                name: "Total Pinjaman",
+                column: "nominal_pinjaman_pusat",
+                class_name: "bg-yellow-100/60 whitespace-nowrap",
                 format: "currency",
-                class_name: "bg-green-100 text-black font-semibold",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Debit SK",
-                column: "debit_sk",
+                filteranble: "no",
+                name: "Total Setoran Pinjaman",
+                column: "total_setoran_pinjaman_pusat",
+                class_name: "bg-yellow-100/60 whitespace-nowrap",
                 format: "currency",
-                class_name: "bg-green-200 text-black font-semibold",
-            },
-        },
-
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Kredit SW",
-                column: "kredit_sw",
-                format: "currency",
-                class_name: "bg-red-100 text-black font-semibold",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Kredit SK",
-                column: "kredit_sk",
+                filteranble: "no",
+                name: "Saldo Pinjaman",
+                column: "saldo_pinjaman_pusat",
+                class_name: "bg-yellow-100/60 whitespace-nowrap",
                 format: "currency",
-                class_name: "bg-red-200 text-black font-semibold",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Saldo SW",
-                column: "balance_sw",
+                filteranble: "no",
+                name: "Total Pinjaman",
+                column: "total_pinjaman",
+                class_name: "bg-blue-100 whitespace-nowrap",
                 format: "currency",
-                class_name: "bg-green-100 text-black font-semibold",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Saldo SK",
-                column: "balance_sk",
+                filteranble: "no",
+                name: "Total Saldo Pinjaman",
+                column: "total_saldo_pinjaman",
+                class_name: "bg-blue-100 whitespace-nowrap",
                 format: "currency",
-                class_name: "bg-green-200 text-black font-semibold",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Saldo Global",
-                column: "saldo_global",
+                filteranble: "no",
+                name: "Total Jasa Modala",
+                column: "jasa_modal_owner",
+                class_name: "bg-blue-100 whitespace-nowrap",
                 format: "currency",
-                class_name: "bg-blue-200 text-black font-semibold",
-            },
-        },
-
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Setoran SW (D)",
-                column: "D_sw",
-                format: "currency",
-                class_name: "bg-emerald-50",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Setoran SK (D)",
-                column: "D_sk",
+                filteranble: "no",
+                name: "Total Pinjaman",
+                column: "total_pinjaman",
+                class_name: "bg-blue-100 whitespace-nowrap",
                 format: "currency",
-                class_name: "bg-emerald-50",
-            },
-        },
-
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Debit Mutasi SW (D)",
-                column: "DM_sw",
-                format: "currency",
-                class_name: "bg-emerald-50",
             },
         },
         {
             type: "default",
             headers: {
-                filterable: "no",
-                name: "Debit Mutasi SK (D)",
-                column: "DM_sk",
+                filteranble: "no",
+                name: "Total Saldo",
+                column: "total_saldo_pinjaman",
+                class_name: "bg-blue-100 whitespace-nowrap",
                 format: "currency",
-                class_name: "bg-emerald-50",
-            },
-        },
-
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Pengambilan SW (K)",
-                column: "K_sw",
-                format: "currency",
-                class_name: "bg-rose-50",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Pengambilan SK (K)",
-                column: "K_sk",
-                format: "currency",
-                class_name: "bg-rose-50",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Kredit Mutasi SW (K)",
-                column: "KM_sw",
-                format: "currency",
-                class_name: "bg-rose-50",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Kredit Mutasi SK (K)",
-                column: "KM_sk",
-                format: "currency",
-                class_name: "bg-rose-50",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Kredit Resign / M SW (K)",
-                column: "KRMD_sw",
-                format: "currency",
-                class_name: "bg-rose-50",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Kredit Resign / MD SK (K)",
-                column: "KRMD_sk",
-                format: "currency",
-                class_name: "bg-rose-50",
             },
         },
     ];
@@ -261,21 +205,84 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
                         <DefaultTable.td className={`text-center`}>
                             {key + 1}
                         </DefaultTable.td>
+
+                        <DefaultTable.td
+                            className={`text-center whitespace-nowrap`}
+                        >
+                            {item.branch}
+                        </DefaultTable.td>
                         <DefaultTable.td className={`text-center`}>
                             {item.wilayah}
                         </DefaultTable.td>
-                        <DefaultTable.td className={`text-center`}>
-                            {dayjs(item.bulan).format("MMM/YYYY")}
-                        </DefaultTable.td>
-                        <DefaultTable.td noSpace className={`text-center`}>
-                            {item.unit}
+                        <DefaultTable.td
+                            noSpace
+                            className={`text-center bg-yellow-200`}
+                        >
+                            <div className={`px-6 py-1`}>
+                                {item.type_pinjaman_owner == 3 ? (
+                                    <Link
+                                        href={route(
+                                            "pinjamanmodal.pinjaman_modal_create"
+                                        )}
+                                        className="px-2 py-1 rounded-lg bg-blue-500 text-white"
+                                    >
+                                        Baru
+                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                    </Link>
+                                ) : item.type_pinjaman_owner == 1 ? (
+                                    <>
+                                        <Link
+                                            href={route(
+                                                "pinjamanmodal.pinjaman_modal_create"
+                                            )}
+                                            className="px-2 py-1 rounded-lg bg-blue-500 text-white mr-3"
+                                        >
+                                            Baru
+                                            {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                        </Link>
+                                        <Link
+                                            href={route(
+                                                "pinjamanmodal.pinjaman_modal_show",
+                                                item.id_pinjaman_owner
+                                            )}
+                                            className="px-2 py-1 rounded-lg bg-green-500 text-white"
+                                        >
+                                            Lunas
+                                            {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <Link
+                                        href={route(
+                                            "pinjamanmodal.pinjaman_modal_show",
+                                            item.id_pinjaman_owner
+                                        )}
+                                        className="px-2 py-1 rounded-lg bg-red-500 text-white"
+                                    >
+                                        Bayar
+                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                    </Link>
+                                )}
+                            </div>
+                            {/* {dayjs(item.bulan).format("MMM/YYYY")} */}
                         </DefaultTable.td>
                         <DefaultTable.td
                             noSpace
-                            className={`text-end bg-yellow-100`}
+                            className={`text-center bg-yellow-200`}
+                        >
+                            {item.transaksi_terakhir_owner !== "-"
+                                ? dayjs(item.transaksi_terakhir_owner).format(
+                                      "DD/MM/YYYY"
+                                  )
+                                : ""}
+                        </DefaultTable.td>
+
+                        <DefaultTable.td
+                            noSpace
+                            className={`text-end bg-yellow-200`}
                         >
                             <NumericFormat
-                                value={item.balance_before_sw}
+                                value={item.nominal_pinjaman_owner}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
@@ -285,17 +292,80 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
                             className={`text-end bg-yellow-200`}
                         >
                             <NumericFormat
-                                value={item.balance_before_sk}
+                                value={item.total_setoran_pinjaman_owner}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
                         </DefaultTable.td>
                         <DefaultTable.td
                             noSpace
-                            className={`text-end bg-green-100`}
+                            className={`text-end bg-yellow-200`}
                         >
                             <NumericFormat
-                                value={item.debit_sw}
+                                value={item.saldo_pinjaman_owner}
+                                displayType={"text"}
+                                thousandSeparator={","}
+                            />
+                        </DefaultTable.td>
+
+                        <DefaultTable.td
+                            noSpace
+                            className={`text-center bg-green-200`}
+                        >
+                            <div className={`px-6 py-1`}>
+                                {item.type_pinjaman_pusat == 3 ? (
+                                    <Link
+                                        href={route(
+                                            "pinjamanmodal.pinjaman_modal_create"
+                                        )}
+                                        className="px-2 py-1 rounded-lg bg-blue-500 text-white"
+                                    >
+                                        Baru
+                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                    </Link>
+                                ) : item.type_pinjaman_pusat == 1 ? (
+                                    <Link
+                                        href={route(
+                                            "pinjamanmodal.pinjaman_modal_show",
+                                            item.id_pinjaman_pusat
+                                        )}
+                                        className="px-2 py-1 rounded-lg bg-green-500 text-white"
+                                    >
+                                        Lunas
+                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                    </Link>
+                                ) : (
+                                    <Link
+                                        href={route(
+                                            "pinjamanmodal.pinjaman_modal_show",
+                                            item.id_pinjaman_pusat
+                                        )}
+                                        className="px-2 py-1 rounded-lg bg-red-500 text-white"
+                                    >
+                                        Bayar
+                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                    </Link>
+                                )}
+                            </div>
+                            {/* {dayjs(item.bulan).format("MMM/YYYY")} */}
+                        </DefaultTable.td>
+                        <DefaultTable.td
+                            noSpace
+                            className={`text-center bg-green-200`}
+                        >
+                            {item.transaksi_terakhir_pusat !== "-"
+                                ? dayjs(item.transaksi_terakhir_pusat).format(
+                                      "DD/MM/YYYY"
+                                  )
+                                : ""}
+                        </DefaultTable.td>
+
+                        <DefaultTable.td
+                            noSpace
+                            className={`text-end bg-green-200`}
+                        >
+                            <NumericFormat
+                                value={item.nominal_pinjaman_pusat}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
@@ -305,37 +375,7 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
                             className={`text-end bg-green-200`}
                         >
                             <NumericFormat
-                                value={item.debit_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-red-100`}
-                        >
-                            <NumericFormat
-                                value={item.kredit_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-red-200`}
-                        >
-                            <NumericFormat
-                                value={item.kredit_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-green-100`}
-                        >
-                            <NumericFormat
-                                value={item.balance_sw}
+                                value={item.total_setoran_pinjaman_pusat}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
@@ -345,117 +385,62 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
                             className={`text-end bg-green-200`}
                         >
                             <NumericFormat
-                                value={item.balance_sk}
+                                value={item.saldo_pinjaman_pusat}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
                         </DefaultTable.td>
+
                         <DefaultTable.td
                             noSpace
                             className={`text-end bg-blue-200`}
                         >
                             <NumericFormat
-                                value={item.saldo_global}
+                                value={item.total_pinjaman}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
                         </DefaultTable.td>
+
                         <DefaultTable.td
                             noSpace
-                            className={`text-end bg-blue-50`}
+                            className={`text-end bg-blue-200`}
                         >
                             <NumericFormat
-                                value={item.D_sw}
+                                value={item.total_saldo_pinjaman}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
                         </DefaultTable.td>
+
                         <DefaultTable.td
                             noSpace
-                            className={`text-end bg-blue-50`}
+                            className={`text-end bg-blue-200`}
                         >
                             <NumericFormat
-                                value={item.D_sk}
+                                value={item.jasa_modal_owner}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
                         </DefaultTable.td>
+
                         <DefaultTable.td
                             noSpace
-                            className={`text-end bg-blue-50`}
+                            className={`text-end bg-blue-200`}
                         >
                             <NumericFormat
-                                value={item.DM_sw}
+                                value={item.total_pinjaman}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
                         </DefaultTable.td>
+
                         <DefaultTable.td
                             noSpace
-                            className={`text-end bg-blue-50`}
+                            className={`text-end bg-blue-200`}
                         >
                             <NumericFormat
-                                value={item.DM_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-blue-50`}
-                        >
-                            <NumericFormat
-                                value={item.K_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-blue-50`}
-                        >
-                            <NumericFormat
-                                value={item.K_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-blue-50`}
-                        >
-                            <NumericFormat
-                                value={item.KM_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-blue-50`}
-                        >
-                            <NumericFormat
-                                value={item.KM_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-blue-50`}
-                        >
-                            <NumericFormat
-                                value={item.KRMD_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-blue-50`}
-                        >
-                            <NumericFormat
-                                value={item.KRMD_sk}
+                                value={item.total_saldo_pinjaman}
                                 displayType={"text"}
                                 thousandSeparator={","}
                             />
@@ -465,33 +450,13 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
             </DefaultTable.tbody>
             <tfoot className="sticky bottom-0 left-0 w-full bg-gray-300 shadow border-t border-t-white">
                 <tr className="bg-blue-200 font-semibold text-black">
-                    <td className={`px-3 py-1`} colSpan={4}>
+                    <td className={`px-3 py-1`} colSpan={5}>
                         TOTAL
                     </td>
-                    <td className={`px-3 py-1`}>
+                    <td className={`px-3 py-1 bg-green-500 text-white`}>
                         <div className={`whitespace-nowrap text-end`}>
                             <NumericFormat
-                                value={totals.balance_before_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.balance_before_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-                    <td className={`px-3 py-1 bg-green-400 text-white`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.debit_sw}
+                                value={totals.nominal_pinjaman_owner}
                                 displayType={"text"}
                                 thousandSeparator={","}
                                 prefix={"Rp. "}
@@ -501,47 +466,32 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
                     <td className={`px-3 py-1 bg-green-500 text-white`}>
                         <div className={`whitespace-nowrap text-end`}>
                             <NumericFormat
-                                value={totals.debit_sk}
+                                value={totals.total_setoran_pinjaman_owner}
                                 displayType={"text"}
                                 thousandSeparator={","}
                                 prefix={"Rp. "}
                             />
                         </div>
                     </td>
-                    <td className={`px-3 py-1`}>
+                    <td className={`px-3 py-1 bg-green-500 text-white `}>
                         <div className={`whitespace-nowrap text-end`}>
                             <NumericFormat
-                                value={totals.kredit_sw}
+                                value={totals.saldo_pinjaman_owner}
                                 displayType={"text"}
                                 thousandSeparator={","}
                                 prefix={"Rp. "}
                             />
                         </div>
                     </td>
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.kredit_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
+
+                    <td className={`px-3 py-1`} colSpan={2}>
+                        TOTAL
                     </td>
-                    <td className={`px-3 py-1`}>
+
+                    <td className={`px-3 py-1 bg-green-500 text-white `}>
                         <div className={`whitespace-nowrap text-end`}>
                             <NumericFormat
-                                value={totals.balance_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.balance_sk}
+                                value={totals.nominal_pinjaman_pusat}
                                 displayType={"text"}
                                 thousandSeparator={","}
                                 prefix={"Rp. "}
@@ -551,7 +501,47 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
                     <td className={`px-3 py-1 bg-green-500 text-white`}>
                         <div className={`whitespace-nowrap text-end`}>
                             <NumericFormat
-                                value={totals.saldo_global}
+                                value={totals.total_setoran_pinjaman_pusat}
+                                displayType={"text"}
+                                thousandSeparator={","}
+                                prefix={"Rp. "}
+                            />
+                        </div>
+                    </td>
+                    <td className={`px-3 py-1 bg-green-500 text-white`}>
+                        <div className={`whitespace-nowrap text-end`}>
+                            <NumericFormat
+                                value={totals.saldo_pinjaman_pusat}
+                                displayType={"text"}
+                                thousandSeparator={","}
+                                prefix={"Rp. "}
+                            />
+                        </div>
+                    </td>
+                    <td className={`px-3 py-1 bg-green-500 text-white`}>
+                        <div className={`whitespace-nowrap text-end`}>
+                            <NumericFormat
+                                value={totals.total_pinjaman}
+                                displayType={"text"}
+                                thousandSeparator={","}
+                                prefix={"Rp. "}
+                            />
+                        </div>
+                    </td>
+                    <td className={`px-3 py-1 bg-green-500 text-white`}>
+                        <div className={`whitespace-nowrap text-end`}>
+                            <NumericFormat
+                                value={totals.total_saldo_pinjaman}
+                                displayType={"text"}
+                                thousandSeparator={","}
+                                prefix={"Rp. "}
+                            />
+                        </div>
+                    </td>
+                    <td className={`px-3 py-1 bg-green-500 text-white`}>
+                        <div className={`whitespace-nowrap text-end`}>
+                            <NumericFormat
+                                value={totals.jasa_modal_owner}
                                 displayType={"text"}
                                 thousandSeparator={","}
                                 prefix={"Rp. "}
@@ -559,105 +549,20 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
                         </div>
                     </td>
 
-                    <td className={`px-3 py-1`}>
+                    <td className={`px-3 py-1 bg-green-500 text-white`}>
                         <div className={`whitespace-nowrap text-end`}>
                             <NumericFormat
-                                value={totals.D_sw}
+                                value={totals.total_pinjaman}
                                 displayType={"text"}
                                 thousandSeparator={","}
                                 prefix={"Rp. "}
                             />
                         </div>
                     </td>
-                    <td className={`px-3 py-1`}>
+                    <td className={`px-3 py-1 bg-green-500 text-white`}>
                         <div className={`whitespace-nowrap text-end`}>
                             <NumericFormat
-                                value={totals.D_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.DM_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.DM_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.K_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.K_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.KM_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.KM_sk}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.KRMD_sw}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-                    <td className={`px-3 py-1`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.KRMD_sk}
+                                value={totals.total_saldo_pinjaman}
                                 displayType={"text"}
                                 thousandSeparator={","}
                                 prefix={"Rp. "}
@@ -966,4 +871,4 @@ const TableGlobalPerbulan = ({ data, loading, setLoading }) => {
     );
 };
 
-export default TableGlobalPerbulan;
+export default PinjamanModalTable;

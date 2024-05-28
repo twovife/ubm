@@ -21,28 +21,57 @@ class BopTransactionController extends Controller
      */
     public function index_mutation()
     {
-        $getFilter = new \stdClass;
-        $getFilter = (object) request()->all();
-        $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
-        $getFilter->transaction_month = request()->transaction_month ??  Carbon::now()->month;
-        $getFilter->tanggal = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->endOfMonth()->format('Y-m-d');
-        $getFilter->tanggal_start = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->startOfMonth()->format('Y-m-d');
-        $getFilter->branch_id = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : (request()->branch_id ?? 1);
-        $getFilter->wilayah = -1;
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $requestFilter = new \stdClass;
+        $requestFilter->isWilayanNeeded = true;
+        $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
+        $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
 
-        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-            $q->where('id', auth()->user()->employee->branch_id);
-        })->get();
 
-        $data = BopTransaction::with('akun')->whereBetween('transaction_date', [$getFilter->tanggal_start, $getFilter->tanggal])->get();
-        $data_before = BopTransaction::with('akun')->where('transaction_date', "<", $getFilter->tanggal_start)->get();
-        // dd($data_before);
+        $data = BopTransaction::with('akun')->whereBetween('transaction_date', [$requestFilter->startOfMonth,  $requestFilter->endOfMonth])->orderBy('transaction_date', 'asc')->get();
+        $data_before = BopTransaction::with('akun')->where('transaction_date', "<",  $requestFilter->startOfMonth)->get();
+
         $saldo_before = $data_before->where('transaction', 'D')->sum('nominal') - $data_before->where('transaction', 'K')->sum('nominal');
         $saldo = $saldo_before;
+
+
+
+
+        $additional_array = [
+            'id' => 0,
+            'bulan' =>  $tanggal->startOfMonth()->format('M Y'),
+            'transaction_date' => $requestFilter->startOfMonth,
+            'type_transaksi' => "Saldo Sebelumnya",
+            'wilayah' => null,
+            'unit' => null,
+            'nama_karyawan' => null,
+            'saldo_sebelumya' => 0,
+            'bop' => null,
+            'debit' => null,
+            'kredit' => null,
+            'saldo' => $saldo_before,
+        ];
+
         $data_bulanan = $data->map(function ($item) use (&$saldo) {
             $saldo_before_counting = $saldo;
             $saldo = $item->transaction == "D" ? $saldo + $item->nominal : $saldo - $item->nominal;
-            // dd($item->akun->employee);
+
+            // return  [
+            //     'id' => $item->id,
+            //     'bulan' => Carbon::create($item->transaction_date)->format('M Y'),
+            //     'transaction_date' => Carbon::create($item->transaction_date)->format('Y-m-d'),
+            //     'type_transaksi' => $item->transaction_type == "TB" ? "TABUNGAN 1JT" : ($item->transaction_type == "BP" ? "Bon Panjer" : "Pinjaman Modal"),
+            //     'wilayah' => $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->wilayah : $item->savingaccount->branch->wilayah,
+            //     'unit' =>  $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->unit : $item->savingaccount->branch->unit,
+            //     'nama_karyawan' => $item->transaction_type == "BP" ? $item->savingaccount->employee->nama_karyawan : null,
+            //     'saldo_sebelumya' => $saldo_before_counting,
+            //     'bop' => $item->transaction == "D" && $item->transaction_type == "TB" ? $item->nominal : null,
+            //     'debit' => $item->transaction == "D" && $item->transaction_type != "TB" ? $item->nominal : null,
+            //     'kredit' => $item->transaction == "K" ? $item->nominal : null,
+            //     'saldo' => $saldo,
+            // ];
+
+
             return [
                 'id' => $item->id,
                 'bulan' => Carbon::create($item->transaction_date)->format('M Y'),
@@ -51,59 +80,57 @@ class BopTransactionController extends Controller
                 'keterangan' => $item->keterangan,
                 'wilayah' => $item->akun->branch->wilayah,
                 'unit' =>  $item->akun->branch->unit,
+                'keterangan' => $item->keterangan,
                 'nama_karyawan' => $item->transaction_type == "BONPRIVE" ? $item->akun->employee->nama_karyawan : null,
                 'saldo_sebelumya' => $saldo_before_counting,
-                'debit' => $item->transaction == "D" ? $item->nominal : 0,
-                'kredit' => $item->transaction == "K" ? $item->nominal : 0,
+
+                'bop' => $item->transaction == "D" && $item->transaction_type == "BOP" ? $item->nominal : null,
+                'debit' => $item->transaction == "D"  && $item->transaction_type != "BOP" ? $item->nominal : null,
+                'kredit' => $item->transaction == "K" ? $item->nominal : null,
                 'saldo' => $saldo,
             ];
         })->values();
+        $data_bulanan->prepend($additional_array);
         // dd($data_bulanan);
 
         return Inertia::render('BiayaOperasional/Dashboard', [
             'datas' => $data_bulanan,
-            'branch' => $branch,
             'saldo_akhir' => $saldo,
-            'server_filters' => $getFilter ?? null
+            'server_filter' => ['bulan' => $tanggal->format('Y-m')]
         ]);
     }
 
 
     public function index_bop()
     {
-        $getFilter = new \stdClass;
-        $getFilter = (object) request()->all();
-        $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
-        $getFilter->transaction_month = request()->transaction_month ??  Carbon::now()->month;
-        $getFilter->tanggal =    Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->endOfMonth()->format('Y-m-d');
-        $getFilter->branch_id = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : (request()->branch_id ?? 1);
-        $getFilter->wilayah = -1;
 
-        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-            $q->where('id', auth()->user()->employee->branch_id);
-        })->get();
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $requestFilter = new \stdClass;
+        $requestFilter->isWilayanNeeded = true;
+        $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
+        $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
 
         $data = Branch::leftJoin('bop_account_transactions', function ($join) {
             $join->on('branches.id', '=', 'bop_account_transactions.branch_id')->where(function ($que) {
                 $que->where('bop_account_transactions.transaction_type', 'BOP');
             });
         })
-            ->leftJoin('bop_transactions', function ($join) use ($getFilter) {
-                $join->on('bop_account_transactions.id', '=', 'bop_transactions.bop_account_transaction_id')->where(function ($que) use ($getFilter) {
-                    $que->where('transaction_date', "<=", $getFilter->tanggal);
+            ->leftJoin('bop_transactions', function ($join) use ($requestFilter) {
+                $join->on('bop_account_transactions.id', '=', 'bop_transactions.bop_account_transaction_id')->where(function ($que) use ($requestFilter) {
+                    $que->where('transaction_date', "<=", $requestFilter->endOfMonth);
                 });
             })
 
-            ->select('bop_account_transactions.id as account_id', 'branches.wilayah', 'branches.id as branch_id', 'branches.unit', DB::raw('COALESCE(SUM(bop_transactions.nominal), 0) as total'), DB::raw('max(transaction_date) as last_payment'))
-            ->groupBy('branches.wilayah', 'branches.id', 'branches.unit', 'bop_account_transactions.id')
+            ->select('bop_account_transactions.id as account_id', 'branches.wilayah', 'branches.id as branch_id', 'branches.unit', 'branches.isactive', DB::raw('COALESCE(SUM(bop_transactions.nominal), 0) as total'), DB::raw('max(transaction_date) as last_payment'))
+            ->groupBy('branches.wilayah', 'branches.id', 'branches.unit', 'bop_account_transactions.id', 'branches.isactive')
             ->get();
 
         // dd($data);
 
-        $data_perunit = $data->groupBy('wilayah')->map(function ($queries) use ($getFilter) {
+        $data_perunit = $data->groupBy('wilayah')->map(function ($queries) use ($requestFilter) {
             return [
                 'wilayah' => $queries->first()['wilayah'],
-                'data' => $queries->map(function ($saving_perwilayah) use ($getFilter) {
+                'data' => $queries->map(function ($saving_perwilayah) use ($requestFilter) {
                     return [
                         'wilayah' => $saving_perwilayah['wilayah'],
                         'id' => $saving_perwilayah['account_id'],
@@ -111,11 +138,21 @@ class BopTransactionController extends Controller
                         'branch_id' => $saving_perwilayah['branch_id'],
                         'total' => $saving_perwilayah['total'],
                         'lastmont' => Carbon::createFromDate($saving_perwilayah['last_year_payment'], $saving_perwilayah['last_month_payment'], 1)->format('Y-m'),
-                        'thismont' => Carbon::createFromDate($getFilter->tanggal, 1)->endOfMonth()->format('Y-m'),
-                        'last_month_payment' => $saving_perwilayah['total'] == 0 ? 1
-                            : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($getFilter->tanggal, 1)->endOfMonth()->format('Y-m') ? 0 : 1),
-                        'tanggungan' => $saving_perwilayah['total'] == 0 ? 'Belum Ada Transaksi'
-                            : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($getFilter->tanggal, 1)->endOfMonth()->format('Y-m') ? 'Nihil' : 'Ada Tanggungan'),
+                        'thismont' => Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m'),
+
+                        'isPaid' => $saving_perwilayah['total'] == 0 ? 1
+                            : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m') ? 0 : 1),
+
+
+                        'last_month_payment' => $saving_perwilayah['isactive'] == 0 ? 0
+                            : ($saving_perwilayah['total'] == 0 ? 1
+                                : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m') ? 0
+                                    : 1)),
+
+                        'tanggungan' => $saving_perwilayah['isactive'] == 0 ? 'Unit Non Aktif'
+                            : ($saving_perwilayah['total'] == 0 ? 'Belum Ada Transaksi'
+                                : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m') ? 'Nihil'
+                                    : 'Ada Tanggungan')),
                     ];
                 })->values(),
             ];
@@ -136,38 +173,37 @@ class BopTransactionController extends Controller
         return Inertia::render('BiayaOperasional/Index', [
             'datas' => $data_perwilayah,
             'batch_datas' => $data_perunit,
-            'branch' => $branch,
-            'server_filters' => $getFilter ?? null
+            'server_filter' => ['bulan' => $tanggal->format('Y-m')]
         ]);
     }
 
     public function index_bonpriv()
     {
-        $getFilter = new \stdClass;
-        $getFilter = (object) request()->all();
-        $getFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
-        $getFilter->transaction_month = request()->transaction_month ??  Carbon::now()->month;
-        $getFilter->tanggal =    Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->endOfMonth()->format('Y-m-d');
-        $getFilter->tanggal_awal =    Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->startOfMonth()->format('Y-m-d');
-        $getFilter->branch_id = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->branch_id : (request()->branch_id ?? 1);
-        $getFilter->wilayah = -1;
+
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $requestFilter = new \stdClass;
+        $requestFilter->isWilayanNeeded = true;
+        $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
+        $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
+
+
 
         $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
             $q->where('id', auth()->user()->employee->branch_id);
         })->get();
 
-        $data = BopAccountTransaction::with('transaksi', 'employee.branch')->where('transaction_type', 'BONPRIVE')->where(fn ($qq) => $qq->whereNull('paid_on'))->whereHas('transaksi', function ($query) use ($getFilter) {
-            $query->where('transaction_date', "<=", $getFilter->tanggal);
+        $data = BopAccountTransaction::with('transaksi', 'employee.branch')->where('transaction_type', 'BONPRIVE')->where(fn ($qq) => $qq->whereNull('paid_on'))->whereHas('transaksi', function ($query) use ($requestFilter) {
+            $query->where('transaction_date', "<=",   $requestFilter->endOfMonth);
         })->get();
         // dd($data);
 
 
-        $data_per_pic = $data->map(function ($queries) use ($getFilter) {
+        $data_per_pic = $data->map(function ($queries) use ($requestFilter) {
             $jumlah_pinjam = $queries->transaksi->where('transaction', 'K')->first()->nominal;
             $tanggal_pinjaman = $queries->transaksi->where('transaction', 'K')->first()->transaction_date;
-            $setoran_bulan_lalu = $queries->transaksi->where('transaction', 'D')->where('transaction_date', "<", $getFilter->tanggal_awal)->sum('nominal');
-            $setoran_bulan_ini =  $queries->transaksi->where('transaction', 'D')->whereBetween('transaction_date', [$getFilter->tanggal_awal, $getFilter->tanggal])->sum('nominal') ?? 0;
-            $pinjaman_bulan_ini =  $queries->transaksi->where('transaction', 'K')->whereBetween('transaction_date', [$getFilter->tanggal_awal, $getFilter->tanggal])->sum('nominal') ?? 0;
+            $setoran_bulan_lalu = $queries->transaksi->where('transaction', 'D')->where('transaction_date', "<",  $requestFilter->startOfMonth)->sum('nominal');
+            $setoran_bulan_ini =  $queries->transaksi->where('transaction', 'D')->whereBetween('transaction_date', [$requestFilter->startOfMonth,  $requestFilter->endOfMonth])->sum('nominal') ?? 0;
+            $pinjaman_bulan_ini =  $queries->transaksi->where('transaction', 'K')->whereBetween('transaction_date', [$requestFilter->startOfMonth,  $requestFilter->endOfMonth])->sum('nominal') ?? 0;
             $keterangan = $setoran_bulan_ini + $pinjaman_bulan_ini == 0 ? 'unpaid' : 'nihil';
             return [
                 'id' => $queries['id'],
@@ -190,7 +226,7 @@ class BopTransactionController extends Controller
         return Inertia::render('BonPrive/Index', [
             'datas' => $data_per_pic,
             'branch' => $branch,
-            'server_filters' => $getFilter ?? null
+            'server_filter' => ['bulan' => $tanggal->format('Y-m')]
         ]);
     }
 
@@ -199,6 +235,50 @@ class BopTransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function index_bonpriv_lunas()
+    {
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $requestFilter = new \stdClass;
+        $requestFilter->isWilayanNeeded = true;
+        $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
+        $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
+
+
+
+        $data = BopAccountTransaction::with('unitssaving', 'employee.branch')->where('account_type', 'BP')->whereNotNull('note')->get();
+
+        $data_per_pic = $data->map(function ($queries) use ($requestFilter) {
+            $jumlah_pinjam = $queries->unitssaving->where('transaction', 'K')->first()->nominal;
+            $tanggal_pinjaman = $queries->unitssaving->where('transaction', 'K')->first()->transaction_date;
+            $setoran_bulan_lalu = $queries->unitssaving->where('transaction', 'D')->where('transaction_date', "<", $requestFilter->startOfMonth)->sum('nominal');
+            $setoran_bulan_ini =  $queries->unitssaving->where('transaction', 'D')->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->sum('nominal') ?? 0;
+            $pinjaman_bulan_ini =  $queries->unitssaving->where('transaction', 'K')->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->sum('nominal') ?? 0;
+            $keterangan = $setoran_bulan_ini + $pinjaman_bulan_ini == 0 ? 'unpaid' : 'nihil';
+            return [
+                'id' => $queries['id'],
+                'branch_id' => $queries->employee->branch->id,
+                'wilayah' => $queries->employee->branch->wilayah,
+                'branch' =>  $queries->employee->branch->unit,
+                'nama_karyawan' =>  $queries->employee->nama_karyawan,
+                'jabatan' =>  $queries->employee->jabatan,
+                'tanggal_pinjaman' => $tanggal_pinjaman,
+                'nominal_pinjaman' => $jumlah_pinjam,
+                'saldo_bulan_lalu' => $jumlah_pinjam - $setoran_bulan_lalu,
+                'setoran_bulan_lalu' => $setoran_bulan_lalu,
+                'setoran_bulan_ini' => $setoran_bulan_ini,
+                'total_setoran' => $setoran_bulan_ini + $setoran_bulan_lalu,
+                'saldo' => ($jumlah_pinjam - $setoran_bulan_lalu) - $setoran_bulan_ini,
+                'keterangan' => $keterangan,
+                'note' => $queries['note']
+            ];
+        })->sortBy('branch')->sortBy('wilayah')->values();
+
+        return Inertia::render('BonPanjer/Lunas', [
+            'datas' => $data_per_pic,
+            'server_filter' => ['bulan' => $tanggal->format('Y-m')]
+        ]);
+    }
     public function create_mutation()
     {
 

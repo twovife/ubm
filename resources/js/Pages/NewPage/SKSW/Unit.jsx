@@ -27,7 +27,7 @@ const Unit = ({ branch, server_filters, batch_datas, ...props }) => {
                         <div className="flex items-center justify-start flex-1">
                             {batch_datas.length > 0 ? (
                                 <>
-                                    <ul className="tab-list flex justify-start gap-3 flex-wrap">
+                                    <ul className="tab-list flex justify-start gap-3 flex-wrap w-full">
                                         {batch_datas.map((item) => (
                                             <li
                                                 key={item.branch_id}

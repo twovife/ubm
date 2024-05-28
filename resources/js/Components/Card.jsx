@@ -4,8 +4,8 @@ import { IoMdCloseCircle } from "react-icons/io";
 
 const Card = ({ judul = "Judul", children }) => {
     return (
-        <div className="bg-white py-2 px-4 shadow rounded border-b">
-            <h1 className="text-4xl font-semibold font-roboto text-gray-400 tracking-wider ">
+        <div className="bg-white py-2 px-4 shadow rounded border-b mb-3">
+            <h1 className="text-2xl lg:text-4xl font-semibold font-roboto text-gray-400 tracking-wider ">
                 {judul}
             </h1>
             {children}

@@ -116,7 +116,7 @@ function useFilter(data, itemsPerPage, local_name) {
         for (let key in entry) {
             if (key !== "wilayah" && key !== "bulan") {
                 totals[key] =
-                    (parseInt(totals[key]) || 0) + parseInt(entry[key]);
+                    (parseInt(totals[key]) || 0) + parseInt(entry[key] ?? 0);
             }
         }
     });

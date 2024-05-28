@@ -31,13 +31,14 @@ class DepositController extends Controller
         $requestFilter = new \stdClass;
         $requestFilter->branch_id = request()->branch_id ?? 91;
         $requestFilter->wilayah = Branch::find($requestFilter->branch_id)->wilayah;
-        $simpanan = Deposit::with('employee', 'branch', 'deposit_transactions')->where('branch_id', $requestFilter->branch_id)->get();
 
+        $simpanan = Deposit::with('employee', 'branch', 'deposit_transactions')->where('branch_id', $requestFilter->branch_id)->get();
         $data = collect($simpanan)->map(
             function ($que) {
-                // dd($que->deposit_transactions);
                 $saldoSw = ($que->deposit_transactions->sum('sw_debit') - $que->deposit_transactions->sum('sw_kredit')) ?? 0;
                 $saldoSk = ($que->deposit_transactions->sum('sk_debit') - $que->deposit_transactions->sum('sk_kredit')) ?? 0;
+                $tidak_punya_saldo = $saldoSw + $saldoSk == 0;
+                $is_active = $tidak_punya_saldo &&  $que->employee->date_resign ?  "tidak" : "active";
                 return  [
                     'id' => $que->id,
                     'wilayah' => $que->branch->wilayah ?? '-',
@@ -48,12 +49,12 @@ class DepositController extends Controller
                     'saldo_sw' => $saldoSw,
                     'saldo_sk' => $saldoSk,
                     'total_saldo' => $saldoSk + $saldoSw,
-                    'isactive' => $que->employee->date_resign ? 1 : 2,
-                    'status_karyawan' => $que->employee->date_resign ? 'Non Aktiv' : 'Aktiv',
+                    'isactive' => $is_active,
+                    'status_karyawan' => $que->employee->date_resign ? 'Resign' : 'Aktif',
                     'hiredate' => $que->employee->hire_date ?? '-',
                 ];
             }
-        )->sortBy('nama')->values();
+        )->where('isactive', "active")->sortBy('nama')->values();
 
         // dd($data);
         return Inertia::render("NewPage/SKSW/Dashboard", [
@@ -63,6 +64,39 @@ class DepositController extends Controller
         ]);
     }
 
+    public function sksw_non_active()
+    {
+        $branch = Branch::all();
+        $simpanan = Deposit::with('employee', 'branch', 'deposit_transactions')->get();
+        $data = collect($simpanan)->map(
+            function ($que) {
+                $saldoSw = ($que->deposit_transactions->sum('sw_debit') - $que->deposit_transactions->sum('sw_kredit')) ?? 0;
+                $saldoSk = ($que->deposit_transactions->sum('sk_debit') - $que->deposit_transactions->sum('sk_kredit')) ?? 0;
+                $tidak_punya_saldo = $saldoSw + $saldoSk == 0;
+                $is_active = $tidak_punya_saldo &&  $que->employee->date_resign ?  "tidak" : "active";
+                return  [
+                    'id' => $que->id,
+                    'wilayah' => $que->branch->wilayah ?? '-',
+                    'unit' => $que->branch->unit ?? '-',
+                    'nama' => $que->employee->nama_karyawan ?? '-',
+                    'jabatan' => $que->employee->jabatan ?? '-',
+                    'tanggal_tabungan' => $que->tgl_tabugan ?? '-',
+                    'saldo_sw' => $saldoSw,
+                    'saldo_sk' => $saldoSk,
+                    'total_saldo' => $saldoSk + $saldoSw,
+                    'isactive' => $is_active,
+                    'status_karyawan' => $que->employee->date_resign ? 'Resign' : 'Aktif',
+                    'hiredate' => $que->employee->hire_date ?? '-',
+                ];
+            }
+        )->where('isactive', "tidak")->sortBy('nama')->values();
+
+        // dd($data);
+        return Inertia::render("NewPage/SKSW/DashboardNon", [
+            'datas' => $data,
+            'branch' => $branch,
+        ]);
+    }
 
     public function store(Request $request)
     {
@@ -128,61 +162,6 @@ class DepositController extends Controller
         return redirect()->route('sksw.transaksi', $deposit->id)->with('message', 'Data berhasil ditambahkan');
     }
 
-
-
-
-    public function swdestroy(MandatoryDepositTransaction $mandatoryDepositTransaction)
-    {
-        try {
-            DB::beginTransaction();
-            if ($mandatoryDepositTransaction->transaction == "D") {
-                // dd("d");
-                $mandatoryDepositTransaction->deposit->sw_balance =  $mandatoryDepositTransaction->deposit->sw_balance - $mandatoryDepositTransaction->debit;
-                $mandatoryDepositTransaction->deposit->save();
-                $mandatoryDepositTransaction->delete();
-            } else if ($mandatoryDepositTransaction->transaction == "K") {
-                // dd("k");
-                $mandatoryDepositTransaction->deposit->sw_balance =  $mandatoryDepositTransaction->deposit->sw_balance + $mandatoryDepositTransaction->debit;
-                $mandatoryDepositTransaction->deposit->save();
-                $mandatoryDepositTransaction->delete();
-            }
-            DB::commit();
-        } catch (\Throwable $th) {
-            DB::rollback();
-            // dd($e);
-            return redirect()->back()->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
-        }
-        return redirect()->route('simpanan.transaksi', $mandatoryDepositTransaction->deposit->id)->with('message', 'data berhasil di hapuskan');
-    }
-
-    public function skdestroy(OptionalDepositTransaction $optionalDepositTransaction)
-    {
-
-        try {
-            DB::beginTransaction();
-            // $divisi_sekarang =
-
-            if ($optionalDepositTransaction->transaction == "D") {
-                // dd("D");
-                $optionalDepositTransaction->deposit->sk_balance =  $optionalDepositTransaction->deposit->sk_balance - $optionalDepositTransaction->debit;
-                $optionalDepositTransaction->deposit->save();
-                $optionalDepositTransaction->delete();
-            } else if ($optionalDepositTransaction->transaction == "K") {
-                // dd("K");
-                $optionalDepositTransaction->deposit->sk_balance =  $optionalDepositTransaction->deposit->sk_balance + $optionalDepositTransaction->debit;
-                $optionalDepositTransaction->deposit->save();
-                $optionalDepositTransaction->delete();
-            }
-
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollback();
-            dd($e);
-            return redirect()->back()->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
-        }
-        return redirect()->route('simpanan.transaksi', $optionalDepositTransaction->deposit->id)->with('message', 'data berhasil di hapuskan');
-    }
 
 
     public function transaksi(Deposit $deposit)
@@ -545,19 +524,6 @@ class DepositController extends Controller
 
     public function sksw_unit()
     {
-
-        // $branch = Branch::query()->select('wilayah')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-        //     $q->where('id', auth()->user()->employee->branch_id);
-        // })->distinct()->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
-
-        // $requestFilter = new \stdClass;
-        // $requestFilter = (object) request()->all();
-        // $requestFilter->transaction_year = request()->transaction_year ??  Carbon::now()->year;
-        // $requestFilter->transaction_month = request()->transaction_month ??   Carbon::now()->month;
-        // $requestFilter->tanggal = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->endOfMonth()->format('Y-m-d');
-        // $requestFilter->startOfMonth = Carbon::createFromDate(request()->transaction_year, request()->transaction_month, 1)->startOfMonth()->format('Y-m-d');
-        // $requestFilter->isWilayanNeeded = request()->isWilayanNeeded ??  true;
-        // $requestFilter->wilayah = auth()->user()->hasPermissionTo('unit') ? auth()->user()->employee->area : (request()->wilayah ?? 0);
 
         $branch = Branch::all();
         $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->format('Y-m'));

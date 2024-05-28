@@ -1,3 +1,4 @@
+import Card from "@/Components/Card";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import LinkButton from "@/Components/LinkButton";
@@ -33,84 +34,86 @@ const Outcome = ({ curent_unit, ...props }) => {
         post(route("mutation.store"));
     };
     return (
-        <Authenticated
-            loading={processing}
-            auth={props.auth}
-            errors={props.errors}
-            header={
-                <>
-                    <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Pengeluaran BOP
-                    </h2>
-                    <div className="ml-auto flex items-center">
-                        <LinkButton
-                            href={route("mutation.index")}
-                            title={"Dashboard BOP"}
-                        />
+        <Authenticated loading={processing}>
+            <Card judul="Create Pengeluaran BOP ">
+                <Card.subTitle>
+                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                        <Card.endContent className={`flex-wrap`}>
+                            <LinkButton
+                                href={route("mutation.index")}
+                                title={"Back"}
+                                size={"sm"}
+                                type="button"
+                                className="block whitespace-nowrap"
+                                theme="primary"
+                            />
+                        </Card.endContent>
                     </div>
-                </>
-            }
-        >
-            <div className="sm:px-6 lg:px-8">
-                <div className="p-3 bg-white rounded shadow w-1/2 mx-auto">
-                    <form onSubmit={onSubmitForm} className="w-full">
-                        <div className="lg:flex gap-3 w-full">
+                </Card.subTitle>
+                <div className="sm:px-6 lg:px-8">
+                    <div className="p-3 bg-white rounded shadow w-1/2 mx-auto">
+                        <form onSubmit={onSubmitForm} className="w-full">
+                            <div className="lg:flex gap-3 w-full">
+                                <div className="mb-2 flex-1 w-full">
+                                    <InputLabel
+                                        value={"Tanggal"}
+                                        className="mb-1"
+                                    />
+                                    <TextInput
+                                        className="block w-full"
+                                        type="date"
+                                        required
+                                        name="transaction_date"
+                                        max={curent_unit.akhirbulan}
+                                        min={curent_unit.awalbulan}
+                                        value={data.transaction_date}
+                                        onChange={onInputChange}
+                                    />
+                                </div>
+                                <div className="mb-2 flex-1">
+                                    <InputLabel
+                                        value={"Nominal"}
+                                        className="mb-1"
+                                    />
+                                    <CurrencyInput
+                                        name="nominal"
+                                        id="nominal"
+                                        className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
+                                        allowDecimals={false}
+                                        prefix="Rp. "
+                                        min={1}
+                                        required
+                                        onValueChange={onHandleCurencyChange}
+                                        value={data.nominal}
+                                        placeholder={
+                                            "Inputkan angka tanpa sparator"
+                                        }
+                                    />
+                                    <InputError
+                                        message={errors.nominal}
+                                        className="mt-2"
+                                    />
+                                </div>
+                            </div>
                             <div className="mb-2 flex-1 w-full">
                                 <InputLabel
-                                    value={"Tanggal"}
+                                    value={"Keterangan"}
                                     className="mb-1"
                                 />
                                 <TextInput
                                     className="block w-full"
-                                    type="date"
+                                    type="text"
                                     required
-                                    name="transaction_date"
-                                    max={curent_unit.akhirbulan}
-                                    min={curent_unit.awalbulan}
-                                    value={data.transaction_date}
+                                    name="keterangan"
+                                    value={data.keterangan}
                                     onChange={onInputChange}
                                 />
                             </div>
-                            <div className="mb-2 flex-1">
-                                <InputLabel
-                                    value={"Nominal"}
-                                    className="mb-1"
-                                />
-                                <CurrencyInput
-                                    name="nominal"
-                                    id="nominal"
-                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                    allowDecimals={false}
-                                    prefix="Rp. "
-                                    min={1}
-                                    required
-                                    onValueChange={onHandleCurencyChange}
-                                    value={data.nominal}
-                                    placeholder={
-                                        "Inputkan angka tanpa sparator"
-                                    }
-                                />
-                                <InputError
-                                    message={errors.nominal}
-                                    className="mt-2"
-                                />
-                            </div>
-                        </div>
-                        <div className="mb-2 flex-1 w-full">
-                            <InputLabel value={"Keterangan"} className="mb-1" />
-                            <TextInput
-                                className="block w-full"
-                                type="text"
-                                required
-                                name="keterangan"
-                                value={data.keterangan}
-                                onChange={onInputChange}
-                            />
-                        </div>
-                        <PrimaryButton type="submit" title={"submit"} />
-                    </form>
+                            <PrimaryButton type="submit" title={"submit"} />
+                        </form>
+                    </div>
                 </div>
-            </div>
+            </Card>
         </Authenticated>
     );
 };

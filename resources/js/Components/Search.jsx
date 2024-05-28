@@ -14,6 +14,7 @@ const Search = ({
     availableBranch = false,
     availableDate = false,
     availableMonth = false,
+    children,
 }) => {
     const {
         wilayah,
@@ -149,6 +150,7 @@ const Search = ({
                     className="block"
                     title={"Reset"}
                 />
+                {children}
             </div>
         </form>
     );

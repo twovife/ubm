@@ -85,20 +85,22 @@ Route::middleware('auth')->group(function () {
     });
 
 
+    Route::prefix('controlpanel')->name('controlpanel.')->group(function () {
+        Route::controller(BranchController::class)->prefix('unit')->name('unit.')->group(function () {
+            Route::get('/', 'index')->name('index');
+        });
+    });
 
 
-    Route::prefix('sksw')->name('sksw.')->group(function () {
-        Route::get('/', [DepositController::class, 'dashboard'])->name('dashboard');
-        // Route::get('/create', [DepositController::class, 'create'])->name('create');
-        Route::post('/', [DepositController::class, 'store'])->name('store');
-
-
-        Route::get('/transaksi/{deposit}', [DepositController::class, 'transaksi'])->name('transaksi'); //detail transaksi
-        Route::put('/transaksi/{deposit}', [DepositController::class, 'addtransaksi'])->name('addtransaksi'); //adding transaksi
-
-        Route::get('/global', [DepositController::class, 'sksw_global'])->name('global');
-        Route::get('/wilayah', [DepositController::class, 'sksw_wilayah'])->name('wilayah');
-        Route::get('/unit', [DepositController::class, 'sksw_unit'])->name('unit');
+    Route::controller(DepositController::class)->prefix('sksw')->name('sksw.')->group(function () {
+        Route::get('/',  'dashboard')->name('dashboard');
+        Route::get('/sksw_non_active',  'sksw_non_active')->name('dashboard_nonaktif');
+        Route::post('/',  'store')->name('store');
+        Route::get('/transaksi/{deposit}',  'transaksi')->name('transaksi'); //detail transaksi
+        Route::put('/transaksi/{deposit}',  'addtransaksi')->name('addtransaksi'); //adding transaksi
+        Route::get('/global',  'sksw_global')->name('global');
+        Route::get('/wilayah',  'sksw_wilayah')->name('wilayah');
+        Route::get('/unit',  'sksw_unit')->name('unit');
     });
 
 
@@ -111,9 +113,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/savingdetails/{unitSavingAccount}', [UnitSavingController::class, 'savingdetailspost'])->name('savingdetailspost');
         Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });
-
     Route::prefix('bonpanjer')->name('bonpanjer.')->group(function () {
         Route::get('/', [UnitSavingController::class, 'bon_panjer'])->name('bon_panjer');
+        Route::get('/lunas', [UnitSavingController::class, 'bon_panjer_lunas'])->name('bon_panjer_lunas');
         Route::get('/create', [UnitSavingController::class, 'bon_panjer_create'])->name('bon_panjer_create');
         Route::post('/', [UnitSavingController::class, 'bon_panjer_store'])->name('bon_panjer_store');
         Route::get('/bon_panjer_show/{unitSavingAccount}', [UnitSavingController::class, 'bon_panjer_show'])->name('bon_panjer_show');
@@ -121,8 +123,6 @@ Route::middleware('auth')->group(function () {
         // Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
         // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });
-
-
     Route::prefix('pinjamanmodal')->name('pinjamanmodal.')->group(function () {
         Route::get('/', [UnitSavingController::class, 'pinjaman_modal'])->name('pinjaman_modal');
         Route::get('/create', [UnitSavingController::class, 'pinjaman_modal_create'])->name('pinjaman_modal_create');
@@ -133,9 +133,11 @@ Route::middleware('auth')->group(function () {
         // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });
 
+
     Route::controller(BopTransactionController::class)->group(function () {
         Route::prefix('bonpriv')->name('bonpriv.')->group(function () {
             Route::get('/', 'index_bonpriv')->name('index');
+            Route::get('/lunas', 'index_bonpriv_lunas')->name('indexlunas');
             Route::get('/create', 'create_bonpriv')->name('create');
             Route::post('/', 'store_bonpriv')->name('store');
             Route::get('/{bopAccountTransaction}', 'show_bonpriv')->name('show');

@@ -264,7 +264,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                 addFilter={addFilter}
                 setAddFilter={setAddFilter}
             />
-            <Card judul="Daftar SKSW Karyawan">
+            <Card judul="Saldo Global SKSW">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
@@ -477,12 +477,12 @@ const Index = ({ server_filters, datas, ...props }) => {
                             </DefaultTable.tr>
                         ))}
                     </DefaultTable.tbody>
-                    <tfoot className="sticky bottom-0 left-0 w-full bg-gray-300 shadow border-t border-t-white">
+                    <tfoot className="sticky bottom-0 left-0 w-full bg-gray-300 shadow border-t border-t-white text-end">
                         <tr className="bg-blue-200 font-semibold text-black">
-                            <td className={`px-6 py-1`} colSpan={2}>
+                            <td className={`px-3 py-1`} colSpan={2}>
                                 TOTAL
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.balance_before_sw}
@@ -492,7 +492,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.balance_before_sk}
@@ -502,7 +502,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1 bg-green-400 text-white`}>
+                            <td className={`px-3 py-1 bg-green-400 text-white`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.debit_sw}
@@ -512,7 +512,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1 bg-green-500 text-white`}>
+                            <td className={`px-3 py-1 bg-green-500 text-white`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.debit_sk}
@@ -522,7 +522,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.kredit_sw}
@@ -532,7 +532,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.kredit_sk}
@@ -542,7 +542,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.balance_sw}
@@ -552,7 +552,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.balance_sk}
@@ -562,7 +562,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1 bg-green-500 text-white`}>
+                            <td className={`px-3 py-1 bg-green-500 text-white`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.saldo_global}
@@ -573,7 +573,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                 </div>
                             </td>
 
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.D_sw}
@@ -583,7 +583,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.D_sk}
@@ -594,7 +594,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                 </div>
                             </td>
 
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.DM_sw}
@@ -605,7 +605,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                 </div>
                             </td>
 
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.DM_sk}
@@ -616,7 +616,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                 </div>
                             </td>
 
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.K_sw}
@@ -626,7 +626,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.K_sk}
@@ -637,7 +637,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                 </div>
                             </td>
 
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.KM_sw}
@@ -647,7 +647,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.KM_sk}
@@ -658,7 +658,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                 </div>
                             </td>
 
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.KRMD_sw}
@@ -668,7 +668,7 @@ const Index = ({ server_filters, datas, ...props }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`px-6 py-1`}>
+                            <td className={`px-3 py-1`}>
                                 <div className={`whitespace-nowrap`}>
                                     <NumericFormat
                                         value={totals.KRMD_sk}
@@ -682,330 +682,8 @@ const Index = ({ server_filters, datas, ...props }) => {
                     </tfoot>
                 </DefaultTable>
             </Card>
-
-            {/* <div className="mx-auto sm:px-6 lg:px-8 mb-6">
-                <div className="p-3 bg-white rounded shadow">
-                    <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center mt-3 gap-3">
-                        <form
-                            onSubmit={onBranchChange}
-                            className="ml-auto flex gap-3 items-center"
-                        >
-                            <SelectList
-                                value={serverFilter.transaction_month}
-                                options={bulanAngka}
-                                name={"transaction_month"}
-                                nullValue={true}
-                                className={"text-sm"}
-                                onChange={onServerFilterChange}
-                            />
-                            <SelectList
-                                value={serverFilter.transaction_year}
-                                options={tahunAngka}
-                                name={"transaction_year"}
-                                nullValue={true}
-                                className={"text-sm"}
-                                onChange={onServerFilterChange}
-                            />
-
-                            <PrimaryButton
-                                href={route("sksw.global")}
-                                title={"Go"}
-                                size={"sm"}
-                                type="submit"
-                                theme="green"
-                            />
-
-                            <LinkButton
-                                href={route("sksw.global")}
-                                title={"Reset"}
-                                size={"sm"}
-                                theme="other"
-                                type="submit"
-                                icon={<BiRefresh />}
-                            />
-                        </form>
-                    </div>
-
-                    {filters && (
-                        <div className="inline-block mt-3">
-                            {filters.map((item) => {
-                                if (item.column == "") {
-                                    return null;
-                                }
-                                return (
-                                    <div className="flex items-center justify-start space-y-2">
-                                        <div className="border rounded flex items-center">
-                                            <div className="p-2 text-lg bg-green-400 text-white">
-                                                <AiFillFilter />
-                                            </div>
-                                            <div className="px-3 text-sm text-main-500">
-                                                <span className="mr-1 capitalize ">
-                                                    {item.column}
-                                                </span>
-                                                <span className="mr-1 capitalize ">
-                                                    {item.operators == 1
-                                                        ? "Contains"
-                                                        : "="}
-                                                </span>
-                                                <span>'{item.values}'</span>
-                                            </div>
-                                        </div>
-                                        <div
-                                            className="hover:border hover:bg-gray-300 hover:cursor-pointer rounded p-1 ml-2"
-                                            onClick={() =>
-                                                decrementFilter(item.column)
-                                            }
-                                        >
-                                            <AiOutlineClose />
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
-
-                <div className="h-[70vh] p-3 mt-3 bg-white rounded shadow overflow-auto">
-                    <table className="w-full text-sm text-left text-gray-500">
-                        <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
-                            <tr>
-                                <th className="px-6 py-4">Nomor</th>
-                                {headers.map((header, key) => (
-                                    <th
-                                        key={key}
-                                        data-item={header.column}
-                                        data-format={header.format ?? "text"}
-                                        scope="col"
-                                        className="px-6 py-4 hover:bg-main-500 hover:text-white hover:cursor-pointer"
-                                    >
-                                        {header.title}
-                                        {orderData.column == header.column && (
-                                            <span className="ml-1 text-blue-400 italic">
-                                                {orderData.orderby}
-                                            </span>
-                                        )}
-
-                                        {showFilter.column == header.column &&
-                                            filterModal()}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        {tBodyGenerator()}
-                        <tfoot>
-                            <tr className="bg-blue-200 font-semibold text-black">
-                                <td className={`px-6 py-1`} colSpan={3}>
-                                    TOTAL
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.balance_before_sw}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.balance_before_sk}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.debit_sw}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.debit_sk}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.kredit_sw}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.kredit_sk}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.balance_sw}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.balance_sk}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.saldo_global}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.D_sw}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.D_sk}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.DM_sw}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.DM_sk}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.K_sw}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.K_sk}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.KM_sw}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.KM_sk}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.KRMD_sw}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                                <td className={`px-6 py-1`}>
-                                    <div className={`whitespace-nowrap`}>
-                                        <NumericFormat
-                                            value={totals.KRMD_sk}
-                                            displayType={"text"}
-                                            thousandSeparator={","}
-                                            prefix={"Rp. "}
-                                        />
-                                    </div>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div> */}
         </Authenticated>
     );
 };
 
 export default Index;
-
-// K_sw
-// D_sw
-// KM_sw
-// DM_sw
-// KRMD_sw

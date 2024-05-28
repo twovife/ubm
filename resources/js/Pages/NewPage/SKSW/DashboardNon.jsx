@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
 import Create from "./Create";
 
-const Dashboard = ({ branch, server_filters, datas, ...props }) => {
+const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
     const [loading, setLoading] = useState(false);
     const {
         showFilter,
@@ -27,7 +27,7 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
         totalPages,
         handlePageChange,
         totals,
-    } = useFilter(datas, 100, "sksw_dashboard");
+    } = useFilter(datas, 100, "sksw_dashboardnon");
 
     const headers = [
         {
@@ -139,7 +139,7 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
                 addFilter={addFilter}
                 setAddFilter={setAddFilter}
             />
-            <Card judul="SKSW Karyawan">
+            <Card judul="SKSW Non Aktif">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
@@ -152,8 +152,8 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
                             <Search
                                 loading={loading}
                                 setLoading={setLoading}
-                                urlLink={route("sksw.dashboard")}
-                                localState={"sksw_dashboard"}
+                                urlLink={route("sksw.dashboard_nonaktif")}
+                                localState={"sksw_dashboardnon"}
                                 availableBranch={true}
                             />
                             <PrimaryButton
@@ -288,4 +288,4 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
     );
 };
 
-export default Dashboard;
+export default DashboardNon;

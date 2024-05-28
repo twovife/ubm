@@ -41,8 +41,22 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                     </button>
                     <SidebarMenuButton
                         onClick={() => togglerColapse(1)}
-                        active={route().current("sksw.*")}
+                        active={route().current("emp.*")}
                         show={collapse == 1}
+                        title={`Karyawan`}
+                        lists={[
+                            {
+                                id: "1",
+                                href: route("emp.index"),
+                                name: "Data Karyawan",
+                                active: route().current("emp.index"),
+                            },
+                        ]}
+                    />
+                    <SidebarMenuButton
+                        onClick={() => togglerColapse(2)}
+                        active={route().current("sksw.*")}
+                        show={collapse == 2}
                         title={`SKSW`}
                         lists={[
                             {
@@ -50,6 +64,14 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                                 href: route("sksw.dashboard"),
                                 name: "Dashboard SKSW",
                                 active: route().current("sksw.dashboard"),
+                            },
+                            {
+                                id: "2",
+                                href: route("sksw.dashboard_nonaktif"),
+                                name: "Dashboard Non Active",
+                                active: route().current(
+                                    "sksw.dashboard_nonaktif"
+                                ),
                             },
                             {
                                 id: "2",
@@ -72,34 +94,103 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                         ]}
                     />
                     <SidebarMenuButton
-                        onClick={() => togglerColapse(2)}
-                        active={route().current("aset.*")}
-                        show={collapse == 2}
-                        title={`Aset Kendaraan`}
+                        onClick={() => togglerColapse(3)}
+                        active={
+                            route().current("unitsaving.*") ||
+                            route().current("bonpanjer.*") ||
+                            route().current("pinjamanmodal.*")
+                        }
+                        show={collapse == 3}
+                        title={`Tabungan 1 Juta`}
                         lists={[
                             {
                                 id: "1",
-                                href: route("sksw.dashboard"),
-                                name: "Dashboard SKSW",
-                                active: route().current("sksw.dashboard"),
+                                href: route("unitsaving.dashboard"),
+                                name: "Buku Transaksi 1jt",
+                                active: route().current("unitsaving.dashboard"),
                             },
                             {
                                 id: "2",
-                                href: route("sksw.global"),
-                                name: "SKSW Global",
-                                active: route().current("sksw.global"),
+                                href: route("unitsaving.index"),
+                                name: "Tabungan 1Jt",
+                                active: route().current("unitsaving.index"),
                             },
                             {
                                 id: "3",
-                                href: route("sksw.wilayah"),
-                                name: "SKSW Wilayah",
-                                active: route().current("sksw.wilayah"),
+                                href: route("bonpanjer.bon_panjer"),
+                                name: "Bon Panjer",
+                                active:
+                                    route().current("bonpanjer.*") &&
+                                    !route().current(
+                                        "bonpanjer.bon_panjer_lunas"
+                                    ),
+                            },
+                            {
+                                id: "5",
+                                href: route("bonpanjer.bon_panjer_lunas"),
+                                name: "Bon Panjer Lunas",
+                                active: route().current(
+                                    "bonpanjer.bon_panjer_lunas"
+                                ),
                             },
                             {
                                 id: "4",
-                                href: route("sksw.unit"),
-                                name: "SKSW Unit",
-                                active: route().current("sksw.unit"),
+                                href: route("pinjamanmodal.pinjaman_modal"),
+                                name: "Pinjaman Modal",
+                                active: route().current(
+                                    "pinjamanmodal.pinjaman_modal"
+                                ),
+                            },
+                        ]}
+                    />
+                    <SidebarMenuButton
+                        onClick={() => togglerColapse(4)}
+                        active={
+                            route().current("bop.*") ||
+                            route().current("bonpriv.*") ||
+                            route().current("mutation.*")
+                        }
+                        show={collapse == 4}
+                        title={`BOP Pusat`}
+                        lists={[
+                            {
+                                id: "1",
+                                href: route("mutation.index"),
+                                name: "Dashboard Mutasi BOP",
+                                active: route().current("mutation.*"),
+                            },
+                            {
+                                id: "2",
+                                href: route("bop.index"),
+                                name: "Setoran BOP",
+                                active: route().current("bop.*"),
+                            },
+                            {
+                                id: "3",
+                                href: route("bonpriv.index"),
+                                name: "Bon Prive",
+                                active: route().current("bonpriv.index"),
+                            },
+                            {
+                                id: "4",
+                                href: route("bonpriv.indexlunas"),
+                                name: "Bon Prive Lunas",
+                                active: route().current("bonpriv.indexlunas"),
+                            },
+                        ]}
+                    />
+
+                    <SidebarMenuButton
+                        onClick={() => togglerColapse(10)}
+                        active={route().current("controlpanel.*")}
+                        show={collapse == 10}
+                        title={`Administrasi`}
+                        lists={[
+                            {
+                                id: "1",
+                                href: route("controlpanel.unit.index"),
+                                name: "Daftar Kantor",
+                                active: route().current("controlpanel.unit.*"),
                             },
                         ]}
                     />

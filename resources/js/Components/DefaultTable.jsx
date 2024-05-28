@@ -2,7 +2,7 @@ import React from "react";
 
 const DefaultTable = ({ children }) => {
     return (
-        <div className="overflow-auto max-h-[50vh] lg:max-h-[70vh]">
+        <div className="overflow-auto max-h-[60vh] lg:max-h-[70vh]">
             <table className="w-full divide-y divide-gray-200 text-xs lg:text-sm relative z-0">
                 {children}
             </table>
@@ -26,9 +26,11 @@ const tableBody = ({ children }) => {
     );
 };
 
-const tableTr = ({ children }) => {
+const tableTr = ({ className, children }) => {
     return (
-        <tr className="odd:bg-white even:bg-gray-100 hover:bg-roman-50/50 group">
+        <tr
+            className={`odd:bg-white even:bg-gray-100 hover:bg-roman-50/50 group ${className}`}
+        >
             {children}
         </tr>
     );

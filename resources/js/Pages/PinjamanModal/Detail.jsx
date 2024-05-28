@@ -1,3 +1,4 @@
+import Card from "@/Components/Card";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import LinkButton from "@/Components/LinkButton";
@@ -6,6 +7,7 @@ import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { useForm } from "@inertiajs/react";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { NumericFormat } from "react-number-format";
@@ -53,8 +55,30 @@ const Detail = ({ details, curent_unit, ...props }) => {
                 </>
             }
         >
-            <div className="sm:px-6 lg:px-8">
-                <div className="p-3 bg-white rounded shadow max-w-6xl mx-auto mb-3">
+            <Card judul="Detail Pinjaman Modal ">
+                <Card.subTitle>
+                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                        <Card.endContent className={`flex-wrap`}>
+                            <LinkButton
+                                href={route("unitsaving.index")}
+                                title={"Simpanan 1JT"}
+                                size={"sm"}
+                                type="button"
+                                className="block whitespace-nowrap"
+                                theme="primary"
+                            />
+                            <LinkButton
+                                href={route("bonpanjer.bon_panjer")}
+                                title={"Bon Panjer"}
+                                size={"sm"}
+                                type="button"
+                                className="block whitespace-nowrap"
+                                theme="primary"
+                            />
+                        </Card.endContent>
+                    </div>
+                </Card.subTitle>
+                <div className="p-3 bg-white rounded shadow w-full mb-3 overflow-auto">
                     <table className="w-full text-left text-gray-500 text-xs">
                         <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
                             <tr>
@@ -123,12 +147,14 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                             <td colSpan="2">{key + 1}</td>
                                         </th>
                                         <td className="px-3 py-1">
-                                            {item.transaction_date}
+                                            {dayjs(
+                                                item.transaction_date
+                                            ).format("DD/MM/YYYY")}
                                         </td>
                                         <td className="px-3 py-1">
                                             {item.wilayah}
                                         </td>
-                                        <td className="px-3 py-1">
+                                        <td className="px-3 py-1 whitespace-nowrap">
                                             {item.unit}
                                         </td>
                                         <td className="px-3 py-1">
@@ -137,36 +163,32 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                         <td className="px-3 py-1">
                                             {item.jabatan}
                                         </td>
-                                        <td className="px-3 py-1">
+                                        <td className="px-3 py-1 whitespace-nowrap">
                                             <NumericFormat
                                                 value={item.saldo_sebelum}
                                                 displayType={"text"}
                                                 thousandSeparator={","}
-                                                prefix={"Rp. "}
                                             />
                                         </td>
-                                        <td className="px-3 py-1">
+                                        <td className="px-3 py-1 whitespace-nowrap">
                                             <NumericFormat
                                                 value={item.angsuran}
                                                 displayType={"text"}
                                                 thousandSeparator={","}
-                                                prefix={"Rp. "}
                                             />
                                         </td>
-                                        <td className="px-3 py-1">
+                                        <td className="px-3 py-1 whitespace-nowrap">
                                             <NumericFormat
                                                 value={item.pinjaman}
                                                 displayType={"text"}
                                                 thousandSeparator={","}
-                                                prefix={"Rp. "}
                                             />
                                         </td>
-                                        <td className="px-3 py-1">
+                                        <td className="px-3 py-1 whitespace-nowrap">
                                             <NumericFormat
                                                 value={item.saldo}
                                                 displayType={"text"}
                                                 thousandSeparator={","}
-                                                prefix={"Rp. "}
                                             />
                                         </td>
                                     </tr>
@@ -179,108 +201,120 @@ const Detail = ({ details, curent_unit, ...props }) => {
                         </tbody>
                     </table>
                 </div>
-                <div className="p-3 bg-white rounded shadow max-w-6xl mx-auto">
-                    <form onSubmit={onSubmitForm} className="w-full">
-                        <div className="lg:flex gap-2 w-full">
-                            <div className="mb-2 flex-1 w-full">
-                                <InputLabel
-                                    value={"Wilayah"}
-                                    className="mb-1"
-                                />
-                                <TextInput
-                                    className="block w-full"
-                                    disabled
-                                    value={curent_unit.wilayah}
-                                />
-                            </div>
 
-                            <div className="mb-2 flex-1 w-full">
-                                <InputLabel value={"Unit"} className="mb-1" />
-                                <TextInput
-                                    className="block w-full"
-                                    disabled
-                                    value={curent_unit.unit}
-                                />
-                            </div>
+                <div className="sm:px-6 lg:px-8">
+                    <div className="p-3 bg-white rounded shadow max-w-6xl mx-auto">
+                        <form onSubmit={onSubmitForm} className="w-full">
+                            <div className="lg:flex gap-2 w-full">
+                                <div className="mb-2 flex-1 w-full">
+                                    <InputLabel
+                                        value={"Wilayah"}
+                                        className="mb-1"
+                                    />
+                                    <TextInput
+                                        className="block w-full"
+                                        disabled
+                                        value={curent_unit.wilayah}
+                                    />
+                                </div>
 
-                            <div className="mb-2 flex-1 w-full">
-                                <InputLabel
-                                    value={"Nama Karyawan"}
-                                    className="mb-1"
-                                />
-                                <TextInput
-                                    className="block w-full"
-                                    type="text"
-                                    disabled
-                                    value={curent_unit.nama_karyawan}
-                                />
-                            </div>
+                                <div className="mb-2 flex-1 w-full">
+                                    <InputLabel
+                                        value={"Unit"}
+                                        className="mb-1"
+                                    />
+                                    <TextInput
+                                        className="block w-full"
+                                        disabled
+                                        value={curent_unit.unit}
+                                    />
+                                </div>
 
-                            <div className="mb-2 flex-1 w-full">
-                                <InputLabel value={"Bulan"} className="mb-1" />
-                                <TextInput
-                                    className="block w-full"
-                                    type="date"
-                                    required
-                                    name="transaction_date"
-                                    min={curent_unit.awalbulan}
-                                    max={curent_unit.akhirbulan}
-                                    value={data.transaction_date}
-                                    onChange={onInputChange}
-                                />
+                                <div className="mb-2 flex-1 w-full">
+                                    <InputLabel
+                                        value={"Nama Karyawan"}
+                                        className="mb-1"
+                                    />
+                                    <TextInput
+                                        className="block w-full"
+                                        type="text"
+                                        disabled
+                                        value={curent_unit.nama_karyawan}
+                                    />
+                                </div>
+
+                                <div className="mb-2 flex-1 w-full">
+                                    <InputLabel
+                                        value={"Bulan"}
+                                        className="mb-1"
+                                    />
+                                    <TextInput
+                                        className="block w-full"
+                                        type="date"
+                                        required
+                                        name="transaction_date"
+                                        min={curent_unit.awalbulan}
+                                        max={curent_unit.akhirbulan}
+                                        value={data.transaction_date}
+                                        onChange={onInputChange}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div className="lg:flex gap-2 w-full">
-                            <div className="mb-2 flex-1 w-full">
-                                <InputLabel value={"Angsur"} className="mb-1" />
-                                <CurrencyInput
-                                    name="debit"
-                                    id="debit"
-                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                    allowDecimals={false}
-                                    prefix="Rp. "
-                                    min={1}
-                                    max={curent_unit.max_payment}
-                                    required
-                                    onValueChange={onHandleCurencyChange}
-                                    value={data.debit}
-                                    placeholder={
-                                        "Inputkan angka tanpa sparator"
-                                    }
-                                />
-                                <InputError
-                                    message={errors.debit}
-                                    className="mt-2"
-                                />
+                            <div className="lg:flex gap-2 w-full">
+                                <div className="mb-2 flex-1 w-full">
+                                    <InputLabel
+                                        value={"Angsur"}
+                                        className="mb-1"
+                                    />
+                                    <CurrencyInput
+                                        name="debit"
+                                        id="debit"
+                                        className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
+                                        allowDecimals={false}
+                                        prefix="Rp. "
+                                        min={1}
+                                        max={curent_unit.max_payment}
+                                        required
+                                        onValueChange={onHandleCurencyChange}
+                                        value={data.debit}
+                                        placeholder={
+                                            "Inputkan angka tanpa sparator"
+                                        }
+                                    />
+                                    <InputError
+                                        message={errors.debit}
+                                        className="mt-2"
+                                    />
+                                </div>
+                                <div className="mb-2 flex-1 w-full">
+                                    <InputLabel
+                                        value={"Jasa Modal 2%"}
+                                        className="mb-1"
+                                    />
+                                    <CurrencyInput
+                                        name="jasa"
+                                        id="jasa"
+                                        className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
+                                        allowDecimals={false}
+                                        prefix="Rp. "
+                                        min={0}
+                                        onValueChange={onHandleCurencyChange}
+                                        value={data.jasa}
+                                        placeholder={
+                                            "Inputkan angka tanpa sparator"
+                                        }
+                                    />
+                                    <InputError
+                                        message={errors.debit}
+                                        className="mt-2"
+                                    />
+                                </div>
                             </div>
-                            <div className="mb-2 flex-1 w-full">
-                                <InputLabel
-                                    value={"Jasa Modal 2%"}
-                                    className="mb-1"
-                                />
-                                <CurrencyInput
-                                    name="jasa"
-                                    id="jasa"
-                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                    allowDecimals={false}
-                                    prefix="Rp. "
-                                    min={0}
-                                    onValueChange={onHandleCurencyChange}
-                                    value={data.jasa}
-                                    placeholder={
-                                        "Inputkan angka tanpa sparator"
-                                    }
-                                />
-                                <InputError
-                                    message={errors.debit}
-                                    className="mt-2"
-                                />
-                            </div>
-                        </div>
-                        <PrimaryButton type="submit" title={"submit"} />
-                    </form>
+                            <PrimaryButton type="submit" title={"submit"} />
+                        </form>
+                    </div>
                 </div>
-            </div>
+            </Card>
         </Authenticated>
     );
 };

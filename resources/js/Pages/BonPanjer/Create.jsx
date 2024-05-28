@@ -1,3 +1,4 @@
+import Card from "@/Components/Card";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import LinkButton from "@/Components/LinkButton";
@@ -67,98 +68,97 @@ const Create = ({ branch, employees, ...props }) => {
         post(route("bonpanjer.bon_panjer_store"));
     };
     return (
-        <Authenticated
-            loading={processing}
-            auth={props.auth}
-            errors={props.errors}
-            header={
-                <>
-                    <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Buat Bon Panjer Baru
-                    </h2>
-                    <div className="ml-auto flex items-center">
-                        <LinkButton
-                            href={route("bonpanjer.bon_panjer")}
-                            title={"Halaman Utama"}
-                        />
+        <Authenticated loading={processing}>
+            <Card judul="Bon Panjer Baru">
+                <Card.subTitle>
+                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                        <Card.startContent
+                            className={`flex-wrap mb-3 lg:mb-0`}
+                        ></Card.startContent>
+                        <Card.endContent className={`flex-wrap`}>
+                            <LinkButton
+                                href={route("bonpanjer.bon_panjer")}
+                                title={"Halaman Utama"}
+                            />
+                        </Card.endContent>
                     </div>
-                </>
-            }
-        >
-            <div className="sm:px-6 lg:px-8">
-                <div className="p-3 bg-white rounded shadow w-1/2 mx-auto">
-                    <form onSubmit={onSubmitForm} className="w-full">
-                        <div className="lg:flex gap-3 w-full">
+                </Card.subTitle>
+                <form onSubmit={onSubmitForm} className="mb-2 max-w-lg mx-auto">
+                    <div className="w-full">
+                        <div className="mb-2">
+                            <InputLabel value={"Wilayah"} className="mb-1" />
+                            <SelectList
+                                onChange={onWilayahChange}
+                                options={wilayah}
+                                nullValue={true}
+                                className={"w-full"}
+                            />
+                        </div>
+                        {unit && (
+                            <div className="mb-2">
+                                <InputLabel value={"Unit"} className="mb-1" />
+                                <SelectList
+                                    onChange={onUnitChange}
+                                    nullValue={true}
+                                    options={unit}
+                                    className={"w-full"}
+                                />
+                            </div>
+                        )}
+                        {employee && (
                             <div className="mb-2">
                                 <InputLabel
-                                    value={"Wilayah"}
+                                    value={"Nama Karawan"}
                                     className="mb-1"
                                 />
                                 <SelectList
-                                    onChange={onWilayahChange}
-                                    options={wilayah}
+                                    onChange={onInputChange}
+                                    name={"employee_id"}
                                     nullValue={true}
+                                    options={employee}
+                                    className={`w-full`}
+                                />
+                                <InputError
+                                    message={errors.employee_id}
+                                    className="mt-2"
                                 />
                             </div>
-                            {unit && (
-                                <div className="mb-2">
-                                    <InputLabel
-                                        value={"Unit"}
-                                        className="mb-1"
-                                    />
-                                    <SelectList
-                                        onChange={onUnitChange}
-                                        nullValue={true}
-                                        options={unit}
-                                    />
-                                </div>
-                            )}
-                            {employee && (
-                                <div className="mb-2">
-                                    <InputLabel
-                                        value={"Nama Karawan"}
-                                        className="mb-1"
-                                    />
-                                    <SelectList
-                                        onChange={onInputChange}
-                                        name={"employee_id"}
-                                        nullValue={true}
-                                        options={employee}
-                                        className={`w-full`}
-                                    />
-                                    <InputError
-                                        message={errors.employee_id}
-                                        className="mt-2"
-                                    />
-                                </div>
-                            )}
-                        </div>
-                        <div className="mb-2">
-                            <InputLabel
-                                value={"Setor Awal Simpanan Wajib"}
-                                className="mb-1"
-                            />
-                            <CurrencyInput
-                                name="besar_pinjaman"
-                                id="besar_pinjaman"
-                                className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                allowDecimals={false}
-                                prefix="Rp. "
-                                min={1}
-                                required
-                                onValueChange={onHandleCurencyChange}
-                                value={data.besar_pinjaman}
-                                placeholder={"Inputkan angka tanpa sparator"}
-                            />
-                            <InputError
-                                message={errors.besar_pinjaman}
-                                className="mt-2"
-                            />
-                        </div>
+                        )}
+                    </div>
+                    <div className="mb-2">
+                        <InputLabel value={"Tanggal Bon"} className="mb-1" />
+                        <TextInput
+                            name="transaction_date"
+                            type="date"
+                            className="w-full"
+                            onChange={onInputChange}
+                            required
+                        />
+                    </div>
+                    <div className="mb-2">
+                        <InputLabel value={"Nominal Bon"} className="mb-1" />
+                        <CurrencyInput
+                            name="besar_pinjaman"
+                            id="besar_pinjaman"
+                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block text-sm mt-2 w-full`}
+                            allowDecimals={false}
+                            prefix="Rp. "
+                            min={1}
+                            required
+                            onValueChange={onHandleCurencyChange}
+                            value={data.besar_pinjaman}
+                            placeholder={"Inputkan angka tanpa sparator"}
+                        />
+                        <InputError
+                            message={errors.besar_pinjaman}
+                            className="mt-2"
+                        />
+                    </div>
+                    <div className="flex justify-end">
                         <PrimaryButton type="submit" title={"submit"} />
-                    </form>
-                </div>
-            </div>
+                    </div>
+                </form>
+            </Card>
         </Authenticated>
     );
 };

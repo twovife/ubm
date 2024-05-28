@@ -14,12 +14,34 @@ class BranchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-        return Inertia::render('Administrator/Branches/Branches', [
-            'branch' => Branch::paginate(20)
+        $requestWilayah = request()->wilayah ?? 0;
+        $branches = Branch::with("karyawan")->where('wilayah', $requestWilayah)->orderBy('unit', 'asc')->get();
+        $branch = $branches->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'wilayah' => $item->wilayah,
+                'unit' => $item->unit,
+                'isactive' => $item->isactive == 1 ? "Active" : "Tutup",
+                "resign_employee" => $item->karyawan->whereNotNull('date_resign')->count('id'),
+                "active_employee" => $item->karyawan->whereNull('date_resign')->count('id'),
+            ];
+        });
+
+
+        return Inertia::render("Administrasi/Branch/Index", [
+            'datas' => $branch,
+            'server_filter' => ['wilayah' => $requestWilayah]
         ]);
     }
+    // public function index()
+    // {
+    //     return Inertia::render('Administrator/Branches/Branches', [
+    //         'branch' => Branch::paginate(20)
+    //     ]);
+    // }
 
     /**
      * Show the form for creating a new resource.

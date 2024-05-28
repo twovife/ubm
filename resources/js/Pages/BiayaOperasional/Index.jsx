@@ -133,7 +133,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                     </tfoot>
                 </DefaultTable>
             </Card>
-            <Card>
+            <Card judul="Wilayah">
                 <div className="w-full">
                     {batch_datas.length > 0 ? (
                         <>

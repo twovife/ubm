@@ -138,7 +138,7 @@ const Create = ({ branch, employees, ...props }) => {
                             </div>
                             <div className="mb-2">
                                 <InputLabel
-                                    value={"Nomonal Pinjaman"}
+                                    value={"Nominal Pinjaman"}
                                     className="mb-1"
                                 />
                                 <CurrencyInput

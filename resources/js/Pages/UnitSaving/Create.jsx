@@ -139,7 +139,7 @@ const Create = ({ branch, employees, ...props }) => {
                                 </div>
                                 <div className="mb-2 flex-1">
                                     <InputLabel
-                                        value={"Setor Awal Simpanan Wajib"}
+                                        value={"Jumlah Setor"}
                                         className="mb-1"
                                     />
                                     <TextInput

@@ -16,6 +16,7 @@ const Create = ({ branch, employees, ...props }) => {
     const { data, setData, post, processing, errors } = useForm({
         branch_id: "",
         setoran_awal: 1000000,
+        transaction_date: "",
     });
 
     const [unit, setUnit] = useState();
@@ -62,15 +63,7 @@ const Create = ({ branch, employees, ...props }) => {
                         <Card.endContent className={`flex-wrap`}>
                             <LinkButton
                                 href={route("unitsaving.index")}
-                                title={"Simpanan 1JT"}
-                                size={"sm"}
-                                type="button"
-                                className="block whitespace-nowrap"
-                                theme="primary"
-                            />
-                            <LinkButton
-                                href={route("bonpanjer.bon_panjer")}
-                                title={"Bon Panjer"}
+                                title={"Back"}
                                 size={"sm"}
                                 type="button"
                                 className="block whitespace-nowrap"
@@ -119,29 +112,48 @@ const Create = ({ branch, employees, ...props }) => {
                                     </div>
                                 )}
                             </div>
-                            <div className="mb-2">
-                                <InputLabel
-                                    value={"Setor Awal Simpanan Wajib"}
-                                    className="mb-1"
-                                />
-                                <CurrencyInput
-                                    name="setoran_awal"
-                                    id="setoran_awal"
-                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                    allowDecimals={false}
-                                    prefix="Rp. "
-                                    min={1}
-                                    required
-                                    onValueChange={onHandleCurencyChange}
-                                    value={data.setoran_awal}
-                                    placeholder={
-                                        "Inputkan angka tanpa sparator"
-                                    }
-                                />
-                                <InputError
-                                    message={errors.setoran_awal}
-                                    className="mt-2"
-                                />
+                            <div className="lg:flex gap-3 w-full">
+                                <div className="mb-2 flex-1">
+                                    <InputLabel
+                                        value={"Setor Awal Simpanan Wajib"}
+                                        className="mb-1"
+                                    />
+                                    <CurrencyInput
+                                        name="setoran_awal"
+                                        id="setoran_awal"
+                                        className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
+                                        allowDecimals={false}
+                                        prefix="Rp. "
+                                        min={1}
+                                        required
+                                        onValueChange={onHandleCurencyChange}
+                                        value={data.setoran_awal}
+                                        placeholder={
+                                            "Inputkan angka tanpa sparator"
+                                        }
+                                    />
+                                    <InputError
+                                        message={errors.setoran_awal}
+                                        className="mt-2"
+                                    />
+                                </div>
+                                <div className="mb-2 flex-1">
+                                    <InputLabel
+                                        value={"Setor Awal Simpanan Wajib"}
+                                        className="mb-1"
+                                    />
+                                    <TextInput
+                                        name="transaction_date"
+                                        value={data.transaction_date}
+                                        type="date"
+                                        onChange={onInputChange}
+                                        className={"w-full"}
+                                    />
+                                    <InputError
+                                        message={errors.setoran_awal}
+                                        className="mt-2"
+                                    />
+                                </div>
                             </div>
                             <PrimaryButton type="submit" title={"submit"} />
                         </form>

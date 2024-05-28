@@ -171,6 +171,8 @@ class UnitSavingController extends Controller
         $awalBulanIni = $unitSavingAccount->load('unitssaving')->unitssaving()->max('transaction_date');
         $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
 
+        $branch = Branch::where('id', '!=', $unitSavingAccount->branch_id)->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
+
         $data = $saving->unitssaving->map(function ($item) use (&$saldo_before, $saving, &$enableToAdd) {
             // dd($item->nominal);
             $saldo = $saldo_before + $item->nominal;
@@ -190,6 +192,7 @@ class UnitSavingController extends Controller
 
         return Inertia::render('UnitSaving/Detail', [
             'details' => $data,
+            'branch' => $branch,
             'curent_unit' => ['id' => $unitSavingAccount->id, 'wilayah' => $saving->load('branch')->branch->wilayah, 'unit' => $saving->load('branch')->branch->unit, 'awalbulan' => $awalBulanIni, 'akhirbulan' => $akhirBulanIni, 'editable' => $enableToAdd]
         ]);
     }
@@ -224,32 +227,27 @@ class UnitSavingController extends Controller
 
     public function store(Request $request)
     {
-        $currentDate = Carbon::now();
         $request->validate([
             'branch_id' => ['required', 'integer'],
+            'transaction_date' => ['required'],
             'setoran_awal' => ['required', 'integer']
         ]);
 
 
         try {
             DB::beginTransaction();
-            $unitAccount = UnitSavingAccount::create([
+            $unitAccount = UnitSavingAccount::firstOrcreate([
                 "branch_id" => $request->branch_id,
                 "account_type" => 'TB',
             ]);
 
 
             $unitsaving = $unitAccount->unitssaving()->create([
-                "transaction_date" => $currentDate->format('Y-m-d'),
-                "transaction_month" => $currentDate->month,
-                "transaction_year" => $currentDate->year,
-
-                "debit" => $request->setoran_awal,
-                "kredit" => 0,
+                "transaction_date" => $request->transaction_date,
+                "nominal" => $request->setoran_awal,
                 "transaction" => "D",
                 "transaction_type" => "TB"
             ]);
-
 
             DB::commit();
         } catch (Exception $e) {
@@ -626,6 +624,8 @@ class UnitSavingController extends Controller
         $nominal_pinjaman = 0;
         $enableToAdd = true;
 
+        $branch = Branch::where('id', '!=', $unitSavingAccount->branch_id)->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
+
 
         $data = $saving->map(function ($item) use ($unitSavingAccount, &$nominal_pinjaman, &$enableToAdd) {
 
@@ -638,6 +638,7 @@ class UnitSavingController extends Controller
                 'nama_karyawan' => $unitSavingAccount->nama_karyawan,
                 'jabatan' => $unitSavingAccount->jabatan,
                 'transaction_date' => $item->transaction_date,
+
                 'saldo_sebelum' => $saldo_sebelum,
                 'pinjaman' => $item->transaction == "K" ? $item->nominal : 0,
                 'angsuran' => $item->transaction == "D" ? $item->nominal : 0,
@@ -645,10 +646,13 @@ class UnitSavingController extends Controller
             ];
         });
 
+        // dd($unitSavingAccount->account_type);
+
 
         return Inertia::render('PinjamanModal/Detail', [
             'details' => $data,
-            'curent_unit' => ['id' => $unitSavingAccount->id, 'max_payment' => $nominal_pinjaman, 'wilayah' => $unitSavingAccount->branch->wilayah, 'unit' => $unitSavingAccount->branch->unit, 'nama_karyawan' => $unitSavingAccount->nama_karyawan, 'awalbulan' => $awalBulanIni, 'akhirbulan' => $akhirBulanIni, 'editable' => $enableToAdd]
+            'server_filter' => ['branch' => $branch],
+            'curent_unit' => ['type_pinjaman' => $unitSavingAccount->account_type, 'id' => $unitSavingAccount->id, 'max_payment' => $nominal_pinjaman, 'wilayah' => $unitSavingAccount->branch->wilayah, 'unit' => $unitSavingAccount->branch->unit, 'nama_karyawan' => $unitSavingAccount->nama_karyawan, 'awalbulan' => $awalBulanIni, 'akhirbulan' => $akhirBulanIni, 'editable' => $enableToAdd]
         ]);
     }
 
@@ -685,5 +689,48 @@ class UnitSavingController extends Controller
         }
 
         return redirect()->route('pinjamanmodal.pinjaman_modal_show', $unitSavingAccount->id)->with('message', 'Data berhasil ditambahkan');
+    }
+
+    public function pinjaman_modal_mutasi(UnitSavingAccount $unitSavingAccount, Request $request)
+    {
+        // dd($request->all());
+
+        $sumPinjam = $unitSavingAccount->unitssaving->where('transaction', 'K')->sum('nominal');
+        $sumBayar = $unitSavingAccount->unitssaving->where('transaction', 'D')->sum('nominal');
+        $total = $sumPinjam - $sumBayar;
+
+        try {
+            DB::beginTransaction();
+            $newUnitSavingAccount = UnitSavingAccount::firstOrCreate([
+                'branch_id' => $request->branch_id,
+                'account_type' =>  $unitSavingAccount->account_type,
+            ],   [
+                'branch_id' => $request->branch_id,
+                'employee_id' => null,
+                'account_type' =>   $unitSavingAccount->account_type,
+            ]);
+
+            $unitsaving = $newUnitSavingAccount->unitssaving()->create([
+                "transaction_date" => $request->transaction_date,
+                "nominal" => $total,
+                "transaction" => "K",
+                "transaction_type" => $unitSavingAccount->account_type,
+            ]);
+
+            $unitsavingPelunasan = $unitSavingAccount->unitssaving()->create([
+                "transaction_date" => $request->transaction_date,
+                "nominal" => $total,
+                "jasa_modal" => 0,
+                "transaction" => "D",
+                "transaction_type" => $unitSavingAccount->account_type
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->route('pinjamanmodal.pinjaman_modal_show', $unitSavingAccount->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+        }
+        return redirect()->route('pinjamanmodal.pinjaman_modal_show', $newUnitSavingAccount->id)->with('message', 'Pinjaman Berhasil Di Pindahkan');
     }
 }

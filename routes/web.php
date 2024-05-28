@@ -106,6 +106,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::prefix('unitsaving')->name('unitsaving.')->group(function () {
+
         Route::get('/dashboard', [UnitSavingController::class, 'dashboard'])->name('dashboard');
         Route::get('/', [UnitSavingController::class, 'index'])->name('index');
         Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
@@ -129,6 +130,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [UnitSavingController::class, 'pinjaman_modal_store'])->name('pinjaman_modal_store');
         Route::get('/pinjaman_modal_show/{unitSavingAccount}', [UnitSavingController::class, 'pinjaman_modal_show'])->name('pinjaman_modal_show');
         Route::post('/pinjaman_modal_post/{unitSavingAccount}', [UnitSavingController::class, 'pinjaman_modal_post'])->name('pinjaman_modal_post');
+        Route::put('/pinjaman_modal_mutasi/{unitSavingAccount}', [UnitSavingController::class, 'pinjaman_modal_mutasi'])->name('pinjaman_modal_mutasi');
         // Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
         // Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
     });

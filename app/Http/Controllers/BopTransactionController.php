@@ -246,14 +246,22 @@ class BopTransactionController extends Controller
 
 
 
-        $data = BopAccountTransaction::with('unitssaving', 'employee.branch')->where('account_type', 'BP')->whereNotNull('note')->get();
+        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
+            $q->where('id', auth()->user()->employee->branch_id);
+        })->get();
+
+        $data = BopAccountTransaction::with('transaksi', 'employee.branch')->where('transaction_type', 'BONPRIVE')->where(fn ($qq) => $qq->whereNotNull('paid_on'))->whereHas('transaksi', function ($query) use ($requestFilter) {
+            $query->where('transaction_date', "<=",   $requestFilter->endOfMonth);
+        })->get();
+        // dd($data);
+
 
         $data_per_pic = $data->map(function ($queries) use ($requestFilter) {
-            $jumlah_pinjam = $queries->unitssaving->where('transaction', 'K')->first()->nominal;
-            $tanggal_pinjaman = $queries->unitssaving->where('transaction', 'K')->first()->transaction_date;
-            $setoran_bulan_lalu = $queries->unitssaving->where('transaction', 'D')->where('transaction_date', "<", $requestFilter->startOfMonth)->sum('nominal');
-            $setoran_bulan_ini =  $queries->unitssaving->where('transaction', 'D')->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->sum('nominal') ?? 0;
-            $pinjaman_bulan_ini =  $queries->unitssaving->where('transaction', 'K')->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->sum('nominal') ?? 0;
+            $jumlah_pinjam = $queries->transaksi->where('transaction', 'K')->first()->nominal;
+            $tanggal_pinjaman = $queries->transaksi->where('transaction', 'K')->first()->transaction_date;
+            $setoran_bulan_lalu = $queries->transaksi->where('transaction', 'D')->where('transaction_date', "<",  $requestFilter->startOfMonth)->sum('nominal');
+            $setoran_bulan_ini =  $queries->transaksi->where('transaction', 'D')->whereBetween('transaction_date', [$requestFilter->startOfMonth,  $requestFilter->endOfMonth])->sum('nominal') ?? 0;
+            $pinjaman_bulan_ini =  $queries->transaksi->where('transaction', 'K')->whereBetween('transaction_date', [$requestFilter->startOfMonth,  $requestFilter->endOfMonth])->sum('nominal') ?? 0;
             $keterangan = $setoran_bulan_ini + $pinjaman_bulan_ini == 0 ? 'unpaid' : 'nihil';
             return [
                 'id' => $queries['id'],
@@ -269,16 +277,16 @@ class BopTransactionController extends Controller
                 'setoran_bulan_ini' => $setoran_bulan_ini,
                 'total_setoran' => $setoran_bulan_ini + $setoran_bulan_lalu,
                 'saldo' => ($jumlah_pinjam - $setoran_bulan_lalu) - $setoran_bulan_ini,
-                'keterangan' => $keterangan,
-                'note' => $queries['note']
+                'keterangan' => $keterangan
             ];
         })->sortBy('branch')->sortBy('wilayah')->values();
 
-        return Inertia::render('BonPanjer/Lunas', [
+        return Inertia::render("BonPrive/Lunas", [
             'datas' => $data_per_pic,
             'server_filter' => ['bulan' => $tanggal->format('Y-m')]
         ]);
     }
+
     public function create_mutation()
     {
 
@@ -294,6 +302,7 @@ class BopTransactionController extends Controller
         $id = $branch->id;
         $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
         $awalBulanIni = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
+
         $branches = Branch::where('id', $id)->get();
         $employee = Employee::where('branch_id', $id)->get();
         return Inertia::render('BiayaOperasional/Create', [
@@ -354,7 +363,7 @@ class BopTransactionController extends Controller
 
     public function store_bop(Request $request)
     {
-        $currentDate = Carbon::now();
+
         $request->validate([
             'branch_id' => ['required', 'integer'],
             'setoran_awal' => ['required', 'integer'],
@@ -394,7 +403,7 @@ class BopTransactionController extends Controller
 
     public function store_bonpriv(Request $request)
     {
-        // dd($request->all());
+
         $validation = $request->validate([
             "employee_id" => ['required'],
             "besar_pinjaman" => ['required'],

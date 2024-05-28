@@ -11,9 +11,10 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { NumericFormat } from "react-number-format";
+import Mutasi from "./Components/Mutasi";
 
 const Detail = ({ details, curent_unit, ...props }) => {
-    // const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const { data, setData, post, processing, errors } = useForm({
         debit: 0,
@@ -37,25 +38,15 @@ const Detail = ({ details, curent_unit, ...props }) => {
     };
     return (
         <Authenticated
-            loading={processing}
+            loading={processing || loading}
             auth={props.auth}
             errors={props.errors}
-            header={
-                <>
-                    <h2 className="font-semibold text-xl text-main-800 leading-tight">
-                        Detail Pinjaman Modal
-                    </h2>
-                    <div className="ml-auto flex items-center">
-                        <LinkButton
-                            as="button"
-                            href={route("pinjamanmodal.pinjaman_modal")}
-                            title={"Back"}
-                        />
-                    </div>
-                </>
-            }
         >
-            <Card judul="Detail Pinjaman Modal ">
+            <Card
+                judul={`Detail Pinjaman Modal ${
+                    curent_unit.type_pinjaman == "PO" ? "Pak Hertawan" : "Pusat"
+                }`}
+            >
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.endContent className={`flex-wrap`}>
@@ -201,117 +192,128 @@ const Detail = ({ details, curent_unit, ...props }) => {
                         </tbody>
                     </table>
                 </div>
-
-                <div className="sm:px-6 lg:px-8">
-                    <div className="p-3 bg-white rounded shadow max-w-6xl mx-auto">
-                        <form onSubmit={onSubmitForm} className="w-full">
-                            <div className="lg:flex gap-2 w-full">
-                                <div className="mb-2 flex-1 w-full">
-                                    <InputLabel
-                                        value={"Wilayah"}
-                                        className="mb-1"
-                                    />
-                                    <TextInput
-                                        className="block w-full"
-                                        disabled
-                                        value={curent_unit.wilayah}
-                                    />
-                                </div>
-
-                                <div className="mb-2 flex-1 w-full">
-                                    <InputLabel
-                                        value={"Unit"}
-                                        className="mb-1"
-                                    />
-                                    <TextInput
-                                        className="block w-full"
-                                        disabled
-                                        value={curent_unit.unit}
-                                    />
-                                </div>
-
-                                <div className="mb-2 flex-1 w-full">
-                                    <InputLabel
-                                        value={"Nama Karyawan"}
-                                        className="mb-1"
-                                    />
-                                    <TextInput
-                                        className="block w-full"
-                                        type="text"
-                                        disabled
-                                        value={curent_unit.nama_karyawan}
-                                    />
-                                </div>
-
-                                <div className="mb-2 flex-1 w-full">
-                                    <InputLabel
-                                        value={"Bulan"}
-                                        className="mb-1"
-                                    />
-                                    <TextInput
-                                        className="block w-full"
-                                        type="date"
-                                        required
-                                        name="transaction_date"
-                                        min={curent_unit.awalbulan}
-                                        max={curent_unit.akhirbulan}
-                                        value={data.transaction_date}
-                                        onChange={onInputChange}
-                                    />
-                                </div>
+                <div className="flex items-start justify-center flex-col lg:flex-row gap-3">
+                    <div className="flex-[3]">
+                        <div className="p-3 bg-white rounded shadow w-full">
+                            <div className="font-semibold text-gray-500 text-xl mb-3">
+                                Transaksi Pinjaman
                             </div>
-                            <div className="lg:flex gap-2 w-full">
-                                <div className="mb-2 flex-1 w-full">
-                                    <InputLabel
-                                        value={"Angsur"}
-                                        className="mb-1"
-                                    />
-                                    <CurrencyInput
-                                        name="debit"
-                                        id="debit"
-                                        className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                        allowDecimals={false}
-                                        prefix="Rp. "
-                                        min={1}
-                                        max={curent_unit.max_payment}
-                                        required
-                                        onValueChange={onHandleCurencyChange}
-                                        value={data.debit}
-                                        placeholder={
-                                            "Inputkan angka tanpa sparator"
-                                        }
-                                    />
-                                    <InputError
-                                        message={errors.debit}
-                                        className="mt-2"
-                                    />
+                            <form onSubmit={onSubmitForm} className="w-full">
+                                <div className="lg:flex gap-2 w-full">
+                                    <div className="mb-3 flex-1 w-full">
+                                        <InputLabel
+                                            value={"Wilayah"}
+                                            className="mb-1"
+                                        />
+                                        <TextInput
+                                            className="block w-full"
+                                            disabled
+                                            value={curent_unit.wilayah}
+                                        />
+                                    </div>
+
+                                    <div className="mb-3 flex-1 w-full">
+                                        <InputLabel
+                                            value={"Unit"}
+                                            className="mb-1"
+                                        />
+                                        <TextInput
+                                            className="block w-full"
+                                            disabled
+                                            value={curent_unit.unit}
+                                        />
+                                    </div>
+
+                                    <div className="mb-3 flex-1 w-full">
+                                        <InputLabel
+                                            value={"Nama Karyawan"}
+                                            className="mb-1"
+                                        />
+                                        <TextInput
+                                            className="block w-full"
+                                            type="text"
+                                            disabled
+                                            value={curent_unit.nama_karyawan}
+                                        />
+                                    </div>
+
+                                    <div className="mb-3 flex-1 w-full">
+                                        <InputLabel
+                                            value={"Bulan"}
+                                            className="mb-1"
+                                        />
+                                        <TextInput
+                                            className="block w-full"
+                                            type="date"
+                                            required
+                                            name="transaction_date"
+                                            min={curent_unit.awalbulan}
+                                            max={curent_unit.akhirbulan}
+                                            value={data.transaction_date}
+                                            onChange={onInputChange}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="mb-2 flex-1 w-full">
-                                    <InputLabel
-                                        value={"Jasa Modal 2%"}
-                                        className="mb-1"
-                                    />
-                                    <CurrencyInput
-                                        name="jasa"
-                                        id="jasa"
-                                        className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                        allowDecimals={false}
-                                        prefix="Rp. "
-                                        min={0}
-                                        onValueChange={onHandleCurencyChange}
-                                        value={data.jasa}
-                                        placeholder={
-                                            "Inputkan angka tanpa sparator"
-                                        }
-                                    />
-                                    <InputError
-                                        message={errors.debit}
-                                        className="mt-2"
-                                    />
+                                <div className="lg:flex gap-2 w-full">
+                                    <div className="mb-3 flex-1 w-full">
+                                        <InputLabel
+                                            value={"Angsur"}
+                                            className="mb-1"
+                                        />
+                                        <CurrencyInput
+                                            name="debit"
+                                            id="debit"
+                                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
+                                            allowDecimals={false}
+                                            prefix="Rp. "
+                                            min={1}
+                                            max={curent_unit.max_payment}
+                                            required
+                                            onValueChange={
+                                                onHandleCurencyChange
+                                            }
+                                            value={data.debit}
+                                            placeholder={
+                                                "Inputkan angka tanpa sparator"
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.debit}
+                                            className="mt-2"
+                                        />
+                                    </div>
+                                    <div className="mb-3 flex-1 w-full">
+                                        <InputLabel
+                                            value={"Jasa Modal 2%"}
+                                            className="mb-1"
+                                        />
+                                        <CurrencyInput
+                                            name="jasa"
+                                            id="jasa"
+                                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
+                                            allowDecimals={false}
+                                            prefix="Rp. "
+                                            min={0}
+                                            onValueChange={
+                                                onHandleCurencyChange
+                                            }
+                                            value={data.jasa}
+                                            placeholder={
+                                                "Inputkan angka tanpa sparator"
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.debit}
+                                            className="mt-2"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <PrimaryButton type="submit" title={"submit"} />
-                        </form>
+                                <PrimaryButton type="submit" title={"submit"} />
+                            </form>
+                        </div>
+                    </div>
+                    <div className="flex-1">
+                        <Mutasi id={curent_unit.id} setLoading={setLoading} />
                     </div>
                 </div>
             </Card>

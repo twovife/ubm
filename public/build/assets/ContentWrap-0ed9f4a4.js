@@ -1,0 +1,1 @@
+import{j as t}from"./app-35486303.js";function o({className:a,children:r}){return t("div",{className:`bg-white dark:bg-gray-800 mx-auto text-gray-600 dark:text-gray-300 shadow-md p-4 rounded ${a}`,children:r})}export{o as C};

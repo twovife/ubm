@@ -7,7 +7,7 @@ import { NumericFormat } from "react-number-format";
 
 const PinjamanModalTable = ({ data, loading, setLoading }) => {
     const datas = data.data;
-    const { returnedData, totals } = useFilter(datas, 100, "pinjaman_modal");
+    const { returnedData, totals } = useFilter(datas, 10000, "pinjaman_modal");
 
     const headers = [
         {

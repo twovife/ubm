@@ -12,7 +12,7 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
     const [loading, setLoading] = useState(false);
     const { filter, removeFilter, returnedData, totals } = useFilter(
         datas,
-        100,
+        10000,
         "1juta_transaksi"
     );
 

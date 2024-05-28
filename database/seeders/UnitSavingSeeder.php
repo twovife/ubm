@@ -23,21 +23,23 @@ class UnitSavingSeeder extends Seeder
         try {
             DB::beginTransaction();
             $counter = 1;
-            collect($tabungan)->each(function($item) use (&$counter) {
-                $account = UnitSavingAccount::firstOrCreate([
-                    'branch_id' => $item['unit_saving_account_id'],
-                    'account_type' => 'TB'
-                ],
-                [
-                    'branch_id' => $item['unit_saving_account_id'],
-                    'account_type' => 'TB'
-                ]);
+            collect($tabungan)->each(function ($item) use (&$counter) {
+                $account = UnitSavingAccount::firstOrCreate(
+                    [
+                        'branch_id' => $item['unit_saving_account_id'],
+                        'account_type' => 'TB'
+                    ],
+                    [
+                        'branch_id' => $item['unit_saving_account_id'],
+                        'account_type' => 'TB'
+                    ]
+                );
 
                 $account->unitssaving()->create([
-                     "transaction_date"=>$item['transaction_date'],
-                     "nominal"=>$item['nominal'],
-                     "transaction"=>"D",
-                     "transaction_type"=>"TB",
+                    "transaction_date" => "2024-03-01",
+                    "nominal" => $item['nominal'],
+                    "transaction" => "D",
+                    "transaction_type" => "TB",
                 ]);
                 echo $counter . PHP_EOL;
                 $counter++;

@@ -49,7 +49,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Tanggal Transaksi Terakhir",
+                name: "Transaksi Terakhir",
                 column: "transaksi_terakhir_owner",
                 class_name: "bg-green-100/80 whitespace-nowrap",
                 format: "date",
@@ -59,7 +59,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Total Pinjaman",
+                name: "Pinjaman",
                 column: "nominal_pinjaman_owner",
                 class_name: "bg-green-100/80 whitespace-nowrap",
                 format: "currency",
@@ -69,7 +69,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Total Setoran Pinjaman",
+                name: "Total Setoran",
                 column: "total_setoran_pinjaman_owner",
                 class_name: "bg-green-100/80 whitespace-nowrap",
                 format: "currency",
@@ -79,7 +79,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Saldo Pinjaman",
+                name: "Saldo",
                 column: "saldo_pinjaman_owner",
                 class_name: "bg-green-100/80 whitespace-nowrap",
                 format: "currency",
@@ -100,7 +100,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Tanggal Transaksi Terakhir",
+                name: "Transaksi Terakhir",
                 column: "transaksi_terakhir_pusat",
                 class_name: "bg-yellow-100/60 whitespace-nowrap",
                 format: "date",
@@ -110,7 +110,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Total Pinjaman",
+                name: "Pinjaman",
                 column: "nominal_pinjaman_pusat",
                 class_name: "bg-yellow-100/60 whitespace-nowrap",
                 format: "currency",
@@ -120,7 +120,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Total Setoran Pinjaman",
+                name: "Total Setoran",
                 column: "total_setoran_pinjaman_pusat",
                 class_name: "bg-yellow-100/60 whitespace-nowrap",
                 format: "currency",
@@ -130,7 +130,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Saldo Pinjaman",
+                name: "Saldo",
                 column: "saldo_pinjaman_pusat",
                 class_name: "bg-yellow-100/60 whitespace-nowrap",
                 format: "currency",
@@ -140,7 +140,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Total Pinjaman",
+                name: "Global Pinjaman",
                 column: "total_pinjaman",
                 class_name: "bg-blue-100 whitespace-nowrap",
                 format: "currency",
@@ -150,7 +150,7 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Total Saldo Pinjaman",
+                name: "Global Saldo",
                 column: "total_saldo_pinjaman",
                 class_name: "bg-blue-100 whitespace-nowrap",
                 format: "currency",
@@ -160,28 +160,8 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
             type: "default",
             headers: {
                 filteranble: "no",
-                name: "Total Jasa Modala",
+                name: "Total Jasa Modal",
                 column: "jasa_modal_owner",
-                class_name: "bg-blue-100 whitespace-nowrap",
-                format: "currency",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filteranble: "no",
-                name: "Total Pinjaman",
-                column: "total_pinjaman",
-                class_name: "bg-blue-100 whitespace-nowrap",
-                format: "currency",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filteranble: "no",
-                name: "Total Saldo",
-                column: "total_saldo_pinjaman",
                 class_name: "bg-blue-100 whitespace-nowrap",
                 format: "currency",
             },
@@ -423,28 +403,6 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
                                 thousandSeparator={","}
                             />
                         </DefaultTable.td>
-
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-blue-200`}
-                        >
-                            <NumericFormat
-                                value={item.total_pinjaman}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-blue-200`}
-                        >
-                            <NumericFormat
-                                value={item.total_saldo_pinjaman}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
                     </DefaultTable.tr>
                 ))}
             </DefaultTable.tbody>
@@ -542,27 +500,6 @@ const PinjamanModalTable = ({ data, loading, setLoading }) => {
                         <div className={`whitespace-nowrap text-end`}>
                             <NumericFormat
                                 value={totals.jasa_modal_owner}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-
-                    <td className={`px-3 py-1 bg-green-500 text-white`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.total_pinjaman}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-                    <td className={`px-3 py-1 bg-green-500 text-white`}>
-                        <div className={`whitespace-nowrap text-end`}>
-                            <NumericFormat
-                                value={totals.total_saldo_pinjaman}
                                 displayType={"text"}
                                 thousandSeparator={","}
                                 prefix={"Rp. "}

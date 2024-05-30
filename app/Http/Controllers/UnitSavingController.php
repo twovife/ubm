@@ -55,7 +55,29 @@ class UnitSavingController extends Controller
                 'id' => $item->id,
                 'bulan' => Carbon::create($item->transaction_date)->format('M Y'),
                 'transaction_date' => Carbon::create($item->transaction_date)->format('Y-m-d'),
-                'type_transaksi' => $item->transaction_type == "TB" ? "TABUNGAN 1JT" : ($item->transaction_type == "BP" ? "Bon Panjer" : "Pinjaman Modal"),
+                'type_transaksi' => $item->transaction_type == "TB"
+                    ? "TABUNGAN 1JT"
+                    : ($item->transaction_type == "BP"
+                        ? ($item->transaction == "D"
+                            ? "Pengembalian Bon Panjer"
+                            : "Bon Panjer")
+                        : ($item->transaction_type == "PM"
+                            ? ($item->transaction == "D"
+                                ? "Pengembalian Pinjaman Modal"
+                                : "Pinjaman Modal")
+                            : ($item->transaction == "D"
+                                ? "$item->keterangan"
+                                : "$item->keterangan"))),
+
+                //     ? ($item->transaction == "D"
+                //         ? "Pengembalian Bon Panjer"
+                //         : "Bon Panjer")
+                // )
+                // : ($item->transaction_type == "PM"
+                //     ? ($item->transaction == "D"
+                //         ? "Pinjaman Modal"
+                //         : "Pengembalian")
+                //     : $item->keterangan),
                 'wilayah' => $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->wilayah : $item->savingaccount->branch->wilayah,
                 'unit' =>  $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->unit : $item->savingaccount->branch->unit,
                 'nama_karyawan' => $item->transaction_type == "BP" ? $item->savingaccount->employee->nama_karyawan : null,
@@ -750,5 +772,53 @@ class UnitSavingController extends Controller
             return redirect()->route('pinjamanmodal.pinjaman_modal_show', $unitSavingAccount->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
         return redirect()->route('pinjamanmodal.pinjaman_modal_show', $newUnitSavingAccount->id)->with('message', 'Pinjaman Berhasil Di Pindahkan');
+    }
+
+    public function create_mutation()
+    {
+
+        $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
+        $awalBulanIni = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
+        return Inertia::render("UnitSaving/Outcome", [
+            'curent_unit' => ['akhirbulan' => $akhirBulanIni, 'awalbulan' => $awalBulanIni],
+        ]);
+    }
+
+    public function store_mutation(Request $request)
+    {
+
+
+        $validation = $request->validate([
+            "nominal" => ['required', 'integer', 'min:1'],
+            "keterangan" => ['required', 'string'],
+            'transaction_date' => ['required', 'date'],
+            'transaksi' => ['required']
+
+        ]);
+
+        try {
+            DB::beginTransaction();
+            // $akun = UnitSavingAccount::where('transaction_type', 'LAIN')->first();
+            $unitAccount = UnitSavingAccount::firstOrcreate([
+                "branch_id" => "91",
+                "account_type" => 'LAIN',
+            ]);
+
+            $unitAccount->unitssaving()->create([
+                "transaction_date" => $request->transaction_date,
+                'transaction' => $request->transaksi,
+                'transaction_type' => 'LAIN',
+                'nominal' => $request->nominal,
+                'keterangan' => $request->keterangan
+            ]);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return redirect()->route('unitsaving.create')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+        }
+
+
+        return redirect()->route('unitsaving.dashboard')->with('message', 'Data berhasil ditambahkan');
     }
 }

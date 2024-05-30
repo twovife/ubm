@@ -131,16 +131,8 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
                                 availableMonth={true}
                             >
                                 <LinkButton
-                                    href={route("unitsaving.index")}
-                                    title={"Simpanan 1JT"}
-                                    size={"sm"}
-                                    type="button"
-                                    className="block whitespace-nowrap"
-                                    theme="primary"
-                                />
-                                <LinkButton
-                                    href={route("bonpanjer.bon_panjer")}
-                                    title={"Bon Panjer"}
+                                    href={route("unitsaving.create_mutasi")}
+                                    title={'Lain"'}
                                     size={"sm"}
                                     type="button"
                                     className="block whitespace-nowrap"

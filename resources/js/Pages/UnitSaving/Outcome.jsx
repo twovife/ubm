@@ -32,7 +32,7 @@ const Outcome = ({ curent_unit, ...props }) => {
     const onSubmitForm = (e) => {
         e.preventDefault();
         // console.log(data);
-        post(route("mutation.store"));
+        post(route("unitsaving.store_mutasi"));
     };
     return (
         <Authenticated loading={processing}>

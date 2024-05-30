@@ -14,7 +14,8 @@ class UnitSaving extends Model
         "nominal",
         "jasa_modal",
         "transaction",
-        "transaction_type"
+        "transaction_type",
+        "keterangan",
     ];
 
     public function savingaccount()

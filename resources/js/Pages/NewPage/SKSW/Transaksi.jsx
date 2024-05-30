@@ -12,6 +12,7 @@ import CurrencyInput from "react-currency-input-field";
 import { NumericFormat } from "react-number-format";
 import Mutasi from "./Components/Mutasi";
 import Card from "@/Components/Card";
+import ButtonWrapper from "@/Components/ButtonWrapper";
 
 const Transaksi = ({
     branch,
@@ -24,15 +25,23 @@ const Transaksi = ({
     const [loading, setLoading] = useState(false);
 
     const { data, setData, put, processing, errors, reset } = useForm({
-        saldo_awal_sk: deposit.sk_balance,
+        saldo_awal_sk: 0,
         nominal_sk: 0,
-        saldo_awal_sw: deposit.sw_balance,
+        saldo_awal_sw: 0,
         nominal_sw: 0,
         transaction_date: "",
         transaction: "",
         transaction_type: "",
         income_note: "Setoran Awal",
     });
+
+    useEffect(() => {
+        setData({
+            ...data,
+            saldo_awal_sk: deposit.sk_balance,
+            saldo_awal_sw: deposit.sw_balance,
+        });
+    }, [deposit]);
 
     const onInputChange = (e) => {
         const { value, name } = e.target;
@@ -44,6 +53,7 @@ const Transaksi = ({
     };
 
     const [detailJenis, setDetailJenis] = useState();
+
     const onJenisChange = (e) => {
         setDetailJenis(null);
         const { value, name } = e.target;
@@ -61,32 +71,43 @@ const Transaksi = ({
 
         if (value === "K") {
             setData(name, value);
-            setDetailJenis([
+            const jenisdetail = [
                 {
                     id: 1,
                     value: "K",
-                    display: "Pengambilan Sukarela",
+                    display: "Pengambilan SK",
                 },
-                {
+            ];
+            if (deposit.status_karyawan == "Resign") {
+                jenisdetail.push({
                     id: 2,
                     value: "KRMD",
                     display: "Kredit Resign / MD",
-                },
-            ]);
+                });
+            }
+            setDetailJenis(jenisdetail);
+        }
+    };
+
+    const onChangeJenisTransaksi = (e) => {
+        const { name, value } = e.target;
+        if (value === "KRMD") {
+            setData({
+                ...data,
+                nominal_sw: parseInt(deposit.sw_balance),
+                nominal_sk: parseInt(deposit.sk_balance),
+                [name]: value,
+            });
+        } else {
+            setData(name, value);
         }
     };
 
     const onSubmitForm = (e) => {
         e.preventDefault();
+        console.log(data);
         put(route("sksw.addtransaksi", deposit.id), {
-            onFinish: () => {
-                router.visit(
-                    route("sksw.transaksi", deposit.id),
-                    {
-                        only: ["deposit"],
-                    },
-                    { preserveState: true }
-                );
+            onSuccess: (page) => {
                 reset();
             },
         });
@@ -110,10 +131,13 @@ const Transaksi = ({
                             </p>
                         </Card.startContent>
                         <Card.endContent className={`flex-wrap`}>
-                            <LinkButton
-                                href={route("sksw.dashboard")}
-                                title={"Halaman Utama"}
-                            />
+                            <ButtonWrapper>
+                                <LinkButton
+                                    href={route("sksw.dashboard")}
+                                    title={"Halaman Utama"}
+                                    className="inline-block"
+                                />
+                            </ButtonWrapper>
                         </Card.endContent>
                     </div>
                 </Card.subTitle>
@@ -454,228 +478,270 @@ const Transaksi = ({
                                 className="w-full"
                             />
                         </div>
+                        <div className="mb-3 flex-1">
+                            <InputLabel value={"Status Karyawan"} />
+                            <TextInput
+                                type={"text"}
+                                disabled
+                                value={deposit.status_karyawan}
+                                name="transaction_date"
+                                className="w-full"
+                            />
+                        </div>
+                        <div className="mb-3 flex-1">
+                            <InputLabel value={"Status SKSW"} />
+                            <TextInput
+                                type={"text"}
+                                disabled
+                                value={deposit.status_sksw}
+                                name="transaction_date"
+                                className="w-full"
+                            />
+                        </div>
                         <div className="mb-3 flex-1"></div>
                         <div className="mb-3 flex-1"></div>
                     </div>
                 </div>
-
-                <div className="p-3 bg-white rounded shadow mt-3">
-                    <form onSubmit={onSubmitForm}>
-                        <span className="font-semibold mb-3">Transaksi</span>
-                        <div className="lg:flex justify-start items-start gap-3">
-                            <div className="mb-3 flex-1">
-                                <InputLabel value={"Tanggal Transaksi"} />
-                                <TextInput
-                                    type={"month"}
-                                    required
-                                    max={validating.max_date}
-                                    min={validating.min_date}
-                                    onChange={onInputChange}
-                                    name="transaction_date"
-                                    className="w-full"
-                                />
-                            </div>
-                            <div className="mb-3 flex-1">
-                                <InputLabel value={"Jenis Transaksi"} />
-                                <SelectList
-                                    className={"w-full"}
-                                    nullValue={true}
-                                    required
-                                    name={"transaction"}
-                                    value={data.transaction}
-                                    onChange={onJenisChange}
-                                    options={[
-                                        {
-                                            id: 1,
-                                            value: "D",
-                                            display: "Debit",
-                                        },
-                                        {
-                                            id: 2,
-                                            value: "K",
-                                            display: "Kredit",
-                                        },
-                                    ]}
-                                />
-                            </div>
-                            <div className="mb-3 flex-1">
-                                <InputLabel value={"Jenis Transaksi"} />
-                                <SelectList
-                                    className={"w-full"}
-                                    nullValue={true}
-                                    name={"transaction_type"}
-                                    required
-                                    onChange={onInputChange}
-                                    options={detailJenis}
-                                />
-                            </div>
-
-                            <div className="flex-[2] flex gap-3">
-                                <div className="flex-1">
-                                    <div className="mb-3">
+                {deposit.status_sksw == "Active" && (
+                    <>
+                        <div className="p-3 bg-white rounded shadow mt-3">
+                            <form onSubmit={onSubmitForm}>
+                                <span className="font-semibold mb-3">
+                                    Transaksi
+                                </span>
+                                <div className="lg:flex justify-start items-start gap-3">
+                                    <div className="mb-3 flex-1">
                                         <InputLabel
-                                            value={"Saldo Simpanan Wajib"}
+                                            value={"Tanggal Transaksi"}
                                         />
-                                        <CurrencyInput
-                                            name="saldo_awal_sw"
-                                            id="saldo_awal_sw"
-                                            readOnly
-                                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md read-only:bg-gray-100 read-only:cursor-not-allowed`}
-                                            allowDecimals={false}
-                                            prefix="Rp. "
-                                            min={1}
+                                        <TextInput
+                                            type={"month"}
                                             required
-                                            onValueChange={
-                                                onHandleCurencyChange
-                                            }
-                                            value={data.saldo_awal_sw}
-                                            placeholder={
-                                                "Inputkan angka tanpa sparator"
-                                            }
+                                            max={validating.max_date}
+                                            min={validating.min_date}
+                                            onChange={onInputChange}
+                                            name="transaction_date"
+                                            className="w-full"
                                         />
                                     </div>
-                                    <div className="mb-3">
-                                        <InputLabel
-                                            value={
-                                                "Nominal Transaksi Simpanan Wajib"
-                                            }
-                                        />
-                                        <CurrencyInput
-                                            name="nominal_sw"
-                                            id="nominal_sw"
-                                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md`}
-                                            allowDecimals={false}
-                                            prefix="Rp. "
-                                            min={1}
+                                    <div className="mb-3 flex-1">
+                                        <InputLabel value={"Jenis Transaksi"} />
+                                        <SelectList
+                                            className={"w-full"}
+                                            nullValue={true}
                                             required
-                                            onValueChange={
-                                                onHandleCurencyChange
-                                            }
-                                            value={data.nominal_sw}
-                                            placeholder={
-                                                "Inputkan angka tanpa sparator"
-                                            }
+                                            name={"transaction"}
+                                            value={data.transaction}
+                                            onChange={onJenisChange}
+                                            options={[
+                                                {
+                                                    id: 1,
+                                                    value: "D",
+                                                    display: "Debit",
+                                                },
+                                                {
+                                                    id: 2,
+                                                    value: "K",
+                                                    display: "Kredit",
+                                                },
+                                            ]}
                                         />
                                     </div>
-                                    <div className="mb-3">
-                                        <InputLabel
-                                            value={
-                                                "Saldo Akhir Transaksi Simpanan Wajib"
-                                            }
-                                        />
-                                        <CurrencyInput
-                                            name="sw_balance"
-                                            id="sw_balance"
-                                            readOnly
-                                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md read-only:bg-gray-100 read-only:cursor-not-allowed`}
-                                            allowDecimals={false}
-                                            prefix="Rp. "
-                                            min={1}
+                                    <div className="mb-3 flex-1">
+                                        <InputLabel value={"Jenis Transaksi"} />
+                                        <SelectList
+                                            className={"w-full"}
+                                            nullValue={true}
+                                            name={"transaction_type"}
                                             required
-                                            value={
-                                                data.transaction == "D"
-                                                    ? parseInt(
-                                                          data.saldo_awal_sw
-                                                      ) +
-                                                      parseInt(data.nominal_sw)
-                                                    : parseInt(
-                                                          data.saldo_awal_sw
-                                                      ) -
-                                                      parseInt(data.nominal_sw)
-                                            }
-                                            placeholder={
-                                                "Inputkan angka tanpa sparator"
-                                            }
+                                            onChange={onChangeJenisTransaksi}
+                                            options={detailJenis}
                                         />
+                                    </div>
+
+                                    <div className="flex-[2] flex gap-3">
+                                        <div className="flex-1">
+                                            <div className="mb-3">
+                                                <InputLabel
+                                                    value={
+                                                        "Saldo Simpanan Wajib"
+                                                    }
+                                                />
+                                                <CurrencyInput
+                                                    name="saldo_awal_sw"
+                                                    id="saldo_awal_sw"
+                                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md read-only:bg-gray-100 read-only:cursor-not-allowed`}
+                                                    allowDecimals={false}
+                                                    prefix="Rp. "
+                                                    min={1}
+                                                    readOnly
+                                                    required
+                                                    onValueChange={
+                                                        onHandleCurencyChange
+                                                    }
+                                                    value={data.saldo_awal_sw}
+                                                    placeholder={
+                                                        "Inputkan angka tanpa sparator"
+                                                    }
+                                                />
+                                            </div>
+                                            <div className="mb-3">
+                                                <InputLabel
+                                                    value={
+                                                        "Nominal Transaksi Simpanan Wajib"
+                                                    }
+                                                />
+                                                <CurrencyInput
+                                                    name="nominal_sw"
+                                                    id="nominal_sw"
+                                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md`}
+                                                    allowDecimals={false}
+                                                    prefix="Rp. "
+                                                    min={1}
+                                                    required
+                                                    onValueChange={
+                                                        onHandleCurencyChange
+                                                    }
+                                                    value={data.nominal_sw}
+                                                    placeholder={
+                                                        "Inputkan angka tanpa sparator"
+                                                    }
+                                                />
+                                            </div>
+                                            <div className="mb-3">
+                                                <InputLabel
+                                                    value={
+                                                        "Saldo Akhir Transaksi Simpanan Wajib"
+                                                    }
+                                                />
+                                                <CurrencyInput
+                                                    name="sw_balance"
+                                                    id="sw_balance"
+                                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md read-only:bg-gray-100 read-only:cursor-not-allowed`}
+                                                    allowDecimals={false}
+                                                    prefix="Rp. "
+                                                    min={1}
+                                                    readOnly
+                                                    required
+                                                    value={
+                                                        data.transaction == "D"
+                                                            ? parseInt(
+                                                                  data.saldo_awal_sw
+                                                              ) +
+                                                              parseInt(
+                                                                  data.nominal_sw
+                                                              )
+                                                            : parseInt(
+                                                                  data.saldo_awal_sw
+                                                              ) -
+                                                              parseInt(
+                                                                  data.nominal_sw
+                                                              )
+                                                    }
+                                                    placeholder={
+                                                        "Inputkan angka tanpa sparator"
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <div className="mb-3">
+                                                <InputLabel
+                                                    value={
+                                                        "Saldo Simpanan Sukarela"
+                                                    }
+                                                />
+                                                <CurrencyInput
+                                                    name="saldo_awal_sk"
+                                                    id="saldo_awal_sk"
+                                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md read-only:bg-gray-100 read-only:cursor-not-allowed`}
+                                                    allowDecimals={false}
+                                                    prefix="Rp. "
+                                                    min={1}
+                                                    required
+                                                    readOnly
+                                                    onValueChange={
+                                                        onHandleCurencyChange
+                                                    }
+                                                    value={data.saldo_awal_sk}
+                                                    placeholder={
+                                                        "Inputkan angka tanpa sparator"
+                                                    }
+                                                />
+                                            </div>
+                                            <div className="mb-3">
+                                                <InputLabel
+                                                    value={
+                                                        "Nominal Transaksi Simpanan Sukarela"
+                                                    }
+                                                />
+                                                <CurrencyInput
+                                                    name="nominal_sk"
+                                                    id="nominal_sk"
+                                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md`}
+                                                    allowDecimals={false}
+                                                    prefix="Rp. "
+                                                    min={1}
+                                                    required
+                                                    onValueChange={
+                                                        onHandleCurencyChange
+                                                    }
+                                                    value={data.nominal_sk}
+                                                    placeholder={
+                                                        "Inputkan angka tanpa sparator"
+                                                    }
+                                                />
+                                            </div>
+                                            <div className="mb-3">
+                                                <InputLabel
+                                                    value={
+                                                        "Saldo Akhir Transaksi Simpanan Sukarela"
+                                                    }
+                                                />
+                                                <CurrencyInput
+                                                    name="sk_balance"
+                                                    id="sk_balance"
+                                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md read-only:bg-gray-100 read-only:cursor-not-allowed`}
+                                                    allowDecimals={false}
+                                                    prefix="Rp. "
+                                                    readOnly
+                                                    min={1}
+                                                    required
+                                                    value={
+                                                        data.transaction == "D"
+                                                            ? parseInt(
+                                                                  data.saldo_awal_sk
+                                                              ) +
+                                                              parseInt(
+                                                                  data.nominal_sk
+                                                              )
+                                                            : parseInt(
+                                                                  data.saldo_awal_sk
+                                                              ) -
+                                                              parseInt(
+                                                                  data.nominal_sk
+                                                              )
+                                                    }
+                                                    placeholder={
+                                                        "Inputkan angka tanpa sparator"
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div className="flex-1">
-                                    <div className="mb-3">
-                                        <InputLabel
-                                            value={"Saldo Simpanan Sukarela"}
-                                        />
-                                        <CurrencyInput
-                                            name="saldo_awal_sk"
-                                            readOnly
-                                            id="saldo_awal_sk"
-                                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md read-only:bg-gray-100 read-only:cursor-not-allowed`}
-                                            allowDecimals={false}
-                                            prefix="Rp. "
-                                            min={1}
-                                            required
-                                            onValueChange={
-                                                onHandleCurencyChange
-                                            }
-                                            value={data.saldo_awal_sk}
-                                            placeholder={
-                                                "Inputkan angka tanpa sparator"
-                                            }
-                                        />
-                                    </div>
-                                    <div className="mb-3">
-                                        <InputLabel
-                                            value={
-                                                "Nominal Transaksi Simpanan Sukarela"
-                                            }
-                                        />
-                                        <CurrencyInput
-                                            name="nominal_sk"
-                                            id="nominal_sk"
-                                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md`}
-                                            allowDecimals={false}
-                                            prefix="Rp. "
-                                            min={1}
-                                            required
-                                            onValueChange={
-                                                onHandleCurencyChange
-                                            }
-                                            value={data.nominal_sk}
-                                            placeholder={
-                                                "Inputkan angka tanpa sparator"
-                                            }
-                                        />
-                                    </div>
-                                    <div className="mb-3">
-                                        <InputLabel
-                                            value={
-                                                "Saldo Akhir Transaksi Simpanan Sukarela"
-                                            }
-                                        />
-                                        <CurrencyInput
-                                            name="sk_balance"
-                                            id="sk_balance"
-                                            readOnly
-                                            className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-md read-only:bg-gray-100 read-only:cursor-not-allowed`}
-                                            allowDecimals={false}
-                                            prefix="Rp. "
-                                            min={1}
-                                            required
-                                            value={
-                                                data.transaction == "D"
-                                                    ? parseInt(
-                                                          data.saldo_awal_sk
-                                                      ) +
-                                                      parseInt(data.nominal_sk)
-                                                    : parseInt(
-                                                          data.saldo_awal_sk
-                                                      ) -
-                                                      parseInt(data.nominal_sk)
-                                            }
-                                            placeholder={
-                                                "Inputkan angka tanpa sparator"
-                                            }
-                                        />
-                                    </div>
+                                <div>
+                                    <PrimaryButton
+                                        title={"Submit"}
+                                        type="submit"
+                                    />
                                 </div>
-                            </div>
+                            </form>
                         </div>
-                        <div>
-                            <PrimaryButton title={"Submit"} type="submit" />
-                        </div>
-                    </form>
-                </div>
-                <Mutasi />
+                        <Mutasi />
+                    </>
+                )}
             </div>
         </Authenticated>
     );

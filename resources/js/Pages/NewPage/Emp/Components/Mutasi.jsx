@@ -7,7 +7,7 @@ import useServerFilter from "@/Hooks/useServerFilter";
 import { useForm, usePage } from "@inertiajs/react";
 import React from "react";
 
-const Mutasi = ({ typeMutasi, closedModal }) => {
+const Mutasi = ({ typeMutasi, closedModal, setLoading }) => {
     const { employee } = usePage().props;
     const { wilayah, selectedWilayah, setSelectedWilayah, filteredBranch } =
         useServerFilter();
@@ -58,9 +58,13 @@ const Mutasi = ({ typeMutasi, closedModal }) => {
 
     const onSubmitMutasi = (e) => {
         e.preventDefault();
+        setLoading(true);
         put(route("emp.perpindahan_karyawan", employee.id), {
             onSuccess: (page) => {
                 closedModal();
+            },
+            onFinish: (page) => {
+                setLoading(false);
             },
             replace: true,
         });

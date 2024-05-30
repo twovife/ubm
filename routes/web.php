@@ -76,13 +76,7 @@ Route::prefix('aset')->name('aset.')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::controller(EmployeeController::class)->prefix('emp')->name('emp.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/{employee}', 'show')->name('show');
-        Route::put('/{employee}', 'perpindahan_karyawan')->name('perpindahan_karyawan');
-        Route::put('/{employee}/resign', 'resign_karyawan')->name('resign_karyawan');
-        Route::put('/{employee}/kembalimasuk', 'kembali_karyawan')->name('kembali_karyawan');
-    });
+
 
 
     Route::prefix('controlpanel')->name('controlpanel.')->group(function () {
@@ -171,11 +165,20 @@ Route::middleware('auth')->group(function () {
         });
     });
 
+    Route::controller(EmployeeController::class)->prefix('emp')->name('emp.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{employee}', 'show')->name('show');
+        Route::put('/{employee}', 'perpindahan_karyawan')->name('perpindahan_karyawan');
+        Route::put('/{employee}/resign', 'resign_karyawan')->name('resign_karyawan');
+        Route::put('/{employee}/kembalimasuk', 'kembali_karyawan')->name('kembali_karyawan');
+        Route::put('/{employee}/pengembalianjaminan', 'pengembalianjaminan')->name('pengembalianjaminan');
+    });
 
     Route::prefix('employee')->name('employee.')->middleware(['auth', 'verified', 'permission:unit|pusat'])->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('index');
         Route::get('/exemployee', [EmployeeController::class, 'exemployee'])->name('exemployee');
         Route::get('/create', [EmployeeController::class, 'create'])->name('create');
+
         Route::get('/action/{employee}', [EmployeeController::class, 'action'])->name('action');
         Route::post('/', [EmployeeController::class, 'store'])->name('store');
         Route::put('/{employee}/update', [EmployeeController::class, 'update'])->name('update');

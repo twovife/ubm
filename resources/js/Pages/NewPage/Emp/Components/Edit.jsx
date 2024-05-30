@@ -6,26 +6,16 @@ import { Transition } from "@headlessui/react";
 import Resign from "./Resign";
 import Kembali from "./Kembali";
 
-const Perpindahan = ({ show, setShow, isActive, setLoading }) => {
+const Edit = ({ show, setShow, isActive, setLoading }) => {
     const [selectedValue, setSelectedValue] = useState("");
 
-    const selectPerpindahan = [
-        { id: 1, value: 1, display: "Promosi" },
-        { id: 2, value: 2, display: "Mutasi" },
-        { id: 3, value: 3, display: "Demosi" },
-
-        { id: 4, value: 4, display: "Resign" },
-        { id: 5, value: 5, display: "Pecat" },
-
-        { id: 6, value: 6, display: "Kembali Masuk" },
+    const selectEdit = [
+        { id: 1, value: 1, display: "Ganti Data" },
+        { id: 2, value: 2, display: "Masukkan Jaminan" },
     ];
 
-    const filteredOptions = isActive
-        ? selectPerpindahan.filter((options) => options.id < 6)
-        : selectPerpindahan.filter((options) => options.id === 6);
-
     const onPerpindahanChange = (e) => {
-        const value = parseInt(e.target.value, 10); // Konversi nilai menjadi angka
+        const value = parseInt(e.target.value, 10);
         setSelectedValue(value);
     };
 
@@ -93,7 +83,7 @@ const Perpindahan = ({ show, setShow, isActive, setLoading }) => {
                         <InputLabel value={"Pilih Perpindahan"} />
                         <SelectList
                             onChange={onPerpindahanChange}
-                            options={filteredOptions}
+                            options={selectEdit}
                             value={selectedValue}
                             className={"block w-full"}
                             nullValue={true}
@@ -106,4 +96,4 @@ const Perpindahan = ({ show, setShow, isActive, setLoading }) => {
     );
 };
 
-export default Perpindahan;
+export default Edit;

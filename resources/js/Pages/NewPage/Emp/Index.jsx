@@ -49,14 +49,14 @@ const Index = ({ server_filter, datas, ...props }) => {
                                 loading={loading}
                                 setLoading={setLoading}
                                 urlLink={route("emp.index")}
-                                localState={"emp.index"}
+                                localState={"employee_index"}
                                 availableBranch={true}
-                            />
-                            {/* <Search loading={loading} setLoading={setLoading} /> */}
-                            <PrimaryButton
-                                className="block"
-                                title={"Tambah Baru"}
-                            />
+                            >
+                                <PrimaryButton
+                                    className="block"
+                                    title={"Tambah Baru"}
+                                />
+                            </Search>
                         </Card.endContent>
                     </div>
                 </Card.subTitle>
@@ -242,7 +242,7 @@ const Index = ({ server_filter, datas, ...props }) => {
                             }}
                         />
                     </DefaultTable.thead>
-                    <tbody className="divide-y divide-gray-200 relative z-0">
+                    <tbody className="divide-y divide-gray-200 relative z-0 text-xs">
                         {returnedData &&
                             returnedData.map((item, key) => (
                                 <tr

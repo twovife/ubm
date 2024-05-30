@@ -170,11 +170,21 @@ class DepositController extends Controller
         $branch = Branch::where('id', '!=', $deposit->branch_id)->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
         $employee = Employee::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('branch_id', auth()->user()->employee->branch_id))->get();
         $deposit = $deposit->load('deposit_transactions.branch', 'branch', 'employee');
+        $saldoSk =  ($deposit->deposit_transactions->sum('sk_debit') - $deposit->deposit_transactions->sum('sk_kredit'));
+        $saldoSw = ($deposit->deposit_transactions->sum('sw_debit') - $deposit->deposit_transactions->sum('sw_kredit'));
+        $tidak_punya_saldo = $saldoSw + $saldoSk == 0;
+        $is_active = $tidak_punya_saldo &&  $deposit->employee->date_resign ?  "Non Active" : "Active";
         $data_deposit = [
             'id' => $deposit->id,
-            'sk_balance' => ($deposit->deposit_transactions->sum('sk_debit') - $deposit->deposit_transactions->sum('sk_kredit')),
-            'sw_balance' => ($deposit->deposit_transactions->sum('sw_debit') - $deposit->deposit_transactions->sum('sw_kredit')),
+
+            'sk_balance' => $saldoSk,
+            'sw_balance' => $saldoSw,
+
             'nama_karyawan' => $deposit->employee->nama_karyawan,
+            'status_karyawan' => $deposit->employee->date_resign ? 'Resign' : 'Aktive',
+
+            'status_sksw' => $is_active,
+
             'unit' => $deposit->branch->unit,
         ];
 
@@ -317,18 +327,18 @@ class DepositController extends Controller
 
 
                 if ($request->transaction_type == "KRMD") {
-                    if ($request->nominal_sw > 0) {
+
+                    if ($sk_balance == $request->nominal_sk) {
                         $employee = Employee::find($deposit->employee_id);
-                        $employee->pencairan_simpanan_w_date = $tanggal_tabungan;
-                        $employee->pencairan_simpanan_w_by = auth()->user()->employee_id;
+                        $employee->pencairan_simpanan_date =   $employee->pencairan_simpanan_date ?? $tanggal_tabungan;
+                        $employee->pencairan_simpanan_by =  $employee->pencairan_simpanan_by ?? auth()->user()->employee_id;
                         $employee->save();
                     }
 
-                    if ($request->nominal_sk > 0) {
-
+                    if ($sw_balance == $request->nominal_sw) {
                         $employee = Employee::find($deposit->employee_id);
-                        $employee->pencairan_simpanan_date = $tanggal_tabungan;
-                        $employee->pencairan_simpanan_by = auth()->user()->employee_id;
+                        $employee->pencairan_simpanan_w_date =   $employee->pencairan_simpanan_w_date ?? $tanggal_tabungan;
+                        $employee->pencairan_simpanan_w_by =     $employee->pencairan_simpanan_w_by ?? auth()->user()->employee_id;
                         $employee->save();
                     }
                 }

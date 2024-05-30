@@ -9,12 +9,25 @@ import { BiEdit, BiUser } from "react-icons/bi";
 import { GrEdit } from "react-icons/gr";
 import { NumericFormat } from "react-number-format";
 import Perpindahan from "./Components/Perpindahan";
+import PengembalianJaminan from "./Components/PengembalianJaminan";
+import Edit from "@/Pages/Profile/Edit";
 
 const Show = ({ employee, deposit_sksw, branches, ...props }) => {
     const [loading, setLoading] = useState(false);
+
     const [isShowPerpindahan, setIsShowPerpindahan] = useState(false);
     const onPerpindahanButtonClicked = () => {
         setIsShowPerpindahan(!isShowPerpindahan);
+    };
+
+    const [isShowPengembalian, setIsShowPengembalian] = useState(false);
+    const onPengembalianButtonClicked = () => {
+        setIsShowPengembalian(!isShowPengembalian);
+    };
+
+    const [isShowEdit, setIsShowEdit] = useState(false);
+    const onEditButtonClicked = () => {
+        setIsShowEdit(!isShowEdit);
     };
 
     return (
@@ -29,22 +42,34 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                             <div className="flex gap-3 mb-3 items-center justify-center">
                                 {employee.resign_status == null ||
                                 employee.resign_status == "" ? (
-                                    <span className="bg-green-400 text-white text-sm px-2 py-1 rounded-full">
-                                        # Active
+                                    <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                        <span class="w-2 h-2 me-1 bg-green-500 rounded-full mr-1"></span>
+                                        Active
                                     </span>
                                 ) : employee.resign_status == "Resign" ? (
-                                    <span className="bg-yellow-400 text-white text-sm px-2 py-1 rounded-full">
-                                        # Resign
+                                    <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                        <span class="w-2 h-2 me-1 bg-yellow-500 rounded-full mr-1"></span>
+                                        Resign
                                     </span>
                                 ) : (
-                                    <span className="bg-black text-white text-sm px-2 py-1 rounded-full">
-                                        # Pecat
+                                    // <span className="bg-yellow-400 text-white text-sm px-2 py-1 rounded-full">
+                                    //     # Resign
+                                    // </span>
+
+                                    <span class="inline-flex items-center bg-black text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                        <span class="w-2 h-2 me-1 bg-white rounded-full mr-1"></span>
+                                        Pecat
                                     </span>
+
+                                    // <span className="bg-black text-white text-sm px-2 py-1 rounded-full">
+                                    //     # Pecat
+                                    // </span>
                                 )}
                                 {employee.janis_jaminan == "" ||
                                 employee.janis_jaminan == null ? (
-                                    <span className="bg-blue-400 text-white text-sm px-2 py-1 rounded-full">
-                                        # Jaminan Belum Lengkap
+                                    <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                        <span class="w-2 h-2 me-1 bg-blue-500 rounded-full mr-1"></span>
+                                        Jaminan Belum Lengkap
                                     </span>
                                 ) : (
                                     ""
@@ -58,7 +83,11 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                     >
                                         Pindah Karyawan
                                     </button>
-                                    <button className="text-xs border border-green-400 hover:bg-green-600 text-green-500 hover:text-white px-2 py-1 rounded ring ring-green-100 hover:ring-green-300">
+
+                                    <button
+                                        onClick={onEditButtonClicked}
+                                        className="text-xs border border-green-400 hover:bg-green-600 text-green-500 hover:text-white px-2 py-1 rounded ring ring-green-100 hover:ring-green-300"
+                                    >
                                         Edit Profil
                                     </button>
                                 </div>
@@ -213,48 +242,70 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                             </tr>
                                         </thead>
                                         <tbody className="text-center">
-                                            <tr>
-                                                <td className="px-2 py-1">
-                                                    <Link className="bg-green-500 hover:bg-green-600 text-white p-1 rounded">
-                                                        Edit
-                                                    </Link>
-                                                </td>
-                                                <td className="px-2 py-1">
-                                                    <NumericFormat
-                                                        value={
-                                                            deposit_sksw.saldo_sk
-                                                        }
-                                                        displayType={"text"}
-                                                        thousandSeparator={","}
-                                                    />
-                                                </td>
-                                                <td className="px-2 py-1">
-                                                    <NumericFormat
-                                                        value={
-                                                            deposit_sksw.saldo_sw
-                                                        }
-                                                        displayType={"text"}
-                                                        thousandSeparator={","}
-                                                    />
-                                                </td>
-                                                <td className="px-2 py-1">
-                                                    <NumericFormat
-                                                        value={
-                                                            deposit_sksw.saldo_sw +
-                                                            deposit_sksw.saldo_sk
-                                                        }
-                                                        displayType={"text"}
-                                                        thousandSeparator={","}
-                                                    />
-                                                </td>
-                                                <td className="px-2 py-1">
-                                                    {deposit_sksw.max_tanggal
-                                                        ? dayjs(
-                                                              deposit_sksw.max_tanggal
-                                                          ).format("DD-MM-YYYY")
-                                                        : "-"}
-                                                </td>
-                                            </tr>
+                                            {deposit_sksw?.deposit_id ? (
+                                                <tr>
+                                                    <td className="px-2 py-1">
+                                                        <Link
+                                                            className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
+                                                            href={route(
+                                                                "sksw.transaksi",
+                                                                deposit_sksw.deposit_id
+                                                            )}
+                                                        >
+                                                            Show
+                                                        </Link>
+                                                    </td>
+                                                    <td className="px-2 py-1">
+                                                        <NumericFormat
+                                                            value={
+                                                                deposit_sksw.saldo_sk
+                                                            }
+                                                            displayType={"text"}
+                                                            thousandSeparator={
+                                                                ","
+                                                            }
+                                                        />
+                                                    </td>
+                                                    <td className="px-2 py-1">
+                                                        <NumericFormat
+                                                            value={
+                                                                deposit_sksw.saldo_sw
+                                                            }
+                                                            displayType={"text"}
+                                                            thousandSeparator={
+                                                                ","
+                                                            }
+                                                        />
+                                                    </td>
+                                                    <td className="px-2 py-1">
+                                                        <NumericFormat
+                                                            value={
+                                                                deposit_sksw.saldo_sw +
+                                                                deposit_sksw.saldo_sk
+                                                            }
+                                                            displayType={"text"}
+                                                            thousandSeparator={
+                                                                ","
+                                                            }
+                                                        />
+                                                    </td>
+                                                    <td className="px-2 py-1">
+                                                        {deposit_sksw.max_tanggal
+                                                            ? dayjs(
+                                                                  deposit_sksw.max_tanggal
+                                                              ).format(
+                                                                  "DD-MM-YYYY"
+                                                              )
+                                                            : "-"}
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan={5}>
+                                                        Belum Ada SKSW
+                                                    </td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
@@ -263,9 +314,9 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                 <div className="text-2xl font-semibold text-gray-400 mb-2">
                                     History
                                 </div>
-                                <div className="overflow-auto rounded">
-                                    <table className="w-full border-2 shadow text-xs">
-                                        <thead className="bg-gray-200 text-center">
+                                <div className="overflow-auto rounded  max-h-[25vh] shadow">
+                                    <table className="w-full border-2 shadow text-xs relative z-0">
+                                        <thead className="bg-gray-200 text-center sticky top-0 left-0 z-10 w-full">
                                             <tr>
                                                 <td className="px-2 py-1">
                                                     Tanggal
@@ -341,45 +392,30 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                         <tbody className="text-center">
                                             <tr>
                                                 <td className="px-2 py-2">
-                                                    {employee.pencairan_simpanan_w_date ? (
-                                                        dayjs(
-                                                            employee.pencairan_simpanan_w_date
-                                                        ).format("DD-MM-YYYY")
-                                                    ) : (
-                                                        <button
-                                                            onClick={
-                                                                onPerpindahanButtonClicked
-                                                            }
-                                                            className="text-xs bg-roman-400 hover:bg-roman-600 text-white px-2 py-1 rounded ring ring-roman-200 hover:ring-roman-400"
-                                                        >
-                                                            Pengambilan SW
-                                                        </button>
-                                                    )}
+                                                    {employee.pencairan_simpanan_w_date
+                                                        ? dayjs(
+                                                              employee.pencairan_simpanan_w_date
+                                                          ).format("DD-MM-YYYY")
+                                                        : "SW belum Diambil"}
                                                 </td>
                                                 <td className="px-2 py-1">
                                                     {
-                                                        employee.pencairan_simpanan_by
+                                                        employee.ttdsw
+                                                            ?.nama_karyawan
                                                     }
                                                 </td>
+
                                                 <td className="px-2 py-1">
-                                                    {employee.pencairan_simpanan_date ? (
-                                                        dayjs(
-                                                            employee.pencairan_simpanan_date
-                                                        ).format("DD-MM-YYYY")
-                                                    ) : (
-                                                        <button
-                                                            onClick={
-                                                                onPerpindahanButtonClicked
-                                                            }
-                                                            className="text-xs bg-roman-400 hover:bg-roman-600 text-white px-2 py-1 rounded ring ring-roman-200 hover:ring-roman-400"
-                                                        >
-                                                            Pengambilan SK
-                                                        </button>
-                                                    )}
+                                                    {employee.pencairan_simpanan_date
+                                                        ? dayjs(
+                                                              employee.pencairan_simpanan_date
+                                                          ).format("DD-MM-YYYY")
+                                                        : "SK belum Diambil"}
                                                 </td>
                                                 <td className="px-2 py-1">
                                                     {
-                                                        employee.pencairan_simpanan_by
+                                                        employee.ttdss
+                                                            ?.nama_karyawan
                                                     }
                                                 </td>
                                                 <td className="px-2 py-1">
@@ -387,10 +423,19 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                                         dayjs(
                                                             employee.handover_jaminan
                                                         ).format("DD-MM-YYYY")
+                                                    ) : employee.janis_jaminan ==
+                                                          "" ||
+                                                      employee.janis_jaminan ==
+                                                          null ? (
+                                                        <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                                            <span class="w-2 h-2 me-1 bg-blue-500 rounded-full mr-1"></span>
+                                                            Jaminan Belum
+                                                            Lengkap
+                                                        </span>
                                                     ) : (
                                                         <button
                                                             onClick={
-                                                                onPerpindahanButtonClicked
+                                                                onPengembalianButtonClicked
                                                             }
                                                             className="text-xs bg-roman-400 hover:bg-roman-600 text-white px-2 py-1 rounded ring ring-roman-200 hover:ring-roman-400"
                                                         >
@@ -400,7 +445,8 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                                 </td>
                                                 <td className="px-2 py-1">
                                                     {
-                                                        employee.handover_jaminan_by
+                                                        employee.ttdjaminan
+                                                            ?.nama_karyawan
                                                     }
                                                 </td>
                                             </tr>
@@ -413,7 +459,6 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                 </div>
                 <div>
                     <ul>
-                        <li>Pengambilan SKSW belum ada editnya</li>
                         <li>Edit Profil</li>
                         <li>Ganti Status Saja</li>
                     </ul>
@@ -422,7 +467,25 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
             <Perpindahan
                 show={isShowPerpindahan}
                 setShow={onPerpindahanButtonClicked}
-                isActive={employee.resign_status == ""}
+                isActive={
+                    employee.resign_status === "" ||
+                    employee.resign_status === null
+                }
+                setLoading={setLoading}
+            />
+            <Edit
+                show={isShowEdit}
+                setShow={onEditButtonClicked}
+                isActive={
+                    employee.resign_status === "" ||
+                    employee.resign_status === null
+                }
+                setLoading={setLoading}
+            />
+            <PengembalianJaminan
+                show={isShowPengembalian}
+                setShow={onPengembalianButtonClicked}
+                setLoading={setLoading}
             />
         </Authenticated>
     );

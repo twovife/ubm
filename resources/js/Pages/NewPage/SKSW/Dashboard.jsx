@@ -155,12 +155,13 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
                                 urlLink={route("sksw.dashboard")}
                                 localState={"sksw_dashboard"}
                                 availableBranch={true}
-                            />
-                            <PrimaryButton
-                                onClick={showCreateHandler}
-                                className="block"
-                                title={"Tambah Baru"}
-                            />
+                            >
+                                <PrimaryButton
+                                    onClick={showCreateHandler}
+                                    className="block"
+                                    title={"Tambah Baru"}
+                                />
+                            </Search>
                         </Card.endContent>
                     </div>
                 </Card.subTitle>

@@ -4,6 +4,7 @@ import useServerFilter from "@/Hooks/useServerFilter";
 import { router, useForm } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import TextInput from "./TextInput";
+import ButtonWrapper from "./ButtonWrapper";
 
 const Search = ({
     loading,
@@ -41,7 +42,7 @@ const Search = ({
 
     const onSubmitSearch = (e) => {
         e.preventDefault();
-        get(urlLink, { only: ["datas", "server_filter", "batch_datas"] });
+        get(urlLink);
     };
 
     const ResetFilter = (e) => {
@@ -80,62 +81,65 @@ const Search = ({
     return (
         <form
             onSubmit={onSubmitSearch}
-            className="flex lg:flex-row flex-col items-center justify-start gap-3 w-full lg:w-auto"
+            className="flex w-full flex-col lg:flex-row gap-3 items-end lg:items-center justify-end"
+            // className="flex lg:flex-row flex-col items-center justify-start gap-3 w-full lg:w-auto bg-red-400"
         >
-            {availableMonth && (
-                <TextInput
-                    type="month"
-                    className={"w-full"}
-                    onChange={onSearchChange}
-                    name="bulan"
-                    value={data.bulan}
-                />
-            )}
-            {availableDate && (
-                <TextInput
-                    type="date"
-                    className={"w-full"}
-                    onChange={onSearchChange}
-                    name="tanggal"
-                    value={data.tanggal}
-                />
-            )}
+            <div className="flex flex-row justify-end gap-3 flex-wrap w-full lg:w-auto">
+                {availableMonth && (
+                    <TextInput
+                        type="month"
+                        className={"w-full lg:w-auto"}
+                        onChange={onSearchChange}
+                        name="bulan"
+                        value={data.bulan}
+                    />
+                )}
+                {availableDate && (
+                    <TextInput
+                        type="date"
+                        className={"w-full lg:w-auto"}
+                        onChange={onSearchChange}
+                        name="tanggal"
+                        value={data.tanggal}
+                    />
+                )}
 
-            {FilterWilayahOnly && (
-                <SelectList
-                    name="wilayah"
-                    value={data.wilayah}
-                    className={`w-full`}
-                    nullValue={true}
-                    options={wilayah}
-                    onChange={onSearchChange}
-                />
-            )}
-
-            {availableBranch && (
-                <>
+                {FilterWilayahOnly && (
                     <SelectList
                         name="wilayah"
-                        value={selectedWilayah}
-                        className={`w-full`}
+                        value={data.wilayah}
+                        className={`w-full lg:w-auto`}
                         nullValue={true}
                         options={wilayah}
-                        onChange={onOptWilayahChange}
+                        onChange={onSearchChange}
                     />
-                    {selectedWilayah !== "" && (
+                )}
+
+                {availableBranch && (
+                    <>
                         <SelectList
-                            name="branch_id"
-                            className={`w-full`}
-                            value={data.branch_id}
+                            name="wilayah"
+                            value={selectedWilayah}
+                            className={`w-full lg:w-auto inline-block`}
                             nullValue={true}
-                            required
-                            options={filteredBranch}
-                            onChange={onSearchChange}
+                            options={wilayah}
+                            onChange={onOptWilayahChange}
                         />
-                    )}
-                </>
-            )}
-            <div className="flex flex-row gap-3">
+                        {selectedWilayah !== "" && (
+                            <SelectList
+                                name="branch_id"
+                                className={`w-full lg:w-auto`}
+                                value={data.branch_id}
+                                nullValue={true}
+                                required
+                                options={filteredBranch}
+                                onChange={onSearchChange}
+                            />
+                        )}
+                    </>
+                )}
+            </div>
+            <ButtonWrapper>
                 <PrimaryButton
                     type="submit"
                     theme="green"
@@ -150,7 +154,7 @@ const Search = ({
                     title={"Reset"}
                 />
                 {children}
-            </div>
+            </ButtonWrapper>
         </form>
     );
 };

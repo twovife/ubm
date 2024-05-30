@@ -65,7 +65,7 @@ class EmployeeController extends Controller
             'handover_jaminan' => $que->handover_jaminan ?? null,
             'handover_jaminan_by' => $que->ttdjaminan->nama_karyawan ?? '-',
             'pencairan_simpanan_w_date' => $que->pencairan_simpanan_w_date ?? null,
-            'pencairan_simpanan_w_by' => $que->ttdsw->pencairan_simpanan_w_by ?? '-',
+            'pencairan_simpanan_w_by' => $que->ttdsw->nama_karyawan ?? '-',
         ])->sortBy('status')->sortBy('unit')->sortBy('wilayah')->values();
 
         // dd($data);
@@ -79,7 +79,7 @@ class EmployeeController extends Controller
     public function show(Employee $employee)
     {
         $branches = Branch::all();
-        $emp = $employee->load('branch', 'histories');
+        $emp = $employee->load('branch', 'histories', 'ttdss', 'ttdsw', 'ttdjaminan');
         $sksw = Deposit::with('deposit_transactions')->where('employee_id', $emp->id)->first();
         $saldo_sw = $sksw?->deposit_transactions?->sum('sw_debit') - $sksw?->deposit_transactions?->sum('sw_kredit');
         $saldo_sk = $sksw?->deposit_transactions?->sum('sk_debit') - $sksw?->deposit_transactions?->sum('sk_kredit');
@@ -170,11 +170,12 @@ class EmployeeController extends Controller
 
     public function kembali_karyawan(Employee $employee, Request $request)
     {
+        // dd($request->all());
         $branch_asal = $employee->branch->unit;
         $data = [
             ['history_date' => $employee->date_resign, 'keterangan' => $employee->resign_status, 'record' => "$employee->resign_status dengan alasan $employee->resign_reson"],
             ['history_date' => $employee->date_resign, 'keterangan' => $employee->resign_status,    'record' =>  "$employee->resign_status dari $branch_asal sebagai $employee->jabatan"],
-            ['history_date' => $employee->tanggal_kembali, 'keterangan' => 'Kembali Masuk',    'record' => 'Kembali menjadi Karyawan']
+            ['history_date' => $request->tanggal_kembali, 'keterangan' => 'Kembali Masuk',    'record' => 'Kembali menjadi Karyawan']
         ];
 
         try {
@@ -186,7 +187,11 @@ class EmployeeController extends Controller
             $employee->pencairan_simpanan_by = null;
             $employee->handover_jaminan = null;
             $employee->handover_jaminan_by = null;
+            $employee->pencairan_simpanan_w_date = null;
+            $employee->pencairan_simpanan_w_by = null;
 
+
+            $employee->status_kontrak =  $request->status_kontrak;
             $employee->hire_date = $request->tanggal_kembali;
             $employee->jabatan =  $request->jabatan;
             $employee->area = $request->area ?? 0;
@@ -317,9 +322,29 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function edit(Employee $employee)
+    public function pengembalianjaminan(Employee $employee, Request $request)
     {
-        //
+        $request->validate([
+            'handover_jaminan' => "required"
+        ], [
+            '*.required' => "Harus Diisi"
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $employee->handover_jaminan = $request->handover_jaminan;
+            $employee->handover_jaminan_by = auth()->user()->employee_id;
+            $employee->save();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
+        }
+
+        $arrayFilter = [
+            "branch_id" => $employee->branch_id ?? null
+        ];
+        return redirect()->route('emp.show', $employee->id)->with('message', 'data berhasil diubah');
     }
 
     /**
@@ -391,7 +416,6 @@ class EmployeeController extends Controller
     public function mutasi(UpdateEmployeeMutationRequest $request, Employee $employee)
     {
         $tanggal_tabungan = Carbon::now()->endOfMonth()->format('Y-m-d');
-
         try {
             DB::beginTransaction();
             $record =  $employee->load('branch')->branch->unit . ' sebagai ' . $employee->getOriginal('jabatan');
@@ -419,7 +443,7 @@ class EmployeeController extends Controller
         $arrayFilter = [
             "branch_id" => $employee->branch_id ?? null
         ];
-        return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'data berhasil diubah');
+        return redirect()->route('emp.show', $employee->id)->with('message', 'data berhasil diubah');
     }
 
     public function resign(UpdateEmployeeResignRequest $request, Employee $employee)
@@ -461,7 +485,11 @@ class EmployeeController extends Controller
             $employee->pencairan_simpanan_by = null;
             $employee->handover_jaminan = null;
             $employee->handover_jaminan_by = null;
+            $employee->pencairan_simpanan_w_date = null;
+            $employee->pencairan_simpanan_w_by = null;
 
+
+            $employee->status_kontrak =  $request->status_kontrak;
             $employee->jabatan =  $request->jabatan;
             $employee->area = $request->area ?? 0;
             $employee->branch_id = $request->branch_id;
@@ -502,62 +530,5 @@ class EmployeeController extends Controller
             "branch_id" => $employee->branch_id ?? null
         ];
         return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'data berhasil dihapus');
-    }
-
-    public function handover(Request $request, Employee $employee)
-    {
-        $employee->pencairan_simpanan_date = $request->pencairan_simpanan_date;
-        $employee->pencairan_simpanan_by = $request->pencairan_simpanan_date ? auth()->user()->employee->id : null;
-        $employee->pencairan_simpanan_w_date = $request->pencairan_simpanan_w_date;
-        $employee->pencairan_simpanan_w_by = $request->pencairan_simpanan_w_date ? auth()->user()->employee->id : null;
-        $employee->handover_jaminan = $request->handover_jaminan;
-        $employee->handover_jaminan_by = $request->handover_jaminan ? auth()->user()->employee->id : null;
-        $employee->save();
-
-        $arrayFilter = [
-            "branch_id" => $employee->branch_id ?? null
-        ];
-        return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'data berhasil diubah');
-    }
-
-
-    // v2 controller
-    public function newindex()
-    {
-        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-            $q->where('id', auth()->user()->employee->branch_id);
-        })->get();
-        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->orderBy('date_resign', 'asc')->orderBy('updated_at', 'desc')->get();
-
-        $data = collect($emp)->map(fn ($que) => [
-            'id' => $que->id ?? null,
-            'nama' => $que->nama_karyawan ?? '-',
-            'nik' => $que->nik ?? '-',
-            'alamat' => $que->alamat ?? '-',
-            'hire_date' => $que->hire_date ?? '-',
-            'masa_kerja' => now()->diffInYears(\Carbon\Carbon::parse($que->hire_date)) ?? '-',
-            'jabatan' => $que->jabatan ?? '-',
-            'area' => $que->area ?? '-',
-            'unit' => $que->branch?->unit ?? '-',
-            'wilayah' => $que->branch?->wilayah ?? '-',
-            'janis_jaminan' => $que->janis_jaminan ?? '-',
-            'tanggal_perpindahan' => $que->history?->history_date ?? '-',
-            'history_perpindahan' => $que->history?->record ?? '-',
-            'keterangan_perpindahan' => $que->history?->keterangan ?? '-',
-            'date_resign' => $que->date_resign ?? '-',
-            'resign_status' => $que->resign_status ?? '-',
-            'pencairan_simpanan_date' => $que->pencairan_simpanan_date ?? '-',
-            'pencairan_simpanan_by' => $que->ttdss->nama_karyawan ?? '-',
-            'handover_jaminan' => $que->handover_jaminan ?? '-',
-            'handover_jaminan_by' => $que->ttdjaminan->nama_karyawan ?? '-',
-            'pencairan_simpanan_w_date' => $que->pencairan_simpanan_w_date ?? '-',
-            'pencairan_simpanan_w_by' => $que->ttdsw->pencairan_simpanan_w_by ?? '-',
-
-        ]);
-        return Inertia::render('V2/Employee/Index', [
-            'branch' => $branch,
-            'employee' => $data,
-            'filters' => request()->data ?? null
-        ]);
     }
 }

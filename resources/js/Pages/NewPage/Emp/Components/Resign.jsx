@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import { useForm, usePage } from "@inertiajs/react";
 import React from "react";
 
-const Resign = ({ typeMutasi, closedModal }) => {
+const Resign = ({ typeMutasi, closedModal, setLoading }) => {
     const { employee } = usePage().props;
 
     const { data, setData, put, processing, recentlySuccessful, errors } =
@@ -22,9 +22,13 @@ const Resign = ({ typeMutasi, closedModal }) => {
 
     const onSubmitResign = (e) => {
         e.preventDefault();
+        setLoading(true);
         put(route("emp.resign_karyawan", employee.id), {
             onSuccess: (page) => {
                 closedModal();
+            },
+            onFinish: (page) => {
+                setLoading(false);
             },
             replace: true,
         });

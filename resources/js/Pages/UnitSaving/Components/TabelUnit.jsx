@@ -77,7 +77,8 @@ const TabelUnit = ({ data, loading, setLoading }) => {
                         <DefaultTable.td className={`text-center`}>
                             <div className="flex justify-start items-center gap-3">
                                 {key + 1}
-                                {item.tanggungan == "Belum Ada Transaksi" ? (
+
+                                {item.button_type == 2 ? (
                                     <Link
                                         href={route(
                                             "unitsaving.create",
@@ -85,28 +86,26 @@ const TabelUnit = ({ data, loading, setLoading }) => {
                                         )}
                                         className="px-2 py-1 rounded-lg bg-green-500 text-white"
                                     >
-                                        Setoran Baru
+                                        Setoran
                                         {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
                                     </Link>
-                                ) : item.tanggungan == "Unit Non Aktif" ? (
-                                    item?.id ? (
-                                        <Link
-                                            href={route(
-                                                "unitsaving.savingdetails",
-                                                item.id ?? 1
-                                            )}
-                                            className="px-2 py-1 rounded-lg bg-gray-500 text-white"
-                                        >
-                                            Show
-                                            {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
-                                        </Link>
-                                    ) : (
-                                        <div className="px-2 py-1 rounded-lg bg-gray-500 text-white">
-                                            Non Aktif
-                                            {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
-                                        </div>
-                                    )
-                                ) : (
+                                ) : item.button_type == 3 ? (
+                                    <Link
+                                        href={route(
+                                            "unitsaving.savingdetails",
+                                            item.id
+                                        )}
+                                        className="px-2 py-1 rounded-lg bg-gray-500 text-white"
+                                    >
+                                        Show
+                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                    </Link>
+                                ) : item.button_type == 4 ? (
+                                    <div className="px-2 py-1 rounded-lg bg-gray-500 text-white">
+                                        Non Aktif
+                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                    </div>
+                                ) : item.button_type == 1 ? (
                                     <Link
                                         href={route(
                                             "unitsaving.savingdetails",
@@ -117,6 +116,8 @@ const TabelUnit = ({ data, loading, setLoading }) => {
                                         Setor
                                         {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
                                     </Link>
+                                ) : (
+                                    "invalid"
                                 )}
                             </div>
                         </DefaultTable.td>

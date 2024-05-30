@@ -21,7 +21,7 @@ class BopTransactionController extends Controller
      */
     public function index_mutation()
     {
-        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
         $requestFilter = new \stdClass;
         $requestFilter->isWilayanNeeded = true;
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
@@ -104,7 +104,7 @@ class BopTransactionController extends Controller
     public function index_bop()
     {
 
-        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
         $requestFilter = new \stdClass;
         $requestFilter->isWilayanNeeded = true;
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
@@ -131,6 +131,8 @@ class BopTransactionController extends Controller
             return [
                 'wilayah' => $queries->first()['wilayah'],
                 'data' => $queries->map(function ($saving_perwilayah) use ($requestFilter) {
+                    $minDate = BopTransaction::where("bop_account_transaction_id", $saving_perwilayah['account_id'])?->min("transaction_date");
+                    $parseMindate = Carbon::parse($minDate)->format('M Y');
                     return [
                         'wilayah' => $saving_perwilayah['wilayah'],
                         'id' => $saving_perwilayah['account_id'],
@@ -140,19 +142,33 @@ class BopTransactionController extends Controller
                         'lastmont' => Carbon::createFromDate($saving_perwilayah['last_year_payment'], $saving_perwilayah['last_month_payment'], 1)->format('Y-m'),
                         'thismont' => Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m'),
 
-                        'isPaid' => $saving_perwilayah['total'] == 0 ? 1
-                            : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m') ? 0 : 1),
+                        'button_type' => $saving_perwilayah['isactive'] == 0 ? ($saving_perwilayah['account_id'] ? 3 : 4) : ($saving_perwilayah['account_id'] ? 1 : 2),
 
+                        'last_month_payment' => $saving_perwilayah['isactive'] == 0
+                            ? 0
+                            : (!$saving_perwilayah['account_id']
+                                ? 1
+                                : ($saving_perwilayah['last_payment']
+                                    ? (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m')
+                                        ? 0
+                                        : 1) : 0
+                                )
+                            ),
 
-                        'last_month_payment' => $saving_perwilayah['isactive'] == 0 ? 0
-                            : ($saving_perwilayah['total'] == 0 ? 1
-                                : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m') ? 0
-                                    : 1)),
+                        'tanggungan' => $saving_perwilayah['isactive'] == 0
+                            ? ($saving_perwilayah['account_id']
+                                ? 'Unit Non Aktif'
+                                : "Tidak Ada Transaksi"
+                            )
 
-                        'tanggungan' => $saving_perwilayah['isactive'] == 0 ? 'Unit Non Aktif'
-                            : ($saving_perwilayah['total'] == 0 ? 'Belum Ada Transaksi'
-                                : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m') ? 'Nihil'
-                                    : 'Ada Tanggungan')),
+                            : (!$saving_perwilayah['account_id']
+                                ? 'Belum Ada Transaksi'
+                                : ($saving_perwilayah['last_payment']
+                                    ? (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m')
+                                        ? "Nihil"
+                                        : "Ada Tanggungan") : "Setoran Awal $parseMindate"
+                                )
+                            ),
                     ];
                 })->values(),
             ];
@@ -180,7 +196,7 @@ class BopTransactionController extends Controller
     public function index_bonpriv()
     {
 
-        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
         $requestFilter = new \stdClass;
         $requestFilter->isWilayanNeeded = true;
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
@@ -238,7 +254,7 @@ class BopTransactionController extends Controller
 
     public function index_bonpriv_lunas()
     {
-        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
         $requestFilter = new \stdClass;
         $requestFilter->isWilayanNeeded = true;
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
@@ -334,7 +350,8 @@ class BopTransactionController extends Controller
         $validation = $request->validate([
             "nominal" => ['required', 'integer', 'min:1'],
             "keterangan" => ['required', 'string'],
-            'transaction_date' => ['required', 'date']
+            'transaction_date' => ['required', 'date'],
+            'transaksi' => ['required']
 
         ]);
 
@@ -343,7 +360,7 @@ class BopTransactionController extends Controller
             $akun = BopAccountTransaction::where('transaction_type', 'LAIN')->first();
             $akun->transaksi()->create([
                 "transaction_date" => $request->transaction_date,
-                'transaction' => "K",
+                'transaction' => $request->transaksi,
                 'transaction_type' => 'LAIN',
                 'nominal' => $request->nominal,
                 'keterangan' => $request->keterangan

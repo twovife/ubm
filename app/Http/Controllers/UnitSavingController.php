@@ -20,7 +20,7 @@ class UnitSavingController extends Controller
     {
 
 
-        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
         $requestFilter = new \stdClass;
         $requestFilter->isWilayanNeeded = true;
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
@@ -78,7 +78,7 @@ class UnitSavingController extends Controller
     public function index()
     {
 
-        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
         $requestFilter = new \stdClass;
         $requestFilter->isWilayanNeeded = true;
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
@@ -92,10 +92,10 @@ class UnitSavingController extends Controller
             });
         })->leftJoin('unit_savings', function ($join) use ($requestFilter) {
             $join->on('unit_saving_accounts.id', '=', 'unit_savings.unit_saving_account_id')->where(function ($que) use ($requestFilter) {
-                $que->where('transaction_date', "<=", $requestFilter->endOfMonth);
+                $que->where('transaction_date', "<=",  $requestFilter->endOfMonth);
             });
         })
-            ->select('unit_saving_accounts.id as account_id', 'branches.wilayah', 'branches.id as branch_id', 'branches.unit', 'branches.isactive', DB::raw('COALESCE(SUM(unit_savings.nominal), 0) as total'), DB::raw('max(transaction_date) as last_payment'))
+            ->select('unit_saving_accounts.id as account_id', 'branches.wilayah', 'branches.id as branch_id', 'branches.unit', 'branches.isactive', DB::raw('COALESCE(SUM(unit_savings.nominal), 0) as total'), DB::raw('max(unit_savings.transaction_date) as last_payment'))
             ->groupBy('branches.wilayah', 'branches.id', 'branches.unit', 'unit_saving_accounts.id', 'branches.isactive')
             ->get();
 
@@ -105,6 +105,8 @@ class UnitSavingController extends Controller
             return [
                 'wilayah' => $queries->first()['wilayah'],
                 'data' => $queries->map(function ($saving_perwilayah) use ($requestFilter) {
+                    $minDate = UnitSaving::where("unit_saving_account_id", $saving_perwilayah['account_id'])?->min("transaction_date");
+                    $parseMindate = Carbon::parse($minDate)->format('M Y');
                     return [
                         'wilayah' => $saving_perwilayah['wilayah'],
                         'id' => $saving_perwilayah['account_id'],
@@ -114,18 +116,34 @@ class UnitSavingController extends Controller
                         'lastmont' => Carbon::createFromDate($saving_perwilayah['last_year_payment'], $saving_perwilayah['last_month_payment'], 1)->format('Y-m'),
                         'thismont' => Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m'),
 
-                        'isPaid' => $saving_perwilayah['total'] == 0 ? 1
-                            : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m') ? 0 : 1),
+                        'button_type' => $saving_perwilayah['isactive'] == 0 ? ($saving_perwilayah['account_id'] ? 3 : 4) : ($saving_perwilayah['account_id'] ? 1 : 2),
 
-                        'last_month_payment' => $saving_perwilayah['isactive'] == 0 ? 0
-                            : ($saving_perwilayah['total'] == 0 ? 1
-                                : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m') ? 0
-                                    : 1)),
+                        'last_month_payment' => $saving_perwilayah['isactive'] == 0
+                            ? 0
+                            : (!$saving_perwilayah['account_id']
+                                ? 1
+                                : ($saving_perwilayah['last_payment']
+                                    ? (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m')
+                                        ? 0
+                                        : 1) : 0
+                                )
+                            ),
 
-                        'tanggungan' => $saving_perwilayah['isactive'] == 0 ? 'Unit Non Aktif'
-                            : ($saving_perwilayah['total'] == 0 ? 'Belum Ada Transaksi'
-                                : (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m') ? 'Nihil'
-                                    : 'Ada Tanggungan')),
+                        'tanggungan' => $saving_perwilayah['isactive'] == 0
+                            ? ($saving_perwilayah['account_id']
+                                ? 'Unit Non Aktif'
+                                : "Tidak Ada Transaksi"
+                            )
+
+                            : (!$saving_perwilayah['account_id']
+                                ? 'Belum Ada Transaksi'
+                                : ($saving_perwilayah['last_payment']
+                                    ? (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m')
+                                        ? "Nihil"
+                                        : "Ada Tanggungan") : "Setoran Awal $parseMindate"
+                                )
+                            ),
+
                     ];
                 })->sortBy('unit')->values(),
             ];
@@ -168,7 +186,7 @@ class UnitSavingController extends Controller
         $saving = $unitSavingAccount->load('unitssaving');
         $saldo_before = 0;
         $enableToAdd = true;
-        $awalBulanIni = $unitSavingAccount->load('unitssaving')->unitssaving()->max('transaction_date');
+        $awalBulanIni = Carbon::parse($unitSavingAccount->load('unitssaving')->unitssaving()->max('transaction_date'))->endOfMonth()->addDay(1)->format('Y-m-d');
         $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
 
         $branch = Branch::where('id', '!=', $unitSavingAccount->branch_id)->orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
@@ -266,7 +284,7 @@ class UnitSavingController extends Controller
     {
 
 
-        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
         $requestFilter = new \stdClass;
         $requestFilter->isWilayanNeeded = true;
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
@@ -312,7 +330,7 @@ class UnitSavingController extends Controller
 
     public function bon_panjer_lunas()
     {
-        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now()->subMonth()->format('Y-m'));
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
         $requestFilter = new \stdClass;
         $requestFilter->isWilayanNeeded = true;
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');

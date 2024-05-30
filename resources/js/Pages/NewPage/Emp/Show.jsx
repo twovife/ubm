@@ -5,12 +5,11 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import { BiEdit, BiUser } from "react-icons/bi";
-import { GrEdit } from "react-icons/gr";
 import { NumericFormat } from "react-number-format";
 import Perpindahan from "./Components/Perpindahan";
 import PengembalianJaminan from "./Components/PengembalianJaminan";
-import Edit from "@/Pages/Profile/Edit";
+import Edit from "./Components/Edit";
+import { BiUser } from "react-icons/bi";
 
 const Show = ({ employee, deposit_sksw, branches, ...props }) => {
     const [loading, setLoading] = useState(false);
@@ -42,13 +41,13 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                             <div className="flex gap-3 mb-3 items-center justify-center">
                                 {employee.resign_status == null ||
                                 employee.resign_status == "" ? (
-                                    <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                        <span class="w-2 h-2 me-1 bg-green-500 rounded-full mr-1"></span>
+                                    <span className="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                        <span className="w-2 h-2 me-1 bg-green-500 rounded-full mr-1"></span>
                                         Active
                                     </span>
                                 ) : employee.resign_status == "Resign" ? (
-                                    <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                        <span class="w-2 h-2 me-1 bg-yellow-500 rounded-full mr-1"></span>
+                                    <span className="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                        <span className="w-2 h-2 me-1 bg-yellow-500 rounded-full mr-1"></span>
                                         Resign
                                     </span>
                                 ) : (
@@ -56,8 +55,8 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                     //     # Resign
                                     // </span>
 
-                                    <span class="inline-flex items-center bg-black text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                        <span class="w-2 h-2 me-1 bg-white rounded-full mr-1"></span>
+                                    <span className="inline-flex items-center bg-black text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                        <span className="w-2 h-2 me-1 bg-white rounded-full mr-1"></span>
                                         Pecat
                                     </span>
 
@@ -67,8 +66,8 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                 )}
                                 {employee.janis_jaminan == "" ||
                                 employee.janis_jaminan == null ? (
-                                    <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                        <span class="w-2 h-2 me-1 bg-blue-500 rounded-full mr-1"></span>
+                                    <span className="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                        <span className="w-2 h-2 me-1 bg-blue-500 rounded-full mr-1"></span>
                                         Jaminan Belum Lengkap
                                     </span>
                                 ) : (
@@ -427,8 +426,8 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                                           "" ||
                                                       employee.janis_jaminan ==
                                                           null ? (
-                                                        <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                                            <span class="w-2 h-2 me-1 bg-blue-500 rounded-full mr-1"></span>
+                                                        <span className="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                                            <span className="w-2 h-2 me-1 bg-blue-500 rounded-full mr-1"></span>
                                                             Jaminan Belum
                                                             Lengkap
                                                         </span>
@@ -473,7 +472,7 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                 }
                 setLoading={setLoading}
             />
-            <Edit
+            {/* <Edit
                 show={isShowEdit}
                 setShow={onEditButtonClicked}
                 isActive={
@@ -481,7 +480,7 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                     employee.resign_status === null
                 }
                 setLoading={setLoading}
-            />
+            /> */}
             <PengembalianJaminan
                 show={isShowPengembalian}
                 setShow={onPengembalianButtonClicked}

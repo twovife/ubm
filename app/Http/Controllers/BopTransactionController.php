@@ -380,7 +380,7 @@ class BopTransactionController extends Controller
 
             $bopAccount = BopAccountTransaction::firstOrcreate([
                 "branch_id" => $request->branch_id,
-                "account_type" => 'BOP',
+                "transaction_type" => 'BOP',
             ], [
                 "branch_id" => $request->branch_id,
                 "transaction_type" => 'BOP',

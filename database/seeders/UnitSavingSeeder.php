@@ -18,7 +18,7 @@ class UnitSavingSeeder extends Seeder
      */
     public function run()
     {
-        $tabungan = json_decode(file_get_contents(storage_path('tabunganunit.json')), true);
+        $tabungan = json_decode(file_get_contents(storage_path('tb1jt.json')), true);
 
         try {
             DB::beginTransaction();
@@ -26,17 +26,17 @@ class UnitSavingSeeder extends Seeder
             collect($tabungan)->each(function ($item) use (&$counter) {
                 $account = UnitSavingAccount::firstOrCreate(
                     [
-                        'branch_id' => $item['unit_saving_account_id'],
+                        'branch_id' => $item['branch_id'],
                         'account_type' => 'TB'
                     ],
                     [
-                        'branch_id' => $item['unit_saving_account_id'],
+                        'branch_id' => $item['branch_id'],
                         'account_type' => 'TB'
                     ]
                 );
 
                 $account->unitssaving()->create([
-                    "transaction_date" => "2024-03-01",
+                    "transaction_date" => "2024-04-01",
                     "nominal" => $item['nominal'],
                     "transaction" => "D",
                     "transaction_type" => "TB",

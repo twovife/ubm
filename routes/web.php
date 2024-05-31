@@ -106,7 +106,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
 
         Route::get('/create_mutasi', [UnitSavingController::class, 'create_mutation'])->name('create_mutasi');
-        Route::post('/', [UnitSavingController::class, 'store_mutation'])->name('store_mutasi');
+        Route::post('/create_mutasi', [UnitSavingController::class, 'store_mutation'])->name('store_mutasi');
     });
     Route::prefix('bonpanjer')->name('bonpanjer.')->group(function () {
         Route::get('/', [UnitSavingController::class, 'bon_panjer'])->name('bon_panjer');

@@ -136,29 +136,49 @@ const Create = ({ branch, employees, ...props }) => {
                                     </div>
                                 )}
                             </div>
-                            <div className="mb-2">
-                                <InputLabel
-                                    value={"Nominal Pinjaman"}
-                                    className="mb-1"
-                                />
-                                <CurrencyInput
-                                    name="setoran_awal"
-                                    id="setoran_awal"
-                                    className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
-                                    allowDecimals={false}
-                                    prefix="Rp. "
-                                    min={1}
-                                    required
-                                    onValueChange={onHandleCurencyChange}
-                                    value={data.setoran_awal}
-                                    placeholder={
-                                        "Inputkan angka tanpa sparator"
-                                    }
-                                />
-                                <InputError
-                                    message={errors.setoran_awal}
-                                    className="mt-2"
-                                />
+                            <div className="lg:flex gap-3 w-full mb-2">
+                                <div className="flex-1">
+                                    <InputLabel
+                                        value={"Nominal Pinjaman"}
+                                        className="mb-1"
+                                    />
+                                    <CurrencyInput
+                                        name="setoran_awal"
+                                        id="setoran_awal"
+                                        className={`border-gray-300 focus:border-brand-500 focus:ring-brand-500 bg-white dark:bg-gray-800 rounded-md shadow-sm block w-full text-sm mt-2`}
+                                        allowDecimals={false}
+                                        prefix="Rp. "
+                                        min={1}
+                                        required
+                                        onValueChange={onHandleCurencyChange}
+                                        value={data.setoran_awal}
+                                        placeholder={
+                                            "Inputkan angka tanpa sparator"
+                                        }
+                                    />
+                                    <InputError
+                                        message={errors.setoran_awal}
+                                        className="mt-2"
+                                    />
+                                </div>
+                                <div className="flex-1">
+                                    <InputLabel
+                                        value={"Tanggal Pinjam"}
+                                        className="mb-1"
+                                    />
+                                    <TextInput
+                                        onChange={onInputChange}
+                                        name="transaction_date"
+                                        value={data.transaction_date}
+                                        type="date"
+                                        required
+                                        className={"w-full"}
+                                    />
+                                    <InputError
+                                        message={errors.transaction_date}
+                                        className="mt-2"
+                                    />
+                                </div>
                             </div>
                             <PrimaryButton type="submit" title={"submit"} />
                         </form>

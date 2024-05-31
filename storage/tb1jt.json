@@ -1,0 +1,532 @@
+[
+  {
+    "branch_id": 1,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 2,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 3,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 4,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 5,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 6,
+    "transaction_date": "2024-04-01",
+    "nominal": 35000000
+  },
+  {
+    "branch_id": 11,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 12,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 13,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 14,
+    "transaction_date": "2024-04-01",
+    "nominal": 35000000
+  },
+  {
+    "branch_id": 15,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 16,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 7,
+    "transaction_date": "2024-04-01",
+    "nominal": 72000000
+  },
+  {
+    "branch_id": 8,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 9,
+    "transaction_date": "2024-04-01",
+    "nominal": 34000000
+  },
+  {
+    "branch_id": 10,
+    "transaction_date": "2024-04-01",
+    "nominal": 35000000
+  },
+  {
+    "branch_id": 17,
+    "transaction_date": "2024-04-01",
+    "nominal": 45000000
+  },
+  {
+    "branch_id": 18,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 19,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 20,
+    "transaction_date": "2024-04-01",
+    "nominal": 35000000
+  },
+  {
+    "branch_id": 21,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 22,
+    "transaction_date": "2024-04-01",
+    "nominal": 31000000
+  },
+  {
+    "branch_id": 23,
+    "transaction_date": "2024-04-01",
+    "nominal": 38000000
+  },
+  {
+    "branch_id": 24,
+    "transaction_date": "2024-04-01",
+    "nominal": 38000000
+  },
+  {
+    "branch_id": 28,
+    "transaction_date": "2024-04-01",
+    "nominal": 38000000
+  },
+  {
+    "branch_id": 106,
+    "transaction_date": "2024-04-01",
+    "nominal": 0
+  },
+  {
+    "branch_id": 29,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 30,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 31,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 25,
+    "transaction_date": "2024-04-01",
+    "nominal": 17000000
+  },
+  {
+    "branch_id": 107,
+    "transaction_date": "2024-04-01",
+    "nominal": 31000000
+  },
+  {
+    "branch_id": 26,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 27,
+    "transaction_date": "2024-04-01",
+    "nominal": 6000000
+  },
+  {
+    "branch_id": 32,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 33,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 34,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 35,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 47,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 45,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 46,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 36,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 37,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 38,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 39,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 40,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 41,
+    "transaction_date": "2024-04-01",
+    "nominal": 7000000
+  },
+  {
+    "branch_id": 42,
+    "transaction_date": "2024-04-01",
+    "nominal": 11000000
+  },
+  {
+    "branch_id": 94,
+    "transaction_date": "2024-04-01",
+    "nominal": 0
+  },
+  {
+    "branch_id": 95,
+    "transaction_date": "2024-04-01",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": 43,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 44,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 100,
+    "transaction_date": "2024-04-01",
+    "nominal": 0
+  },
+  {
+    "branch_id": 54,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 101,
+    "transaction_date": "2024-04-01",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": 102,
+    "transaction_date": "2024-04-01",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": 52,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 53,
+    "transaction_date": "2024-04-01",
+    "nominal": 39000000
+  },
+  {
+    "branch_id": 48,
+    "transaction_date": "2024-04-01",
+    "nominal": 47000000
+  },
+  {
+    "branch_id": 49,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 50,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 51,
+    "transaction_date": "2024-04-01",
+    "nominal": 36000000
+  },
+  {
+    "branch_id": 55,
+    "transaction_date": "2024-04-01",
+    "nominal": 39000000
+  },
+  {
+    "branch_id": 56,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 57,
+    "transaction_date": "2024-04-01",
+    "nominal": 38000000
+  },
+  {
+    "branch_id": 58,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 59,
+    "transaction_date": "2024-04-01",
+    "nominal": 37000000
+  },
+  {
+    "branch_id": 60,
+    "transaction_date": "2024-04-01",
+    "nominal": 11000000
+  },
+  {
+    "branch_id": 61,
+    "transaction_date": "2024-04-01",
+    "nominal": 18000000
+  },
+  {
+    "branch_id": 62,
+    "transaction_date": "2024-04-01",
+    "nominal": 19000000
+  },
+  {
+    "branch_id": 63,
+    "transaction_date": "2024-04-01",
+    "nominal": 15000000
+  },
+  {
+    "branch_id": 64,
+    "transaction_date": "2024-04-01",
+    "nominal": 16000000
+  },
+  {
+    "branch_id": 68,
+    "transaction_date": "2024-04-01",
+    "nominal": 36000000
+  },
+  {
+    "branch_id": 69,
+    "transaction_date": "2024-04-01",
+    "nominal": 37000000
+  },
+  {
+    "branch_id": 70,
+    "transaction_date": "2024-04-01",
+    "nominal": 30000000
+  },
+  {
+    "branch_id": 71,
+    "transaction_date": "2024-04-01",
+    "nominal": 31000000
+  },
+  {
+    "branch_id": 72,
+    "transaction_date": "2024-04-01",
+    "nominal": 25000000
+  },
+  {
+    "branch_id": 73,
+    "transaction_date": "2024-04-01",
+    "nominal": 12000000
+  },
+  {
+    "branch_id": 74,
+    "transaction_date": "2024-04-01",
+    "nominal": 0
+  },
+  {
+    "branch_id": 65,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 66,
+    "transaction_date": "2024-04-01",
+    "nominal": 37000000
+  },
+  {
+    "branch_id": 67,
+    "transaction_date": "2024-04-01",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": 105,
+    "transaction_date": "2024-04-01",
+    "nominal": 0
+  },
+  {
+    "branch_id": 80,
+    "transaction_date": "2024-04-01",
+    "nominal": 11000000
+  },
+  {
+    "branch_id": 75,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 76,
+    "transaction_date": "2024-04-01",
+    "nominal": 48000000
+  },
+  {
+    "branch_id": 77,
+    "transaction_date": "2024-04-01",
+    "nominal": 10000000
+  },
+  {
+    "branch_id": 78,
+    "transaction_date": "2024-04-01",
+    "nominal": 26000000
+  },
+  {
+    "branch_id": 79,
+    "transaction_date": "2024-04-01",
+    "nominal": 15000000
+  },
+  {
+    "branch_id": 81,
+    "transaction_date": "2024-04-01",
+    "nominal": 30000000
+  },
+  {
+    "branch_id": 82,
+    "transaction_date": "2024-04-01",
+    "nominal": 19000000
+  },
+  {
+    "branch_id": 83,
+    "transaction_date": "2024-04-01",
+    "nominal": 23000000
+  },
+  {
+    "branch_id": 84,
+    "transaction_date": "2024-04-01",
+    "nominal": 27000000
+  },
+  {
+    "branch_id": 85,
+    "transaction_date": "2024-04-01",
+    "nominal": 21000000
+  },
+  {
+    "branch_id": 86,
+    "transaction_date": "2024-04-01",
+    "nominal": 21000000
+  },
+  {
+    "branch_id": 87,
+    "transaction_date": "2024-04-01",
+    "nominal": 17000000
+  },
+  {
+    "branch_id": 88,
+    "transaction_date": "2024-04-01",
+    "nominal": 0
+  },
+  {
+    "branch_id": 103,
+    "transaction_date": "2024-04-01",
+    "nominal": 1000000
+  },
+  {
+    "branch_id": 104,
+    "transaction_date": "2024-04-01",
+    "nominal": 1000000
+  },
+  {
+    "branch_id": 97,
+    "transaction_date": "2024-04-01",
+    "nominal": 4000000
+  },
+  {
+    "branch_id": 99,
+    "transaction_date": "2024-04-01",
+    "nominal": 4000000
+  },
+  {
+    "branch_id": 89,
+    "transaction_date": "2024-04-01",
+    "nominal": 11000000
+  },
+  {
+    "branch_id": 90,
+    "transaction_date": "2024-04-01",
+    "nominal": 11000000
+  },
+  {
+    "branch_id": 92,
+    "transaction_date": "2024-04-01",
+    "nominal": 3000000
+  },
+  {
+    "branch_id": 93,
+    "transaction_date": "2024-04-01",
+    "nominal": 4000000
+  },
+  {
+    "branch_id": 96,
+    "transaction_date": "2024-04-01",
+    "nominal": 4000000
+  },
+  {
+    "branch_id": 98,
+    "transaction_date": "2024-04-01",
+    "nominal": 3000000
+  }
+]

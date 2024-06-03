@@ -583,7 +583,7 @@ class UnitSavingController extends Controller
                     ];
                 })->sortBy('branch')->sortBy('wilayah')->values()
             ];
-        })->values();
+        })->sortBy('wilayah')->values();
         // dd($data_per_pic);
 
         return Inertia::render('PinjamanModal/Index', [
@@ -684,6 +684,7 @@ class UnitSavingController extends Controller
                 'saldo_sebelum' => $saldo_sebelum,
                 'pinjaman' => $item->transaction == "K" ? $item->nominal : 0,
                 'angsuran' => $item->transaction == "D" ? $item->nominal : 0,
+                'jasa_modal' => $item->jasa_modal ? $item->jasa_modal : 0,
                 'saldo' => $saldo
             ];
         });

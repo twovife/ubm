@@ -128,6 +128,12 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                 >
                                     Saldo
                                 </th>
+                                <th
+                                    scope="col"
+                                    className="px-3 py-1 hover:bg-main-200 hover:text-black"
+                                >
+                                    Jasa modal
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -178,6 +184,13 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                         <td className="px-3 py-1 whitespace-nowrap">
                                             <NumericFormat
                                                 value={item.saldo}
+                                                displayType={"text"}
+                                                thousandSeparator={","}
+                                            />
+                                        </td>
+                                        <td className="px-3 py-1 whitespace-nowrap">
+                                            <NumericFormat
+                                                value={item.jasa_modal}
                                                 displayType={"text"}
                                                 thousandSeparator={","}
                                             />

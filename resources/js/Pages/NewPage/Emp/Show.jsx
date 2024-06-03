@@ -473,6 +473,7 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                 setLoading={setLoading}
             />
             {/* <Edit
+                emps={employee}
                 show={isShowEdit}
                 setShow={onEditButtonClicked}
                 isActive={

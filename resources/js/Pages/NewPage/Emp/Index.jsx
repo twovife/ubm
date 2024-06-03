@@ -9,6 +9,7 @@ import DefaultTable from "@/Components/DefaultTable";
 import Paginasi from "@/Components/Paginasi";
 import Search from "@/Components/Search";
 import FilterBox from "@/Components/FilterBox";
+import Create from "./Create";
 
 const Index = ({ server_filter, datas, ...props }) => {
     const [loading, setLoading] = useState(false);
@@ -25,6 +26,11 @@ const Index = ({ server_filter, datas, ...props }) => {
         totalPages,
         handlePageChange,
     } = useFilter(datas, 10, "employee_index");
+
+    const [isShowCreate, setIsShowCreate] = useState(false);
+    const onCreateButtonClicked = () => {
+        setIsShowCreate(!isShowCreate);
+    };
 
     return (
         <Authenticated loading={loading} judul="Daftar Karyawan">
@@ -55,6 +61,7 @@ const Index = ({ server_filter, datas, ...props }) => {
                                 <PrimaryButton
                                     className="block"
                                     title={"Tambah Baru"}
+                                    onClick={onCreateButtonClicked}
                                 />
                             </Search>
                         </Card.endContent>
@@ -403,6 +410,11 @@ const Index = ({ server_filter, datas, ...props }) => {
                     currentPage={currentPage}
                     totalPages={totalPages}
                     onPageChange={handlePageChange}
+                />
+                <Create
+                    show={isShowCreate}
+                    setShow={onCreateButtonClicked}
+                    setLoading={setLoading}
                 />
             </Card>
         </Authenticated>

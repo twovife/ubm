@@ -16,7 +16,7 @@ import Mutasi from "./Components/Mutasi";
 const Detail = ({ details, curent_unit, ...props }) => {
     const [loading, setLoading] = useState(false);
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         debit: 0,
         jasa: (curent_unit.max_payment * 2) / 100,
         transaction_date: "",
@@ -34,7 +34,9 @@ const Detail = ({ details, curent_unit, ...props }) => {
     const onSubmitForm = (e) => {
         e.preventDefault();
         // console.log(data);
-        post(route("pinjamanmodal.pinjaman_modal_post", curent_unit.id));
+        post(route("pinjamanmodal.pinjaman_modal_post", curent_unit.id), {
+            onSuccess: (page) => reset(),
+        });
     };
     return (
         <Authenticated

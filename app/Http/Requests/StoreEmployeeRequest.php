@@ -30,8 +30,13 @@ class StoreEmployeeRequest extends FormRequest
             'branch_id' => ["required", 'integer'],
             'hire_date' => ["required", 'date'],
             'jabatan' => ["required", 'string'],
-            'area' => ["nullable", 'integer'],
+            'area' => ["required_if:jabatan,mantri", 'integer'],
+            "status_kontrak" => ["required"],
         ];
+
+
+        // "nik" => ["required", ''],
+
     }
     public function messages()
     {

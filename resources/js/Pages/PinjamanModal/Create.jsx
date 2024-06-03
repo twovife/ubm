@@ -13,7 +13,7 @@ import CurrencyInput from "react-currency-input-field";
 const Create = ({ branch, employees, ...props }) => {
     // const [loading, setLoading] = useState(false);
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         branch_id: "",
         setoran_awal: 1000000,
         source: "",
@@ -57,7 +57,9 @@ const Create = ({ branch, employees, ...props }) => {
     const onSubmitForm = (e) => {
         e.preventDefault();
         // console.log(data);
-        post(route("pinjamanmodal.pinjaman_modal_store"));
+        post(route("pinjamanmodal.pinjaman_modal_store"), {
+            onSuccess: (page) => reset(),
+        });
     };
     return (
         <Authenticated loading={processing}>

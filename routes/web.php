@@ -170,6 +170,7 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(EmployeeController::class)->prefix('emp')->name('emp.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
         Route::get('/{employee}', 'show')->name('show');
         Route::put('/{employee}', 'perpindahan_karyawan')->name('perpindahan_karyawan');
         Route::put('/{employee}/resign', 'resign_karyawan')->name('resign_karyawan');

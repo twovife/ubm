@@ -76,6 +76,25 @@ class EmployeeController extends Controller
         ]);
     }
 
+    public function store(StoreEmployeeRequest $request)
+    {
+
+
+        try {
+            DB::beginTransaction();
+            $data = $request->all();
+            $data['area'] = $request->area ?? 0;
+            $employee = Employee::create($data);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
+        }
+
+        return redirect()->route('emp.show', $employee->id)->with('message', 'Data berhasil ditambahkan');
+    }
+
+
     public function show(Employee $employee)
     {
         $branches = Branch::all();
@@ -283,30 +302,6 @@ class EmployeeController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreEmployeeRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreEmployeeRequest $request)
-    {
-        try {
-            DB::beginTransaction();
-            $data = $request->all();
-            $data['area'] = $request->area ?? 0;
-            $employee = Employee::create($data);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
-        }
-
-        $arrayFilter = [
-            "branch_id" => $employee->branch_id ?? null
-        ];
-        return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'Data berhasil ditambahkan');
-    }
 
     /**
      * Display the specified resource.

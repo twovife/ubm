@@ -61,6 +61,7 @@ function useServerFilter() {
                       ?.filter((item) => {
                           return item.wilayah == selectedWilayah;
                       })
+                      //   ?.sort((a, b) => a.unit - b.unit)
                       ?.map((mapitem) => {
                           return {
                               id: mapitem.id,

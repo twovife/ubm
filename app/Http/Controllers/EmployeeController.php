@@ -156,7 +156,7 @@ class EmployeeController extends Controller
     {
         try {
             DB::beginTransaction();
-            $employee->resign_status = $request->resign_status == 4 ? "Pecat" : "Resign";
+            $employee->resign_status = $request->resign_status == 4 ? "Resign" : "Pecat";
             $employee->date_resign = $request->date_resign;
             $employee->resign_reson = $request->resign_reson;
             $employee->save();

@@ -1,11 +1,11 @@
 import { useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
-function useServerFilter() {
+function useServerFilter({ propsWilayah = "", ...props } = {}) {
     const { server_filter } = usePage().props;
 
     const [selectedWilayah, setSelectedWilayah] = useState(
-        server_filter?.wilayah ?? ""
+        server_filter?.wilayah ?? propsWilayah
     );
 
     // dipakai jika hanya tanpa mengganti request branch_id

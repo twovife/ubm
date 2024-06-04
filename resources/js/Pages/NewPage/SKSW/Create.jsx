@@ -51,15 +51,21 @@ const Create = ({ show = false, showHandler }) => {
         // setAddFilter({ name: "", data_type: "" });
         showHandler(false);
         reset();
+        setLoading(false);
     };
 
     const onSubmitForm = (e) => {
         e.preventDefault();
         // console.log(data);
         post(route("sksw.store"), {
+            onStart: (visit) => {
+                setLoading(true);
+            },
             onSuccess: (page) => {
                 onClosedModal();
             },
+            onError: (errors) => setLoading(false),
+
             replace: true,
         });
     };

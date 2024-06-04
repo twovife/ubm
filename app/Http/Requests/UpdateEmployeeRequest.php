@@ -23,8 +23,16 @@ class UpdateEmployeeRequest extends FormRequest
      */
     public function rules()
     {
+        $employeeId = $this->route('employee')->id;
+
         return [
-            //
+            'nik' => 'required|string|unique:employees,nik,' . $employeeId,
+        ];
+    }
+    public function messages()
+    {
+        return [
+            '*.unique' => "Nik Sudah Terdaftar"
         ];
     }
 }

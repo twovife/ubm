@@ -32,8 +32,6 @@ class EmployeeController extends Controller
     public function index()
 
     {
-        // dd(request()->branch_id);
-
         $branch = Branch::orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
         // dd($branch);
         $emp = Employee::with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->when(request()->filled('branch_id'), function ($q) {
@@ -68,7 +66,7 @@ class EmployeeController extends Controller
             'pencairan_simpanan_w_by' => $que->ttdsw->nama_karyawan ?? '-',
         ])->sortBy('status')->sortBy('unit')->sortBy('wilayah')->values();
 
-        // dd($data);
+
 
         return Inertia::render('NewPage/Emp/Index', [
             'datas' => $data,
@@ -104,6 +102,7 @@ class EmployeeController extends Controller
         $saldo_sk = $sksw?->deposit_transactions?->sum('sk_debit') - $sksw?->deposit_transactions?->sum('sk_kredit');
         $deposit_sksw = [
             'deposit_id' => $sksw->id ?? null,
+            'unit' => $sksw->branch->unit ?? null,
             'saldo_sk' => $saldo_sk ?? 0,
             'saldo_sw' => $saldo_sw ?? 0,
             'max_tanggal' => $sksw?->deposit_transactions->max('transaction_date') ?? null
@@ -385,12 +384,8 @@ class EmployeeController extends Controller
 
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        // dd($employee);
-        if ($employee->nik !== $request->nik) {
-            $request->validate([
-                'nik' => 'unique:employees'
-            ]);
-        }
+
+        // $validatedData = $request->validated();
 
         try {
             DB::beginTransaction();
@@ -401,11 +396,8 @@ class EmployeeController extends Controller
             return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
         }
 
-        $arrayFilter = [
-            "branch_id" => $employee->branch_id ?? null
-        ];
 
-        return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'data berhasil diubah');
+        return redirect()->route('emp.show', $employee->id)->with('message', 'data berhasil diubah');
     }
 
     public function mutasi(UpdateEmployeeMutationRequest $request, Employee $employee)

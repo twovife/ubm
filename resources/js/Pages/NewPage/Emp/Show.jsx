@@ -7,8 +7,10 @@ import { NumericFormat } from "react-number-format";
 import Perpindahan from "./Components/Perpindahan";
 import PengembalianJaminan from "./Components/PengembalianJaminan";
 import { BiUser } from "react-icons/bi";
+import Edit from "./Components/Edit";
 
 const Show = ({ employee, deposit_sksw, branches, ...props }) => {
+    console.log(deposit_sksw);
     const [loading, setLoading] = useState(false);
 
     const [isShowPerpindahan, setIsShowPerpindahan] = useState(false);
@@ -224,6 +226,9 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                                     Show
                                                 </td>
                                                 <td className="px-2 py-1">
+                                                    Unit SKSW
+                                                </td>
+                                                <td className="px-2 py-1">
                                                     Saldo SK
                                                 </td>
                                                 <td className="px-2 py-1">
@@ -252,6 +257,9 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                                         </Link>
                                                     </td>
                                                     <td className="px-2 py-1">
+                                                        {deposit_sksw.unit}
+                                                    </td>
+                                                    <td className="px-2 py-1">
                                                         <NumericFormat
                                                             value={
                                                                 deposit_sksw.saldo_sk
@@ -262,6 +270,7 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                                             }
                                                         />
                                                     </td>
+
                                                     <td className="px-2 py-1">
                                                         <NumericFormat
                                                             value={
@@ -453,12 +462,6 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <ul>
-                        <li>Edit Profil</li>
-                        <li>Ganti Status Saja</li>
-                    </ul>
-                </div>
             </Card>
             <Perpindahan
                 show={isShowPerpindahan}
@@ -469,16 +472,11 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                 }
                 setLoading={setLoading}
             />
-            {/* <Edit
-                emps={employee}
+            <Edit
                 show={isShowEdit}
                 setShow={onEditButtonClicked}
-                isActive={
-                    employee.resign_status === "" ||
-                    employee.resign_status === null
-                }
                 setLoading={setLoading}
-            /> */}
+            />
             <PengembalianJaminan
                 show={isShowPengembalian}
                 setShow={onPengembalianButtonClicked}

@@ -2,6 +2,7 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
+import TextArea from "@/Components/TextArea";
 import TextInput from "@/Components/TextInput";
 import useServerFilter from "@/Hooks/useServerFilter";
 import { Transition } from "@headlessui/react";
@@ -10,15 +11,17 @@ import React, { Fragment } from "react";
 
 const Edit = ({ show, setShow, setLoading }) => {
     const { employee } = usePage().props;
-    const { data, setData, post, reset, processing, errors } = useForm({
-        nama_karyawan: "",
-        nik: "",
-        alamat: "",
-        branch_id: "",
-        hire_date: "",
-        jabatan: "",
-        area: "",
-        janis_jaminan: "",
+    // console.log(employee);
+    const { data, setData, put, reset, processing, errors } = useForm({
+        nama_karyawan: employee.nama_karyawan ?? "",
+        nik: employee.nik ?? "",
+        alamat: employee.alamat ?? "",
+        branch_id: employee.branch_id ?? "",
+        hire_date: employee.hire_date ?? "",
+        jabatan: employee.jabatan ?? "",
+        area: employee.area ?? "",
+        janis_jaminan: employee.janis_jaminan ?? "",
+        status_kontrak: employee.status_kontrak ?? "",
     });
 
     const {
@@ -32,7 +35,7 @@ const Edit = ({ show, setShow, setLoading }) => {
         onWilayahChangeHandler,
         onBranchChangeHandler,
         filteredEmps,
-    } = useServerFilter();
+    } = useServerFilter({ propsWilayah: employee.branch.wilayah });
 
     const jabatan = [
         { id: 1, value: "mantri", display: "Mantri" },
@@ -66,15 +69,19 @@ const Edit = ({ show, setShow, setLoading }) => {
     const closedModal = (e) => {
         setShow();
         reset();
+        setLoading(false);
     };
 
     const onSubmitMutasi = (e) => {
         e.preventDefault();
-        console.log(data);
-        setLoading(true);
-        post(route("emp.store"), {
-            onSuccess: (visit) => closedModal(),
-            onFinish: (page) => setLoading(false),
+        put(route("emp.update", employee.id), {
+            onStart: (visit) => {
+                setLoading(true);
+            },
+            onSuccess: (page) => {
+                closedModal();
+            },
+            onError: (errors) => setLoading(false),
         });
     };
 
@@ -113,6 +120,7 @@ const Edit = ({ show, setShow, setLoading }) => {
                                         onChange={onInputChange}
                                         className={`mt-1 w-full`}
                                         name={`nama_karyawan`}
+                                        value={data.nama_karyawan}
                                         id={`nama_karyawan`}
                                     />
                                     <InputError
@@ -128,6 +136,7 @@ const Edit = ({ show, setShow, setLoading }) => {
                                         className={`mt-1 w-full`}
                                         name={`nik`}
                                         id={`nik`}
+                                        value={data.nik}
                                     />
                                     <InputError
                                         message={errors.nik}
@@ -140,12 +149,13 @@ const Edit = ({ show, setShow, setLoading }) => {
                                         htmlFor={"alamat"}
                                         value={"Alamat"}
                                     />
-                                    <TextInput
+                                    <TextArea
                                         required
                                         onChange={onInputChange}
                                         className={`mt-1 w-full`}
                                         name={`alamat`}
                                         id={`alamat`}
+                                        value={data.alamat}
                                     />
                                     <InputError
                                         message={errors.alamat}
@@ -196,6 +206,7 @@ const Edit = ({ show, setShow, setLoading }) => {
                                         className={`mt-1 w-full`}
                                         name={`hire_date`}
                                         id={`hire_date`}
+                                        value={data.hire_date}
                                         type={`date`}
                                     />
                                     <InputError
@@ -252,6 +263,7 @@ const Edit = ({ show, setShow, setLoading }) => {
                                         className={`mt-1 w-full`}
                                         name={`janis_jaminan`}
                                         id={`janis_jaminan`}
+                                        value={data.janis_jaminan}
                                     />
                                     <InputError
                                         message={errors.janis_jaminan}

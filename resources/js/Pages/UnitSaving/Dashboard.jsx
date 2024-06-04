@@ -5,7 +5,7 @@ import Search from "@/Components/Search";
 import useFilter from "@/Hooks/useFilter";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
 
 const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {

@@ -1,60 +1,38 @@
-import InputLabel from "@/Components/InputLabel";
-import SelectList from "@/Components/SelectList";
-import React, { Fragment, useState } from "react";
-import Mutasi from "./Mutasi";
-import { Transition } from "@headlessui/react";
-import Resign from "./Resign";
-import Kembali from "./Kembali";
 import InputError from "@/Components/InputError";
-import { useForm } from "@inertiajs/react";
-import TextInput from "@/Components/TextInput";
-import TextArea from "@/Components/TextArea";
-import useServerFilter from "@/Hooks/useServerFilter";
+import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
+import SelectList from "@/Components/SelectList";
+import TextInput from "@/Components/TextInput";
+import useServerFilter from "@/Hooks/useServerFilter";
+import { Transition } from "@headlessui/react";
+import { useForm, usePage } from "@inertiajs/react";
+import React, { Fragment } from "react";
 
-const Edit = ({ show, emps, setShow, isActive, setLoading }) => {
+const Edit = ({ show, setShow, setLoading }) => {
+    const { employee } = usePage().props;
+    const { data, setData, post, reset, processing, errors } = useForm({
+        nama_karyawan: "",
+        nik: "",
+        alamat: "",
+        branch_id: "",
+        hire_date: "",
+        jabatan: "",
+        area: "",
+        janis_jaminan: "",
+    });
+
     const {
         wilayah,
-        selectedWilayah,
         setSelectedWilayah,
         filteredBranch,
+        selectedWilayah,
+        selectedBranch,
         selectedBranch_id,
-        selectedBulan,
+
+        onWilayahChangeHandler,
+        onBranchChangeHandler,
+        filteredEmps,
     } = useServerFilter();
-
-    const {
-        data,
-        setData,
-        put,
-        processing,
-        errors,
-        reset,
-        recentlySuccessful,
-    } = useForm({ ...emps });
-
-    const onJabatanChangeHandler = (e) => {
-        if (e.target.value != "mantri") {
-            setData({ ...data, area: 0, [e.target.name]: e.target.value });
-            document.getElementById("updateArea").disabled = true;
-            document.getElementById("updateArea").required = "";
-        } else {
-            setData(e.target.name, e.target.value);
-            document.getElementById("updateArea").disabled = false;
-            document.getElementById("updateArea").focus();
-            document.getElementById("updateArea").required = "require";
-        }
-    };
-
-    const afterSubmitUpdate = () => {
-        reset();
-        onClose();
-    };
-
-    const onOptWilayahChange = (e) => {
-        const { value } = e.target;
-        setSelectedWilayah(value);
-        setData({ branch_id: "" });
-    };
 
     const jabatan = [
         { id: 1, value: "mantri", display: "Mantri" },
@@ -72,6 +50,7 @@ const Edit = ({ show, emps, setShow, isActive, setLoading }) => {
         { id: 1, value: 1, display: "Cadangan" },
         { id: 2, value: 2, display: "Kontrak" },
     ];
+
     const onInputChange = (e) => {
         const { name, value } = e.target;
         setData(name, value);
@@ -84,15 +63,19 @@ const Edit = ({ show, emps, setShow, isActive, setLoading }) => {
         setData((currentData) => ({ ...currentData, ...newData }));
     };
 
-    const onSubmitProcessUpdate = (e) => {
-        e.preventDefault();
-        put(route("employee.update", data.id), {
-            onSuccess: () => afterSubmitUpdate(),
-        });
-    };
-
     const closedModal = (e) => {
         setShow();
+        reset();
+    };
+
+    const onSubmitMutasi = (e) => {
+        e.preventDefault();
+        console.log(data);
+        setLoading(true);
+        post(route("emp.store"), {
+            onSuccess: (visit) => closedModal(),
+            onFinish: (page) => setLoading(false),
+        });
     };
 
     return (
@@ -111,43 +94,193 @@ const Edit = ({ show, emps, setShow, isActive, setLoading }) => {
                 onClick={closedModal}
             >
                 <div
-                    className="p-3 rounded shadow-lg bg-white border max-w-md w-full"
+                    className="p-3 rounded shadow-lg bg-white border max-w-2xl w-full"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <form
-                        className="overflow-y-auto"
-                        onSubmit={onSubmitProcessUpdate}
-                    >
-                        <div className="tracking-widest font-semibold mb-3">
-                            Update Data
+                    <form onSubmit={onSubmitMutasi} className="mt-3 bg-inherit">
+                        <div className="text-gray-500 font-semibold text-xl mono">
+                            Tambah Karywan Baru
                         </div>
-                        <div className="mb-3">
-                            <InputLabel
-                                htmlFor={"nama_karyawan"}
-                                value={"Nama Karyawan"}
-                            />
-                            <TextInput
-                                className={`w-full block mt-1`}
-                                name={`nama_karyawan`}
-                                type={`text`}
-                                value={data.nama_karyawan}
-                            />
-                            <InputError
-                                message={errors.nama_karyawan}
-                                className="mt-2"
-                            />
+                        <div className="w-full mx-auto flex">
+                            <div className="flex-1 p-3">
+                                <div className="mb-3">
+                                    <InputLabel
+                                        htmlFor={"nama_karyawan"}
+                                        value={"Nama Pegawai"}
+                                    />
+                                    <TextInput
+                                        required
+                                        onChange={onInputChange}
+                                        className={`mt-1 w-full`}
+                                        name={`nama_karyawan`}
+                                        id={`nama_karyawan`}
+                                    />
+                                    <InputError
+                                        message={errors.nama_karyawan}
+                                        className="mt-2"
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <InputLabel htmlFor={"nik"} value={"NIK"} />
+                                    <TextInput
+                                        required
+                                        onChange={onInputChange}
+                                        className={`mt-1 w-full`}
+                                        name={`nik`}
+                                        id={`nik`}
+                                    />
+                                    <InputError
+                                        message={errors.nik}
+                                        className="mt-2"
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <InputLabel
+                                        required
+                                        htmlFor={"alamat"}
+                                        value={"Alamat"}
+                                    />
+                                    <TextInput
+                                        required
+                                        onChange={onInputChange}
+                                        className={`mt-1 w-full`}
+                                        name={`alamat`}
+                                        id={`alamat`}
+                                    />
+                                    <InputError
+                                        message={errors.alamat}
+                                        className="mt-2"
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <InputLabel
+                                        value={"Wilayah"}
+                                        className="mb-1"
+                                    />
+                                    <SelectList
+                                        name="wilayah"
+                                        value={selectedWilayah}
+                                        className={`w-full`}
+                                        nullValue={true}
+                                        options={wilayah}
+                                        onChange={onWilayahChangeHandler}
+                                        required
+                                    />
+                                </div>
+                                {selectedWilayah !== "" && (
+                                    <div className="mb-3">
+                                        <InputLabel
+                                            value={"Unit"}
+                                            className="mb-1"
+                                        />
+                                        <SelectList
+                                            name="branch_id"
+                                            className={`w-full`}
+                                            value={data.branch_id}
+                                            nullValue={true}
+                                            options={filteredBranch}
+                                            onChange={onInputChange}
+                                            required
+                                        />
+                                    </div>
+                                )}
+
+                                <div className="mb-3">
+                                    <InputLabel
+                                        htmlFor={"hire_date"}
+                                        value={"Tanggal masuk"}
+                                    />
+                                    <TextInput
+                                        required
+                                        onChange={onInputChange}
+                                        className={`mt-1 w-full`}
+                                        name={`hire_date`}
+                                        id={`hire_date`}
+                                        type={`date`}
+                                    />
+                                    <InputError
+                                        message={errors.hire_date}
+                                        className="mt-2"
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex-1 p-3">
+                                <div className="flex flex-col lg:flex-row items-center justify-center gap-3 mb-3">
+                                    <div className="flex-1">
+                                        <InputLabel value={"Jabatan"} />
+                                        <SelectList
+                                            required
+                                            value={data.jabatan}
+                                            className={"w-full"}
+                                            nullvalue={true}
+                                            options={jabatan}
+                                            name="jabatan"
+                                            onChange={onJabatanChange}
+                                        />
+                                        <InputError
+                                            message={errors.jabatan}
+                                            className="mt-2"
+                                        />
+                                    </div>
+                                    {data.jabatan === "mantri" && (
+                                        <div className="flex-1">
+                                            <InputLabel value={`Kelompok`} />
+                                            <TextInput
+                                                className={"w-full"}
+                                                required
+                                                name="area"
+                                                value={data.area}
+                                                type="number"
+                                                min="0"
+                                                onChange={onInputChange}
+                                            />
+                                            <InputError
+                                                message={errors.area}
+                                                className="mt-2"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="mb-3">
+                                    <InputLabel
+                                        htmlFor={"janis_jaminan"}
+                                        value={"Jenis Jaminan"}
+                                    />
+                                    <TextInput
+                                        onChange={onInputChange}
+                                        className={`mt-1 w-full`}
+                                        name={`janis_jaminan`}
+                                        id={`janis_jaminan`}
+                                    />
+                                    <InputError
+                                        message={errors.janis_jaminan}
+                                        className="mt-2"
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <InputLabel value={"Status Kontrak"} />
+                                    <SelectList
+                                        required
+                                        name="status_kontrak"
+                                        value={data.status_kontrak}
+                                        className={"w-full"}
+                                        nullvalue={true}
+                                        options={statusKontrak}
+                                        onChange={onInputChange}
+                                    />
+                                    <InputError
+                                        message={errors.status_kontrak}
+                                        className="mt-2"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div className={"mb-3"}>
-                            <InputLabel htmlFor={"nik"} value={"Nik"} />
-                            <TextInput
-                                className={`w-full block mt-1`}
-                                name={`nik`}
-                                type={`text`}
-                                value={data.nik}
-                            />
-                            <InputError
-                                message={errors.nik}
-                                className={"mt-2"}
+                        <div className="flex justify-end items-end">
+                            <PrimaryButton
+                                type="submit"
+                                title={"Submit"}
+                                theme="green"
                             />
                         </div>
                     </form>

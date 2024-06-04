@@ -1,18 +1,13 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
 import LinkButton from "@/Components/LinkButton";
-import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
-import SelectList from "@/Components/SelectList";
-import useBulanFilter from "@/Hooks/useBulanFilter";
 import useFilter from "@/Hooks/useFilter";
-import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
-// import { BiRefresh } from "react-icons/bi";
 
 const Index = ({ branch, server_filters, datas, ...props }) => {
     const [loading, setLoading] = useState(false);

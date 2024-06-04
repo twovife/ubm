@@ -2,7 +2,7 @@ import DefaultTable from "@/Components/DefaultTable";
 import useFilter from "@/Hooks/useFilter";
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { NumericFormat } from "react-number-format";
 
 const PinjamanModalTable = ({ data, loading, setLoading }) => {

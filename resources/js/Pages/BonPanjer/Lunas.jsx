@@ -1,12 +1,10 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
-import LinkButton from "@/Components/LinkButton";
-import Search from "@/Components/Search";
 import useFilter from "@/Hooks/useFilter";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
 
 const Lunas = ({ branch, server_filters, datas, ...props }) => {

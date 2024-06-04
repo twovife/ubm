@@ -1,11 +1,32 @@
 import { useEffect, useState } from "react";
 
 function useFilter(data, itemsPerPage, local_name) {
-    const savedFilter = localStorage.getItem(local_name);
+    const savedFilterString = localStorage.getItem(local_name);
 
-    const { oldFilter, oldPage } = savedFilter
-        ? JSON.parse(savedFilter)
-        : { oldFilter: [], oldPage: 1 };
+    // Default value jika kondisi tidak terpenuhi
+    const defaultValue = { oldFilter: [], oldPage: 1 };
+
+    let savedFilter;
+
+    try {
+        // Coba parsing string menjadi JSON
+        savedFilter = JSON.parse(savedFilterString);
+
+        // Cek apakah nilai yang diambil memiliki properti yang diharapkan
+        if (
+            !savedFilter ||
+            typeof savedFilter !== "object" ||
+            !("oldFilter" in savedFilter) ||
+            !("oldPage" in savedFilter)
+        ) {
+            savedFilter = defaultValue;
+        }
+    } catch (e) {
+        // Jika terjadi error saat parsing, gunakan nilai default
+        savedFilter = defaultValue;
+    }
+
+    const { oldFilter, oldPage } = savedFilter;
 
     const [showFilter, setShowFilter] = useState(false);
     const [filter, setFilter] = useState(oldFilter);

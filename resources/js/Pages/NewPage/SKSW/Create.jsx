@@ -4,10 +4,8 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import useServerFilter from "@/Hooks/useServerFilter";
-import Wilayah from "@/Pages/NewPage/SKSW/Wilayah";
 import { Transition } from "@headlessui/react";
 import { useForm } from "@inertiajs/react";
-import { replace } from "lodash";
 import React, { Fragment } from "react";
 import CurrencyInput from "react-currency-input-field";
 

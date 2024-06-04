@@ -1,27 +1,11 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
 import LinkButton from "@/Components/LinkButton";
-import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
-import SelectList from "@/Components/SelectList";
-import useBulanFilter from "@/Hooks/useBulanFilter";
 import useFilter from "@/Hooks/useFilter";
-import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
-import {
-    AiFillCheckCircle,
-    AiFillEdit,
-    AiFillFilter,
-    AiFillFolderOpen,
-    AiOutlineCheck,
-    AiOutlineClose,
-    AiOutlineSortAscending,
-    AiOutlineSortDescending,
-} from "react-icons/ai";
-import { BiRefresh } from "react-icons/bi";
+import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
 // import { BiRefresh } from "react-icons/bi";
 
@@ -32,141 +16,6 @@ const Dashboard = ({
     saldo_akhir,
     ...props
 }) => {
-    // const {
-    //     tahunAngka,
-    //     bulanAngka,
-    //     serverFilter,
-    //     setServerFilter,
-    //     onServerFilterChange,
-    //     onBranchChange,
-    //     branchess,
-    //     loading,
-    //     setLoading,
-    //     activeTab,
-    //     setActiveTab,
-    //     handleTabClick,
-    // } = useBulanFilter(
-    //     server_filters,
-    //     route("unitsaving.index"),
-    //     branch,
-    //     datas,
-    //     "wilayah"
-    // );
-
-    // const itemsPerPage = 1000;
-    // const {
-    //     filters,
-    //     setFilters,
-    //     orderData,
-    //     setOrderData,
-    //     currentPage,
-    //     setCurrentPage,
-    //     displayData,
-    //     totalPages,
-    //     handlePageChange,
-    //     totals,
-    // } = useFilteredComplains({}, itemsPerPage, datas);
-
-    // const [showFilter, setShowFilter] = useState("");
-    // const [addFilter, setAddFilter] = useState({
-    //     column: "",
-    //     operators: "1",
-    //     values: "",
-    // });
-
-    // const thisonclick = (column, format = "text") => {
-    //     setShowFilter({ column, format });
-    // };
-
-    // useEffect(() => {
-    //     const storedFilter = JSON.parse(localStorage.getItem("bonpanjer_1"));
-    //     if (storedFilter && Object.keys(storedFilter).length > 0) {
-    //         setFilters(storedFilter);
-    //     }
-    // }, []);
-
-    // useEffect(() => {
-    //     localStorage.setItem("bonpanjer_1", JSON.stringify(filters));
-    // }, [filters]);
-
-    // useEffect(() => {
-    //     const log = (e) => {
-    //         if (e.target.tagName == "TH") {
-    //             thisonclick(
-    //                 e.target.getAttribute("data-item"),
-    //                 e.target.getAttribute("data-format")
-    //             );
-    //             setAddFilter({
-    //                 ...addFilter,
-    //                 ["column"]: e.target.getAttribute("data-item"),
-    //             });
-    //         } else {
-    //             thisonclick("");
-    //         }
-    //     };
-    //     window.addEventListener("click", log);
-    //     return () => {
-    //         window.removeEventListener("click", log);
-    //     };
-    // });
-
-    // const onSubmitSearch = () => {
-    //     const updatedFilters = [...filters];
-
-    //     // Cari indeks filter yang memiliki column yang sama dengan addFilter.column
-    //     const indexToUpdate = updatedFilters.findIndex(
-    //         (filter) => filter.column === addFilter.column
-    //     );
-
-    //     // Jika ada filter dengan column yang sama, gantikan filter tersebut
-    //     if (indexToUpdate !== -1) {
-    //         updatedFilters[indexToUpdate] = addFilter;
-    //     } else {
-    //         // Jika tidak ada filter dengan column yang sama, tambahkan filter baru
-    //         updatedFilters.push(addFilter);
-    //     }
-
-    //     setFilters(updatedFilters);
-    // };
-
-    // const decrementFilter = (column) => {
-    //     // Buat salinan dari daftar filter
-    //     const updatedFilters = [...filters];
-    //     // Cari indeks filter dengan column yang sesuai
-    //     const decrementFilters = filters.filter(
-    //         (filter) => filter.column !== column
-    //     );
-    //     setFilters(decrementFilters);
-    // };
-
-    // const handleInputChange = (e) => {
-    //     const { name, value, type } = e.target;
-    //     let convertedValue = value;
-
-    //     if (type === "number") {
-    //         convertedValue = parseInt(value);
-    //     }
-
-    //     setAddFilter({
-    //         ...addFilter,
-    //         [name]: convertedValue,
-    //     });
-    // };
-
-    // // jabatan;
-    // // tanggal_pinjaman;
-
-    // // keterangan;\\
-
-    // //
-    // //
-    // //
-    // //
-    // //
-    // //
-    // //
-    // //
-
     const [loading, setLoading] = useState(false);
     const { filter, removeFilter, returnedData, totals } = useFilter(
         datas,

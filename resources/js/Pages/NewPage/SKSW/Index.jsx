@@ -1,25 +1,11 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
 import FilterBox from "@/Components/FilterBox";
-import LinkButton from "@/Components/LinkButton";
-import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
-import SelectList from "@/Components/SelectList";
-import useBulanFilter from "@/Hooks/useBulanFilter";
 import useFilter from "@/Hooks/useFilter";
-import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Link, router } from "@inertiajs/react";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
-import {
-    AiFillEdit,
-    AiFillFilter,
-    AiOutlineClose,
-    AiOutlineSortAscending,
-    AiOutlineSortDescending,
-} from "react-icons/ai";
-import { BiRefresh } from "react-icons/bi";
+import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
 
 const Index = ({ server_filters, datas, ...props }) => {

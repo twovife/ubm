@@ -1,13 +1,11 @@
-import LinkButton from "@/Components/LinkButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
 import TabelUnit from "./Components/TabelUnit";
 import useFilter from "@/Hooks/useFilter";
 import Card from "@/Components/Card";
 import Search from "@/Components/Search";
 import DefaultTable from "@/Components/DefaultTable";
-// import { BiRefresh } from "react-icons/bi";
 
 const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
     const [loading, setLoading] = useState(false);

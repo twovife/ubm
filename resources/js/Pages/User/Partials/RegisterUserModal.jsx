@@ -4,7 +4,7 @@ import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
-import { Link, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 
 const RegisterUserModal = ({ show, onClose, ...props }) => {

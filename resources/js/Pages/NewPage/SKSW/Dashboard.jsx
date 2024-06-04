@@ -1,7 +1,6 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
 import FilterBox from "@/Components/FilterBox";
-import LinkButton from "@/Components/LinkButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
 import useFilter from "@/Hooks/useFilter";
@@ -23,9 +22,6 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
         setAddFilter,
         removeFilter,
         returnedData,
-        currentPage,
-        totalPages,
-        handlePageChange,
         totals,
     } = useFilter(datas, 100, "sksw_dashboard");
 

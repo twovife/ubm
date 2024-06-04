@@ -3,7 +3,6 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
-import useFilter from "@/Hooks/useFilter";
 import useServerFilter from "@/Hooks/useServerFilter";
 import { useForm } from "@inertiajs/react";
 import React from "react";

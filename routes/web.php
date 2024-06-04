@@ -60,18 +60,18 @@ Route::get('/testdump', [HomeController::class, 'testdump']);
 
 
 
-Route::prefix('aset')->name('aset.')->group(function () {
-    Route::controller(InventoryController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/taxalert', 'taxalert')->name('taxalert');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::put('/put/{inventory}', 'update')->name('update');
-        Route::get('/show/{inventory}', 'show')->name('show');
-        Route::put('/edit/{inventory}', 'edit')->name('edit');
-        Route::put('/mutating/{inventory}', 'mutating')->name('mutating');
-    });
-})->middleware('auth');
+// Route::prefix('aset')->name('aset.')->group(function () {
+//     Route::controller(InventoryController::class)->group(function () {
+//         Route::get('/', 'index')->name('index');
+//         Route::get('/taxalert', 'taxalert')->name('taxalert');
+//         Route::get('/create', 'create')->name('create');
+//         Route::post('/', 'store')->name('store');
+//         Route::put('/put/{inventory}', 'update')->name('update');
+//         Route::get('/show/{inventory}', 'show')->name('show');
+//         Route::put('/edit/{inventory}', 'edit')->name('edit');
+//         Route::put('/mutating/{inventory}', 'mutating')->name('mutating');
+//     });
+// })->middleware('auth');
 
 
 Route::middleware('auth')->group(function () {
@@ -158,15 +158,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::prefix('administrator')->name('administrator.')->group(function () {
-        Route::prefix('branches')->name('branches.')->group(function () {
-            Route::get('/', [BranchController::class, 'index'])->name('index');
-            Route::post('/', [BranchController::class, 'store'])->name('store');
-        });
-        Route::prefix('user')->name('user.')->group(function () {
-            Route::get('/', [UserController::class, 'index'])->name('index');
-        });
-    });
+
 
     Route::controller(EmployeeController::class)->prefix('emp')->name('emp.')->group(function () {
         Route::get('/', 'index')->name('index');

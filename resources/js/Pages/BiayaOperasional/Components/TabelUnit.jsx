@@ -1,14 +1,12 @@
 import DefaultTable from "@/Components/DefaultTable";
 import useFilter from "@/Hooks/useFilter";
 import { Link, router } from "@inertiajs/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { NumericFormat } from "react-number-format";
 
 const TabelUnit = ({ data, loading, setLoading }) => {
     const datas = data.data;
-    console.log(datas);
     const { returnedData, totals } = useFilter(datas, 100, "unitsaving_index");
-    // console.log(returnedData);
 
     const headers = [
         {

@@ -1,6 +1,4 @@
 import Card from "@/Components/Card";
-import InputLabel from "@/Components/InputLabel";
-import SelectList from "@/Components/SelectList";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
@@ -8,7 +6,6 @@ import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
 import Perpindahan from "./Components/Perpindahan";
 import PengembalianJaminan from "./Components/PengembalianJaminan";
-import Edit from "./Components/Edit";
 import { BiUser } from "react-icons/bi";
 
 const Show = ({ employee, deposit_sksw, branches, ...props }) => {

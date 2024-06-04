@@ -1,7 +1,6 @@
 import Card from "@/Components/Card";
-import Search from "@/Components/Search";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PinjamanModalTable from "./Components/PinjamanModalTable";
 import LinkButton from "@/Components/LinkButton";
 

@@ -7,7 +7,7 @@ import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { useForm } from "@inertiajs/react";
-import React, { useState } from "react";
+import React from "react";
 import CurrencyInput from "react-currency-input-field";
 
 const Outcome = ({ curent_unit, ...props }) => {

@@ -3,18 +3,15 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import LinkButton from "@/Components/LinkButton";
 import PrimaryButton from "@/Components/PrimaryButton";
-import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { useForm } from "@inertiajs/react";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { NumericFormat } from "react-number-format";
 
 const Detail = ({ details, curent_unit, ...props }) => {
-    // const [loading, setLoading] = useState(false);
-
     const { data, setData, post, processing, errors } = useForm({
         debit: 10000,
         transaction_date: "",

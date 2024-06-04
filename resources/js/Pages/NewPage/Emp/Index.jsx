@@ -1,8 +1,8 @@
 import Card from "@/Components/Card";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useEffect, useState } from "react";
-import { Head, Link } from "@inertiajs/react";
+import React, { useState } from "react";
+import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
 import useFilter from "@/Hooks/useFilter";
 import DefaultTable from "@/Components/DefaultTable";

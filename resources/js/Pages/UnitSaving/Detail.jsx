@@ -3,11 +3,10 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import LinkButton from "@/Components/LinkButton";
 import PrimaryButton from "@/Components/PrimaryButton";
-import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { useForm } from "@inertiajs/react";
-import React, { useState } from "react";
+import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { NumericFormat } from "react-number-format";
 

@@ -4,7 +4,6 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
 import useServerFilter from "@/Hooks/useServerFilter";
-import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Transition } from "@headlessui/react";
 import { useForm } from "@inertiajs/react";
 import React, { Fragment } from "react";

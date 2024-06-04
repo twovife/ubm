@@ -170,6 +170,23 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                         {employee.janis_jaminan}
                                     </div>
                                 </div>
+                                <div className="flex gap-1">
+                                    <div className="basis-2/6 break-all">
+                                        Status Kontrak
+                                    </div>
+                                    <div className="basis-1/6 text-center">
+                                        :
+                                    </div>
+                                    <div className="basis-3/6 break-all">
+                                        {employee.status_kontrak == 1 ? (
+                                            <span className="text-red-500">
+                                                Cadangan
+                                            </span>
+                                        ) : (
+                                            "Kontrak"
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                             {employee.date_resign && (
                                 <div className="rounded-md shadow p-3 border space-y-3 text-sm">

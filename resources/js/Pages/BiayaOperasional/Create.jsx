@@ -63,7 +63,11 @@ const Create = ({ branch, employees, curent_unit, ...props }) => {
                             <div className="w-full">
                                 <LinkButton
                                     href={route("bop.index", [
-                                        { bulan: props.back_params.bulan },
+                                        {
+                                            bulan:
+                                                props.back_params?.bulan ??
+                                                null,
+                                        },
                                     ])}
                                     title={"Back"}
                                     size={"sm"}

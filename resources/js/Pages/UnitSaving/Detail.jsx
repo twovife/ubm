@@ -40,7 +40,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                         <Card.endContent className={`flex-wrap`}>
                             <LinkButton
                                 href={route("unitsaving.index", [
-                                    { bulan: props.back_params.bulan },
+                                    { bulan: props.back_params?.bulan ?? null },
                                 ])}
                                 title={"Back"}
                                 size={"sm"}

@@ -39,16 +39,10 @@ const Detail = ({ details, curent_unit, ...props }) => {
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.endContent className={`flex-wrap`}>
                             <LinkButton
-                                href={route("unitsaving.index")}
-                                title={"Simpanan 1JT"}
-                                size={"sm"}
-                                type="button"
-                                className="block whitespace-nowrap"
-                                theme="primary"
-                            />
-                            <LinkButton
-                                href={route("bonpanjer.bon_panjer")}
-                                title={"Bon Panjer"}
+                                href={route("unitsaving.index", [
+                                    { bulan: props.back_params.bulan },
+                                ])}
+                                title={"Back"}
                                 size={"sm"}
                                 type="button"
                                 className="block whitespace-nowrap"

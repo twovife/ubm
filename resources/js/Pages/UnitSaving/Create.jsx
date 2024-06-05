@@ -62,7 +62,9 @@ const Create = ({ branch, employees, ...props }) => {
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.endContent className={`flex-wrap`}>
                             <LinkButton
-                                href={route("unitsaving.index")}
+                                href={route("unitsaving.index", [
+                                    { bulan: props.back_params.bulan },
+                                ])}
                                 title={"Back"}
                                 size={"sm"}
                                 type="button"

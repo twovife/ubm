@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class UnitSavingController extends Controller
@@ -196,12 +197,14 @@ class UnitSavingController extends Controller
         })->values();
 
 
-        // dd($data_perunit);
+        $sessionValue = ['bulan' => $tanggal->format('Y-m')];
+        Session::put('unitsavingindex', $sessionValue);
+
 
         return Inertia::render('UnitSaving/Index', [
             'datas' => $data_perwilayah,
             'batch_datas' => $data_perunit,
-            'server_filter' => ['bulan' => $tanggal->format('Y-m')]
+            'server_filter' => $sessionValue
         ]);
     }
 
@@ -213,6 +216,7 @@ class UnitSavingController extends Controller
         $employee = Employee::where('branch_id', $id)->get();
         return Inertia::render('UnitSaving/Create', [
             'branch' => $branches,
+            'back_params' => Session::get('unitsavingindex'),
             'employees' => $employee
         ]);
     }
@@ -247,6 +251,7 @@ class UnitSavingController extends Controller
         return Inertia::render('UnitSaving/Detail', [
             'details' => $data,
             'branch' => $branch,
+            'back_params' => Session::get('unitsavingindex'),
             'curent_unit' => ['id' => $unitSavingAccount->id, 'wilayah' => $saving->load('branch')->branch->wilayah, 'unit' => $saving->load('branch')->branch->unit, 'awalbulan' => $awalBulanIni, 'akhirbulan' => $akhirBulanIni, 'editable' => $enableToAdd]
         ]);
     }

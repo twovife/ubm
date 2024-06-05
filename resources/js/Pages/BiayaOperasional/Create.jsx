@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 
 const Create = ({ branch, employees, curent_unit, ...props }) => {
+    console.log(props.back_params);
     const { data, setData, post, processing, errors } = useForm({
         branch_id: "",
         setoran_awal: 1500000,
@@ -61,7 +62,9 @@ const Create = ({ branch, employees, curent_unit, ...props }) => {
                         <Card.endContent className={`flex-wrap`}>
                             <div className="w-full">
                                 <LinkButton
-                                    href={route("bop.index")}
+                                    href={route("bop.index", [
+                                        { bulan: props.back_params.bulan },
+                                    ])}
                                     title={"Back"}
                                     size={"sm"}
                                     type="button"

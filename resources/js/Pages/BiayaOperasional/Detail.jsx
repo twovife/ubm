@@ -34,36 +34,20 @@ const Detail = ({ details, curent_unit, ...props }) => {
         post(route("bop.update", curent_unit.id));
     };
     return (
-        <Authenticated
-            loading={processing}
-            // auth={props.auth}
-            // errors={props.errors}
-            // header={
-            //     <>
-            //         <h2 className="font-semibold text-xl text-main-800 leading-tight">
-            //             Detail Pembayaran BOP
-            //         </h2>
-            //         <div className="ml-auto flex items-center">
-            //             <LinkButton
-            //                 as="button"
-            //                 href={route("unitsaving.index")}
-            //                 title={"Back"}
-            //             />
-            //         </div>
-            //     </>
-            // }
-        >
+        <Authenticated loading={processing}>
             <Card judul="Setor BOP Unit">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.endContent className={`flex-wrap`}>
                             <ButtonWrapper>
                                 <LinkButton
-                                    href={route("unitsaving.index")}
+                                    href={route("bop.index", [
+                                        { bulan: props.back_params.bulan },
+                                    ])}
                                     title={"Back"}
                                     size={"sm"}
                                     type="button"
-                                    className="block whitespace-nowrap"
+                                    className="block whitespace-nowrap ml-auto"
                                     theme="primary"
                                 />
                             </ButtonWrapper>

@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class BopTransactionController extends Controller
@@ -19,6 +20,7 @@ class BopTransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index_mutation()
     {
         $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
@@ -99,6 +101,17 @@ class BopTransactionController extends Controller
             'server_filter' => ['bulan' => $tanggal->format('Y-m')]
         ]);
     }
+
+    public function create_mutation()
+    {
+
+        $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
+        $awalBulanIni = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
+        return Inertia::render('BiayaOperasional/Outcome', [
+            'curent_unit' => ['akhirbulan' => $akhirBulanIni, 'awalbulan' => $awalBulanIni],
+        ]);
+    }
+
 
 
     public function index_bop()
@@ -198,15 +211,132 @@ class BopTransactionController extends Controller
             ];
         })->values();
 
-
-
+        $sessionValues = ['bulan' => $tanggal->format('Y-m')];
+        Session::put('bopindex', $sessionValues);
 
         return Inertia::render('BiayaOperasional/Index', [
             'datas' => $data_perwilayah,
             'batch_datas' => $data_perunit,
-            'server_filter' => ['bulan' => $tanggal->format('Y-m')]
+            'server_filter' => $sessionValues
         ]);
     }
+
+    public function create_bop(Branch $branch)
+    {
+        $id = $branch->id;
+        $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
+        $awalBulanIni = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
+
+        $branches = Branch::where('id', $id)->get();
+        $employee = Employee::where('branch_id', $id)->get();
+        return Inertia::render('BiayaOperasional/Create', [
+            'branch' => $branches,
+            'employees' => $employee,
+            'back_params' => Session::get('bopindex'),
+            'curent_unit' => ['akhirbulan' => $akhirBulanIni, 'awalbulan' => $awalBulanIni],
+        ]);
+    }
+
+    public function store_bop(Request $request)
+    {
+
+        $request->validate([
+            'branch_id' => ['required', 'integer'],
+            'setoran_awal' => ['required', 'integer'],
+            'transaction_date' => ['required', 'date']
+        ]);
+
+        $branch = Branch::find($request->branch_id);
+        // dd($branch);
+        try {
+            DB::beginTransaction();
+
+
+
+
+            $bopAccount = BopAccountTransaction::firstOrcreate([
+                "branch_id" => $request->branch_id,
+                "transaction_type" => 'BOP',
+            ], [
+                "branch_id" => $request->branch_id,
+                "transaction_type" => 'BOP',
+                "mark" => 'BOP Unit ' . $branch->unit,
+            ]);
+
+
+            $bopAccount->transaksi()->create([
+                "transaction_date" => $request->transaction_date,
+                'transaction' => "D",
+                'transaction_type' => 'BOP',
+                'nominal' => $request->setoran_awal,
+                'keterangan' => 'Pembayaran ' . $bopAccount['mark']
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->route('bop.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+        }
+
+        return redirect()->route('bop.show', $bopAccount->id)->with('message', 'Data berhasil ditambahkan');
+    }
+
+    public function show_bop(BopAccountTransaction $bopAccountTransaction)
+    {
+        $saving = $bopAccountTransaction->load('transaksi');
+        $saldo_before = 0;
+        $enableToAdd = true;
+        $awalBulanIni = Carbon::createFromDate($bopAccountTransaction->load('transaksi')->transaksi()->max('transaction_date'))->endOfMonth()->addDay(1)->format('Y-m-d');
+        $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
+
+        $data = $saving->transaksi->map(function ($item) use (&$saldo_before, $saving, &$enableToAdd) {
+            // dd($item->nominal);
+            $saldo = $saldo_before + $item->nominal;
+            $enableToAdd = Carbon::create($item->transaction_date)->format('Y-m') == Carbon::now()->format('Y-m') ? false : true;
+            $saldo_sebelum = $saldo_before;
+            $saldo_before = $saldo;
+            return [
+                'tanggal' => Carbon::create($item->transaction_date)->format('F Y'),
+                'wilayah' => $saving->load('branch')->branch->wilayah,
+                'unit' => $saving->load('branch')->branch->unit,
+                'id' => $item->id,
+                'debit' => $item->nominal,
+                'saldo_before' => $saldo_sebelum,
+                'saldo' => $saldo,
+            ];
+        })->values();
+
+        return Inertia::render('BiayaOperasional/Detail', [
+            'details' => $data,
+            'back_params' => Session::get('bopindex'),
+            'curent_unit' => ['id' => $bopAccountTransaction->id, 'wilayah' => $saving->load('branch')->branch->wilayah, 'unit' => $saving->load('branch')->branch->unit, 'awalbulan' => $awalBulanIni, 'akhirbulan' => $akhirBulanIni, 'editable' => $enableToAdd]
+        ]);
+    }
+
+
+    public function update_bop(Request $request, BopAccountTransaction $bopAccountTransaction)
+    {
+
+        try {
+            DB::beginTransaction();
+            $bopAccountTransaction->transaksi()->create([
+                'transaction_date' => $request->transaction_date,
+                'transaction' => "D",
+                'transaction_type' => 'BOP',
+                'nominal' => $request->debit,
+                'keterangan' => 'Pembayaran ' . $bopAccountTransaction->mark
+            ]);
+
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->route('bop.index')->withErrors('terjadi kesalahan, mohon refresh browser atau hubungi IT');
+        }
+        return redirect()->route('bop.show', $bopAccountTransaction->id)->with('message', 'Data berhasil ditambahkan');
+    }
+
 
     public function index_bonpriv()
     {
@@ -261,12 +391,6 @@ class BopTransactionController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function index_bonpriv_lunas()
     {
         $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
@@ -318,31 +442,6 @@ class BopTransactionController extends Controller
         ]);
     }
 
-    public function create_mutation()
-    {
-
-        $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
-        $awalBulanIni = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        return Inertia::render('BiayaOperasional/Outcome', [
-            'curent_unit' => ['akhirbulan' => $akhirBulanIni, 'awalbulan' => $awalBulanIni],
-        ]);
-    }
-
-    public function create_bop(Branch $branch)
-    {
-        $id = $branch->id;
-        $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
-        $awalBulanIni = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-
-        $branches = Branch::where('id', $id)->get();
-        $employee = Employee::where('branch_id', $id)->get();
-        return Inertia::render('BiayaOperasional/Create', [
-            'branch' => $branches,
-            'employees' => $employee,
-            'curent_unit' => ['akhirbulan' => $akhirBulanIni, 'awalbulan' => $awalBulanIni],
-        ]);
-    }
-
     public function create_bonpriv()
     {
         $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
@@ -357,88 +456,6 @@ class BopTransactionController extends Controller
             'employees' => $employee
         ]);
     }
-
-    public function store_mutation(Request $request)
-    {
-
-
-        $validation = $request->validate([
-            "nominal" => ['required', 'integer', 'min:1'],
-            "keterangan" => ['required', 'string'],
-            'transaction_date' => ['required', 'date'],
-            'transaksi' => ['required']
-
-        ]);
-
-        try {
-            DB::beginTransaction();
-            $akun = BopAccountTransaction::where('transaction_type', 'LAIN')->first();
-            $akun->transaksi()->create([
-                "transaction_date" => $request->transaction_date,
-                'transaction' => $request->transaksi,
-                'transaction_type' => 'LAIN',
-                'nominal' => $request->nominal,
-                'keterangan' => $request->keterangan
-            ]);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-
-            return redirect()->route('mutation.create')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
-        }
-
-
-        return redirect()->route('mutation.index')->with('message', 'Data berhasil ditambahkan');
-    }
-
-
-
-    public function store_bop(Request $request)
-    {
-
-        $request->validate([
-            'branch_id' => ['required', 'integer'],
-            'setoran_awal' => ['required', 'integer'],
-            'transaction_date' => ['required', 'date']
-        ]);
-
-        $branch = Branch::find($request->branch_id);
-        // dd($branch);
-        try {
-            DB::beginTransaction();
-
-
-
-
-            $bopAccount = BopAccountTransaction::firstOrcreate([
-                "branch_id" => $request->branch_id,
-                "transaction_type" => 'BOP',
-            ], [
-                "branch_id" => $request->branch_id,
-                "transaction_type" => 'BOP',
-                "mark" => 'BOP Unit ' . $branch->unit,
-            ]);
-
-
-            $bopAccount->transaksi()->create([
-                "transaction_date" => $request->transaction_date,
-                'transaction' => "D",
-                'transaction_type' => 'BOP',
-                'nominal' => $request->setoran_awal,
-                'keterangan' => 'Pembayaran ' . $bopAccount['mark']
-            ]);
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            dd($e);
-            return redirect()->route('bop.index')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
-        }
-
-        return redirect()->route('bop.index')->with('message', 'Data berhasil ditambahkan');
-    }
-
-
 
     public function store_bonpriv(Request $request)
     {
@@ -488,50 +505,6 @@ class BopTransactionController extends Controller
         return redirect()->route('bonpriv.show', $generate_new_account->id)->with('message', 'Data berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\BopTransaction  $bopTransaction
-     * @return \Illuminate\Http\Response
-     */
-    public function show(BopTransaction $bopTransaction)
-    {
-        //
-    }
-
-
-    public function show_bop(BopAccountTransaction $bopAccountTransaction)
-    {
-        $saving = $bopAccountTransaction->load('transaksi');
-        $saldo_before = 0;
-        $enableToAdd = true;
-        $awalBulanIni = Carbon::createFromDate($bopAccountTransaction->load('transaksi')->transaksi()->max('transaction_date'))->endOfMonth()->addDay(1)->format('Y-m-d');
-        $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
-
-        $data = $saving->transaksi->map(function ($item) use (&$saldo_before, $saving, &$enableToAdd) {
-            // dd($item->nominal);
-            $saldo = $saldo_before + $item->nominal;
-            $enableToAdd = Carbon::create($item->transaction_date)->format('Y-m') == Carbon::now()->format('Y-m') ? false : true;
-            $saldo_sebelum = $saldo_before;
-            $saldo_before = $saldo;
-            return [
-                'tanggal' => Carbon::create($item->transaction_date)->format('F Y'),
-                'wilayah' => $saving->load('branch')->branch->wilayah,
-                'unit' => $saving->load('branch')->branch->unit,
-                'id' => $item->id,
-                'debit' => $item->nominal,
-                'saldo_before' => $saldo_sebelum,
-                'saldo' => $saldo,
-            ];
-        })->values();
-
-        return Inertia::render('BiayaOperasional/Detail', [
-            'details' => $data,
-            'curent_unit' => ['id' => $bopAccountTransaction->id, 'wilayah' => $saving->load('branch')->branch->wilayah, 'unit' => $saving->load('branch')->branch->unit, 'awalbulan' => $awalBulanIni, 'akhirbulan' => $akhirBulanIni, 'editable' => $enableToAdd]
-        ]);
-    }
-
-
     public function show_bonpriv(BopAccountTransaction $bopAccountTransaction)
     {
 
@@ -577,59 +550,6 @@ class BopTransactionController extends Controller
         // // dd($bopAccountTransaction->load('transaksi'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\BopTransaction  $bopTransaction
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(BopTransaction $bopTransaction)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\BopTransaction  $bopTransaction
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, BopAccountTransaction $bopAccountTransaction)
-    {
-        //
-    }
-
-    public function update_bop(Request $request, BopAccountTransaction $bopAccountTransaction)
-    {
-        // $pinjaman = $bopAccountTransaction->load('transaksi')->transaksi()->where('transaction', 'K')->sum('nominal');
-        // $total_angsuran = $bopAccountTransaction->load('transaksi')->transaksi()->where('transaction', 'D')->sum('nominal');
-        // $saldo = $pinjaman - $total_angsuran;
-
-        // if ($saldo - $request->debit < 0) {
-        //     return redirect()->route('bop.show', $bopAccountTransaction->id)->withErrors('Saldo tidak boleh melebihi 0');
-        // }
-
-        // dd($request->all());
-        try {
-            DB::beginTransaction();
-            $bopAccountTransaction->transaksi()->create([
-                'transaction_date' => $request->transaction_date,
-                'transaction' => "D",
-                'transaction_type' => 'BOP',
-                'nominal' => $request->debit,
-                'keterangan' => 'Pembayaran ' . $bopAccountTransaction->mark
-            ]);
-
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            return redirect()->route('bop.index')->withErrors('terjadi kesalahan, mohon refresh browser atau hubungi IT');
-        }
-        return redirect()->route('bop.show', $bopAccountTransaction->id)->with('message', 'Data berhasil ditambahkan');
-    }
-
     public function update_bonpriv(Request $request, BopAccountTransaction $bopAccountTransaction)
     {
         $pinjaman = $bopAccountTransaction->load('transaksi')->transaksi()->where('transaction', 'K')->sum('nominal');
@@ -662,14 +582,36 @@ class BopTransactionController extends Controller
         return redirect()->route('bonpriv.show', $bopAccountTransaction->id)->with('message', 'Data berhasil ditambahkan');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\BopTransaction  $bopTransaction
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(BopTransaction $bopTransaction)
+    public function store_mutation(Request $request)
     {
-        //
+
+
+        $validation = $request->validate([
+            "nominal" => ['required', 'integer', 'min:1'],
+            "keterangan" => ['required', 'string'],
+            'transaction_date' => ['required', 'date'],
+            'transaksi' => ['required']
+
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $akun = BopAccountTransaction::where('transaction_type', 'LAIN')->first();
+            $akun->transaksi()->create([
+                "transaction_date" => $request->transaction_date,
+                'transaction' => $request->transaksi,
+                'transaction_type' => 'LAIN',
+                'nominal' => $request->nominal,
+                'keterangan' => $request->keterangan
+            ]);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return redirect()->route('mutation.create')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+        }
+
+
+        return redirect()->route('mutation.index')->with('message', 'Data berhasil ditambahkan');
     }
 }

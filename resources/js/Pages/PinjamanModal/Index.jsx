@@ -190,9 +190,7 @@ const Index = ({ branch, server_filters, batch_datas, ...props }) => {
 
                                 <td className="px-3 py-1.5 sticky left-0 top-0 z-10 bg-inherit text-end">
                                     <NumericFormat
-                                        value={
-                                            totals[item.wilayah].totalPinjaman
-                                        }
+                                        value={totals[item.wilayah].pinjaman}
                                         displayType={"text"}
                                         thousandSeparator={","}
                                         prefix={"Rp. "}
@@ -200,7 +198,7 @@ const Index = ({ branch, server_filters, batch_datas, ...props }) => {
                                 </td>
                                 <td className="px-3 py-1.5 sticky left-0 top-0 z-10 bg-inherit text-end">
                                     <NumericFormat
-                                        value={totals[item.wilayah].totalSaldo}
+                                        value={totals[item.wilayah].saldo}
                                         displayType={"text"}
                                         thousandSeparator={","}
                                         prefix={"Rp. "}

@@ -43,7 +43,6 @@ const FilterBox = ({
     useLayoutEffect(() => {
         setOnChangeValues({
             ...onChangeValues,
-
             name: addFilter?.name,
             data_type: addFilter?.data_type,
             operator: operator[0]?.value,

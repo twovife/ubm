@@ -114,6 +114,7 @@ class EmployeeController extends Controller
         ]);
     }
 
+
     public function perpindahan_karyawan(Employee $employee, Request $request)
     {
         // dd([$employee, $request->all()]);
@@ -230,92 +231,9 @@ class EmployeeController extends Controller
     }
 
 
-    public function indexx()
-    {
-
-        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-            $q->where('id', auth()->user()->employee->branch_id);
-        })->get();
 
 
-        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->orderBy('date_resign', 'asc')->orderBy('updated_at', 'desc')->get();
 
-        $data = collect($emp)->map(fn ($que) => [
-            'id' => $que->id ?? null,
-            'nama' => $que->nama_karyawan ?? '-',
-            'status_karyawan' => $que->date_resign ? 'off' : ($que->janis_jaminan == null ? 'belum-lengkap' : "on"),
-            'nik' => $que->nik ?? '-',
-            'alamat' => $que->alamat ?? '-',
-            'hire_date' => $que->hire_date ?? '-',
-            'masa_kerja' => now()->diffInYears(\Carbon\Carbon::parse($que->hire_date)) ?? '-',
-            'jabatan' => $que->jabatan ?? '-',
-            'area' => $que->area ?? '-',
-            'unit' => $que->branch?->unit ?? '-',
-            'wilayah' => $que->branch?->wilayah ?? '-',
-            'janis_jaminan' => !$que->janis_jaminan ? '-' : $que->janis_jaminan,
-            'tanggal_perpindahan' => $que->history?->history_date ?? '-',
-            'history_perpindahan' => $que->history?->record ?? '-',
-            'keterangan_perpindahan' => $que->history?->keterangan ?? '-',
-            'date_resign' => $que->date_resign ?? '-',
-            'resign_status' => $que->resign_status ?? '-',
-            'pencairan_simpanan_date' => $que->pencairan_simpanan_date ?? '-',
-            'pencairan_simpanan_by' => $que->ttdss->nama_karyawan ?? '-',
-            'handover_jaminan' => $que->handover_jaminan ?? '-',
-            'handover_jaminan_by' => $que->ttdjaminan->nama_karyawan ?? '-',
-            'pencairan_simpanan_w_date' => $que->pencairan_simpanan_w_date ?? '-',
-            'pencairan_simpanan_w_by' => $que->ttdsw->pencairan_simpanan_w_by ?? '-',
-
-        ]);
-        return Inertia::render('V2/Employee/Index', [
-            'branch' => $branch,
-            'datas' => $data,
-            'server_filters' => request()->branch_id ?? null
-        ]);
-    }
-
-    public function exemployee()
-    {
-        $branch = Branch::query()->select('id', 'unit')->get();
-        $emp = Employee::query()->with('branch', 'history')->whereNotNull('date_resign')->orderBy('id', 'asc')->paginate(10);
-        return Inertia::render('Employee/ExEmployee', [
-            'branch' => $branch,
-            'employee' => $emp
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-            $q->where('id', auth()->user()->employee->branch_id);
-        })->get();
-        $emp = Employee::query()->with('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan')->filterData()->orderBy('branch_id', 'asc')->paginate(10)->withQueryString();
-        return Inertia::render('Employee/EmployeeCreate', [
-            'branch' => $branch,
-            'employee' => $emp,
-            'titles' => Title::all(),
-        ]);
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
-     */
     public function pengembalianjaminan(Employee $employee, Request $request)
     {
         $request->validate([
@@ -349,38 +267,7 @@ class EmployeeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function action(Employee $employee)
-    {
-        $branch = Branch::query()->select('id', 'unit')->when(auth()->user()->hasPermissionTo('unit'), function ($q) {
-            $q->where('id', auth()->user()->employee->branch_id);
-        })->get();
 
-        $countCustomer = Customer::whereHas('employee', function ($q) use ($employee) {
-            $q->where('mantri', $employee->id);
-        })->count();
-
-        $countLoan = Loan::whereHas('mantri', function ($q) use ($employee) {
-            $q->where('mantri', $employee->id);
-        })->count();
-        $countLoanReq = LoanRequest::whereHas('mantri', function ($q) use ($employee) {
-            $q->where('mantri', $employee->id);
-        })->count();
-        $countLoanReq = LoanRequest::whereHas('mantri', function ($q) use ($employee) {
-            $q->where('mantri', $employee->id);
-        })->count();
-        $countInst = Instalment::whereHas('mantri', function ($q) use ($employee) {
-            $q->where('mantri', $employee->id);
-        })->count();
-
-        $isDeletable = $countCustomer + $countLoan + $countLoanReq + $countInst;
-
-        return Inertia::render('Employee/EmployeeAction', [
-            'titles' => Title::all(),
-            'branch' => $branch,
-            'data' => $employee->load('branch', 'history', 'ttdss', 'ttdsw', 'ttdjaminan'),
-            'deletable' => $isDeletable == 0 ? true : false
-        ]);
-    }
 
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
@@ -431,91 +318,5 @@ class EmployeeController extends Controller
             "branch_id" => $employee->branch_id ?? null
         ];
         return redirect()->route('emp.show', $employee->id)->with('message', 'data berhasil diubah');
-    }
-
-    public function resign(UpdateEmployeeResignRequest $request, Employee $employee)
-    {
-
-        try {
-            DB::beginTransaction();
-            $employee->resign_status = $request->resign_status;
-            $employee->date_resign = $request->date_resign;
-            $employee->resign_reson = $request->resign_reson;
-            $employee->save();
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            // dd($e);
-            return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
-        }
-
-        $arrayFilter = [
-            "branch_id" => $employee->branch_id ?? null
-        ];
-        return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'data berhasil diubah');
-    }
-
-    public function reactive(Request $request, Employee $employee)
-    {
-        $data = [
-            ['history_date' => $employee->date_resign, 'keterangan' => 'resign', 'record' => $employee->resign_status . ' dengan alasan ' . $employee->resign_reson],
-            ['history_date' => $request->history_date, 'keterangan' => 'resign',    'record' =>  $employee->load('branch')->branch->unit . ' sebagai ' . $employee->getOriginal('jabatan')],
-            ['history_date' => $request->history_date, 'keterangan' => 'reactive',    'record' => 'Kembali menjadi karyawan']
-        ];
-
-        try {
-            DB::beginTransaction();
-            $employee->date_resign = null;
-            $employee->resign_status = null;
-            $employee->resign_reson = null;
-            $employee->pencairan_simpanan_date = null;
-            $employee->pencairan_simpanan_by = null;
-            $employee->handover_jaminan = null;
-            $employee->handover_jaminan_by = null;
-            $employee->pencairan_simpanan_w_date = null;
-            $employee->pencairan_simpanan_w_by = null;
-
-
-            $employee->status_kontrak =  $request->status_kontrak;
-            $employee->jabatan =  $request->jabatan;
-            $employee->area = $request->area ?? 0;
-            $employee->branch_id = $request->branch_id;
-            $employee->janis_jaminan = $request->janis_jaminan;
-            $employee->save();
-
-            $employee->histories()->createMany($data);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
-        }
-
-        $arrayFilter = [
-            "branch_id" => $employee->branch_id ?? null
-        ];
-        return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'data berhasil diubah');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Employee $employee)
-    {
-        try {
-            DB::beginTransaction();
-            $employee->delete();
-            $employee->histories()->delete();
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withErrors('somethink went wrong refresh or contact @itdev');
-        }
-        $arrayFilter = [
-            "branch_id" => $employee->branch_id ?? null
-        ];
-        return redirect()->route('employee.index', ['data' => $arrayFilter])->with('message', 'data berhasil dihapus');
     }
 }

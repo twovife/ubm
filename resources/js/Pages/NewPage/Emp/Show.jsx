@@ -490,6 +490,7 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                 setLoading={setLoading}
             />
             <Edit
+                employee={employee}
                 show={isShowEdit}
                 setShow={onEditButtonClicked}
                 setLoading={setLoading}

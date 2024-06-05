@@ -7,22 +7,27 @@ import TextInput from "@/Components/TextInput";
 import useServerFilter from "@/Hooks/useServerFilter";
 import { Transition } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 
-const Edit = ({ show, setShow, setLoading }) => {
-    const { employee } = usePage().props;
+const Edit = ({ show, setShow, setLoading, employee }) => {
     // console.log(employee);
-    const { data, setData, put, reset, processing, errors } = useForm({
-        nama_karyawan: employee.nama_karyawan ?? "",
-        nik: employee.nik ?? "",
-        alamat: employee.alamat ?? "",
-        branch_id: employee.branch_id ?? "",
-        hire_date: employee.hire_date ?? "",
-        jabatan: employee.jabatan ?? "",
-        area: employee.area ?? "",
-        janis_jaminan: employee.janis_jaminan ?? "",
-        status_kontrak: employee.status_kontrak ?? "",
-    });
+    const { data, setData, put, reset, processing, errors } = useForm({});
+    useEffect(() => {
+        setData({
+            nama_karyawan: employee.nama_karyawan ?? null,
+            nik: employee.nik ?? null,
+            alamat: employee.alamat ?? null,
+            branch_id: employee.branch_id ?? null,
+            hire_date: employee.hire_date ?? null,
+            jabatan: employee.jabatan ?? null,
+            area: employee.area ?? null,
+            janis_jaminan: employee.janis_jaminan ?? null,
+            status_kontrak: employee.status_kontrak ?? null,
+            date_resign: employee.date_resign ?? null,
+            resign_status: employee.resign_status ?? null,
+            resign_reson: employee.resign_reson ?? null,
+        });
+    }, [employee]);
 
     const {
         wilayah,
@@ -101,14 +106,14 @@ const Edit = ({ show, setShow, setLoading }) => {
                 onClick={closedModal}
             >
                 <div
-                    className="p-3 rounded shadow-lg bg-white border max-w-2xl w-full"
+                    className="p-3 rounded shadow-lg bg-white border max-w-2xl w-full max-h-screen overflow-auto"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <form onSubmit={onSubmitMutasi} className="mt-3 bg-inherit">
                         <div className="text-gray-500 font-semibold text-xl mono">
                             Tambah Karywan Baru
                         </div>
-                        <div className="w-full mx-auto flex">
+                        <div className="w-full mx-auto flex flex-col lg:flex-row">
                             <div className="flex-1 p-3">
                                 <div className="mb-3">
                                     <InputLabel
@@ -214,10 +219,8 @@ const Edit = ({ show, setShow, setLoading }) => {
                                         className="mt-2"
                                     />
                                 </div>
-                            </div>
-                            <div className="flex-1 p-3">
                                 <div className="flex flex-col lg:flex-row items-center justify-center gap-3 mb-3">
-                                    <div className="flex-1">
+                                    <div className="flex-1 w-full">
                                         <InputLabel value={"Jabatan"} />
                                         <SelectList
                                             required
@@ -234,7 +237,7 @@ const Edit = ({ show, setShow, setLoading }) => {
                                         />
                                     </div>
                                     {data.jabatan === "mantri" && (
-                                        <div className="flex-1">
+                                        <div className="flex-1 w-full">
                                             <InputLabel value={`Kelompok`} />
                                             <TextInput
                                                 className={"w-full"}
@@ -252,7 +255,8 @@ const Edit = ({ show, setShow, setLoading }) => {
                                         </div>
                                     )}
                                 </div>
-
+                            </div>
+                            <div className="flex-1 p-3">
                                 <div className="mb-3">
                                     <InputLabel
                                         htmlFor={"janis_jaminan"}
@@ -286,6 +290,73 @@ const Edit = ({ show, setShow, setLoading }) => {
                                         className="mt-2"
                                     />
                                 </div>
+                                <br />
+                                {employee.resign_status && (
+                                    <>
+                                        <div className="mb-3">
+                                            <InputLabel
+                                                value={"Tanggal Resign"}
+                                            />
+                                            <TextInput
+                                                required
+                                                name="date_resign"
+                                                value={data.date_resign}
+                                                className={"w-full"}
+                                                type="date"
+                                                onChange={onInputChange}
+                                            />
+                                            <InputError
+                                                message={errors.date_resign}
+                                                className="mt-2"
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <InputLabel
+                                                value={"Status Resign"}
+                                            />
+                                            <SelectList
+                                                required
+                                                name="resign_status"
+                                                value={data.resign_status}
+                                                className={"w-full"}
+                                                options={[
+                                                    {
+                                                        id: 1,
+                                                        display: "Resign",
+                                                        value: "Resign",
+                                                    },
+                                                    {
+                                                        id: 2,
+                                                        display: "Pecat",
+                                                        value: "Pecat",
+                                                    },
+                                                ]}
+                                                onChange={onInputChange}
+                                            />
+                                            <InputError
+                                                message={errors.resign_status}
+                                                className="mt-2"
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <InputLabel
+                                                value={"Alasan Keluar"}
+                                            />
+                                            <TextInput
+                                                required
+                                                name="resign_reson"
+                                                value={data.resign_reson}
+                                                className={"w-full"}
+                                                type="text"
+                                                onChange={onInputChange}
+                                            />
+                                            <InputError
+                                                message={errors.resign_reson}
+                                                className="mt-2"
+                                            />
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                         <div className="flex justify-end items-end">

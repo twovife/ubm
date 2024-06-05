@@ -10,7 +10,6 @@ import { useForm, usePage } from "@inertiajs/react";
 import React, { Fragment, useEffect } from "react";
 
 const Edit = ({ show, setShow, setLoading, employee }) => {
-    // console.log(employee);
     const { data, setData, put, reset, processing, errors } = useForm({});
     useEffect(() => {
         setData({

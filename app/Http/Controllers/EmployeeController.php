@@ -20,6 +20,7 @@ use Inertia\Inertia;
 use App\Helpers\AppHelper;
 use App\Models\Deposit;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class EmployeeController extends Controller
 {
@@ -29,7 +30,7 @@ class EmployeeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index(Request $request)
 
     {
         $branch = Branch::orderBy('wilayah', 'asc')->orderBy('unit', 'asc')->get();
@@ -67,10 +68,13 @@ class EmployeeController extends Controller
         ])->sortBy('status')->sortBy('unit')->sortBy('wilayah')->values();
 
 
+        $filterData = ['wilayah' => request()->filled('branch_id') ? $emp->first()->branch->wilayah : null, 'branch_id' => request()->branch_id, 'branch' => $branch];
+        session(['employee_index' => $filterData]);
+
 
         return Inertia::render('NewPage/Emp/Index', [
             'datas' => $data,
-            'server_filter' => ['wilayah' => request()->filled('branch_id') ? $emp->first()->branch->wilayah : null, 'branch_id' => request()->branch_id, 'branch' => $branch]
+            'server_filter' => $request->session()->get('employee_index')
         ]);
     }
 
@@ -110,7 +114,8 @@ class EmployeeController extends Controller
         return Inertia::render('NewPage/Emp/Show', [
             'employee' => $emp,
             'deposit_sksw' => $deposit_sksw,
-            'server_filter' => ['branch' => $branches]
+            'server_filter' => ['branch' => $branches],
+            'back_params' => Session::get('employee_index')
         ]);
     }
 

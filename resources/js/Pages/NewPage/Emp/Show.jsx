@@ -8,9 +8,11 @@ import Perpindahan from "./Components/Perpindahan";
 import PengembalianJaminan from "./Components/PengembalianJaminan";
 import { BiUser } from "react-icons/bi";
 import Edit from "./Components/Edit";
+import LinkButton from "@/Components/LinkButton";
 
 const Show = ({ employee, deposit_sksw, branches, ...props }) => {
-    console.log(deposit_sksw);
+    console.log(props.back_params);
+
     const [loading, setLoading] = useState(false);
 
     const [isShowPerpindahan, setIsShowPerpindahan] = useState(false);
@@ -30,7 +32,20 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
 
     return (
         <Authenticated loading={loading}>
-            <Card judul={`Profil Karyawan`}>
+            <Card
+                judul={`Profil Karyawan`}
+                button={
+                    <LinkButton
+                        title={"back"}
+                        href={route("emp.index", [
+                            {
+                                wilayah: props.back_params.wilayah,
+                                branch_id: props.back_params.branch_id,
+                            },
+                        ])}
+                    />
+                }
+            >
                 <div className="lg:flex mt-2 gap-3">
                     <div className="flex-1">
                         <div className="p-2">

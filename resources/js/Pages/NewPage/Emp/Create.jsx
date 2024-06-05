@@ -69,7 +69,6 @@ const Create = ({ show, setShow, setLoading }) => {
 
     const onSubmitMutasi = (e) => {
         e.preventDefault();
-        console.log(data);
         setLoading(true);
         post(route("emp.store"), {
             onSuccess: (visit) => closedModal(),

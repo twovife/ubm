@@ -85,7 +85,7 @@ const Index = ({ datas }) => {
                             <Search
                                 loading={loading}
                                 setLoading={setLoading}
-                                urlLink={route("controlpanel.unit.index")}
+                                urlLink={route("controlpanel.daftar_unit")}
                                 localState={"branch_index"}
                                 FilterWilayahOnly={true}
                             />

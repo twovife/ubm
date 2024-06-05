@@ -3,6 +3,7 @@
 use App\Http\Controllers\BonPrivateController;
 use App\Http\Controllers\BopTransactionController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\ControlPanelController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\EmployeeController;
@@ -79,10 +80,9 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::prefix('controlpanel')->name('controlpanel.')->group(function () {
-        Route::controller(BranchController::class)->prefix('unit')->name('unit.')->group(function () {
-            Route::get('/', 'index')->name('index');
-        });
+    Route::controller(ControlPanelController::class)->prefix('controlpanel')->name('controlpanel.')->group(function () {
+        Route::get('/syncronize_sksw_with_employee', 'syncronize_sksw_with_employee')->name('syncronize_sksw_with_employee');
+        Route::get('/daftar_unit', 'daftar_unit')->name('daftar_unit');
     });
 
     Route::controller(DepositController::class)->prefix('sksw')->name('sksw.')->group(function () {
@@ -152,12 +152,9 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 
 
     Route::controller(EmployeeController::class)->prefix('emp')->name('emp.')->group(function () {

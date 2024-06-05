@@ -138,7 +138,20 @@ class UnitSavingController extends Controller
                         'lastmont' => Carbon::createFromDate($saving_perwilayah['last_year_payment'], $saving_perwilayah['last_month_payment'], 1)->format('Y-m'),
                         'thismont' => Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m'),
 
-                        'button_type' => $saving_perwilayah['isactive'] == 0 ? ($saving_perwilayah['account_id'] ? 3 : 4) : ($saving_perwilayah['account_id'] ? 1 : 2),
+                        'button_type' =>  $saving_perwilayah['isactive'] == 0
+                            ? ($saving_perwilayah['account_id']
+                                ? 3
+                                : 4
+                            )
+                            : (!$saving_perwilayah['account_id']
+                                ? 2
+                                : ($saving_perwilayah['last_payment']
+                                    ? (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m')
+                                        ? 5
+                                        : 1)
+                                    : 1
+                                )
+                            ),
 
                         'last_month_payment' => $saving_perwilayah['isactive'] == 0
                             ? 0
@@ -147,22 +160,23 @@ class UnitSavingController extends Controller
                                 : ($saving_perwilayah['last_payment']
                                     ? (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m')
                                         ? 0
-                                        : 1) : 0
+                                        : 1)
+                                    : 0
                                 )
                             ),
 
                         'tanggungan' => $saving_perwilayah['isactive'] == 0
                             ? ($saving_perwilayah['account_id']
-                                ? 'Unit Non Aktif'
-                                : "Tidak Ada Transaksi"
+                                ? 'Unit Tutup'
+                                : "Unit Tutup Tdk Ada Transaksi"
                             )
-
                             : (!$saving_perwilayah['account_id']
-                                ? 'Belum Ada Transaksi'
+                                ? 'Unit Baru'
                                 : ($saving_perwilayah['last_payment']
                                     ? (Carbon::createFromDate($saving_perwilayah['last_payment'], 1)->endOfMonth()->format('Y-m') == Carbon::createFromDate($requestFilter->endOfMonth, 1)->endOfMonth()->format('Y-m')
                                         ? "Nihil"
-                                        : "Ada Tanggungan") : "Setoran Awal $parseMindate"
+                                        : "Ada Tanggungan")
+                                    : "Setoran Awal $parseMindate"
                                 )
                             ),
 

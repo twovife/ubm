@@ -20,14 +20,6 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
             type: "default",
             headers: {
                 filterable: "no",
-                name: "Nomor",
-                column: "no",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
                 name: "Wilayah",
                 column: "wilayah",
             },
@@ -92,9 +84,6 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                         {returnedData?.map((item, index) => (
                             <DefaultTable.tr key={index}>
                                 <DefaultTable.td className={`text-center`}>
-                                    {index + 1}
-                                </DefaultTable.td>
-                                <DefaultTable.td className={`text-center`}>
                                     {item.wilayah}
                                 </DefaultTable.td>
                                 <DefaultTable.td className={`text-end`}>
@@ -113,9 +102,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                     </DefaultTable.tbody>
                     <tfoot>
                         <tr className="bg-blue-200 font-semibold text-black">
-                            <td className={`px-3 py-1`} colSpan={"2"}>
-                                TOTAL
-                            </td>
+                            <td className={`px-3 py-1`}>TOTAL</td>
                             <td className={`px-3 py-1 bg-green-500 text-white`}>
                                 <div className={`whitespace-nowrap text-right`}>
                                     <NumericFormat

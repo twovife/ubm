@@ -181,16 +181,28 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                     />
 
                     <SidebarMenuButton
-                        onClick={() => togglerColapse(10)}
+                        onClick={() => togglerColapse(99)}
                         active={route().current("controlpanel.*")}
-                        show={collapse == 10}
+                        show={collapse == 99}
                         title={`Administrasi`}
                         lists={[
                             {
                                 id: "1",
-                                href: route("controlpanel.unit.index"),
+                                href: route("controlpanel.daftar_unit"),
                                 name: "Daftar Kantor",
-                                active: route().current("controlpanel.unit.*"),
+                                active: route().current(
+                                    "controlpanel.daftar_unit"
+                                ),
+                            },
+                            {
+                                id: "2",
+                                href: route(
+                                    "controlpanel.syncronize_sksw_with_employee"
+                                ),
+                                name: "Emp X SKSW",
+                                active: route().current(
+                                    "controlpanel.syncronize_sksw_with_employee"
+                                ),
                             },
                         ]}
                     />

@@ -80,8 +80,6 @@ class EmployeeController extends Controller
 
     public function store(StoreEmployeeRequest $request)
     {
-        dd($request->all());
-
         try {
             DB::beginTransaction();
             $data = $request->all();
@@ -122,7 +120,6 @@ class EmployeeController extends Controller
 
     public function perpindahan_karyawan(Employee $employee, Request $request)
     {
-        // dd([$employee, $request->all()]);
         $validate = $request->validate([
             "branch_id" => ['required'],
             "tanggal_mutasi" => ['required'],
@@ -132,7 +129,6 @@ class EmployeeController extends Controller
         ], [
             "*.required" => "Wajib Diisi"
         ]);
-        // dd($request->all());
 
         $oldUnit = $employee->branch->unit;
         $keterangan = AppHelper::typeMutasi($request->typeMutasi);
@@ -169,7 +165,6 @@ class EmployeeController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
             return redirect()->back()->withErrors('Terjadi Kesalahan saat input coba hubungi IT');
         }
 

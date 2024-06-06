@@ -9,7 +9,7 @@ import { useForm } from "@inertiajs/react";
 import React, { Fragment } from "react";
 import CurrencyInput from "react-currency-input-field";
 
-const Create = ({ show = false, showHandler }) => {
+const Create = ({ show = false, showHandler, setLoading }) => {
     const {
         wilayah,
         setSelectedWilayah,

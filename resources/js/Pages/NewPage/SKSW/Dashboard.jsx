@@ -280,7 +280,12 @@ const Dashboard = ({ branch, server_filters, datas, ...props }) => {
                     </tfoot>
                 </DefaultTable>
             </Card>
-            <Create show={onShowCreate} showHandler={showCreateHandler} />;
+            <Create
+                show={onShowCreate}
+                showHandler={showCreateHandler}
+                setLoading={setLoading}
+            />
+            ;
         </Authenticated>
     );
 };

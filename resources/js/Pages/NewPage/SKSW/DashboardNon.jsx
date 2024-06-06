@@ -1,7 +1,6 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
 import FilterBox from "@/Components/FilterBox";
-import LinkButton from "@/Components/LinkButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
 import useFilter from "@/Hooks/useFilter";
@@ -23,9 +22,6 @@ const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
         setAddFilter,
         removeFilter,
         returnedData,
-        currentPage,
-        totalPages,
-        handlePageChange,
         totals,
     } = useFilter(datas, 100, "sksw_dashboardnon");
 
@@ -99,7 +95,7 @@ const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
         {
             type: "default",
             headers: {
-                name: "Simpanan Wajib",
+                name: "Simpanan Wajib Terakhir",
                 filterable: "yes",
                 column: "saldo_sw",
                 type_date: "number",
@@ -108,7 +104,7 @@ const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
         {
             type: "default",
             headers: {
-                name: "Simpanan Sukarela",
+                name: "Simpanan Sukarela Terakhir",
                 filterable: "yes",
                 column: "saldo_sk",
                 type_date: "number",
@@ -117,7 +113,7 @@ const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
         {
             type: "default",
             headers: {
-                name: "Total Simpanan",
+                name: "Total Simpanan Terakhir",
                 filterable: "yes",
                 column: "total_saldo",
                 type_date: "number",
@@ -155,12 +151,13 @@ const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
                                 urlLink={route("sksw.dashboard_nonaktif")}
                                 localState={"sksw_dashboardnon"}
                                 availableBranch={true}
-                            />
-                            <PrimaryButton
-                                onClick={showCreateHandler}
-                                className="block"
-                                title={"Tambah Baru"}
-                            />
+                            >
+                                <PrimaryButton
+                                    onClick={showCreateHandler}
+                                    className="block"
+                                    title={"Tambah Baru"}
+                                />
+                            </Search>
                         </Card.endContent>
                     </div>
                 </Card.subTitle>

@@ -11,7 +11,6 @@ const Mutasi = ({ typeMutasi, closedModal, setLoading }) => {
     const { employee } = usePage().props;
     const { wilayah, selectedWilayah, setSelectedWilayah, filteredBranch } =
         useServerFilter();
-    // console.log(filteredBranch);
 
     const { data, setData, put, processing, recentlySuccessful, errors } =
         useForm({

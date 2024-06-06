@@ -67,11 +67,18 @@ class DepositController extends Controller
     public function sksw_non_active()
     {
         $branch = Branch::all();
-        $simpanan = Deposit::with('employee', 'branch', 'deposit_transactions')->get();
+        $employee = Employee::orderBy("date_resign", "asc")->orderBy("nama_karyawan", "asc")->get();
+        $requestFilter = new \stdClass;
+        $requestFilter->branch_id = request()->branch_id ?? 91;
+        $requestFilter->wilayah = Branch::find($requestFilter->branch_id)->wilayah;
+
+        $simpanan = Deposit::with('employee', 'branch', 'deposit_transactions')->where('branch_id', $requestFilter->branch_id)->get();
         $data = collect($simpanan)->map(
             function ($que) {
                 $saldoSw = ($que->deposit_transactions->sum('sw_debit') - $que->deposit_transactions->sum('sw_kredit')) ?? 0;
                 $saldoSk = ($que->deposit_transactions->sum('sk_debit') - $que->deposit_transactions->sum('sk_kredit')) ?? 0;
+                $saldoTerakhirsw = $que->deposit_transactions->where('sw_transaction_type', 'KRMD')->sortByDesc('transaction_date')->first()?->sw_kredit;
+                $saldoTerakhirsk = $que->deposit_transactions->where('sk_transaction_type', 'KRMD')->sortByDesc('transaction_date')->first()?->sk_kredit;
                 $tidak_punya_saldo = $saldoSw + $saldoSk == 0;
                 $is_active = $tidak_punya_saldo &&  $que->employee->date_resign ?  "tidak" : "active";
                 return  [
@@ -81,9 +88,9 @@ class DepositController extends Controller
                     'nama' => $que->employee->nama_karyawan ?? '-',
                     'jabatan' => $que->employee->jabatan ?? '-',
                     'tanggal_tabungan' => $que->tgl_tabugan ?? '-',
-                    'saldo_sw' => $saldoSw,
-                    'saldo_sk' => $saldoSk,
-                    'total_saldo' => $saldoSk + $saldoSw,
+                    'saldo_sw' => $saldoTerakhirsw,
+                    'saldo_sk' => $saldoTerakhirsk,
+                    'total_saldo' => $saldoTerakhirsw + $saldoTerakhirsk,
                     'isactive' => $is_active,
                     'status_karyawan' => $que->employee->date_resign ? 'Resign' : 'Aktif',
                     'hiredate' => $que->employee->hire_date ?? '-',
@@ -95,8 +102,10 @@ class DepositController extends Controller
         return Inertia::render("NewPage/SKSW/DashboardNon", [
             'datas' => $data,
             'branch' => $branch,
+            'server_filter' => ['wilayah' => $requestFilter->wilayah, 'branch_id' => $requestFilter->branch_id, 'branch' => $branch,  'employees' => $employee]
         ]);
     }
+
 
     public function store(Request $request)
     {

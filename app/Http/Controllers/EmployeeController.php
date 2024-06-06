@@ -80,7 +80,7 @@ class EmployeeController extends Controller
 
     public function store(StoreEmployeeRequest $request)
     {
-
+        dd($request->all());
 
         try {
             DB::beginTransaction();

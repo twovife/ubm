@@ -145,7 +145,7 @@ const Show = ({ employee, deposit_sksw, branches, ...props }) => {
                                         :
                                     </div>
                                     <div className="basis-3/6 break-all">
-                                        {dayjs(employee.hire_Date).format(
+                                        {dayjs(employee.hire_date).format(
                                             "DD-MM-YYYY"
                                         )}
                                     </div>

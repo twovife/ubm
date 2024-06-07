@@ -28,7 +28,7 @@ const FilterBox = ({
             return item.grouping > 1;
         }
         if (addFilter?.data_type == "number") {
-            return item.grouping < 3;
+            return item.grouping == 2;
         }
         return item.grouping > 0;
     });

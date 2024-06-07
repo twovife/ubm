@@ -28,6 +28,7 @@ class UnitSavingController extends Controller
         $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
 
         $data = UnitSaving::with('savingaccount')->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->whereNot('transaction_type', 'PO')->orderBy('transaction_date', 'asc')->get();
+
         $data_before = UnitSaving::with('savingaccount')->where('transaction_date', "<", $requestFilter->startOfMonth)->whereNot('transaction_type', 'PO')->get();
 
         $saldo_before = $data_before->where('transaction', 'D')->sum('nominal')  - $data_before->where('transaction', 'K')->sum('nominal');
@@ -69,16 +70,6 @@ class UnitSavingController extends Controller
                             : ($item->transaction == "D"
                                 ? "$item->keterangan"
                                 : "$item->keterangan"))),
-
-                //     ? ($item->transaction == "D"
-                //         ? "Pengembalian Bon Panjer"
-                //         : "Bon Panjer")
-                // )
-                // : ($item->transaction_type == "PM"
-                //     ? ($item->transaction == "D"
-                //         ? "Pinjaman Modal"
-                //         : "Pengembalian")
-                //     : $item->keterangan),
                 'wilayah' => $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->wilayah : $item->savingaccount->branch->wilayah,
                 'unit' =>  $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->unit : $item->savingaccount->branch->unit,
                 'nama_karyawan' => $item->transaction_type == "BP" ? $item->savingaccount->employee->nama_karyawan : null,
@@ -625,6 +616,49 @@ class UnitSavingController extends Controller
         ]);
     }
 
+    public function pinjaman_modal_transaksi()
+    {
+
+        $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
+        $requestFilter = new \stdClass;
+        $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
+        $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
+
+        $data = UnitSaving::with('savingaccount.branch')->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->get()->whereIn('transaction_type', ['PO', 'PM']);
+
+
+
+        $data_per_wilayah =  $data->map(function ($queries) {
+            $markerketerangan = $queries->transaction == "D" ? "Pengembalian Pinjaman" : "Pinjaman";
+            $secondMarker = $queries->transaction_type == "PO" ? "Pak Hartawan" : "Pusat";
+            return [
+                'wilayah' => $queries->first()->savingaccount->branch->wilayah,
+                'branch_id' => $queries->savingaccount->branch->id,
+                'branch' => $queries->savingaccount->branch->unit,
+                'wilayah' => $queries->savingaccount->branch->wilayah,
+                'transaction_date' => $queries->transaction_date,
+
+                'transaction_type' => $queries->transaction_type,
+                'keterangan' => "$markerketerangan $secondMarker",
+
+                'DPO' => $queries->transaction_type == "PO" && $queries->transaction == "D" ? $queries->nominal : 0,
+                'KPO' =>  $queries->transaction_type == "PO" && $queries->transaction == "K" ? $queries->nominal : 0,
+
+                'DPP' =>  $queries->transaction_type == "PM" && $queries->transaction == "D" ? $queries->nominal : 0,
+                'KPP' => $queries->transaction_type == "PM" && $queries->transaction == "K" ? $queries->nominal : 0,
+
+                'jasamodal' => $queries->jasa_modal
+            ];
+        })->sortBy('branch')->sortBy('wilayah')->values();
+        // dd($data_per_wilayah);
+        return Inertia::render("PinjamanModal/Transaksi", [
+            'datas' => $data_per_wilayah,
+            'server_filter' => ['bulan' => $tanggal->format('Y-m')]
+        ]);
+    }
+
+    // kspusahabersamamandiriindo
+
 
     public function pinjaman_modal_store(Request $request)
     {
@@ -669,8 +703,6 @@ class UnitSavingController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
-
             return redirect()->route('pinjamanmodal.pinjaman_modal')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
 
@@ -748,7 +780,6 @@ class UnitSavingController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
             return redirect()->route('pinjamanmodal.pinjaman_modal_show', $unitSavingAccount->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
 
@@ -792,7 +823,6 @@ class UnitSavingController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
             return redirect()->route('pinjamanmodal.pinjaman_modal_show', $unitSavingAccount->id)->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
         return redirect()->route('pinjamanmodal.pinjaman_modal_show', $newUnitSavingAccount->id)->with('message', 'Pinjaman Berhasil Di Pindahkan');

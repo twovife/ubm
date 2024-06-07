@@ -141,6 +141,16 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                                     "pinjamanmodal.pinjaman_modal"
                                 ),
                             },
+                            {
+                                id: "5",
+                                href: route(
+                                    "pinjamanmodal.pinjaman_modal_transaksi"
+                                ),
+                                name: "Transaksi Pinj Modal",
+                                active: route().current(
+                                    "pinjamanmodal.pinjaman_modal_transaksi"
+                                ),
+                            },
                         ]}
                     />
                     <SidebarMenuButton

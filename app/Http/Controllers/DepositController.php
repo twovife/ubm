@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use stdClass;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 
@@ -56,7 +57,11 @@ class DepositController extends Controller
             }
         )->where('isactive', "active")->sortBy('nama')->values();
 
-        // dd($data);
+        $backButtonParams = ['wilayah' => $requestFilter->wilayah, 'branch_id' => $requestFilter->branch_id];
+        Session::put('back_button', route('sksw.dashboard', $backButtonParams));
+
+        // dd(Session::get('sksw_dashboard'));
+
         return Inertia::render("NewPage/SKSW/Dashboard", [
             'datas' => $data,
             'branch' => $branch,
@@ -98,6 +103,9 @@ class DepositController extends Controller
             }
         )->where('isactive', "tidak")->sortBy('nama')->values();
 
+
+        $backButtonParams = ['wilayah' => $requestFilter->wilayah, 'branch_id' => $requestFilter->branch_id];
+        Session::put('back_button', route('sksw.dashboard_nonaktif', $backButtonParams));
         // dd($data);
         return Inertia::render("NewPage/SKSW/DashboardNon", [
             'datas' => $data,
@@ -244,7 +252,8 @@ class DepositController extends Controller
             'datas' => $data,
             'branch' => $branch,
             'validating' => ['min_date' => Carbon::create($mindate)->format('Y-m'), 'max_date' => Carbon::now()->lastOfMonth()->format('Y-m')],
-            'employees' => $employee
+            'employees' => $employee,
+            'back_button' => Session::get('back_button')
         ]);
     }
 
@@ -608,6 +617,10 @@ class DepositController extends Controller
                 })->values()
             ];
         })->sortBy('unit')->values();
+
+
+        $backButtonParams = ['wilayah' => $requestFilter->wilayah, 'bulan' => $tanggal->format('Y-m')];
+        Session::put('back_button', route('sksw.unit', $backButtonParams));
         // dd(sksw_unit);
         // dd($maping_sksw);
         return Inertia::render("NewPage/SKSW/Unit", [

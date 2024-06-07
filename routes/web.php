@@ -121,6 +121,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('pinjamanmodal')->name('pinjamanmodal.')->group(function () {
         Route::get('/', [UnitSavingController::class, 'pinjaman_modal'])->name('pinjaman_modal');
         Route::get('/create', [UnitSavingController::class, 'pinjaman_modal_create'])->name('pinjaman_modal_create');
+        Route::get('/transaksi', [UnitSavingController::class, 'pinjaman_modal_transaksi'])->name('pinjaman_modal_transaksi');
         Route::post('/', [UnitSavingController::class, 'pinjaman_modal_store'])->name('pinjaman_modal_store');
         Route::get('/pinjaman_modal_show/{unitSavingAccount}', [UnitSavingController::class, 'pinjaman_modal_show'])->name('pinjaman_modal_show');
         Route::post('/pinjaman_modal_post/{unitSavingAccount}', [UnitSavingController::class, 'pinjaman_modal_post'])->name('pinjaman_modal_post');

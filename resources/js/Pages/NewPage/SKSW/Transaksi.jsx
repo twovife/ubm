@@ -133,8 +133,11 @@ const Transaksi = ({
                         <Card.endContent className={`flex-wrap`}>
                             <ButtonWrapper>
                                 <LinkButton
-                                    href={route("sksw.dashboard")}
-                                    title={"Halaman Utama"}
+                                    href={
+                                        props.back_button ??
+                                        route("sksw.dashboard")
+                                    }
+                                    title={"Back"}
                                     className="inline-block"
                                 />
                             </ButtonWrapper>

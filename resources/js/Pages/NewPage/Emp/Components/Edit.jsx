@@ -28,18 +28,8 @@ const Edit = ({ show, setShow, setLoading, employee }) => {
         });
     }, [employee]);
 
-    const {
-        wilayah,
-        setSelectedWilayah,
-        filteredBranch,
-        selectedWilayah,
-        selectedBranch,
-        selectedBranch_id,
-
-        onWilayahChangeHandler,
-        onBranchChangeHandler,
-        filteredEmps,
-    } = useServerFilter({ propsWilayah: employee.branch.wilayah });
+    const { wilayah, filteredBranch, selectedWilayah, onWilayahChangeHandler } =
+        useServerFilter({ propsWilayah: employee.branch.wilayah });
 
     const jabatan = [
         { id: 1, value: "mantri", display: "Mantri" },

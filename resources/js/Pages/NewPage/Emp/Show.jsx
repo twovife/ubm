@@ -11,8 +11,6 @@ import Edit from "./Components/Edit";
 import LinkButton from "@/Components/LinkButton";
 
 const Show = ({ employee, deposit_sksw, branches, ...props }) => {
-    console.log(props.back_params);
-
     const [loading, setLoading] = useState(false);
 
     const [isShowPerpindahan, setIsShowPerpindahan] = useState(false);

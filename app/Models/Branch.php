@@ -35,4 +35,9 @@ class Branch extends Model
     {
         return $this->hasMany(Employee::class, 'branch_id', 'id');
     }
+
+    public function unit_transaction()
+    {
+        return $this->hasMany(UnitPaymentTransaction::class, 'branch_id', 'id')->orderBy('transaction_date', 'asc');
+    }
 }

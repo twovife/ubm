@@ -18,6 +18,136 @@ const Sidebar = ({ isOpen, setIsopen }) => {
             setCollapse(params);
         }
     };
+    const menu1 =
+        auth.user == "suci"
+            ? [
+                  {
+                      id: "1",
+                      href: route("unitsaving.dashboard"),
+                      name: "Buku Transaksi 1jt",
+                      active: route().current("unitsaving.dashboard"),
+                  },
+
+                  {
+                      id: "2",
+                      href: route("unitsaving.index"),
+                      name: "Tabungan 1Jt",
+                      active: route().current("unitsaving.index"),
+                  },
+                  {
+                      id: "3",
+                      href: route("bonpanjer.bon_panjer"),
+                      name: "Bon Panjer",
+                      active:
+                          route().current("bonpanjer.*") &&
+                          !route().current("bonpanjer.bon_panjer_lunas"),
+                  },
+                  {
+                      id: "5",
+                      href: route("bonpanjer.bon_panjer_lunas"),
+                      name: "Bon Panjer Lunas",
+                      active: route().current("bonpanjer.bon_panjer_lunas"),
+                  },
+                  {
+                      id: "4",
+                      href: route("pinjamanmodal.pinjaman_modal"),
+                      name: "Pinjaman Modal",
+                      active: route().current("pinjamanmodal.pinjaman_modal"),
+                  },
+                  {
+                      id: "5",
+                      href: route("pinjamanmodal.pinjaman_modal_transaksi"),
+                      name: "Transaksi Pinj Modal",
+                      active: route().current(
+                          "pinjamanmodal.pinjaman_modal_transaksi"
+                      ),
+                  },
+              ]
+            : [
+                  {
+                      id: "2",
+                      href: route("unitsaving.index"),
+                      name: "Tabungan 1Jt",
+                      active: route().current("unitsaving.index"),
+                  },
+                  {
+                      id: "3",
+                      href: route("bonpanjer.bon_panjer"),
+                      name: "Bon Panjer",
+                      active:
+                          route().current("bonpanjer.*") &&
+                          !route().current("bonpanjer.bon_panjer_lunas"),
+                  },
+                  {
+                      id: "5",
+                      href: route("bonpanjer.bon_panjer_lunas"),
+                      name: "Bon Panjer Lunas",
+                      active: route().current("bonpanjer.bon_panjer_lunas"),
+                  },
+                  {
+                      id: "4",
+                      href: route("pinjamanmodal.pinjaman_modal"),
+                      name: "Pinjaman Modal",
+                      active: route().current("pinjamanmodal.pinjaman_modal"),
+                  },
+                  {
+                      id: "5",
+                      href: route("pinjamanmodal.pinjaman_modal_transaksi"),
+                      name: "Transaksi Pinj Modal",
+                      active: route().current(
+                          "pinjamanmodal.pinjaman_modal_transaksi"
+                      ),
+                  },
+              ];
+
+    const menu2 =
+        auth.user == "suci"
+            ? [
+                  {
+                      id: "1",
+                      href: route("mutation.index"),
+                      name: "Dashboard Mutasi BOP",
+                      active: route().current("mutation.*"),
+                  },
+                  {
+                      id: "2",
+                      href: route("bop.index"),
+                      name: "Setoran BOP",
+                      active: route().current("bop.*"),
+                  },
+                  {
+                      id: "3",
+                      href: route("bonpriv.index"),
+                      name: "Bon Prive",
+                      active: route().current("bonpriv.index"),
+                  },
+                  {
+                      id: "4",
+                      href: route("bonpriv.indexlunas"),
+                      name: "Bon Prive Lunas",
+                      active: route().current("bonpriv.indexlunas"),
+                  },
+              ]
+            : [
+                  {
+                      id: "2",
+                      href: route("bop.index"),
+                      name: "Setoran BOP",
+                      active: route().current("bop.*"),
+                  },
+                  {
+                      id: "3",
+                      href: route("bonpriv.index"),
+                      name: "Bon Prive",
+                      active: route().current("bonpriv.index"),
+                  },
+                  {
+                      id: "4",
+                      href: route("bonpriv.indexlunas"),
+                      name: "Bon Prive Lunas",
+                      active: route().current("bonpriv.indexlunas"),
+                  },
+              ];
     return (
         <aside
             className={`${
@@ -102,56 +232,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                         }
                         show={collapse == 3}
                         title={`Tabungan 1 Juta`}
-                        lists={[
-                            {
-                                id: "1",
-                                href: route("unitsaving.dashboard"),
-                                name: "Buku Transaksi 1jt",
-                                active: route().current("unitsaving.dashboard"),
-                            },
-                            {
-                                id: "2",
-                                href: route("unitsaving.index"),
-                                name: "Tabungan 1Jt",
-                                active: route().current("unitsaving.index"),
-                            },
-                            {
-                                id: "3",
-                                href: route("bonpanjer.bon_panjer"),
-                                name: "Bon Panjer",
-                                active:
-                                    route().current("bonpanjer.*") &&
-                                    !route().current(
-                                        "bonpanjer.bon_panjer_lunas"
-                                    ),
-                            },
-                            {
-                                id: "5",
-                                href: route("bonpanjer.bon_panjer_lunas"),
-                                name: "Bon Panjer Lunas",
-                                active: route().current(
-                                    "bonpanjer.bon_panjer_lunas"
-                                ),
-                            },
-                            {
-                                id: "4",
-                                href: route("pinjamanmodal.pinjaman_modal"),
-                                name: "Pinjaman Modal",
-                                active: route().current(
-                                    "pinjamanmodal.pinjaman_modal"
-                                ),
-                            },
-                            {
-                                id: "5",
-                                href: route(
-                                    "pinjamanmodal.pinjaman_modal_transaksi"
-                                ),
-                                name: "Transaksi Pinj Modal",
-                                active: route().current(
-                                    "pinjamanmodal.pinjaman_modal_transaksi"
-                                ),
-                            },
-                        ]}
+                        lists={menu1}
                     />
                     <SidebarMenuButton
                         onClick={() => togglerColapse(4)}
@@ -162,33 +243,39 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                         }
                         show={collapse == 4}
                         title={`BOP Pusat`}
+                        lists={menu2}
+                    />
+
+                    {/* <SidebarMenuButton
+                        onClick={() => togglerColapse(5)}
+                        active={route().current("controlpanel.*")}
+                        show={collapse == 5}
+                        title={`Goro Umroh `}
                         lists={[
                             {
                                 id: "1",
-                                href: route("mutation.index"),
-                                name: "Dashboard Mutasi BOP",
-                                active: route().current("mutation.*"),
+                                href: route("goroumrah.goro_transaksi"),
+                                name: "Transaksi Goro",
+                                active: route().current(
+                                    "goroumrah.goro_transaksi"
+                                ),
                             },
                             {
                                 id: "2",
-                                href: route("bop.index"),
-                                name: "Setoran BOP",
-                                active: route().current("bop.*"),
+                                href: route("goroumrah.goro_index"),
+                                name: "Iuran Goro Umroh",
+                                active: route().current("goroumrah.goro_index"),
                             },
                             {
                                 id: "3",
-                                href: route("bonpriv.index"),
-                                name: "Bon Prive",
-                                active: route().current("bonpriv.index"),
-                            },
-                            {
-                                id: "4",
-                                href: route("bonpriv.indexlunas"),
-                                name: "Bon Prive Lunas",
-                                active: route().current("bonpriv.indexlunas"),
+                                href: route("goroumrah.goro_pinjaman"),
+                                name: "Pinjaman Goro",
+                                active: route().current(
+                                    "goroumrah.goro_pinjaman"
+                                ),
                             },
                         ]}
-                    />
+                    /> */}
 
                     <SidebarMenuButton
                         onClick={() => togglerColapse(99)}

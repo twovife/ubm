@@ -20,18 +20,8 @@ const Create = ({ show, setShow, setLoading }) => {
         janis_jaminan: "",
     });
 
-    const {
-        wilayah,
-        setSelectedWilayah,
-        filteredBranch,
-        selectedWilayah,
-        selectedBranch,
-        selectedBranch_id,
-
-        onWilayahChangeHandler,
-        onBranchChangeHandler,
-        filteredEmps,
-    } = useServerFilter();
+    const { wilayah, filteredBranch, selectedWilayah, onWilayahChangeHandler } =
+        useServerFilter();
 
     const jabatan = [
         { id: 1, value: "mantri", display: "Mantri" },

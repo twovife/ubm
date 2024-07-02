@@ -8,7 +8,6 @@ import { NumericFormat } from "react-number-format";
 import ButtonWrapper from "@/Components/ButtonWrapper";
 
 const Index = ({ branch, server_filters, batch_datas, ...props }) => {
-    console.log(batch_datas);
     const [activeTab, setActiveTab] = useState(batch_datas[0]?.wilayah ?? null); // Mengatur tab pertama sebagai aktif
     const handleTabClick = (tabId) => {
         setActiveTab(tabId);

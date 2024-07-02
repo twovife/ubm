@@ -1,6 +1,5 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
-
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
     content: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
@@ -8,14 +7,21 @@ module.exports = {
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.jsx",
         "./node_modules/flowbite/**/*.js",
+        "./pages/**/*.{js,jsx}",
+        "./components/**/*.{js,jsx}",
+        "./app/**/*.{js,jsx}",
+        "./src/**/*.{js,jsx}",
     ],
-
+    prefix: "",
     theme: {
-        extend: {
-            fontFamily: {
-                sans: ["Figtree", ...defaultTheme.fontFamily.sans],
-                roboto: ["Roboto", ...defaultTheme.fontFamily.serif],
+        container: {
+            center: true,
+            padding: "2rem",
+            screens: {
+                "2xl": "1400px",
             },
+        },
+        extend: {
             colors: {
                 main: {
                     100: "#DEF7FA",
@@ -42,8 +48,25 @@ module.exports = {
                     950: "#430c0c",
                 },
             },
+            keyframes: {
+                "accordion-down": {
+                    from: { height: "0" },
+                    to: { height: "var(--radix-accordion-content-height)" },
+                },
+                "accordion-up": {
+                    from: { height: "var(--radix-accordion-content-height)" },
+                    to: { height: "0" },
+                },
+            },
+            animation: {
+                "accordion-down": "accordion-down 0.2s ease-out",
+                "accordion-up": "accordion-up 0.2s ease-out",
+            },
         },
     },
-
-    plugins: [require("@tailwindcss/forms"), require("flowbite/plugin")],
+    plugins: [
+        require("tailwindcss-animate"),
+        require("@tailwindcss/forms"),
+        require("flowbite/plugin"),
+    ],
 };

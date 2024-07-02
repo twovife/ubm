@@ -1,27 +1,13 @@
 <?php
 
-use App\Http\Controllers\BonPrivateController;
 use App\Http\Controllers\BopTransactionController;
-use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ControlPanelController;
-use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\InstalmentController;
-use App\Http\Controllers\InventoryController;
-use App\Http\Controllers\MantriAppController;
-use App\Http\Controllers\OperationalBookController;
-use App\Http\Controllers\OptionalDepositController;
-use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UnitPaymentController;
 use App\Http\Controllers\UnitSavingController;
-use App\Http\Controllers\UserController;
-use App\Models\BopTransaction;
-use App\Models\Deposit;
-use App\Models\Inventory;
-use App\Models\OneMilDeposit;
-use App\Models\UnitSaving;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -78,7 +64,17 @@ Route::get('/testdump', [HomeController::class, 'testdump']);
 Route::middleware('auth')->group(function () {
 
 
-
+    Route::controller(UnitPaymentController::class)->group(function () {
+        Route::prefix('goroumrah')->name('goroumrah.')->group(function () {
+            Route::get('/', 'goro_index')->name('goro_index');
+            Route::post('/goro_create', 'goro_create')->name('goro_create');
+            Route::get('/requestWilayahTransaction', 'requestWilayahTransaction')->name('requestWilayahTransaction');
+            Route::get('/requestUnitTransaction', 'requestUnitTransaction')->name('requestUnitTransaction');
+            Route::get('/transaksi', 'goro_transaksi')->name('goro_transaksi');
+            Route::get('/pinjaman', 'goro_pinjaman')->name('goro_pinjaman');
+            Route::get('/requestPinjamanUnit', 'requestPinjamanUnit')->name('requestPinjamanUnit');
+        });
+    });
 
     Route::controller(ControlPanelController::class)->prefix('controlpanel')->name('controlpanel.')->group(function () {
         Route::get('/syncronize_sksw_with_employee', 'syncronize_sksw_with_employee')->name('syncronize_sksw_with_employee');
@@ -104,7 +100,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/savingdetails/{unitSavingAccount}', [UnitSavingController::class, 'savingdetails'])->name('savingdetails');
         Route::post('/savingdetails/{unitSavingAccount}', [UnitSavingController::class, 'savingdetailspost'])->name('savingdetailspost');
         Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
-
         Route::get('/create_mutasi', [UnitSavingController::class, 'create_mutation'])->name('create_mutasi');
         Route::post('/create_mutasi', [UnitSavingController::class, 'store_mutation'])->name('store_mutasi');
     });

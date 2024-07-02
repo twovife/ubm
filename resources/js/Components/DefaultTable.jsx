@@ -1,8 +1,12 @@
 import React from "react";
 
-const DefaultTable = ({ children }) => {
+const DefaultTable = ({
+    children,
+    className,
+    maxH = "max-h-[60vh] lg:max-h-[70vh]",
+}) => {
     return (
-        <div className="overflow-auto max-h-[60vh] lg:max-h-[70vh]">
+        <div className={`overflow-auto ${maxH} ${className}`}>
             <table className="w-full divide-y divide-gray-200 text-xs lg:text-sm relative z-0">
                 {children}
             </table>

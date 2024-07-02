@@ -19,7 +19,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
         }
     };
     const menu1 =
-        auth.user == "suci"
+        auth.user.username == "suci"
             ? [
                   {
                       id: "1",
@@ -101,7 +101,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
               ];
 
     const menu2 =
-        auth.user == "suci"
+        auth.user.username == "suci"
             ? [
                   {
                       id: "1",

@@ -106,7 +106,7 @@ class BopTransactionController extends Controller
     {
 
         $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
-        $awalBulanIni = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
+        $awalBulanIni = Carbon::now()->startOfMonth()->subMonth(3)->format('Y-m-d');
         return Inertia::render('BiayaOperasional/Outcome', [
             'curent_unit' => ['akhirbulan' => $akhirBulanIni, 'awalbulan' => $awalBulanIni],
         ]);

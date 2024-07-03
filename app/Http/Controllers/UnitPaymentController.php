@@ -158,7 +158,7 @@ class UnitPaymentController extends Controller
             "type_transaksi" => ["required"]
         ]);
 
-        $branch = Branch::find($request->branch_id);
+        $branch = $request->branch_id ? Branch::find($request->branch_id) : null;
 
 
         $nominal = $request->nominal;
@@ -178,7 +178,6 @@ class UnitPaymentController extends Controller
             ]);
 
             if ($request->unit_payment_id == 1) {
-
                 $wilayah = $branch->wilayah;
                 $id = $branch->id;
                 Cache::forget("branch_unit_goro_transaction_wilayah_$wilayah");
@@ -186,6 +185,7 @@ class UnitPaymentController extends Controller
             }
 
             if ($request->unit_payment_id == 3) {
+                $branch = Branch::find($request->branch_id);
                 $wilayah = $branch->wilayah;
                 $id = $branch->id;
                 Cache::forget("branch_unit_goro_stordo");

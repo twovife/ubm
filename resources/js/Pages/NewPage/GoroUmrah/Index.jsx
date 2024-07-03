@@ -27,8 +27,10 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import DetailGoro from "./Components/DetailGoro";
 import { FaPlay } from "react-icons/fa6";
+import dayjs from "dayjs";
 
 const Index = ({ datas, ...props }) => {
+    const bulan = dayjs(props.server_filter.bulan).format("MMM");
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState(() => datas);
@@ -68,7 +70,7 @@ const Index = ({ datas, ...props }) => {
                 accessorKey: "sum_nominal_on",
                 id: "sum_nominal_on",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
-                header: () => "Bulan Ini",
+                header: () => `Bulan ${bulan}`,
                 footer: (info) => (
                     <FormatNumbering value={totals.totalNominal} />
                 ),
@@ -134,7 +136,11 @@ const Index = ({ datas, ...props }) => {
                                         return (
                                             <TableHead
                                                 key={header.id}
-                                                className="text-center"
+                                                className={`text-center lg:whitespace-nowrap whitespace-pre-line duration-300 ease-linear ${
+                                                    showNewTr
+                                                        ? "text-transparent"
+                                                        : ""
+                                                }`}
                                             >
                                                 {flexRender(
                                                     header.column.columnDef
@@ -156,7 +162,7 @@ const Index = ({ datas, ...props }) => {
                                               id={row.id}
                                               className={`${
                                                   showNewTr == row.id
-                                                      ? `border-b-0`
+                                                      ? `border-b-0 bg-green-100`
                                                       : ``
                                               }`}
                                           >
@@ -216,11 +222,11 @@ const Index = ({ datas, ...props }) => {
                                           {showNewTr == row.id && (
                                               <TableRow
                                                   key={`newrow${row.id}`}
-                                                  className="p-0"
+                                                  className="p-0 hover:bg-transparent"
                                               >
                                                   <TableCell
                                                       colSpan="4"
-                                                      className="lg:p-3 p-0"
+                                                      className="p-0 border-0"
                                                   >
                                                       <DetailGoro
                                                           triggerId={showNewTr}
@@ -232,26 +238,30 @@ const Index = ({ datas, ...props }) => {
                                   ))
                                 : null}
                         </TableBody>
-                        <TableFooter>
-                            {table.getFooterGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
-                                        return (
-                                            <TableHead
-                                                key={header.id}
-                                                className="text-center bg-gray-100 text-black"
-                                            >
-                                                {flexRender(
-                                                    header.column.columnDef
-                                                        .footer,
-                                                    header.getContext()
-                                                )}
-                                            </TableHead>
-                                        );
-                                    })}
-                                </TableRow>
-                            ))}
-                        </TableFooter>
+                        {showNewTr ? (
+                            ""
+                        ) : (
+                            <TableFooter>
+                                {table.getFooterGroups().map((headerGroup) => (
+                                    <TableRow key={headerGroup.id}>
+                                        {headerGroup.headers.map((header) => {
+                                            return (
+                                                <TableHead
+                                                    key={header.id}
+                                                    className="text-center bg-gray-100 text-black"
+                                                >
+                                                    {flexRender(
+                                                        header.column.columnDef
+                                                            .footer,
+                                                        header.getContext()
+                                                    )}
+                                                </TableHead>
+                                            );
+                                        })}
+                                    </TableRow>
+                                ))}
+                            </TableFooter>
+                        )}
                     </Table>
                 </div>
             </Card>

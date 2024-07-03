@@ -109,8 +109,8 @@ const DetailPerUnitGoro = ({ triggerId }) => {
     });
 
     return (
-        <div className="p-3">
-            <Table className="border shadow lg:text-sm text-xs ">
+        <div className="px-3 py-6 bg-gray-50">
+            <Table className="lg:text-sm text-xs ">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>

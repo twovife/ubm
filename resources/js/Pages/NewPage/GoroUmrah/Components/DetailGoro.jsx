@@ -158,7 +158,7 @@ const DetailGoro = ({ triggerId }) => {
     });
 
     return (
-        <div className="rounded border shadow">
+        <div>
             <Table className="text-xs lg:text-sm">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -195,7 +195,7 @@ const DetailGoro = ({ triggerId }) => {
                                     id={row.id}
                                     className={`${
                                         showNewTr == row.original.unit_id
-                                            ? "bg-green-100 hover:bg-green-200"
+                                            ? "bg-gray-100 hover:bg-gray-200"
                                             : ""
                                     }`}
                                 >
@@ -256,8 +256,14 @@ const DetailGoro = ({ triggerId }) => {
                                     ))}
                                 </TableRow>
                                 {showNewTr == row.original.unit_id && (
-                                    <TableRow key={`newrow${row.id}`}>
-                                        <TableCell colSpan="5">
+                                    <TableRow
+                                        key={`newrow${row.id}`}
+                                        className="p-0 hover:bg-transparent"
+                                    >
+                                        <TableCell
+                                            colSpan="5"
+                                            className="p-0 border-0"
+                                        >
                                             <DetailPerUnitGoro
                                                 triggerId={showNewTr}
                                             />

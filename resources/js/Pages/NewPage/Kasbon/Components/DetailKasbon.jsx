@@ -69,7 +69,7 @@ const DetailKasbon = ({ triggerId }) => {
                 accessorKey: "pinjaman",
                 id: "pinjaman",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
-                header: () => "",
+                header: () => "Pinjaman",
                 footer: (info) => (
                     <FormatNumbering value={totals.totalPinjaman} />
                 ),
@@ -78,7 +78,7 @@ const DetailKasbon = ({ triggerId }) => {
                 accessorKey: "bayar",
                 id: "bayar",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
-                header: () => "",
+                header: () => "Pembayaran",
                 footer: (info) => (
                     <FormatNumbering value={totals.totalPembayaran} />
                 ),
@@ -87,7 +87,7 @@ const DetailKasbon = ({ triggerId }) => {
                 accessorKey: "sisa",
                 id: "sisa",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
-                header: () => "",
+                header: () => "Sisa",
             },
         ],
         [totals]
@@ -146,15 +146,15 @@ const DetailKasbon = ({ triggerId }) => {
 
     return (
         <div className="max-h-[40vh] overflow-auto">
-            <Table className="lg:text-sm text-xs bg-gray-50">
+            <Table className="lg:text-sm text-xs">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
+                        <TableRow key={headerGroup.id} className="bg-gray-100">
                             {headerGroup.headers.map((header) => {
                                 return (
                                     <TableHead
                                         key={header.id}
-                                        className="text-center"
+                                        className="text-center "
                                     >
                                         {flexRender(
                                             header.column.columnDef.header,
@@ -207,7 +207,7 @@ const DetailKasbon = ({ triggerId }) => {
                                 return (
                                     <TableHead
                                         key={header.id}
-                                        className="text-center bg-white text-blue-600 py-5"
+                                        className="text-center bg-gray-100 text-blue-600 py-5"
                                     >
                                         {flexRender(
                                             header.column.columnDef.footer,

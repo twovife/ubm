@@ -31,7 +31,7 @@ class UnitPaymentController extends Controller
 
         $data = Branch::with(['unit_transaction' => function ($query) use ($requestFilter) {
             $query->whereHas('account', function ($sub_query) {
-                $sub_query->where('account_type', 'GORO');
+                $sub_query->where('account_name', 'GORO');
             })
                 ->where('transaction_date', '<=', $requestFilter->endOfMonth);
         }])->get();
@@ -56,8 +56,7 @@ class UnitPaymentController extends Controller
             ];
         })->sortBy('wilayah')->values();
 
-        Session::put('goro_index_wilayah_show', ['wilayah' => request()->wilayah]);
-        Session::put('goro_create_back_redirect', route('goroumrah.goro_index',  ['bulan' => $tanggal->format('Y-m')]));
+        Session::put('goro_index_wilayah_show', ['wilayah' => request()->backparam]);
 
         return Inertia::render('NewPage/GoroUmrah/Index', [
             'datas' => $result,
@@ -82,7 +81,7 @@ class UnitPaymentController extends Controller
         $data = Cache::remember("branch_unit_transaction_goro_wilayah_$wilayahrequest", 60, function () use ($requestFilter) {
             return Branch::where('wilayah', $requestFilter->wilayah)->with(['unit_transaction' => function ($query) use ($requestFilter) {
                 $query->whereHas('account', function ($sub_query) {
-                    $sub_query->where('account_type', 'GORO');
+                    $sub_query->where('account_name', 'GORO');
                 })->where('transaction_date', '<=', $requestFilter->endOfMonth);
             }])->get();
         });
@@ -128,7 +127,7 @@ class UnitPaymentController extends Controller
         $data = Cache::remember("branch_unit_transaction_goro_unit_$branch_idrequest", 60, function () use ($requestFilter) {
             return Branch::where('id', $requestFilter->branch_id)->with(['unit_transaction' => function ($query) {
                 $query->whereHas('account', function ($sub_query) {
-                    $sub_query->where('account_type', 'GORO');
+                    $sub_query->where('account_name', 'GORO');
                 });
             }])->first();
         });
@@ -150,17 +149,16 @@ class UnitPaymentController extends Controller
 
     public function goro_create(Request $request)
     {
-        $backLink = Session::get('goro_create_back_redirect');
         // $request->all();
         $validate = $request->validate([
-            "branch_id" => ["required_if:unit_payment_id,1"],
+            "branch_id" => ["required_if:unit_payment_id,1,3,4"],
             "unit_payment_id" => ['required'],
             "nominal" => ['required'],
             "transaction_date" => ["required"],
             "type_transaksi" => ["required"]
         ]);
 
-
+        $branch = Branch::find($request->branch_id);
 
         $nominal = $request->nominal;
         if ($request->type_transaksi == 2) {
@@ -179,7 +177,6 @@ class UnitPaymentController extends Controller
             ]);
 
             if ($request->unit_payment_id == 1) {
-                $branch = Branch::find($request->branch_id);
                 $wilayah = $branch->wilayah;
                 $id = $branch->id;
 
@@ -190,10 +187,17 @@ class UnitPaymentController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect($backLink)->withErrors('Data Gagal Disimpan Mohon Muat Ulang Halaman');
+            return redirect()->back()->withErrors('Data Gagal Disimpan Mohon Muat Ulang Halaman');
         }
 
-        return redirect($backLink)->with('message', 'Data Berhasil disimpan');
+        $previousUrl = url()->previous();
+        $urlComponents = parse_url($previousUrl);
+        parse_str($urlComponents['query'] ?? '', $queryParams);
+        $queryParams['backparam'] = $request->unit_payment_id == 1 ? $branch->wilayah : $request->branch_id;
+        $newUrl = url()->to($urlComponents['path']) . '?' . http_build_query($queryParams);
+
+
+        return redirect($newUrl)->with('message', 'Data Berhasil disimpan');
     }
 
     public function goro_transaksi(Request $request)
@@ -247,7 +251,6 @@ class UnitPaymentController extends Controller
         $sessionValue = ['bulan' => $tanggal->format('Y-m')];
 
         Session::put('goro_transaksi_bulan', $sessionValue);
-        Session::put('goro_create_back_redirect', route('goroumrah.goro_transaksi',  ['bulan' => $tanggal->format('Y-m')]));
 
         return Inertia::render('NewPage/GoroUmrah/Transaksi', [
             'datas' => $data_bulanan,
@@ -270,7 +273,6 @@ class UnitPaymentController extends Controller
         })->get();
 
 
-
         $result = $data->groupBy('branch_id')->map(function ($query) use ($requestFilter) {
             $total_pinjaman = $query->where('nominal', '<', 0)->sum('nominal') * -1;
             $bayar_on_month = $query->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->where('nominal', '>', 0)->sum('nominal') ?? 0;
@@ -287,8 +289,7 @@ class UnitPaymentController extends Controller
         })->values();
 
         $branch = Branch::all();
-        Session::put('goro_pinjaman_unit_show', ['branch' => request()->branch]);
-        // Session::put('goro_create_back_redirect', route('goroumrah.goro_index',  ['bulan' => $tanggal->format('Y-m')]));
+        Session::put('goro_pinjaman_unit_show', ['branch' => request()->backparam]);
 
         return Inertia::render('NewPage/Kasbon/Index', [
             'datas' => $result,

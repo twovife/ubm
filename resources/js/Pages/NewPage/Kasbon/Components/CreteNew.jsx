@@ -19,14 +19,7 @@ import Loading from "@/Components/Loading";
 import SelectList from "@/Components/SelectList";
 import useServerFilter from "@/Hooks/useServerFilter";
 
-const Create = ({
-    open,
-    onClosed,
-    triggeredId,
-    triggeredBranch,
-    triggeredWilayah,
-}) => {
-    console.log(triggeredId);
+const CreateNew = ({ open, onClosed }) => {
     // const previledge = usePage().props.auth.user?.permissions?.name;
     const {
         wilayah,
@@ -34,15 +27,15 @@ const Create = ({
         selectedWilayah,
         onWilayahChangeHandler,
         setSelectedWilayah,
-    } = useServerFilter({ propsWilayah: triggeredWilayah });
+    } = useServerFilter();
 
     const { data, setData, post, processing, errors, reset } = useForm({
         branch_id: "",
         unit_payment_id: 4,
-        remark: "",
+        remark: "PINJAMAN GORO",
         nominal: 1000000,
         transaction_date: "",
-        type_transaksi: "",
+        type_transaksi: 2,
     });
 
     const onInputChange = (e) => {
@@ -50,23 +43,9 @@ const Create = ({
         setData(name, value);
     };
 
-    const onTypeTransactionChange = (e) => {
-        const { value, name } = e.target;
-        setData((prev) => ({
-            ...prev,
-            [name]: parseInt(value),
-            remark: value == 1 ? "PEMBAYARAN PINJAMAN GORO" : "PINJAMAN GORO",
-        }));
-    };
-
     const onHandleCurencyChange = (value, name) => {
         setData(name, value);
     };
-
-    useEffect(() => {
-        setData("branch_id", triggeredId);
-        setSelectedWilayah(triggeredWilayah);
-    }, [triggeredId, triggeredWilayah]);
 
     const onSubmitForm = (e) => {
         e.preventDefault();
@@ -84,20 +63,14 @@ const Create = ({
     return (
         <Dialog
             open={open}
-            onOpenChange={(open) =>
-                open == true ? setData("branch_id", triggeredId) : onClosed()
-            }
+            onOpenChange={(open) => (open == true ? null : onClosed())}
             className="text-sm"
         >
             <Loading show={processing} />
             <DialogContent className="lg:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle>
-                        Bayar Goro Umroh {triggeredBranch}
-                    </DialogTitle>
-                    <DialogDescription>
-                        Pembayaran Goro Umroh Bulanan
-                    </DialogDescription>
+                    <DialogTitle>Pinjaman Goro Umroh</DialogTitle>
+                    <DialogDescription>Pinjaman Goro Umroh</DialogDescription>
                 </DialogHeader>
                 <form className="grid gap-4 py-4" onSubmit={onSubmitForm}>
                     <div className="mb-3">
@@ -127,25 +100,6 @@ const Create = ({
                         </div>
                     )}
 
-                    <div className="mb-3">
-                        <InputLabel value={"Tipe Transaksi"} className="mb-1" />
-                        <SelectList
-                            name="type_transaksi"
-                            className="w-full inline-block"
-                            onChange={onTypeTransactionChange}
-                            value={data.type_transaksi}
-                            nullValue={true}
-                            options={[
-                                { id: 1, display: "Bayar", value: 1 },
-                                { id: 2, display: "Pinjam", value: 2 },
-                            ]}
-                            required
-                        />
-                        <InputError
-                            message={errors.type_transaksi}
-                            className="mt-2"
-                        />
-                    </div>
                     <div className="mb-3">
                         <InputLabel
                             value={"Tanggal Transaksi"}
@@ -191,4 +145,4 @@ const Create = ({
     );
 };
 
-export default Create;
+export default CreateNew;

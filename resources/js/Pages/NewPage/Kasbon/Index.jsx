@@ -25,6 +25,9 @@ import { FaPlay } from "react-icons/fa6";
 import dayjs from "dayjs";
 import DetailKasbon from "./Components/DetailKasbon";
 import Create from "./Components/Create";
+import ButtonWrapper from "@/Components/ButtonWrapper";
+import PrimaryButton from "@/Components/PrimaryButton";
+import CreateNew from "./Components/CreteNew";
 
 const Index = ({ datas, ...props }) => {
     const bulan = dayjs(props.server_filter.bulan).format("MMM");
@@ -65,12 +68,13 @@ const Index = ({ datas, ...props }) => {
                 id: "collapse",
                 cell: (info) => info.getValue(),
                 header: () => "Unit",
+                footer: (info) => <div>Total Keseluruhan</div>,
             },
             {
                 accessorKey: "total_pinjaman",
                 id: "total_pinjaman",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
-                header: () => "Pinjaman",
+                header: () => "Total Pinjaman",
                 footer: (info) => (
                     <FormatNumbering value={totals.totalPinjaman} />
                 ),
@@ -79,7 +83,7 @@ const Index = ({ datas, ...props }) => {
                 accessorKey: "bayar_on",
                 id: "bayar_on",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
-                header: () => `Pembayaran ${bulan}`,
+                header: () => `Pembayaran Bln ${bulan}`,
                 footer: (info) => (
                     <FormatNumbering value={totals.totalPembayaran} />
                 ),
@@ -108,6 +112,7 @@ const Index = ({ datas, ...props }) => {
     const [isCreateOpened, setIsCreateOpened] = useState(false);
 
     const openCreateDrawer = (id, unit, will) => {
+        console.log(id, unit, will);
         setIsCreateOpened(true);
         setCreatingBrachId(id);
         setCreatingBrach(unit);
@@ -117,6 +122,15 @@ const Index = ({ datas, ...props }) => {
         setIsCreateOpened(false);
         setCreatingBrachId(null);
         setCreatingBrach(null);
+    };
+
+    // this is newCreate Parameter
+    const [isNewCreateOpen, setisNewCreateOpen] = useState(false);
+    const openNewCreateHandler = (e) => {
+        setisNewCreateOpen(true);
+    };
+    const closedNewCreateHandler = (e) => {
+        setisNewCreateOpen(true);
     };
 
     useEffect(() => {
@@ -139,10 +153,18 @@ const Index = ({ datas, ...props }) => {
                             <Search
                                 loading={loading}
                                 setLoading={setLoading}
-                                urlLink={route("goroumrah.goro_index")}
-                                localState={"goroumrah_goro_index"}
+                                urlLink={route("goroumrah.goro_pinjaman")}
+                                localState={"goroumrah_goro_pinjaman"}
                                 availableMonth={true}
-                            ></Search>
+                            >
+                                <ButtonWrapper>
+                                    <PrimaryButton
+                                        title="Create New"
+                                        onClick={openNewCreateHandler}
+                                        type="button"
+                                    />
+                                </ButtonWrapper>
+                            </Search>
                         </Card.endContent>
                     </div>
                 </Card.subTitle>
@@ -155,7 +177,11 @@ const Index = ({ datas, ...props }) => {
                                         return (
                                             <TableHead
                                                 key={header.id}
-                                                className="text-center"
+                                                className={`text-center lg:whitespace-nowrap whitespace-pre-line duration-300 ease-linear ${
+                                                    showNewTr
+                                                        ? "text-transparent"
+                                                        : ""
+                                                }`}
                                             >
                                                 {flexRender(
                                                     header.column.columnDef
@@ -212,12 +238,19 @@ const Index = ({ datas, ...props }) => {
                                                                   </button>
 
                                                                   <button
-                                                                      className="px-2 py-1 text-xs border border-gray-400 rounded hover:bg-gray-400 hover:text-white"
+                                                                      className={`px-2 py-1 text-xs border border-gray-400 rounded hover:bg-gray-500 hover:text-white ${
+                                                                          showNewTr ==
+                                                                          row
+                                                                              .original
+                                                                              .id
+                                                                              ? `bg-gray-400 text-white font-semibold`
+                                                                              : ""
+                                                                      }`}
                                                                       onClick={() =>
                                                                           openCreateDrawer(
                                                                               row
                                                                                   .original
-                                                                                  .unit_id,
+                                                                                  .id,
                                                                               row
                                                                                   .original
                                                                                   .unit,
@@ -254,7 +287,7 @@ const Index = ({ datas, ...props }) => {
                                               <>
                                                   <TableRow
                                                       key={`newrow${row.id}`}
-                                                      className="p-0"
+                                                      className="p-0 hover:bg-transparent"
                                                   >
                                                       <TableCell
                                                           colSpan="4"
@@ -306,6 +339,10 @@ const Index = ({ datas, ...props }) => {
                 triggeredId={creatingBrachId}
                 triggeredBranch={creatingBrach}
                 triggeredWilayah={creatingWilayah}
+            />
+            <CreateNew
+                open={isNewCreateOpen}
+                onClosed={closedNewCreateHandler}
             />
         </Authenticated>
     );

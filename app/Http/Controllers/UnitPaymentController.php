@@ -84,6 +84,7 @@ class UnitPaymentController extends Controller
                     $sub_query->where('account_name', 'GORO');
                 })->where('transaction_date', '<=', $requestFilter->endOfMonth);
             }])->get();
+
         // $data = Cache::remember("branch_unit_goro_transaction_wilayah_($wilayahrequest)_($tanggal)", 60, function () use ($requestFilter) {
         //     return Branch::where('wilayah', $requestFilter->wilayah)
         //         ->with(['unit_transaction' => function ($query) use ($requestFilter) {

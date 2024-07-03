@@ -78,13 +78,20 @@ class UnitPaymentController extends Controller
         $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
 
         $wilayahrequest = $request->wilayah;
-        $data = Cache::remember("branch_unit_goro_transaction_wilayah_$wilayahrequest", 60, function () use ($requestFilter) {
-            return Branch::where('wilayah', $requestFilter->wilayah)->with(['unit_transaction' => function ($query) use ($requestFilter) {
+        $data = Branch::where('wilayah', $requestFilter->wilayah)
+            ->with(['unit_transaction' => function ($query) use ($requestFilter) {
                 $query->whereHas('account', function ($sub_query) {
                     $sub_query->where('account_name', 'GORO');
                 })->where('transaction_date', '<=', $requestFilter->endOfMonth);
             }])->get();
-        });
+        // $data = Cache::remember("branch_unit_goro_transaction_wilayah_($wilayahrequest)_($tanggal)", 60, function () use ($requestFilter) {
+        //     return Branch::where('wilayah', $requestFilter->wilayah)
+        //         ->with(['unit_transaction' => function ($query) use ($requestFilter) {
+        //             $query->whereHas('account', function ($sub_query) {
+        //                 $sub_query->where('account_name', 'GORO');
+        //             })->where('transaction_date', '<=', $requestFilter->endOfMonth);
+        //         }])->get();
+        // });
 
 
 
@@ -115,6 +122,7 @@ class UnitPaymentController extends Controller
     public function requestUnitTransaction(Request $request)
     {
 
+        // dd($request->all());
         $request->validate(['branch_id' => ['required']]);
 
         $tanggal = Carbon::parse($request->bulan ?? Carbon::now());
@@ -123,16 +131,17 @@ class UnitPaymentController extends Controller
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
         $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
 
+        // dd($requestFilter);
+
         $branch_idrequest = $request->branch_id;
-        $data = Cache::remember("branch_unit_goro_transaction_unit_$branch_idrequest", 60, function () use ($requestFilter) {
-            return Branch::where('id', $requestFilter->branch_id)->with(['unit_transaction' => function ($query) {
+        $data = Branch::where('id', $requestFilter->branch_id)
+            ->with(['unit_transaction' => function ($query) use ($requestFilter) {
                 $query->whereHas('account', function ($sub_query) {
                     $sub_query->where('account_name', 'GORO');
-                });
+                })->where('transaction_date', '<=', $requestFilter->endOfMonth);
             }])->first();
-        });
 
-
+        // dd($data);
         $total  = 0;
         $result = $data->unit_transaction->map(function ($transaction) use (&$total) {
             $total += $transaction->nominal;
@@ -177,20 +186,20 @@ class UnitPaymentController extends Controller
                 "remark" => $request->remark,
             ]);
 
-            if ($request->unit_payment_id == 1) {
-                $wilayah = $branch->wilayah;
-                $id = $branch->id;
-                Cache::forget("branch_unit_goro_transaction_wilayah_$wilayah");
-                Cache::forget("branch_unit_goro_transaction_unit_$id");
-            }
+            // if ($request->unit_payment_id == 1) {
+            //     $wilayah = $branch->wilayah;
+            //     $id = $branch->id;
+            //     Cache::forget("branch_unit_goro_transaction_wilayah_$wilayah");
+            //     Cache::forget("branch_unit_goro_transaction_unit_$id");
+            // }
 
-            if ($request->unit_payment_id == 3) {
-                $branch = Branch::find($request->branch_id);
-                $wilayah = $branch->wilayah;
-                $id = $branch->id;
-                Cache::forget("branch_unit_goro_stordo");
-                Cache::forget("branch_unit_goro_stordo_$id");
-            }
+            // if ($request->unit_payment_id == 3) {
+            //     $branch = Branch::find($request->branch_id);
+            //     $wilayah = $branch->wilayah;
+            //     $id = $branch->id;
+            //     Cache::forget("branch_unit_goro_stordo");
+            //     Cache::forget("branch_unit_goro_stordo_$id");
+            // }
 
             DB::commit();
         } catch (Exception $e) {
@@ -276,25 +285,26 @@ class UnitPaymentController extends Controller
         $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
 
 
-        $data = UnitPaymentTransaction::with('branch', 'account')->whereHas('account', function ($acc) {
-            $acc->where('account_name', 'PG');
-        })->get();
+        $data = UnitPaymentTransaction::with('branch', 'account')
+            ->whereHas('account', function ($acc) {
+                $acc->where('account_name', 'PG');
+            })->where('transaction_date', '<=', $requestFilter->endOfMonth)->get();
 
 
         $result = $data->groupBy('branch_id')->map(function ($query) use ($requestFilter) {
             $total_pinjaman = $query->where('nominal', '<', 0)->sum('nominal') * -1;
             $bayar_on_month = $query->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->where('nominal', '>', 0)->sum('nominal') ?? 0;
             $total_bayar = $query->where('nominal', '>', 0)->sum('nominal');
-
             return [
                 'id' => $query->first()->branch->id,
                 'unit' => $query->first()->branch->unit,
                 'wilayah' => $query->first()->branch->wilayah,
                 'total_pinjaman' => $total_pinjaman,
                 'bayar_on' => $bayar_on_month,
+                'total_bayar' => $total_bayar,
                 'sisa' => $total_pinjaman - $total_bayar
             ];
-        })->values();
+        })->where('sisa', ">", 0)->values();
 
         $branch = Branch::all();
         Session::put('goro_pinjaman_unit_show', ['branch' => request()->backparam]);
@@ -400,13 +410,11 @@ class UnitPaymentController extends Controller
         $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
 
         $branch_idrequest = $request->branch_id;
-        $data = Cache::remember("branch_unit_goro_stordo_$branch_idrequest", 60, function () use ($requestFilter) {
-            return Branch::where('id', $requestFilter->branch_id)->with(['unit_transaction' => function ($query) {
-                $query->whereHas('account', function ($sub_query) {
-                    $sub_query->where('account_name', 'STOR DO');
-                });
-            }])->first();
-        });
+        $data = Branch::where('id', $requestFilter->branch_id)->with(['unit_transaction' => function ($query) {
+            $query->whereHas('account', function ($sub_query) {
+                $sub_query->where('account_name', 'STOR DO');
+            });
+        }])->first();
 
 
         $total  = 0;

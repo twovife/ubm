@@ -48,6 +48,7 @@ const Index = ({ datas, ...props }) => {
                 acc.totalPinjaman += item.total_pinjaman || 0;
                 acc.totalPembayaran += item.bayar_on || 0;
                 acc.totalSisa += item.sisa || 0;
+                acc.totalBayar += item.total_bayar || 0;
 
                 return acc;
             },
@@ -55,6 +56,7 @@ const Index = ({ datas, ...props }) => {
                 totalPinjaman: 0,
                 totalPembayaran: 0,
                 totalSisa: 0,
+                totalBayar: 0,
             }
         );
     };
@@ -87,6 +89,13 @@ const Index = ({ datas, ...props }) => {
                 footer: (info) => (
                     <FormatNumbering value={totals.totalPembayaran} />
                 ),
+            },
+            {
+                accessorKey: "total_bayar",
+                id: "total_bayar",
+                cell: (info) => <FormatNumbering value={info.getValue()} />,
+                header: () => `Total Bayar`,
+                footer: (info) => <FormatNumbering value={totals.totalBayar} />,
             },
             {
                 accessorKey: "sisa",
@@ -212,7 +221,7 @@ const Index = ({ datas, ...props }) => {
                                                   .map((cell) => (
                                                       <TableCell
                                                           key={cell.id}
-                                                          className={`${cell.column.columnDef.className} w-1/4`}
+                                                          className={`${cell.column.columnDef.className} w-1/5`}
                                                       >
                                                           {cell.column.id ==
                                                           "collapse" ? (
@@ -290,7 +299,7 @@ const Index = ({ datas, ...props }) => {
                                                       className="p-0 hover:bg-transparent"
                                                   >
                                                       <TableCell
-                                                          colSpan="4"
+                                                          colSpan="5"
                                                           className="p-0 border-0"
                                                       >
                                                           <DetailKasbon

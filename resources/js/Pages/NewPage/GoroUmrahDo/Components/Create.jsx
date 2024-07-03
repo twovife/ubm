@@ -30,25 +30,16 @@ const Create = ({
 
     const { data, setData, post, processing, errors, reset } = useForm({
         branch_id: "",
-        unit_payment_id: 4,
-        remark: "",
+        unit_payment_id: 3,
+        remark: "STOR DO",
         nominal: 1000000,
         transaction_date: "",
-        type_transaksi: "",
+        type_transaksi: 1,
     });
 
     const onInputChange = (e) => {
         const { value, name } = e.target;
         setData(name, value);
-    };
-
-    const onTypeTransactionChange = (e) => {
-        const { value, name } = e.target;
-        setData((prev) => ({
-            ...prev,
-            [name]: parseInt(value),
-            remark: value == 1 ? "PEMBAYARAN PINJAMAN GORO" : "PINJAMAN GORO",
-        }));
     };
 
     const onHandleCurencyChange = (value, name) => {
@@ -84,32 +75,13 @@ const Create = ({
             <DialogContent className="lg:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>
-                        Bayar Goro Umroh {triggeredBranch}
+                        Stor DO UNIT GORO {triggeredBranch}
                     </DialogTitle>
                     <DialogDescription>
-                        Pembayaran Goro Umroh Bulanan
+                        Stor DO UNIT GORO Bulanan
                     </DialogDescription>
                 </DialogHeader>
                 <form className="grid gap-4 py-4" onSubmit={onSubmitForm}>
-                    <div className="mb-3">
-                        <InputLabel value={"Tipe Transaksi"} className="mb-1" />
-                        <SelectList
-                            name="type_transaksi"
-                            className="w-full inline-block"
-                            onChange={onTypeTransactionChange}
-                            value={data.type_transaksi}
-                            nullValue={true}
-                            options={[
-                                { id: 1, display: "Bayar", value: 1 },
-                                { id: 2, display: "Pinjam", value: 2 },
-                            ]}
-                            required
-                        />
-                        <InputError
-                            message={errors.type_transaksi}
-                            className="mt-2"
-                        />
-                    </div>
                     <div className="mb-3">
                         <InputLabel
                             value={"Tanggal Transaksi"}

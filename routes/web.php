@@ -73,6 +73,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/transaksi', 'goro_transaksi')->name('goro_transaksi');
             Route::get('/pinjaman', 'goro_pinjaman')->name('goro_pinjaman');
             Route::get('/requestPinjamanUnit', 'requestPinjamanUnit')->name('requestPinjamanUnit');
+            Route::get('/do', 'goro_do')->name('goro_do');
+            Route::get('/requestDoUnit', 'requestDoUnit')->name('requestDoUnit');
         });
     });
 

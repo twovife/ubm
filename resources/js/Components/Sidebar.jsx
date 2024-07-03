@@ -248,7 +248,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
 
                     <SidebarMenuButton
                         onClick={() => togglerColapse(5)}
-                        active={route().current("controlpanel.*")}
+                        active={route().current("goroumrah.*")}
                         show={collapse == 5}
                         title={`Goro Umroh `}
                         lists={[

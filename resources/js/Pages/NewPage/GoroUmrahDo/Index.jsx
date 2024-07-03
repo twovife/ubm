@@ -23,13 +23,10 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { FaPlay } from "react-icons/fa6";
 import dayjs from "dayjs";
-import DetailKasbon from "./Components/DetailKasbon";
 import Create from "./Components/Create";
-import ButtonWrapper from "@/Components/ButtonWrapper";
-import PrimaryButton from "@/Components/PrimaryButton";
-import CreateNew from "./Components/CreteNew";
+import DetailDo from "./Components/DetailDo";
 
-const Index = ({ datas, ...props }) => {
+const Index = ({ datas, unit_show, ...props }) => {
     const bulan = dayjs(props.server_filter.bulan).format("MMM");
     const [loading, setLoading] = useState(false);
 
@@ -38,23 +35,22 @@ const Index = ({ datas, ...props }) => {
     const [showNewTr, setShowNewTr] = useState();
 
     const getThisParentTr = (id) => {
-        // console.log(id);
         setShowNewTr((prevId) => (prevId === id ? null : id));
     };
 
     const calculateTotals = (data) => {
         return data.reduce(
             (acc, item) => {
-                acc.totalPinjaman += item.total_pinjaman || 0;
-                acc.totalPembayaran += item.bayar_on || 0;
-                acc.totalSisa += item.sisa || 0;
+                acc.totalBefore += item.sum_nominal_before || 0;
+                acc.totalOn += item.sum_nominal_on || 0;
+                acc.totalAfter += item.total_pembayaran || 0;
 
                 return acc;
             },
             {
-                totalPinjaman: 0,
-                totalPembayaran: 0,
-                totalSisa: 0,
+                totalBefore: 0,
+                totalOn: 0,
+                totalAfter: 0,
             }
         );
     };
@@ -71,29 +67,18 @@ const Index = ({ datas, ...props }) => {
                 footer: (info) => <div>Total Keseluruhan</div>,
             },
             {
-                accessorKey: "total_pinjaman",
-                id: "total_pinjaman",
-                cell: (info) => <FormatNumbering value={info.getValue()} />,
-                header: () => "Total Pinjaman",
-                footer: (info) => (
-                    <FormatNumbering value={totals.totalPinjaman} />
-                ),
-            },
-            {
-                accessorKey: "bayar_on",
-                id: "bayar_on",
+                accessorKey: "sum_nominal_on",
+                id: "sum_nominal_on",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
                 header: () => `Pembayaran Bln ${bulan}`,
-                footer: (info) => (
-                    <FormatNumbering value={totals.totalPembayaran} />
-                ),
+                footer: (info) => <FormatNumbering value={totals.totalOn} />,
             },
             {
-                accessorKey: "sisa",
-                id: "sisa",
+                accessorKey: "total_pembayaran",
+                id: "total_pembayaran",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
-                header: () => "Sisa Pinjaman",
-                footer: (info) => <FormatNumbering value={totals.totalSisa} />,
+                header: () => "Total Stor DO",
+                footer: (info) => <FormatNumbering value={totals.totalAfter} />,
             },
         ],
         []
@@ -112,7 +97,6 @@ const Index = ({ datas, ...props }) => {
     const [isCreateOpened, setIsCreateOpened] = useState(false);
 
     const openCreateDrawer = (id, unit, will) => {
-        console.log(id, unit, will);
         setIsCreateOpened(true);
         setCreatingBrachId(id);
         setCreatingBrach(unit);
@@ -124,20 +108,14 @@ const Index = ({ datas, ...props }) => {
         setCreatingBrach(null);
     };
 
-    // this is newCreate Parameter
-    const [isNewCreateOpen, setisNewCreateOpen] = useState(false);
-    const openNewCreateHandler = (e) => {
-        setisNewCreateOpen(true);
-    };
-    const closedNewCreateHandler = (e) => {
-        setisNewCreateOpen(false);
-    };
+    useEffect(() => {
+        getThisParentTr(parseInt(unit_show?.branch));
+    }, [unit_show]);
 
     useEffect(() => {
-        getThisParentTr(parseInt(props.unit_show.branch));
-    }, []);
+        console.log(data);
+    }, [data]);
 
-    // console.log(table.getRowModel().rows[0].getVisibleCells()[1]);
     return (
         <Authenticated loading={loading}>
             <Card judul="Goro Umrah">
@@ -153,18 +131,10 @@ const Index = ({ datas, ...props }) => {
                             <Search
                                 loading={loading}
                                 setLoading={setLoading}
-                                urlLink={route("goroumrah.goro_pinjaman")}
-                                localState={"goroumrah_goro_pinjaman"}
+                                urlLink={route("goroumrah.goro_do")}
+                                localState={"goroumrah_goro_do"}
                                 availableMonth={true}
-                            >
-                                <ButtonWrapper>
-                                    <PrimaryButton
-                                        title="Create New"
-                                        onClick={openNewCreateHandler}
-                                        type="button"
-                                    />
-                                </ButtonWrapper>
-                            </Search>
+                            ></Search>
                         </Card.endContent>
                     </div>
                 </Card.subTitle>
@@ -293,7 +263,7 @@ const Index = ({ datas, ...props }) => {
                                                           colSpan="4"
                                                           className="p-0 border-0"
                                                       >
-                                                          <DetailKasbon
+                                                          <DetailDo
                                                               triggerId={
                                                                   showNewTr
                                                               }
@@ -339,10 +309,6 @@ const Index = ({ datas, ...props }) => {
                 triggeredId={creatingBrachId}
                 triggeredBranch={creatingBrach}
                 triggeredWilayah={creatingWilayah}
-            />
-            <CreateNew
-                open={isNewCreateOpen}
-                onClosed={closedNewCreateHandler}
             />
         </Authenticated>
     );

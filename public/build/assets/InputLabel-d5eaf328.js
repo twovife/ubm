@@ -1,0 +1,1 @@
+import{a as o,j as i}from"./app-cc2d0faa.js";function c({value:t,className:a="",children:s,optional:e,text:l="text-sm",...n}){return o("label",{...n,className:`block font-medium ${l} text-gray-700 `+a,children:[t||s,e?i("i",{className:"text-xs opacity-70",children:" (optional)"}):null]})}export{c as I};

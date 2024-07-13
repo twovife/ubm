@@ -278,6 +278,29 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                     />
 
                     <SidebarMenuButton
+                        onClick={() => togglerColapse(6)}
+                        active={route().current("asset.kendaraan.*")}
+                        show={collapse == 6}
+                        title={`Aset Kendaraan `}
+                        lists={[
+                            {
+                                id: "1",
+                                href: route("asset.kendaraan.index"),
+                                name: "Aset",
+                                active: route().current(
+                                    "asset.kendaraan.index"
+                                ),
+                            },
+                            {
+                                id: "2",
+                                href: route("asset.kendaraan.her"),
+                                name: "Jadwal Her",
+                                active: route().current("asset.kendaraan.her"),
+                            },
+                        ]}
+                    />
+
+                    <SidebarMenuButton
                         onClick={() => togglerColapse(99)}
                         active={route().current("controlpanel.*")}
                         show={collapse == 99}

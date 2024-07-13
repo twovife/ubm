@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssetMasterController;
 use App\Http\Controllers\BopTransactionController;
 use App\Http\Controllers\ControlPanelController;
 use App\Http\Controllers\DepositController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UnitPaymentController;
 use App\Http\Controllers\UnitSavingController;
+use App\Models\AssetMaster;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -63,6 +65,19 @@ Route::get('/testdump', [HomeController::class, 'testdump']);
 
 Route::middleware('auth')->group(function () {
 
+
+    Route::controller(AssetMasterController::class)->group(function () {
+        Route::prefix('asset')->name('asset.')->group(function () {
+            Route::prefix('kendaraan')->name('kendaraan.')->group(function () {
+                Route::get('/', 'index_kendaraan')->name('index');
+                Route::get('/getasset', 'getasset')->name('getasset');
+                Route::post('/store', 'store_kendaraan')->name('store');
+                Route::put('/updatekendaraan/{assetMaster}', 'update_kendaraan')->name('update');
+                Route::get('/her', 'her_kendaraan')->name('her');
+                Route::put('/her/{assetMaster}', 'herpayment_kendaraan')->name('herpayment');
+            });
+        });
+    });
 
     Route::controller(UnitPaymentController::class)->group(function () {
         Route::prefix('goroumrah')->name('goroumrah.')->group(function () {

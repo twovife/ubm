@@ -40,4 +40,54 @@ class Branch extends Model
     {
         return $this->hasMany(UnitPaymentTransaction::class, 'branch_id', 'id')->orderBy('transaction_date', 'asc');
     }
+
+    public function asset_location()
+    {
+        return $this->hasMany(AssetLocation::class, 'branch_id', 'id');
+    }
+
+    public function lastLocation()
+    {
+        return $this->hasMany(AssetLocation::class, 'branch_id', 'id');
+    }
+
+    public function asset_master()
+    {
+        return $this->hasManyThrough(
+            AssetMaster::class,
+            AssetLocation::class,
+            'branch_id', // Foreign key on the environments table...
+            'id', // Local key on the projects table...
+
+            'id', // Local key on the environments table...
+            'asset_master_id',
+        );
+    }
 }
+
+// projects
+//     id - integer
+//     name - string
+
+// environments
+//     id - integer
+//     project_id - integer
+//     name - string
+
+// deployments
+//     id - integer
+//     environment_id - integer
+//     commit_hash - string
+
+
+// Branch
+// id
+// unit
+
+// location
+// id
+// branch_id
+
+// master
+// id
+// nama

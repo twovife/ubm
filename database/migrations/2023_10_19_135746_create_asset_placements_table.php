@@ -15,12 +15,11 @@ return new class extends Migration
     {
         Schema::create('asset_placements', function (Blueprint $table) {
             $table->id();
-            $table->integer('inventory_id')->nullable();
-            $table->integer('branch_id')->nullable();
-            $table->date('tanggal_masuk')->nullable();
-            $table->date('tanggal_keluar')->nullable();
-            $table->string('keterangan_keluar')->nullable();
-            $table->string('pengguna')->nullable();
+            $table->integer('asset_master_id')->nullable();
+            $table->integer('asset_place_id_before')->nullable();
+            $table->integer('asset_place_id')->nullable();
+            $table->string('pengguna', 255)->nullable();
+            $table->string('keterangan', 255)->nullable();
             $table->timestamps();
         });
     }

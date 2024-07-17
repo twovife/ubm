@@ -128,7 +128,7 @@ const Transaksi = ({ datas, ...props }) => {
 
     return (
         <Authenticated>
-            <Card judul="Transaksi BOP">
+            <Card judul="Transaksi Goro">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>

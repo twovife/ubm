@@ -27,9 +27,13 @@ class UnitSavingController extends Controller
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
         $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
 
-        $data = UnitSaving::with('savingaccount')->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->whereNot('transaction_type', 'PO')->orderBy('transaction_date', 'asc')->get();
+        $data = UnitSaving::with(['savingaccount' => function ($savingacc) {
+            $savingacc->with('employee.branch', 'branch');
+        }])->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->whereNot('transaction_type', 'PO')->orderBy('transaction_date', 'asc')->get();
 
-        $data_before = UnitSaving::with('savingaccount')->where('transaction_date', "<", $requestFilter->startOfMonth)->whereNot('transaction_type', 'PO')->get();
+        $data_before = UnitSaving::with(['savingaccount' => function ($savingacc) {
+            $savingacc->with('employee.branch');
+        }])->where('transaction_date', "<", $requestFilter->startOfMonth)->whereNot('transaction_type', 'PO')->get();
 
         $saldo_before = $data_before->where('transaction', 'D')->sum('nominal')  - $data_before->where('transaction', 'K')->sum('nominal');
         $saldo = $saldo_before;
@@ -81,7 +85,7 @@ class UnitSavingController extends Controller
             ];
         })->values();
         $data_bulanan->prepend($additional_array);
-        // dd();
+        // ddd($data_bulanan);
 
         return Inertia::render('UnitSaving/Dashboard', [
             'datas' => $data_bulanan,

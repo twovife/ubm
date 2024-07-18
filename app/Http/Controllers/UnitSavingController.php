@@ -93,6 +93,7 @@ class UnitSavingController extends Controller
             'server_filter' => ['bulan' => $tanggal->format('Y-m')]
         ]);
     }
+
     public function index()
     {
 
@@ -104,7 +105,7 @@ class UnitSavingController extends Controller
 
 
 
-        $data = Branch::leftJoin('unit_saving_accounts', function ($join) {
+        $data = Branch::with('unit_saving_accounts')->leftJoin('unit_saving_accounts', function ($join) {
             $join->on('branches.id', '=', 'unit_saving_accounts.branch_id')->where(function ($que) {
                 $que->where('unit_saving_accounts.account_type', 'TB');
             });
@@ -191,7 +192,7 @@ class UnitSavingController extends Controller
             ];
         })->values();
 
-
+        // ddd($data_perunit);
         $sessionValue = ['bulan' => $tanggal->format('Y-m')];
         Session::put('unitsavingindex', $sessionValue);
 
@@ -873,10 +874,10 @@ class UnitSavingController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
 
-            return redirect()->route('unitsaving.create')->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
+            return redirect()->back()->withErrors('Data gagal ditambahkan refresh sebelum memulai lagi');
         }
 
 
-        return redirect()->route('unitsaving.dashboard')->with('message', 'Data berhasil ditambahkan');
+        return redirect()->back()->with('message', 'Data berhasil ditambahkan');
     }
 }

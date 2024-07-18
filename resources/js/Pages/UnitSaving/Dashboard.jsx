@@ -1,12 +1,14 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
 import LinkButton from "@/Components/LinkButton";
+import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
 import useFilter from "@/Hooks/useFilter";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
+import Outcome from "./Outcome";
 
 const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
     const [loading, setLoading] = useState(false);
@@ -111,8 +113,17 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
         },
     ];
 
+    const [showMutasi, setShowMutasi] = useState(false);
+    const showMutasiHandler = (e) => {
+        setShowMutasi(true);
+    };
+    const hideMutasiHandler = (e) => {
+        setShowMutasi(false);
+    };
+
     return (
         <Authenticated loading={loading}>
+            <Outcome open={showMutasi} onClosed={hideMutasiHandler} />
             <Card judul="Buku Transaksi 1JT">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
@@ -130,8 +141,9 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
                                 localState={"1juta_transaksi"}
                                 availableMonth={true}
                             >
-                                <LinkButton
-                                    href={route("unitsaving.create_mutasi")}
+                                <PrimaryButton
+                                    onClick={showMutasiHandler}
+                                    // href={route("unitsaving.create_mutasi")}
                                     title={'Lain"'}
                                     size={"sm"}
                                     type="button"

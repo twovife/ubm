@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 function useServerFilter({ propsWilayah = "", ...props } = {}) {
     const { server_filter } = usePage().props;
 
+    const [selectedSearchParam, setSelectedSearchParam] = useState(
+        server_filter?.search ?? null
+    );
     const [selectedWilayah, setSelectedWilayah] = useState(
         server_filter?.wilayah ?? propsWilayah
     );
@@ -100,6 +103,7 @@ function useServerFilter({ propsWilayah = "", ...props } = {}) {
     // fungsi ini dipakai jika yang dicari adalah employee
 
     return {
+        selectedSearchParam,
         selectedWilayah,
         setSelectedWilayah,
         selectedBranch_id,

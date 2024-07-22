@@ -40,6 +40,33 @@ class GoroSeeder extends Seeder
                 echo $counter . PHP_EOL;
                 $counter++;
             });
+
+            $data = [
+                [
+                    "account_name" => "LAIN",
+                    "account_type" => "GORO",
+                    "remark" => "TRANSACTION"
+                ],
+                [
+                    "account_name" => "STOR DO",
+                    "account_type" => "GORO",
+                    "remark" => NULL
+                ],
+                [
+                    "account_name" => "PG",
+                    "account_type" => "GORO",
+                    "remark" => "PINJAMAN MODAL"
+                ],
+            ];
+            collect($data)->each(function ($item) {
+                $accountType = UnitPayment::firstOrCreate([
+                    'account_name' => $item['account_name']
+                ], [
+                    "account_name" => $item['account_name'],
+                    "account_type" => $item['account_type'],
+                    "remark" => $item['remark']
+                ]);
+            });
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

@@ -97,7 +97,7 @@ const DataDetail = ({ datas }) => {
     });
 
     return (
-        <Table className="absolute top-0 left-0 w-full h-full lg:text-sm text-xs z-0">
+        <Table>
             <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id}>

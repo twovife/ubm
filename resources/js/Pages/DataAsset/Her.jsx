@@ -20,6 +20,7 @@ import {
 import Search from "@/Components/Search";
 import { FaPlay } from "react-icons/fa6";
 import DetailHer from "./DetailHer";
+import { ScrollArea, ScrollBar } from "@/shadcn/ui/scroll-area";
 
 const Her = ({ datas, ...props }) => {
     // console.log(datas);
@@ -194,28 +195,6 @@ const Her = ({ datas, ...props }) => {
                                                               </div>
                                                           </div>
                                                       ) : (
-                                                          //   : showNewTr ==
-                                                          //   row.original
-                                                          //       .branch_id ? (
-                                                          //     <div className="grid lg:grid-cols-2 grid-cols-1">
-                                                          //         {flexRender(
-                                                          //             cell.column
-                                                          //                 .columnDef
-                                                          //                 .cell,
-                                                          //             cell.getContext()
-                                                          //         )}
-                                                          //         {typeShow ==
-                                                          //         "non" ? (
-                                                          //             <span className="ml-1 px-2 py-1 bg-red-400 text-white rounded-full text-xs">
-                                                          //                 Non Active
-                                                          //             </span>
-                                                          //         ) : (
-                                                          //             <span className="ml-1 px-2 py-1 bg-green-400 text-white rounded-full text-xs">
-                                                          //                 Active
-                                                          //             </span>
-                                                          //         )}
-                                                          //     </div>
-                                                          // )
                                                           flexRender(
                                                               cell.column
                                                                   .columnDef
@@ -235,10 +214,17 @@ const Her = ({ datas, ...props }) => {
                                                   colSpan="3"
                                                   className="p-2 border-0"
                                               >
-                                                  <div className="flex max-w-full relative overflow-auto w-full h-[50vh]">
-                                                      <DetailHer
-                                                          datas={detailData}
-                                                      />
+                                                  <div className="flex max-w-full relative overflow-auto w-full z-10 h-[50vh]">
+                                                      <div className="absolute top-0 w-full h-full z-20">
+                                                          <ScrollArea className="h-full w-full">
+                                                              <DetailHer
+                                                                  datas={
+                                                                      detailData
+                                                                  }
+                                                              />
+                                                              <ScrollBar orientation="horizontal" />
+                                                          </ScrollArea>
+                                                      </div>
                                                   </div>
                                               </TableCell>
                                           </TableRow>

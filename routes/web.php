@@ -70,7 +70,6 @@ Route::middleware('auth')->group(function () {
         Route::prefix('asset')->name('asset.')->group(function () {
             Route::prefix('kendaraan')->name('kendaraan.')->group(function () {
                 Route::get('/', 'index_kendaraan')->name('index');
-                Route::get('/getasset', 'getasset')->name('getasset');
                 Route::post('/store', 'store_kendaraan')->name('store');
                 Route::put('/updatekendaraan/{assetMaster}', 'update_kendaraan')->name('update');
                 Route::get('/her', 'her_kendaraan')->name('her');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssetVehicle;
 use App\Models\Branch;
 use App\Models\UnitPayment;
 use App\Models\UnitPaymentTransaction;
@@ -27,6 +28,7 @@ class UnitPaymentController extends Controller
         $requestFilter->isWilayanNeeded = true;
         $requestFilter->endOfMonth = $tanggal->endOfMonth()->format('Y-m-d');
         $requestFilter->startOfMonth = $tanggal->startOfMonth()->format('Y-m-d');
+
 
 
         $data = Branch::with(['unit_transaction' => function ($query) use ($requestFilter) {
@@ -55,6 +57,8 @@ class UnitPaymentController extends Controller
                 'sisa_goro' => (100000000 * $count_wilayah) - ($sumBefore + $sumOn),
             ];
         })->sortBy('wilayah')->values();
+
+
 
         Session::put('goro_index_wilayah_show', ['wilayah' => request()->backparam]);
 
@@ -161,7 +165,7 @@ class UnitPaymentController extends Controller
     {
         // $request->all();
         $validate = $request->validate([
-            "branch_id" => ["required_if:unit_payment_id,1,3,4"],
+            "branch_id" => ["required_if:unit_payment_id,1,3,4"], //1 for GORO 2. Transaksi / lain 3. STOR DO 4. Pinjaman goro / PG
             "unit_payment_id" => ['required'],
             "nominal" => ['required'],
             "transaction_date" => ["required"],
@@ -187,20 +191,6 @@ class UnitPaymentController extends Controller
                 "remark" => $request->remark,
             ]);
 
-            // if ($request->unit_payment_id == 1) {
-            //     $wilayah = $branch->wilayah;
-            //     $id = $branch->id;
-            //     Cache::forget("branch_unit_goro_transaction_wilayah_$wilayah");
-            //     Cache::forget("branch_unit_goro_transaction_unit_$id");
-            // }
-
-            // if ($request->unit_payment_id == 3) {
-            //     $branch = Branch::find($request->branch_id);
-            //     $wilayah = $branch->wilayah;
-            //     $id = $branch->id;
-            //     Cache::forget("branch_unit_goro_stordo");
-            //     Cache::forget("branch_unit_goro_stordo_$id");
-            // }
 
             DB::commit();
         } catch (Exception $e) {

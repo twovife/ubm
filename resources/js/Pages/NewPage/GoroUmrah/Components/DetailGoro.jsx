@@ -132,7 +132,6 @@ const DetailGoro = ({ triggerId }) => {
                 if (axios.isCancel(error)) {
                     console.log("Request canceled:", error.message);
                 } else {
-                    setError(error);
                     setLoading(false);
                 }
             } finally {

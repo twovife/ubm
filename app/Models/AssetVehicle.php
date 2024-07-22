@@ -15,4 +15,10 @@ class AssetVehicle extends Model
         "tanggal_pajak_tahunan",
         "nama_stnk",
     ];
+
+
+    public function asset_master()
+    {
+        return $this->belongsTo(AssetMaster::class);
+    }
 }

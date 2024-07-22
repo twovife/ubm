@@ -15,9 +15,12 @@ const Search = ({
     availableBranch = false,
     availableDate = false,
     availableMonth = false,
+    availablePlanText = false,
+    planTextName = "search",
     children,
 }) => {
     const {
+        selectedSearchParam,
         wilayah,
         selectedWilayah,
         setSelectedWilayah,
@@ -25,13 +28,32 @@ const Search = ({
         selectedBranch_id,
         selectedBulan,
     } = useServerFilter();
-    // console.log(selectedBulan);
 
     const { data, setData, get, processing } = useForm({});
-
     const onSearchChange = (e) => {
         const { name, value } = e.target;
-        setData(name, value);
+        if (availablePlanText) {
+            if (name == planTextName) {
+                setData((prevData) => {
+                    const newData = { [name]: value };
+
+                    for (const key in prevData) {
+                        if (key !== "search") {
+                            newData[key] = "";
+                        }
+                    }
+                    return newData;
+                });
+            } else {
+                setData((prevData) => ({
+                    ...prevData,
+                    [name]: value,
+                    [planTextName]: "",
+                }));
+            }
+        } else {
+            setData(name, value);
+        }
     };
 
     const onOptWilayahChange = (e) => {
@@ -59,14 +81,19 @@ const Search = ({
 
     useEffect(() => {
         const newData = {};
-        if (selectedBranch_id) {
-            newData.branch_id = selectedBranch_id;
-        }
-        if (selectedBulan) {
-            newData.bulan = selectedBulan;
-        }
-        if (selectedWilayah) {
-            newData.wilayah = selectedWilayah;
+
+        if (selectedSearchParam) {
+            newData[planTextName] = selectedSearchParam;
+        } else {
+            if (selectedBranch_id) {
+                newData.branch_id = selectedBranch_id;
+            }
+            if (selectedBulan) {
+                newData.bulan = selectedBulan;
+            }
+            if (selectedWilayah) {
+                newData.wilayah = selectedWilayah;
+            }
         }
 
         if (Object.keys(newData).length > 0) {
@@ -112,6 +139,17 @@ const Search = ({
                         nullValue={true}
                         options={wilayah}
                         onChange={onSearchChange}
+                    />
+                )}
+
+                {availablePlanText && (
+                    <TextInput
+                        type="text"
+                        className={"w-full lg:w-auto"}
+                        onChange={onSearchChange}
+                        name={planTextName}
+                        value={data[planTextName]}
+                        placeholder={planTextName}
                     />
                 )}
 

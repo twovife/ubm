@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssetMaster;
+use App\Models\AssetVehicle;
 use App\Models\Branch;
 use Carbon\Carbon;
 use Exception;
@@ -17,57 +18,92 @@ class AssetMasterController extends Controller
      */
     public function index_kendaraan()
     {
-        $wilayah = request()->wilayah ?? 1;
-        $branches = Branch::with(['asset_master' => function ($qq) {
-            $qq->distinct('asset_masters.id')
-                ->with(["asset_location" => function ($qw) {
-                    $qw->with('branch_before', 'branch');
+        $platNomor = request()->plat_nomor ? preg_replace('/\s+/', '', request()->plat_nomor) : null;
+        $wilayah =  $platNomor ? null : (request()->wilayah ?? 1);
+
+        // dd($wilayah);
+
+
+        if ($platNomor) {
+            $query_by_plat = AssetVehicle::with(['asset_master' => function ($master) {
+                $master->with(['asset_vehicle_payment', 'asset_location' => function ($location) {
+                    $location->with('branch', 'branch_before');
                 }]);
-        }, 'asset_master.asset_vehicle'])->whereHas('asset_master')->where('wilayah', $wilayah)->get();
+            }])->where(DB::raw('lower(plat_nomor)'), 'like', '%' . strtolower($platNomor) . '%')->get();
 
-        // dd($branches);
+            $result_by_plat = $query_by_plat->map(function ($aset) {
+                $latestPlace = $aset->asset_master->asset_location->first();
+                $isactive = $aset->asset_master->isactive == "yes" ? 1 : 2;
+                $keterangan = $aset->asset_master->isactive == "yes" ? ($latestPlace->branch_before ? "Pindahan Dari [$latestPlace->branch_before]" : "") : $aset->asset_master->nonactive_reason;
+                return [
+                    'id' => $aset->asset_master->id,
+                    'plat_nomor' => $aset->plat_nomor,
+                    'asset_name' => $aset->asset_master->asset_name,
+                    'wilayah' => $aset->asset_master->asset_location->first()->branch->wilayah,
+                    'unit' => $aset->asset_master->asset_location->first()->branch->unit,
+                    'tanggal_stnk' => $aset->tanggal_stnk,
+                    'nama_stnk' => $aset->nama_stnk,
+                    'tanggal_pajak_tahunan' => $aset->tanggal_pajak_tahunan,
+                    'keterangan' => $keterangan,
+                    'is_active' => $isactive,
+                ];
+            })->sortBy('unit')->sortBy('wilayah')->values();
 
-        $result = $branches->map(function ($branch) use ($wilayah) {
-            $total_asset = 0;
-            $total_non = 0;
-            return [
-                'branch_id' => $branch->id,
-                'branch' => $branch->unit,
+            // ddd($result_by_plat);
+        } else {
+            $branches = Branch::with(['asset_master' => function ($qq) {
+                $qq->distinct('asset_masters.id')
+                    ->with(["asset_location" => function ($qw) {
+                        $qw->with('branch_before', 'branch');
+                    }]);
+            }, 'asset_master.asset_vehicle'])->whereHas('asset_master')->where('wilayah', $wilayah)->get();
 
-                'datas' => $branch->asset_master->map(function ($aset) use ($branch, &$total_asset, &$total_non, $wilayah) {
-                    $latestPlace = $aset->asset_location->first();
-                    $branch_before = $latestPlace->branch_before?->unit;
-                    $isactive = $aset->isactive == "yes" ? ($latestPlace->branch->id == $branch->id ? 1 : 2) : 3;
-                    $keterangan = $isactive == 1 ? ($branch_before !== null ? "pindahan dari $branch_before" : "") : ($isactive == 2 ? "dipindahkan ke" . $latestPlace->branch->unit : $aset->nonactive_reason);
-                    $total_asset = $total_asset + ($isactive == 1 ? 1 : 0);
-                    $total_non = $total_non + ($isactive != 1 ? 1 : 0);
-                    return [
-                        'branch_id' => $branch->id,
-                        'wilayah' => $wilayah,
-                        'id' => $aset->id,
-                        'is_active' => $isactive,
-                        'keterangan' => $keterangan,
-                        'before' => $branch_before,
-                        'asset_name' => $aset->asset_name,
-                        'plat_nomor' => $aset->asset_vehicle->plat_nomor,
-                        'tanggal_stnk' => $aset->asset_vehicle->tanggal_stnk,
-                        'tanggal_pajak_tahunan' => $aset->asset_vehicle->tanggal_pajak_tahunan,
-                        'nama_stnk' => $aset->asset_vehicle->nama_stnk,
-                        'pengguna' => $latestPlace->pengguna
+            // dd($branches);
 
-                    ];
-                })->values(),
-                'total_asset_aktif' => $total_asset,
-                'total_asset_non_aktif' => $total_non,
-            ];
-        })->values();
+            $result = $branches->map(function ($branch) use ($wilayah) {
+                $total_asset = 0;
+                $total_non = 0;
+                return [
+                    'branch_id' => $branch->id,
+                    'branch' => $branch->unit,
+
+                    'datas' => $branch->asset_master->map(function ($aset) use ($branch, &$total_asset, &$total_non, $wilayah) {
+                        $latestPlace = $aset->asset_location->first();
+                        $branch_before = $latestPlace->branch_before?->unit;
+                        $isactive = $aset->isactive == "yes" ? ($latestPlace->branch->id == $branch->id ? 1 : 2) : 3;
+                        $keterangan = $isactive == 1 ? ($branch_before !== null ? "pindahan dari $branch_before" : "") : ($isactive == 2 ? "dipindahkan ke" . $latestPlace->branch->unit : $aset->nonactive_reason);
+                        $total_asset = $total_asset + ($isactive == 1 ? 1 : 0);
+                        $total_non = $total_non + ($isactive != 1 ? 1 : 0);
+                        return [
+                            'branch_id' => $branch->id,
+                            'wilayah' => $wilayah,
+                            'id' => $aset->id,
+                            'is_active' => $isactive,
+                            'keterangan' => $keterangan,
+                            'before' => $branch_before,
+                            'asset_name' => $aset->asset_name,
+                            'plat_nomor' => $aset->asset_vehicle->plat_nomor,
+                            'tanggal_stnk' => $aset->asset_vehicle->tanggal_stnk,
+                            'tanggal_pajak_tahunan' => $aset->asset_vehicle->tanggal_pajak_tahunan,
+                            'nama_stnk' => $aset->asset_vehicle->nama_stnk,
+                            'pengguna' => $latestPlace->pengguna
+
+                        ];
+                    })->values(),
+                    'total_asset_aktif' => $total_asset,
+                    'total_asset_non_aktif' => $total_non,
+                ];
+            })->values();
+        }
 
         // dd($result);
         return Inertia::render('DataAsset/Index', [
-            'datas' => $result,
-            "server_filter" => ['wilayah' => $wilayah, 'branch' => Branch::all()]
+            'datas' => $platNomor ? [] : $result,
+            'datas_by_plat_nomor' => $platNomor ? $result_by_plat : null,
+            "server_filter" => ['wilayah' => $wilayah, 'branch' => Branch::all(), 'search' => $platNomor]
         ]);
     }
+
 
     public function her_kendaraan()
     {
@@ -185,9 +221,7 @@ class AssetMasterController extends Controller
         return redirect()->back()->with('message', 'data berhasil diubah');
     }
 
-    public function getasset(Request $request)
-    {
-    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -196,6 +230,7 @@ class AssetMasterController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store_kendaraan(Request $request)
     {
 

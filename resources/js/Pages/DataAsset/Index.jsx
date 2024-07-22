@@ -1,35 +1,28 @@
-import ButtonWrapper from "@/Components/ButtonWrapper";
 import Card from "@/Components/Card";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Create from "./Create";
-import useServerFilter from "@/Hooks/useServerFilter";
 import {
-    createColumnHelper,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import FormatNumbering from "@/Components/FormatNumbering";
 import {
     Table,
     TableBody,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/shadcn/ui/table";
-import axios from "axios";
-import Loading from "@/Components/Loading";
-import dayjs from "dayjs";
 import Search from "@/Components/Search";
 import { FaPlay } from "react-icons/fa6";
 import DataDetail from "./DataDetail";
+import SearchByPlat from "./SearchByPlat";
+import { ScrollArea, ScrollBar } from "@/shadcn/ui/scroll-area";
 
-const Index = ({ datas, ...props }) => {
+const Index = ({ datas, datas_by_plat_nomor, ...props }) => {
     const [data, setData] = useState(() => datas);
     const [loading, setLoading] = useState(false);
 
@@ -45,8 +38,6 @@ const Index = ({ datas, ...props }) => {
     const [detailData, setDetailData] = useState();
 
     const getThisParentTr = (type, id, datas) => {
-        console.log(type);
-
         if (showNewTr == id && typeShow == type) {
             setDetailData();
             setShowNewTr();
@@ -113,6 +104,8 @@ const Index = ({ datas, ...props }) => {
                                 urlLink={route("asset.kendaraan.index")}
                                 localState={"asset_kendaraan_index"}
                                 FilterWilayahOnly={true}
+                                availablePlanText={true}
+                                planTextName="plat_nomor"
                             >
                                 <PrimaryButton
                                     type="button"
@@ -124,148 +117,168 @@ const Index = ({ datas, ...props }) => {
                         </Card.endContent>
                     </div>
                 </Card.subTitle>
-                <Table className="border text-xs lg:text-sm">
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup, i) => (
-                            <TableRow key={i}>
-                                {headerGroup.headers.map((header, i) => {
-                                    return (
-                                        <TableHead
+                {!datas_by_plat_nomor ? (
+                    <Table className="border text-xs lg:text-sm">
+                        <TableHeader>
+                            {table.getHeaderGroups().map((headerGroup, i) => (
+                                <TableRow key={i}>
+                                    {headerGroup.headers.map((header, i) => {
+                                        return (
+                                            <TableHead
+                                                key={i}
+                                                className={`text-center lg:whitespace-nowrap whitespace-pre-line duration-300 ease-linear ${
+                                                    showNewTr
+                                                        ? "bg-green-200 text-black"
+                                                        : ""
+                                                }`}
+                                            >
+                                                {flexRender(
+                                                    header.column.columnDef
+                                                        .header,
+                                                    header.getContext()
+                                                )}
+                                            </TableHead>
+                                        );
+                                    })}
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+                        <TableBody className="text-center">
+                            {table.getRowModel().rows.length ? (
+                                table.getRowModel().rows.map((row, i) => (
+                                    <React.Fragment key={i}>
+                                        <TableRow
                                             key={i}
-                                            className={`text-center lg:whitespace-nowrap whitespace-pre-line duration-300 ease-linear ${
-                                                showNewTr
-                                                    ? "bg-green-200 text-black"
-                                                    : ""
+                                            className={`${
+                                                row.original.is_active == 2
+                                                    ? `bg-red-100 even:bg-red-50 hover:bg-red-200`
+                                                    : ``
                                             }`}
                                         >
-                                            {flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                        </TableHead>
-                                    );
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody className="text-center">
-                        {table.getRowModel().rows.length
-                            ? table.getRowModel().rows.map((row, i) => (
-                                  <React.Fragment key={i}>
-                                      <TableRow
-                                          key={i}
-                                          className={`${
-                                              row.original.is_active == 2
-                                                  ? `bg-red-100 even:bg-red-50 hover:bg-red-200`
-                                                  : ``
-                                          }`}
-                                      >
-                                          {row
-                                              .getVisibleCells()
-                                              .map((cell, i) => (
-                                                  <TableCell
-                                                      key={i}
-                                                      className={`${cell.column.columnDef.className} w-1/3`}
-                                                  >
-                                                      {cell.column.columnDef
-                                                          .type ==
-                                                      "collapse" ? (
-                                                          <div className="flex w-full items-center justify-center gap-3">
-                                                              <button
-                                                                  onClick={() =>
-                                                                      getThisParentTr(
-                                                                          cell
-                                                                              .column
-                                                                              .columnDef
-                                                                              .dataColapse,
-                                                                          row
-                                                                              .original
-                                                                              .branch_id,
-                                                                          row
-                                                                              .original
-                                                                              .datas
-                                                                      )
-                                                                  }
-                                                                  className={`flex justify-center items-start hover:text-roman-500 ${
-                                                                      showNewTr ==
-                                                                          row
-                                                                              .original
-                                                                              .branch_id &&
-                                                                      typeShow ==
-                                                                          cell
-                                                                              .column
-                                                                              .columnDef
-                                                                              .dataColapse
-                                                                          ? `rotate-90 text-roman-500`
-                                                                          : ""
-                                                                  } `}
-                                                              >
-                                                                  <FaPlay />
-                                                              </button>
-                                                              <div>
-                                                                  {flexRender(
-                                                                      cell
-                                                                          .column
-                                                                          .columnDef
-                                                                          .cell,
-                                                                      cell.getContext()
-                                                                  )}
-                                                              </div>
-                                                          </div>
-                                                      ) : showNewTr ==
-                                                        row.original
-                                                            .branch_id ? (
-                                                          <div className="grid lg:grid-cols-2 grid-cols-1">
-                                                              {flexRender(
-                                                                  cell.column
-                                                                      .columnDef
-                                                                      .cell,
-                                                                  cell.getContext()
-                                                              )}
-                                                              {typeShow ==
-                                                              "non" ? (
-                                                                  <span className="ml-1 px-2 py-1 bg-red-400 text-white rounded-full text-xs">
-                                                                      Non Active
-                                                                  </span>
-                                                              ) : (
-                                                                  <span className="ml-1 px-2 py-1 bg-green-400 text-white rounded-full text-xs">
-                                                                      Active
-                                                                  </span>
-                                                              )}
-                                                          </div>
-                                                      ) : (
-                                                          flexRender(
-                                                              cell.column
-                                                                  .columnDef
-                                                                  .cell,
-                                                              cell.getContext()
-                                                          )
-                                                      )}
-                                                  </TableCell>
-                                              ))}
-                                      </TableRow>
-                                      {showNewTr == row.original.branch_id && (
-                                          <TableRow
-                                              key={`newrow${i}`}
-                                              className="p-0 hover:bg-transparent"
-                                          >
-                                              <TableCell
-                                                  colSpan="3"
-                                                  className="p-2 border-0"
-                                              >
-                                                  <div className="flex max-w-full relative overflow-auto w-full h-[50vh]">
-                                                      <DataDetail
-                                                          datas={detailData}
-                                                      />
-                                                  </div>
-                                              </TableCell>
-                                          </TableRow>
-                                      )}
-                                  </React.Fragment>
-                              ))
-                            : null}
-                    </TableBody>
-                </Table>
+                                            {row
+                                                .getVisibleCells()
+                                                .map((cell, i) => (
+                                                    <TableCell
+                                                        key={i}
+                                                        className={`${cell.column.columnDef.className} w-1/3`}
+                                                    >
+                                                        {cell.column.columnDef
+                                                            .type ==
+                                                        "collapse" ? (
+                                                            <div className="flex w-full items-center justify-center gap-3">
+                                                                <button
+                                                                    onClick={() =>
+                                                                        getThisParentTr(
+                                                                            cell
+                                                                                .column
+                                                                                .columnDef
+                                                                                .dataColapse,
+                                                                            row
+                                                                                .original
+                                                                                .branch_id,
+                                                                            row
+                                                                                .original
+                                                                                .datas
+                                                                        )
+                                                                    }
+                                                                    className={`flex justify-center items-start hover:text-roman-500 ${
+                                                                        showNewTr ==
+                                                                            row
+                                                                                .original
+                                                                                .branch_id &&
+                                                                        typeShow ==
+                                                                            cell
+                                                                                .column
+                                                                                .columnDef
+                                                                                .dataColapse
+                                                                            ? `rotate-90 text-roman-500`
+                                                                            : ""
+                                                                    } `}
+                                                                >
+                                                                    <FaPlay />
+                                                                </button>
+                                                                <div>
+                                                                    {flexRender(
+                                                                        cell
+                                                                            .column
+                                                                            .columnDef
+                                                                            .cell,
+                                                                        cell.getContext()
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        ) : showNewTr ==
+                                                          row.original
+                                                              .branch_id ? (
+                                                            <div className="grid lg:grid-cols-2 grid-cols-1">
+                                                                {flexRender(
+                                                                    cell.column
+                                                                        .columnDef
+                                                                        .cell,
+                                                                    cell.getContext()
+                                                                )}
+                                                                {typeShow ==
+                                                                "non" ? (
+                                                                    <span className="ml-1 px-2 py-1 bg-red-400 text-white rounded-full text-xs">
+                                                                        Non
+                                                                        Active
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="ml-1 px-2 py-1 bg-green-400 text-white rounded-full text-xs">
+                                                                        Active
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        ) : (
+                                                            flexRender(
+                                                                cell.column
+                                                                    .columnDef
+                                                                    .cell,
+                                                                cell.getContext()
+                                                            )
+                                                        )}
+                                                    </TableCell>
+                                                ))}
+                                        </TableRow>
+                                        {showNewTr ==
+                                            row.original.branch_id && (
+                                            <TableRow
+                                                key={`newrow${i}`}
+                                                className="p-0 hover:bg-transparent"
+                                            >
+                                                <TableCell
+                                                    colSpan="3"
+                                                    className="p-0 border-0"
+                                                >
+                                                    <div className="flex max-w-full relative overflow-auto w-full z-10 h-[50vh]">
+                                                        <div className="absolute top-0 w-full h-full z-20">
+                                                            <ScrollArea className="h-full w-full">
+                                                                <DataDetail
+                                                                    datas={
+                                                                        detailData
+                                                                    }
+                                                                />
+                                                                <ScrollBar orientation="horizontal" />
+                                                            </ScrollArea>
+                                                        </div>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </React.Fragment>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan="3">
+                                        Data Tidak Ada
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                ) : (
+                    <SearchByPlat datas={datas_by_plat_nomor} />
+                )}
             </Card>
             <Create open={onCreteaShow} onClosed={closedCreateHandle} />
         </Authenticated>

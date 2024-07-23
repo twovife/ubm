@@ -38,7 +38,7 @@ const Search = ({
                     const newData = { [name]: value };
 
                     for (const key in prevData) {
-                        if (key !== "search") {
+                        if (key !== name) {
                             newData[key] = "";
                         }
                     }

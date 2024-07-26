@@ -34,7 +34,8 @@ class AssetMasterController extends Controller
             $result_by_plat = $query_by_plat->map(function ($aset) {
                 $latestPlace = $aset->asset_master->asset_location->first();
                 $isactive = $aset->asset_master->isactive == "yes" ? 1 : 2;
-                $keterangan = $aset->asset_master->isactive == "yes" ? ($latestPlace->branch_before ? "Pindahan Dari [$latestPlace->branch_before]" : "") : $aset->asset_master->nonactive_reason;
+                $branch_before = $latestPlace->branch_before?->unit;
+                $keterangan = $aset->asset_master->isactive == "yes" ? ($latestPlace->branch_before ? "Pindahan Dari $branch_before" : "") : $aset->asset_master->nonactive_reason;
                 return [
                     'id' => $aset->asset_master->id,
                     'plat_nomor' => $aset->plat_nomor,

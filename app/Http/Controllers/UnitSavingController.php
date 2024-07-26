@@ -61,6 +61,7 @@ class UnitSavingController extends Controller
                 'id' => $item->id,
                 'bulan' => Carbon::create($item->transaction_date)->format('M Y'),
                 'transaction_date' => Carbon::create($item->transaction_date)->format('Y-m-d'),
+                'deletable' => $item->unit_saving_account_id == 1 ? true : false,
                 'type_transaksi' => $item->transaction_type == "TB"
                     ? "TABUNGAN 1JT"
                     : ($item->transaction_type == "BP"

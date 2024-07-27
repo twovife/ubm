@@ -89,6 +89,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/requestPinjamanUnit', 'requestPinjamanUnit')->name('requestPinjamanUnit');
             Route::get('/do', 'goro_do')->name('goro_do');
             Route::get('/requestDoUnit', 'requestDoUnit')->name('requestDoUnit');
+            Route::delete('/deleteTrans/{unitPaymentTransaction}', 'deleteTrans')->name('deleteTrans');
         });
     });
 

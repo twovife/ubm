@@ -54,12 +54,10 @@ const Create = ({
         e.preventDefault();
         // console.log(data);
         post(route("goroumrah.goro_create"), {
-            onSuccess: () => {
-                reset();
-                onClosed();
-                location.reload();
-            },
-            replace: true,
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => onClosed(),
+            onFinish: () => reset(),
         });
     };
 

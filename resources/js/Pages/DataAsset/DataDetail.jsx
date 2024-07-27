@@ -17,37 +17,46 @@ import {
 } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import Edit from "./Edit";
+import { usePage } from "@inertiajs/react";
 
-const DataDetail = ({ datas }) => {
-    const [data, setData] = useState(() => datas);
+const DataDetail = ({ branchShow, typeShow }) => {
+    const { datas } = usePage().props;
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        const filtered = datas.filter(
+            (item) => item.branch_id == branchShow
+        )?.[0]?.datas;
+        const filteredType = filtered.filter((item) =>
+            typeShow == "active" ? item.is_active === 1 : item.is_active !== 1
+        );
+        setData(filteredType);
+    }, [datas, typeShow, branchShow]);
 
     const [onEditShow, setOnEditShow] = useState(false);
     const [editData, setEditData] = useState();
     const showEditHandler = (data) => {
         setOnEditShow(true);
         setEditData(data);
-        // console.log(data);
     };
     const closedEditHandle = (e) => {
         setOnEditShow(false);
         setEditData();
     };
 
-    useEffect(() => {
-        setData(datas);
-    }, [datas]);
     const columns = useMemo(
         () => [
             {
                 accessorKey: "asset_name",
                 id: "asset_name",
+                type: "button",
                 cell: (info) => info.getValue(),
                 header: () => "Nama Aset",
             },
             {
                 accessorKey: "plat_nomor",
                 id: "plat_nomor",
-                type: "button",
+
                 cell: (info) => info.getValue(),
                 header: () => "Plat Nomor",
             },

@@ -22,7 +22,7 @@ import dayjs from "dayjs";
 import { FaPlay } from "react-icons/fa6";
 
 const DetailKasbon = ({ triggerId }) => {
-    const { server_filter } = usePage().props;
+    const { server_filter, datas } = usePage().props;
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showNewTr, setShowNewTr] = useState();
@@ -133,7 +133,7 @@ const DetailKasbon = ({ triggerId }) => {
         return () => {
             controller.abort();
         };
-    }, [triggerId]);
+    }, [triggerId, datas]);
 
     const table = useReactTable({
         data,

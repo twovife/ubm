@@ -34,6 +34,9 @@ const Index = ({ datas, ...props }) => {
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState(() => datas);
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
 
     const [showNewTr, setShowNewTr] = useState();
 
@@ -149,7 +152,7 @@ const Index = ({ datas, ...props }) => {
     // console.log(table.getRowModel().rows[0].getVisibleCells()[1]);
     return (
         <Authenticated loading={loading}>
-            <Card judul="Goro Umrah">
+            <Card judul="Kasbon Goro Umroh">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>

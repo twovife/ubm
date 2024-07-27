@@ -35,6 +35,9 @@ const Index = ({ datas, ...props }) => {
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState(() => datas);
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
 
     const [showNewTr, setShowNewTr] = useState();
 

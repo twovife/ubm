@@ -36,17 +36,22 @@ class AssetMasterController extends Controller
                 $isactive = $aset->asset_master->isactive == "yes" ? 1 : 2;
                 $branch_before = $latestPlace->branch_before?->unit;
                 $keterangan = $aset->asset_master->isactive == "yes" ? ($latestPlace->branch_before ? "Pindahan Dari $branch_before" : "") : $aset->asset_master->nonactive_reason;
+
+
+
                 return [
                     'id' => $aset->asset_master->id,
                     'plat_nomor' => $aset->plat_nomor,
                     'asset_name' => $aset->asset_master->asset_name,
                     'wilayah' => $aset->asset_master->asset_location->first()->branch->wilayah,
+                    'branch_id' => $aset->asset_master->asset_location->first()->branch_id,
                     'unit' => $aset->asset_master->asset_location->first()->branch->unit,
                     'tanggal_stnk' => $aset->tanggal_stnk,
                     'nama_stnk' => $aset->nama_stnk,
                     'tanggal_pajak_tahunan' => $aset->tanggal_pajak_tahunan,
                     'keterangan' => $keterangan,
                     'is_active' => $isactive,
+                    'pengguna' => $latestPlace->pengguna
                 ];
             })->sortBy('unit')->sortBy('wilayah')->values();
 
@@ -77,7 +82,7 @@ class AssetMasterController extends Controller
                         $total_non = $total_non + ($isactive != 1 ? 1 : 0);
                         return [
                             'branch_id' => $branch->id,
-                            'wilayah' => $wilayah,
+                            'wilayah' => $branch->wilayah,
                             'id' => $aset->id,
                             'is_active' => $isactive,
                             'keterangan' => $keterangan,

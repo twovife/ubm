@@ -21,7 +21,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa6";
 
 const DetailPerUnitGoro = ({ triggerId }) => {
-    const { server_filter } = usePage().props;
+    const { server_filter, datas } = usePage().props;
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showNewTr, setShowNewTr] = useState();
@@ -97,7 +97,7 @@ const DetailPerUnitGoro = ({ triggerId }) => {
         return () => {
             controller.abort();
         };
-    }, [triggerId]);
+    }, [triggerId, datas]);
 
     const table = useReactTable({
         data,

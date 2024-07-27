@@ -9,11 +9,14 @@ use App\Models\UnitPaymentTransaction;
 use App\Models\UnitSaving;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Response;
 
 class UnitPaymentController extends Controller
 {
@@ -21,7 +24,7 @@ class UnitPaymentController extends Controller
 
 
 
-    public function goro_index()
+    public function goro_index(): Response
     {
         $tanggal = Carbon::parse(request()->bulan ?? Carbon::now());
         $requestFilter = new \stdClass;
@@ -57,7 +60,6 @@ class UnitPaymentController extends Controller
                 'sisa_goro' => (100000000 * $count_wilayah) - ($sumBefore + $sumOn),
             ];
         })->sortBy('wilayah')->values();
-
 
 
         Session::put('goro_index_wilayah_show', ['wilayah' => request()->backparam]);
@@ -161,7 +163,7 @@ class UnitPaymentController extends Controller
     }
 
 
-    public function goro_create(Request $request)
+    public function goro_create(Request $request): RedirectResponse
     {
         // $request->all();
         $validate = $request->validate([
@@ -204,8 +206,7 @@ class UnitPaymentController extends Controller
         $queryParams['backparam'] = $request->unit_payment_id == 1 ? $branch->wilayah : ($request->unit_payment_id == 2 ? "" : $request->branch_id);
         $newUrl = url()->to($urlComponents['path']) . '?' . http_build_query($queryParams);
 
-
-        return redirect($newUrl)->with('message', 'Data Berhasil disimpan');
+        return Redirect::to($newUrl)->with('message', 'Data Berhasil disimpan');
     }
 
     public function goro_transaksi(Request $request)
@@ -233,6 +234,7 @@ class UnitPaymentController extends Controller
             'transaction_date' => $requestFilter->startOfMonth,
             'keterangan' => "Saldo Sebelumnya",
             'unit' => null,
+            'debit_goro' => null,
             'debit' => null,
             'kredit' => null,
             'saldo' => $saldoBefore,
@@ -245,10 +247,12 @@ class UnitPaymentController extends Controller
             return [
                 'id' => $item->id,
                 'bulan' =>  Carbon::parse($item->transaction_date)->format('M Y'),
+                'transaction' =>  $item->unit_payment_id == 1 ? "GORO" : ($item->unit_payment_id == 2 ? "LAIN" : ($item->unit_payment_id == 3 ? "DO" : "PINJAMAN")),
                 'transaction_date' =>  Carbon::parse($item->transaction_date)->format('Y-m-d'),
                 'keterangan' => $item->remark ?? null,
                 'unit' => $item->branch->unit ?? null,
-                'debit' => $item->nominal >= 0 ? $item->nominal : null,
+                'debit_goro' => ($item->unit_payment_id == 1 && $item->nominal >= 0) ? $item->nominal : null,
+                'debit' => ($item->unit_payment_id != 1 && $item->nominal >= 0) ? $item->nominal : null,
                 'kredit' => $item->nominal < 0 ? (-1 * $item->nominal) : null,
                 'saldo' => $saldo_before_counting
             ];
@@ -419,5 +423,20 @@ class UnitPaymentController extends Controller
         });
 
         return response()->json(['data' => $result]);
+    }
+
+    public function deleteTrans(UnitPaymentTransaction $unitPaymentTransaction): RedirectResponse
+    {
+        try {
+            DB::beginTransaction();
+            $unitPaymentTransaction->delete();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors('Data Gagal Disimpan Mohon Muat Ulang Halaman');
+        }
+
+        $previousUrl = url()->previous();
+        return  Redirect::to($previousUrl)->with('message', 'Data Berhasil disimpan');
     }
 }

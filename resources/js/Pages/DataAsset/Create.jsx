@@ -72,14 +72,11 @@ const Create = ({
 
     const onSubmitForm = (e) => {
         e.preventDefault();
-        // console.log(data);
         post(route("asset.kendaraan.store"), {
-            onSuccess: () => {
-                reset();
-                onClosed();
-                location.reload();
-            },
-            replace: true,
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => onClosed(),
+            onFinish: () => reset(),
         });
     };
 

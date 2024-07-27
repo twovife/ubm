@@ -1,7 +1,7 @@
 import Card from "@/Components/Card";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Create from "./Create";
 import {
     flexRender,
@@ -24,6 +24,10 @@ import { ScrollArea, ScrollBar } from "@/shadcn/ui/scroll-area";
 
 const Index = ({ datas, datas_by_plat_nomor, ...props }) => {
     const [data, setData] = useState(() => datas);
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
+
     const [loading, setLoading] = useState(false);
 
     const [onCreteaShow, setOnCreteaShow] = useState(false);
@@ -35,19 +39,13 @@ const Index = ({ datas, datas_by_plat_nomor, ...props }) => {
     };
     const [showNewTr, setShowNewTr] = useState();
     const [typeShow, setTypeShow] = useState();
-    const [detailData, setDetailData] = useState();
 
-    const getThisParentTr = (type, id, datas) => {
+    const getThisParentTr = (type, id) => {
         if (showNewTr == id && typeShow == type) {
-            setDetailData();
             setShowNewTr();
             setTypeShow();
         } else {
             setShowNewTr(id);
-            const data = datas.filter((item) =>
-                type == "active" ? item.is_active === 1 : item.is_active !== 1
-            );
-            setDetailData(data);
             setTypeShow(type);
         }
     };
@@ -175,10 +173,7 @@ const Index = ({ datas, datas_by_plat_nomor, ...props }) => {
                                                                                 .dataColapse,
                                                                             row
                                                                                 .original
-                                                                                .branch_id,
-                                                                            row
-                                                                                .original
-                                                                                .datas
+                                                                                .branch_id
                                                                         )
                                                                     }
                                                                     className={`flex justify-center items-start hover:text-roman-500 ${
@@ -254,8 +249,11 @@ const Index = ({ datas, datas_by_plat_nomor, ...props }) => {
                                                         <div className="absolute top-0 w-full h-full z-20">
                                                             <ScrollArea className="h-full w-full">
                                                                 <DataDetail
-                                                                    datas={
-                                                                        detailData
+                                                                    branchShow={
+                                                                        showNewTr
+                                                                    }
+                                                                    typeShow={
+                                                                        typeShow
                                                                     }
                                                                 />
                                                                 <ScrollBar orientation="horizontal" />

@@ -2,7 +2,7 @@ import ButtonWrapper from "@/Components/ButtonWrapper";
 import Card from "@/Components/Card";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     Table,
     TableBody,
@@ -25,10 +25,18 @@ import dayjs from "dayjs";
 import FormatNumbering from "@/Components/FormatNumbering";
 import Search from "@/Components/Search";
 import CreateTransaksi from "./Components/CreateTransaksi";
+import { FaTrash } from "react-icons/fa6";
+import DeleteTransaksi from "./Components/DeleteTransaksi";
+import { router } from "@inertiajs/react";
 
 const Transaksi = ({ datas, ...props }) => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(() => datas);
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
+
+    console.log(data.length);
 
     const [onOpenCreate, setOnOpenCreate] = useState(false);
     const handleOpenCreate = (e) => {
@@ -38,15 +46,27 @@ const Transaksi = ({ datas, ...props }) => {
         setOnOpenCreate(false);
     };
 
+    const [onOpenDelete, setOnOpenDelete] = useState(false);
+    const [triggeredDeletedId, setTriggeredDeletedId] = useState("");
+    const handleOpenDelete = (id) => {
+        setOnOpenDelete(true);
+        setTriggeredDeletedId(id);
+    };
+    const handleCloseDelete = (e) => {
+        setOnOpenDelete(false);
+    };
+
     const calculateTotals = (data) => {
         return data.reduce(
             (acc, item) => {
+                acc.debitGoro += item.debit_goro || 0;
                 acc.totalDebit += item.debit || 0;
                 acc.totalKredit += item.kredit || 0;
 
                 return acc;
             },
             {
+                debitGoro: 0,
                 totalDebit: 0,
                 totalKredit: 0,
             }
@@ -58,12 +78,11 @@ const Transaksi = ({ datas, ...props }) => {
     const columns = useMemo(
         () => [
             {
-                accessorKey: "bulan",
-                id: "bulan",
-                cell: (info) => (
-                    <div className="text-center">{info.getValue()}</div>
-                ),
-                header: () => "Bulan",
+                accessorKey: "transaction",
+                id: "transaction",
+                type: "action",
+                cell: (info) => info.getValue(),
+                header: () => "Type",
             },
 
             {
@@ -93,6 +112,13 @@ const Transaksi = ({ datas, ...props }) => {
                     <div className="text-center">{info.getValue()}</div>
                 ),
                 header: () => "Keterangan",
+            },
+            {
+                accessorKey: "debit_goro",
+                id: "debit_goro",
+                cell: (info) => <FormatNumbering value={info.getValue()} />,
+                header: () => "Debit Goro",
+                footer: (info) => <FormatNumbering value={totals.debitGoro} />,
             },
             {
                 accessorKey: "debit",
@@ -156,12 +182,12 @@ const Transaksi = ({ datas, ...props }) => {
                 </Card.subTitle>
                 <Table className="border">
                     <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
+                        {table.getHeaderGroups().map((headerGroup, i) => (
+                            <TableRow key={i}>
+                                {headerGroup.headers.map((header, i) => {
                                     return (
                                         <TableHead
-                                            key={header.id}
+                                            key={i}
                                             className="text-center"
                                         >
                                             {flexRender(
@@ -177,31 +203,73 @@ const Transaksi = ({ datas, ...props }) => {
                     <TableBody>
                         {table.getRowModel().rows.length
                             ? table.getRowModel().rows.map((row, i) => (
-                                  <React.Fragment key={row.id}>
-                                      <TableRow key={row.id} id={row.id}>
-                                          {row.getVisibleCells().map((cell) => (
-                                              <TableCell
-                                                  key={cell.id}
-                                                  className={
-                                                      cell.column.columnDef
-                                                          .className
-                                                  }
-                                              >
-                                                  {flexRender(
-                                                      cell.column.columnDef
-                                                          .cell,
-                                                      cell.getContext()
-                                                  )}
-                                              </TableCell>
-                                          ))}
+                                  <React.Fragment key={i}>
+                                      <TableRow key={i}>
+                                          {row
+                                              .getVisibleCells()
+                                              .map((cell, i) => (
+                                                  <TableCell
+                                                      key={i}
+                                                      className={
+                                                          cell.column.columnDef
+                                                              .className
+                                                      }
+                                                  >
+                                                      {cell.column.columnDef
+                                                          .type == "action" ? (
+                                                          <div className="flex gap-2 items-center">
+                                                              <div className="flex-1 text-end">
+                                                                  {flexRender(
+                                                                      cell.row
+                                                                          .original
+                                                                          .transaction
+                                                                  ) ==
+                                                                  "LAIN" ? (
+                                                                      <button
+                                                                          className="bg-red-500 text-white rounded p-2"
+                                                                          onClick={() =>
+                                                                              handleOpenDelete(
+                                                                                  cell
+                                                                                      .row
+                                                                                      .original
+                                                                                      .id
+                                                                              )
+                                                                          }
+                                                                      >
+                                                                          <FaTrash />
+                                                                      </button>
+                                                                  ) : (
+                                                                      "2"
+                                                                  )}
+                                                              </div>
+                                                              <div className="flex-1 text-start">
+                                                                  {flexRender(
+                                                                      cell
+                                                                          .column
+                                                                          .columnDef
+                                                                          .cell,
+                                                                      cell.getContext()
+                                                                  )}
+                                                              </div>
+                                                          </div>
+                                                      ) : (
+                                                          flexRender(
+                                                              cell.column
+                                                                  .columnDef
+                                                                  .cell,
+                                                              cell.getContext()
+                                                          )
+                                                      )}
+                                                  </TableCell>
+                                              ))}
                                       </TableRow>
                                   </React.Fragment>
                               ))
                             : null}
                     </TableBody>
                     <TableFooter>
-                        {table.getFooterGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
+                        {table.getFooterGroups().map((headerGroup, i) => (
+                            <TableRow key={i}>
                                 {headerGroup.headers.map((header) => {
                                     return (
                                         <TableHead
@@ -221,6 +289,11 @@ const Transaksi = ({ datas, ...props }) => {
                 </Table>
             </Card>
             <CreateTransaksi open={onOpenCreate} onClosed={handleCloseCreate} />
+            <DeleteTransaksi
+                open={onOpenDelete}
+                onClosed={handleCloseDelete}
+                triggeredId={triggeredDeletedId}
+            />
         </Authenticated>
     );
 };

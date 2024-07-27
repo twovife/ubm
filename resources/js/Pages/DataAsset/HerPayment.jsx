@@ -32,24 +32,17 @@ const HerPayment = ({ open, onClosed, triggeredId }) => {
     const onSubmitForm = (e) => {
         e.preventDefault();
         put(route("asset.kendaraan.herpayment", triggeredId), {
-            onSuccess: () => {
-                reset();
-                onClosed();
-                location.reload();
-            },
-            replace: true,
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => onClosed(),
+            onFinish: () => reset(),
         });
-    };
-
-    const closedTheModal = () => {
-        onClosed();
-        reset();
     };
 
     return (
         <Dialog
             open={open}
-            onOpenChange={(open) => (open == true ? "" : closedTheModal())}
+            onOpenChange={(open) => (open == true ? "" : onClosed())}
             className="text-sm"
         >
             <Loading show={processing} />

@@ -26,6 +26,7 @@ const Edit = ({ open, onClosed, dataDetail }) => {
         asset_category_id: 1,
         asset_detail: "", //
         isactive: "yes",
+        edit: "edit",
 
         plat_nomor: "", //
         tanggal_stnk: "", //
@@ -40,8 +41,14 @@ const Edit = ({ open, onClosed, dataDetail }) => {
         keterangan: "", //
     });
 
+    useEffect(() => {
+        setData((prevData) => ({ ...prevData, ...dataDetail }));
+    }, [dataDetail]);
+
     const { wilayah, selectedWilayah, onWilayahChangeHandler, filteredBranch } =
         useServerFilter({ propsWilayah: data.wilayah });
+
+    console.log(selectedWilayah);
 
     const onInputChange = (e) => {
         const { value, name } = e.target;
@@ -61,24 +68,17 @@ const Edit = ({ open, onClosed, dataDetail }) => {
         setData(name, value);
     };
 
-    useEffect(() => {
-        setData({ ...dataDetail });
-    }, [dataDetail]);
-
     const onSubmitForm = (e) => {
         e.preventDefault();
-        console.log(data);
         // // console.log(data);
         put(route("asset.kendaraan.update", data.id), {
-            onSuccess: () => {
-                reset();
-                onClosed();
-                location.reload();
-            },
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => onClosed(),
+            onFinish: () => reset(),
             replace: true,
         });
     };
-
     return (
         <Dialog
             open={open}
@@ -111,7 +111,7 @@ const Edit = ({ open, onClosed, dataDetail }) => {
                                         className="w-full inline-block"
                                         onChange={onInputChange}
                                         value={data.asset_name}
-                                        placeHolder="ex: Supra Fit 125"
+                                        placeholder="ex: Supra Fit 125"
                                         required
                                     />
                                     <InputError
@@ -130,7 +130,7 @@ const Edit = ({ open, onClosed, dataDetail }) => {
                                         className="w-full inline-block"
                                         onChange={onInputChange}
                                         value={data.plat_nomor}
-                                        placeHolder="AG1010HX tanpa spasi "
+                                        placeholder="AG1010HX tanpa spasi "
                                         required
                                     />
                                     <InputError
@@ -150,7 +150,7 @@ const Edit = ({ open, onClosed, dataDetail }) => {
                                         className="w-full inline-block"
                                         onChange={onInputChange}
                                         value={data.asset_detail}
-                                        placeHolder="Warna Putih"
+                                        placeholder="Warna Putih"
                                     />
                                     <InputError
                                         message={errors.asset_detail}
@@ -186,7 +186,7 @@ const Edit = ({ open, onClosed, dataDetail }) => {
                                         className="w-full inline-block"
                                         onChange={onInputChange}
                                         value={data.tanggal_stnk}
-                                        placeHolder="Warna Putih"
+                                        placeholder="Warna Putih"
                                         required
                                     />
                                     <InputError
@@ -207,7 +207,7 @@ const Edit = ({ open, onClosed, dataDetail }) => {
                                         className="w-full inline-block"
                                         onChange={onInputChange}
                                         value={data.tanggal_pajak_tahunan}
-                                        placeHolder="Warna Putih"
+                                        placeholder="Warna Putih"
                                         required
                                     />
                                     <InputError
@@ -331,7 +331,7 @@ const Edit = ({ open, onClosed, dataDetail }) => {
                                                 className="w-full inline-block"
                                                 onChange={onInputChange}
                                                 value={data.pengguna}
-                                                placeHolder="Mantri 1 / Admin"
+                                                placeholder="Mantri 1 / Admin"
                                                 required
                                             />
                                             <InputError
@@ -372,7 +372,7 @@ const Edit = ({ open, onClosed, dataDetail }) => {
                                                 className="w-full inline-block"
                                                 onChange={onInputChange}
                                                 value={data.nonactive_date}
-                                                placeHolder="Warna Putih"
+                                                placeholder="Warna Putih"
                                                 required
                                             />
                                             <InputError
@@ -391,7 +391,7 @@ const Edit = ({ open, onClosed, dataDetail }) => {
                                                 className="w-full inline-block"
                                                 onChange={onInputChange}
                                                 value={data.nonactive_reason}
-                                                placeHolder="Hilang / Rusak"
+                                                placeholder="Hilang / Rusak"
                                                 required
                                             />
                                             <InputError

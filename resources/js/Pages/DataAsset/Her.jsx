@@ -35,15 +35,12 @@ const Her = ({ datas, ...props }) => {
         setOnCreteaShow(false);
     };
     const [showNewTr, setShowNewTr] = useState();
-    const [detailData, setDetailData] = useState();
 
     const getThisParentTr = (id, datas) => {
         if (showNewTr == id) {
-            setDetailData();
             setShowNewTr();
         } else {
             setShowNewTr(id);
-            setDetailData(datas);
         }
     };
 
@@ -218,8 +215,8 @@ const Her = ({ datas, ...props }) => {
                                                       <div className="absolute top-0 w-full h-full z-20">
                                                           <ScrollArea className="h-full w-full">
                                                               <DetailHer
-                                                                  datas={
-                                                                      detailData
+                                                                  branchShow={
+                                                                      showNewTr
                                                                   }
                                                               />
                                                               <ScrollBar orientation="horizontal" />

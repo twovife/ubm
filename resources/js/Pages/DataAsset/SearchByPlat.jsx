@@ -20,6 +20,9 @@ import Edit from "./Edit";
 
 const SearchByPlat = ({ datas }) => {
     const [data, setData] = useState(() => datas);
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
 
     const [onEditShow, setOnEditShow] = useState(false);
     const [editData, setEditData] = useState();

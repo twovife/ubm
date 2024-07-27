@@ -31,6 +31,9 @@ const Index = ({ datas, unit_show, ...props }) => {
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState(() => datas);
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
 
     const [showNewTr, setShowNewTr] = useState();
 
@@ -110,15 +113,11 @@ const Index = ({ datas, unit_show, ...props }) => {
 
     useEffect(() => {
         getThisParentTr(parseInt(unit_show?.branch));
-    }, [unit_show]);
-
-    useEffect(() => {
-        console.log(data);
-    }, [data]);
+    }, []);
 
     return (
         <Authenticated loading={loading}>
-            <Card judul="Goro Umrah">
+            <Card judul="Stor DO Goro Umrah">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>

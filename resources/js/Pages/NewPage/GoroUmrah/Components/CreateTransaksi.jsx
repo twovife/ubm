@@ -40,24 +40,17 @@ const CreateTransaksi = ({ open, onClosed }) => {
     const onSubmitForm = (e) => {
         e.preventDefault();
         post(route("goroumrah.goro_create"), {
-            onSuccess: () => {
-                reset();
-                onClosed();
-                location.reload();
-            },
-            replace: true,
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => onClosed(),
+            onFinish: () => reset(),
         });
-    };
-
-    const onClosedModal = (e) => {
-        onClosed();
-        reset();
     };
 
     return (
         <Dialog
             open={open}
-            onOpenChange={(open) => (open == true ? "" : onClosedModal())}
+            onOpenChange={(open) => (open == true ? "" : onClosed())}
             className="text-sm"
         >
             <Loading show={processing} />

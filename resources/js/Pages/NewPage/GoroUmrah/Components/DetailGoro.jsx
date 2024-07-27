@@ -21,11 +21,11 @@ import axios from "axios";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa6";
 import DetailPerUnitGoro from "./DetailPerUnitGoro";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import Create from "./Create";
 
 const DetailGoro = ({ triggerId }) => {
-    const { server_filter } = usePage().props;
+    const { server_filter, datas } = usePage().props;
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showNewTr, setShowNewTr] = useState();
@@ -145,7 +145,7 @@ const DetailGoro = ({ triggerId }) => {
         return () => {
             controller.abort();
         };
-    }, [triggerId]);
+    }, [triggerId, datas]);
 
     const table = useReactTable({
         data,

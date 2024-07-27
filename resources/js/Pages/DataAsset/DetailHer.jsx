@@ -19,9 +19,20 @@ import {
 import dayjs from "dayjs";
 import Edit from "./Edit";
 import HerPayment from "./HerPayment";
+import { usePage } from "@inertiajs/react";
 
-const DetailHer = ({ datas }) => {
-    const [data, setData] = useState(() => datas);
+const DetailHer = ({ branchShow }) => {
+    console.log(branchShow);
+    const { datas } = usePage().props;
+    const [data, setData] = useState([]);
+    console.log(data);
+
+    useEffect(() => {
+        const filtered = datas.filter((item) => item.id == branchShow)?.[0]
+            ?.datas;
+        setData(filtered);
+    }, [datas, branchShow]);
+
     const [onEditShow, setOnEditShow] = useState(false);
     const [triggeredId, setTriggeredId] = useState();
 
@@ -35,10 +46,6 @@ const DetailHer = ({ datas }) => {
         setOnEditShow(false);
         setTriggeredId();
     };
-
-    useEffect(() => {
-        setData(datas);
-    }, [datas]);
 
     const columns = useMemo(
         () => [

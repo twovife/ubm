@@ -8,8 +8,12 @@ function useServerFilter({ propsWilayah = "", ...props } = {}) {
         server_filter?.search ?? null
     );
     const [selectedWilayah, setSelectedWilayah] = useState(
-        server_filter?.wilayah ?? propsWilayah
+        server_filter?.wilayah ?? ""
     );
+
+    useEffect(() => {
+        propsWilayah !== "" && setSelectedWilayah(propsWilayah);
+    }, [propsWilayah]);
 
     // dipakai jika hanya tanpa mengganti request branch_id
     const [selectedBranch_id, setSelectedBranch_id] = useState(

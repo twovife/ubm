@@ -148,6 +148,49 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                       active: route().current("bonpriv.indexlunas"),
                   },
               ];
+
+    const menu3 =
+        auth.user.username == "suci"
+            ? [
+                  {
+                      id: "1",
+                      href: route("goroumrah.goro_transaksi"),
+                      name: "Transaksi Goro",
+                      active: route().current("goroumrah.goro_transaksi"),
+                  },
+                  {
+                      id: "2",
+                      href: route("goroumrah.goro_index"),
+                      name: "Iuran Goro Umroh",
+                      active: route().current("goroumrah.goro_index"),
+                  },
+                  {
+                      id: "3",
+                      href: route("goroumrah.goro_pinjaman"),
+                      name: "Pinjaman Goro",
+                      active: route().current("goroumrah.goro_pinjaman"),
+                  },
+                  {
+                      id: "3",
+                      href: route("goroumrah.goro_do"),
+                      name: "Stor DO",
+                      active: route().current("goroumrah.goro_do"),
+                  },
+              ]
+            : [
+                  {
+                      id: "2",
+                      href: route("goroumrah.goro_index"),
+                      name: "Iuran Goro Umroh",
+                      active: route().current("goroumrah.goro_index"),
+                  },
+                  {
+                      id: "3",
+                      href: route("goroumrah.goro_pinjaman"),
+                      name: "Pinjaman Goro",
+                      active: route().current("goroumrah.goro_pinjaman"),
+                  },
+              ];
     return (
         <aside
             className={`${
@@ -251,36 +294,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                         active={route().current("goroumrah.*")}
                         show={collapse == 5}
                         title={`Goro Umroh `}
-                        lists={[
-                            {
-                                id: "1",
-                                href: route("goroumrah.goro_transaksi"),
-                                name: "Transaksi Goro",
-                                active: route().current(
-                                    "goroumrah.goro_transaksi"
-                                ),
-                            },
-                            {
-                                id: "2",
-                                href: route("goroumrah.goro_index"),
-                                name: "Iuran Goro Umroh",
-                                active: route().current("goroumrah.goro_index"),
-                            },
-                            {
-                                id: "3",
-                                href: route("goroumrah.goro_pinjaman"),
-                                name: "Pinjaman Goro",
-                                active: route().current(
-                                    "goroumrah.goro_pinjaman"
-                                ),
-                            },
-                            {
-                                id: "3",
-                                href: route("goroumrah.goro_do"),
-                                name: "Stor DO",
-                                active: route().current("goroumrah.goro_do"),
-                            },
-                        ]}
+                        lists={menu3}
                     />
 
                     <SidebarMenuButton

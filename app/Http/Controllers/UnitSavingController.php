@@ -8,8 +8,10 @@ use App\Models\UnitSaving;
 use App\Models\UnitSavingAccount;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
@@ -61,7 +63,7 @@ class UnitSavingController extends Controller
                 'id' => $item->id,
                 'bulan' => Carbon::create($item->transaction_date)->format('M Y'),
                 'transaction_date' => Carbon::create($item->transaction_date)->format('Y-m-d'),
-                'deletable' => $item->unit_saving_account_id == 1 ? true : false,
+                'deletable' => $item->unit_saving_account_id == 1 ? "true" : "false",
                 'type_transaksi' => $item->transaction_type == "TB"
                     ? "TABUNGAN 1JT"
                     : ($item->transaction_type == "BP"
@@ -201,7 +203,7 @@ class UnitSavingController extends Controller
         return Inertia::render('UnitSaving/Index', [
             'datas' => $data_perwilayah,
             'batch_datas' => $data_perunit,
-            'server_filter' => $sessionValue
+            'server_filter' => $sessionValue,
         ]);
     }
 
@@ -880,5 +882,20 @@ class UnitSavingController extends Controller
 
 
         return redirect()->back()->with('message', 'Data berhasil ditambahkan');
+    }
+
+    public function delete_mutation(UnitSaving $unitSaving): RedirectResponse
+    {
+        try {
+            DB::beginTransaction();
+            $unitSaving->delete();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors('Data Gagal Disimpan Mohon Muat Ulang Halaman');
+        }
+
+        $previousUrl = url()->previous();
+        return  Redirect::to($previousUrl)->with('message', 'Data Berhasil disimpan');
     }
 }

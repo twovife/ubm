@@ -1,164 +1,282 @@
 import DefaultTable from "@/Components/DefaultTable";
 import useFilter from "@/Hooks/useFilter";
-import { Link } from "@inertiajs/react";
-import React from "react";
+import { Link, usePage } from "@inertiajs/react";
+import React, { useEffect, useMemo, useState } from "react";
 import { NumericFormat } from "react-number-format";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/shadcn/ui/table";
 
-const TabelUnit = ({ data, loading, setLoading }) => {
-    const datas = data.data;
-    console.log(datas);
-    const { returnedData, totals } = useFilter(datas, 100, "unitsaving_index");
-    // console.log(returnedData);
+import {
+    createColumnHelper,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    useReactTable,
+} from "@tanstack/react-table";
+import FormatNumbering from "@/Components/FormatNumbering";
+import Create from "../Create";
 
-    const headers = [
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Action",
-                column: "no",
-                type_date: "text",
+const TabelUnit = ({ triggeredWilayah, loading, setLoading }) => {
+    const { batch_datas } = usePage().props;
+    // console.log(batch_datas);
+    const [data, setData] = useState([]);
+
+    const [onOpenCreate, setOnOpenCreate] = useState(false);
+    const [triggeredBranchId, setTriggeredBranchId] = useState("");
+    const [triggeredBranch, setTriggeredBranch] = useState("");
+    const handleOpenCreate = (id, branch) => {
+        setOnOpenCreate(true);
+        setTriggeredBranchId(id);
+        setTriggeredBranch(branch);
+    };
+    const handleCloseCreate = (e) => {
+        setOnOpenCreate(false);
+        setTriggeredBranch("");
+    };
+
+    useEffect(() => {
+        const filtered = batch_datas.filter(
+            (item) => item.wilayah == triggeredWilayah
+        )?.[0]?.data;
+        setData(filtered);
+    }, [triggeredWilayah, batch_datas]);
+
+    const calculateTotals = (data) => {
+        return data.reduce(
+            (acc, item) => {
+                acc.total += item.total || 0;
+
+                return acc;
             },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Unit",
-                column: "unit",
-                type_date: "text",
+            {
+                total: 0,
+            }
+        );
+    };
+
+    const totals = calculateTotals(data);
+
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: "button_type",
+                id: "button_type",
+                type: "action",
+                cell: (info) => info.getValue(),
+                header: () => "Action",
             },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Total",
-                column: "total",
-                class_name: "whitespace-nowrap",
-                type_date: "text",
+            {
+                accessorKey: "unit",
+                id: "unit",
+                cell: (info) => info.getValue(),
+                header: () => "Unit",
             },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Keterangan",
-                column: "tanggungan",
-                class_name: "whitespace-nowrap",
-                type_date: "text",
+            {
+                accessorKey: "total",
+                id: "total",
+                cell: (info) => <FormatNumbering value={info.getValue()} />,
+                header: () => "Total",
+                footer: (info) => (
+                    <FormatNumbering value={totals.totalNominal} />
+                ),
             },
-        },
-    ];
+            {
+                accessorKey: "tanggungan",
+                id: "tanggungan",
+                cell: (info) => info.getValue(),
+                header: () => "Keterangan",
+            },
+        ],
+        []
+    );
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    });
 
     return (
-        <DefaultTable>
-            <DefaultTable.thead>
-                {headers.map((item, key) => (
-                    <DefaultTable.th
-                        key={key}
-                        type={item.type}
-                        headers={item.headers}
-                    />
+        <Table className="border">
+            <Create
+                branch={triggeredBranch}
+                branchId={triggeredBranchId}
+                open={onOpenCreate}
+                onClosed={handleCloseCreate}
+            />
+            <TableHeader>
+                {table.getHeaderGroups().map((headerGroup, i) => (
+                    <TableRow key={i}>
+                        {headerGroup.headers.map((header, i) => {
+                            return (
+                                <TableHead key={i} className="text-center">
+                                    {flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext()
+                                    )}
+                                </TableHead>
+                            );
+                        })}
+                    </TableRow>
                 ))}
-            </DefaultTable.thead>
-            <DefaultTable.tbody>
-                {returnedData?.map((item, key) => (
-                    <DefaultTable.tr key={key}>
-                        <DefaultTable.td className={`text-center`}>
-                            <div className="flex justify-start items-center gap-3">
-                                {item.button_type == 2 ? (
-                                    <Link
-                                        href={route(
-                                            "unitsaving.create",
-                                            item.branch_id
-                                        )}
-                                        className="px-2 py-1 rounded-lg bg-green-500 text-white"
-                                    >
-                                        Baru
-                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
-                                    </Link>
-                                ) : item.button_type == 3 ? (
-                                    <Link
-                                        href={route(
-                                            "unitsaving.savingdetails",
-                                            item.id
-                                        )}
-                                        className="px-2 py-1 rounded-lg bg-gray-500 text-white"
-                                    >
-                                        Tutup
-                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
-                                    </Link>
-                                ) : item.button_type == 4 ? (
-                                    <div className="px-2 py-1 rounded-lg">
-                                        Non Aktif
-                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
-                                    </div>
-                                ) : item.button_type == 1 ? (
-                                    <Link
-                                        href={route(
-                                            "unitsaving.savingdetails",
-                                            item.id
-                                        )}
-                                        className="px-2 py-1 rounded-lg bg-indigo-500 text-white"
-                                    >
-                                        Setor
-                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
-                                    </Link>
-                                ) : item.button_type == 5 ? (
-                                    <Link
-                                        href={route(
-                                            "unitsaving.savingdetails",
-                                            item.id
-                                        )}
-                                        className="px-2 py-1 rounded-lg bg-amber-500 text-white"
-                                    >
-                                        Nihil
-                                        {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
-                                    </Link>
-                                ) : (
-                                    "invalid"
-                                )}
-                            </div>
-                        </DefaultTable.td>
-                        <DefaultTable.td className={`text-center`}>
-                            {item.unit}
-                        </DefaultTable.td>
-                        <DefaultTable.td
-                            noSpace
-                            className={`text-end bg-green-200`}
-                        >
-                            <NumericFormat
-                                value={item.total}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                            />
-                        </DefaultTable.td>
-                        <DefaultTable.td className={`text-center`}>
-                            {item.tanggungan}
-                        </DefaultTable.td>
-                    </DefaultTable.tr>
+            </TableHeader>
+            <TableBody>
+                {table.getRowModel().rows.length
+                    ? table.getRowModel().rows.map((row, i) => (
+                          <React.Fragment key={i}>
+                              <TableRow key={i} className="text-center">
+                                  {row.getVisibleCells().map((cell, i) => (
+                                      <TableCell
+                                          key={i}
+                                          className={
+                                              cell.column.columnDef.className
+                                          }
+                                      >
+                                          {cell.column.columnDef.type ==
+                                          "action" ? (
+                                              <div className="flex items-center justify-center-center">
+                                                  <div className="w-full">
+                                                      {flexRender(
+                                                          cell.row.original
+                                                              .button_type
+                                                      ) == 2 ? (
+                                                          <button
+                                                              onClick={() =>
+                                                                  handleOpenCreate(
+                                                                      cell.row
+                                                                          .original
+                                                                          .branch_id,
+                                                                      cell.row
+                                                                          .original
+                                                                          .unit
+                                                                  )
+                                                              }
+                                                              className="px-2 py-1 rounded-lg bg-green-500 text-white"
+                                                          >
+                                                              Baru
+                                                          </button>
+                                                      ) : flexRender(
+                                                            cell.row.original
+                                                                .button_type
+                                                        ) == 3 ? (
+                                                          <Link
+                                                              href={route(
+                                                                  "unitsaving.savingdetails",
+                                                                  cell.row
+                                                                      .original
+                                                                      .id
+                                                              )}
+                                                              className="px-2 py-1 rounded-lg bg-gray-500 text-white"
+                                                          >
+                                                              Tutup
+                                                              {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                          </Link>
+                                                      ) : flexRender(
+                                                            cell.row.original
+                                                                .button_type
+                                                        ) == 4 ? (
+                                                          <div className="px-2 py-1 rounded-lg">
+                                                              Non Aktif
+                                                              {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                          </div>
+                                                      ) : flexRender(
+                                                            cell.row.original
+                                                                .button_type
+                                                        ) == 1 ? (
+                                                          <Link
+                                                              href={route(
+                                                                  "unitsaving.savingdetails",
+                                                                  cell.row
+                                                                      .original
+                                                                      .id
+                                                              )}
+                                                              className="px-2 py-1 rounded-lg bg-indigo-500 text-white"
+                                                          >
+                                                              Setor
+                                                              {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                          </Link>
+                                                      ) : flexRender(
+                                                            cell.row.original
+                                                                .button_type
+                                                        ) == 5 ? (
+                                                          <Link
+                                                              href={route(
+                                                                  "unitsaving.savingdetails",
+                                                                  cell.row
+                                                                      .original
+                                                                      .id
+                                                              )}
+                                                              className="px-2 py-1 rounded-lg bg-amber-500 text-white"
+                                                          >
+                                                              Nihil
+                                                              {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                          </Link>
+                                                      ) : (
+                                                          "invalid"
+                                                      )}
+
+                                                      {/* {flexRender(
+                                                          cell.row.original
+                                                              .button_type
+                                                      ) == 1 ? (
+                                                          <button
+                                                              className="bg-red-500 text-white rounded p-2"
+                                                              onClick={() =>
+                                                                  handleOpenCreate(
+                                                                      cell.row
+                                                                          .original
+                                                                          .branch_id
+                                                                  )
+                                                              }
+                                                          >
+                                                              <FaTrash />
+                                                          </button>
+                                                      ) : (
+                                                          "2"
+                                                      )} */}
+                                                  </div>
+                                              </div>
+                                          ) : (
+                                              flexRender(
+                                                  cell.column.columnDef.cell,
+                                                  cell.getContext()
+                                              )
+                                          )}
+                                      </TableCell>
+                                  ))}
+                              </TableRow>
+                          </React.Fragment>
+                      ))
+                    : null}
+            </TableBody>
+            <TableFooter>
+                {table.getFooterGroups().map((headerGroup, i) => (
+                    <TableRow key={i}>
+                        {headerGroup.headers.map((header) => {
+                            return (
+                                <TableHead
+                                    key={header.id}
+                                    className="text-center bg-gray-100 text-black"
+                                >
+                                    {flexRender(
+                                        header.column.columnDef.footer,
+                                        header.getContext()
+                                    )}
+                                </TableHead>
+                            );
+                        })}
+                    </TableRow>
                 ))}
-            </DefaultTable.tbody>
-            <tfoot className="sticky bottom-0 left-0 w-full bg-gray-300 shadow border-t border-t-white">
-                <tr className="bg-blue-200 font-semibold text-black">
-                    <td className={`px-3 py-1`} colSpan={2}>
-                        TOTAL
-                    </td>
-                    <td className={`px-3 py-1 bg-green-500 text-white`}>
-                        <div className={`whitespace-nowrap  text-end`}>
-                            <NumericFormat
-                                value={totals.total}
-                                displayType={"text"}
-                                thousandSeparator={","}
-                                prefix={"Rp. "}
-                            />
-                        </div>
-                    </td>
-                    <td className={`px-3 py-1`}></td>
-                </tr>
-            </tfoot>
-        </DefaultTable>
+            </TableFooter>
+        </Table>
     );
 };
 

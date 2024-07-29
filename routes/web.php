@@ -110,7 +110,6 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('unitsaving')->name('unitsaving.')->group(function () {
-
         Route::get('/dashboard', [UnitSavingController::class, 'dashboard'])->name('dashboard');
         Route::get('/', [UnitSavingController::class, 'index'])->name('index');
         Route::get('/create/{branch}', [UnitSavingController::class, 'create'])->name('create');
@@ -119,6 +118,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [UnitSavingController::class, 'store'])->name('store');
         Route::get('/create_mutasi', [UnitSavingController::class, 'create_mutation'])->name('create_mutasi');
         Route::post('/create_mutasi', [UnitSavingController::class, 'store_mutation'])->name('store_mutasi');
+        Route::delete('/delete_mutasi/{unitSaving}', [UnitSavingController::class, 'delete_mutation'])->name('delete_mutasi');
     });
     Route::prefix('bonpanjer')->name('bonpanjer.')->group(function () {
         Route::get('/', [UnitSavingController::class, 'bon_panjer'])->name('bon_panjer');
@@ -162,6 +162,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'index_mutation')->name('index');
             Route::get('/create', 'create_mutation')->name('create');
             Route::post('/', 'store_mutation')->name('store');
+            Route::delete('/delete_mutasi/{bopTransaction}', 'delete_mutation')->name('delete_mutasi');
         });
     });
 

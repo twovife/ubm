@@ -19,7 +19,6 @@ import React, { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 
 const Outcome = ({ open, onClosed }) => {
-    // const [loading, setLoading] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         nominal: 0,
         transaction_date: "",
@@ -39,12 +38,10 @@ const Outcome = ({ open, onClosed }) => {
     const onSubmitForm = (e) => {
         e.preventDefault();
         post(route("unitsaving.store_mutasi"), {
-            onSuccess: () => {
-                reset();
-                onClosed();
-                location.reload();
-            },
-            replace: true,
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => onClosed(),
+            onFinish: () => reset(),
         });
     };
     return (

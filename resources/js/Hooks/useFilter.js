@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 
-function useFilter(data, itemsPerPage, local_name) {
+function useFilter(datas, itemsPerPage, local_name) {
+    const [data, setData] = useState(() => datas);
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
     const savedFilterString = localStorage.getItem(local_name);
 
     // Default value jika kondisi tidak terpenuhi

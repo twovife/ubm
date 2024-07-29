@@ -8,8 +8,10 @@ use App\Models\Branch;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
@@ -58,26 +60,11 @@ class BopTransactionController extends Controller
             $saldo_before_counting = $saldo;
             $saldo = $item->transaction == "D" ? $saldo + $item->nominal : $saldo - $item->nominal;
 
-            // return  [
-            //     'id' => $item->id,
-            //     'bulan' => Carbon::create($item->transaction_date)->format('M Y'),
-            //     'transaction_date' => Carbon::create($item->transaction_date)->format('Y-m-d'),
-            //     'type_transaksi' => $item->transaction_type == "TB" ? "TABUNGAN 1JT" : ($item->transaction_type == "BP" ? "Bon Panjer" : "Pinjaman Modal"),
-            //     'wilayah' => $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->wilayah : $item->savingaccount->branch->wilayah,
-            //     'unit' =>  $item->transaction_type == "BP" ? $item->savingaccount->employee->branch->unit : $item->savingaccount->branch->unit,
-            //     'nama_karyawan' => $item->transaction_type == "BP" ? $item->savingaccount->employee->nama_karyawan : null,
-            //     'saldo_sebelumya' => $saldo_before_counting,
-            //     'bop' => $item->transaction == "D" && $item->transaction_type == "TB" ? $item->nominal : null,
-            //     'debit' => $item->transaction == "D" && $item->transaction_type != "TB" ? $item->nominal : null,
-            //     'kredit' => $item->transaction == "K" ? $item->nominal : null,
-            //     'saldo' => $saldo,
-            // ];
-
-
             return [
                 'id' => $item->id,
                 'bulan' => Carbon::create($item->transaction_date)->format('M Y'),
                 'transaction_date' => Carbon::create($item->transaction_date)->format('Y-m-d'),
+                'deletable' => $item->transaction_type == "LAIN" ? "true" : "false",
                 'type_transaksi' => $item->transaction_type == "BOP" ? "BOP" : ($item->transaction_type == "BONPRIVE" ? 'BONPRIVE' : 'LAIN'),
                 'keterangan' => $item->keterangan,
                 'wilayah' => $item->akun->branch->wilayah,
@@ -93,7 +80,6 @@ class BopTransactionController extends Controller
             ];
         })->values();
         $data_bulanan->prepend($additional_array);
-        // dd($data_bulanan);
 
         return Inertia::render('BiayaOperasional/Dashboard', [
             'datas' => $data_bulanan,
@@ -613,5 +599,21 @@ class BopTransactionController extends Controller
 
 
         return redirect()->route('mutation.index')->with('message', 'Data berhasil ditambahkan');
+    }
+
+
+    public function delete_mutation(BopTransaction $bopTransaction): RedirectResponse
+    {
+        try {
+            DB::beginTransaction();
+            $bopTransaction->delete();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors('Data Gagal Disimpan Mohon Muat Ulang Halaman');
+        }
+
+        $previousUrl = url()->previous();
+        return  Redirect::to($previousUrl)->with('message', 'Data Berhasil disimpan');
     }
 }

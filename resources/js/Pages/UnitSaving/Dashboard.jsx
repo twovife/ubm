@@ -6,112 +6,145 @@ import Search from "@/Components/Search";
 import useFilter from "@/Hooks/useFilter";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import Outcome from "./Outcome";
+import {
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from "@tanstack/react-table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/shadcn/ui/table";
+import FormatNumbering from "@/Components/FormatNumbering";
+import { FaTrash } from "react-icons/fa6";
+import DeleteDialogContent from "@/Components/DeleteDialogContent";
 
 const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
     const [loading, setLoading] = useState(false);
-    const { filter, removeFilter, returnedData, totals } = useFilter(
-        datas,
-        10000,
-        "1juta_transaksi"
+    // const { filter, removeFilter, returnedData, totals } = useFilter(
+    //     datas,
+    //     10000,
+    //     "1juta_transaksi"
+    // );
+
+    const [data, setData] = useState(() => datas);
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
+
+    const calculateTotals = (data) => {
+        return data.reduce(
+            (acc, item) => {
+                acc.saldo += item.saldo || 0;
+                acc.debit += item.debit || 0;
+                acc.kredit += item.kredit || 0;
+                acc.bop += item.bop || 0;
+
+                return acc;
+            },
+            {
+                saldo: 0,
+                debit: 0,
+                kredit: 0,
+                bop: 0,
+            }
+        );
+    };
+
+    const totals = calculateTotals(data);
+
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: "deletable",
+                id: "deletable",
+                type: "action",
+                cell: (info) => info.getValue(),
+                header: () => "Action",
+            },
+            {
+                accessorKey: "transaction_date",
+                id: "transaction_date",
+                cell: (info) => (
+                    <div className="text-center">
+                        {dayjs(info.getValue()).format("DD-MM-YY")}
+                    </div>
+                ),
+                header: () => "Tanggal",
+            },
+            {
+                accessorKey: "type_transaksi",
+                id: "type_transaksi",
+                cell: (info) => info.getValue(),
+                header: () => "Keterangan",
+            },
+            {
+                accessorKey: "wilayah",
+                id: "wilayah",
+                cell: (info) => info.getValue(),
+                header: () => "Wilayah",
+            },
+            {
+                accessorKey: "unit",
+                id: "unit",
+                cell: (info) => info.getValue(),
+                header: () => "Unit",
+            },
+            {
+                accessorKey: "nama_karyawan",
+                id: "nama_karyawan",
+                cell: (info) => info.getValue(),
+                header: () => "Nama Karyawan",
+            },
+            {
+                accessorKey: "bop",
+                id: "bop",
+                className: "bg-green-100",
+                cell: (info) => <FormatNumbering value={info.getValue()} />,
+                header: () => "TB 1JT",
+                footer: (info) => <FormatNumbering value={totals.bop} />,
+            },
+            {
+                accessorKey: "debit",
+                id: "debit",
+                className: "bg-green-200",
+                cell: (info) => <FormatNumbering value={info.getValue()} />,
+                header: () => "Debit",
+                footer: (info) => <FormatNumbering value={totals.debit} />,
+            },
+            {
+                accessorKey: "kredit",
+                id: "kredit",
+                className: "bg-red-100",
+                cell: (info) => <FormatNumbering value={info.getValue()} />,
+                header: () => "Kredit",
+                footer: (info) => <FormatNumbering value={totals.kredit} />,
+            },
+            {
+                accessorKey: "saldo",
+                id: "saldo",
+                className: "bg-blue-100",
+                cell: (info) => <FormatNumbering value={info.getValue()} />,
+                header: () => "Saldo",
+                footer: (info) => <FormatNumbering value={saldo_akhir} />,
+            },
+        ],
+        []
     );
 
-    const headers = [
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Bulan",
-                column: "bulan",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Tanggal",
-                column: "transaction_date",
-                class_name: "whitespace-nowrap",
-                format: "date",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Keterangan",
-                column: "type_transaksi",
-                class_name: "whitespace-nowrap",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Wilayah",
-                column: "wilayah",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Unit",
-                column: "unit",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Nama Karyawan",
-                column: "nama_karyawan",
-            },
-        },
-
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "TB 1jt",
-                column: "bop",
-                format: "currency",
-                class_name: "whitespace-nowrap bg-gray-100",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Debit",
-                column: "debit",
-                format: "currency",
-                class_name: "whitespace-nowrap bg-green-100",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Kredit",
-                column: "kredit",
-                format: "currency",
-                class_name: "whitespace-nowrap bg-red-100",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Saldo",
-                column: "saldo",
-                format: "currency",
-                class_name: "whitespace-nowrap bg-blue-100",
-            },
-        },
-    ];
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    });
 
     const [showMutasi, setShowMutasi] = useState(false);
     const showMutasiHandler = (e) => {
@@ -121,18 +154,25 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
         setShowMutasi(false);
     };
 
+    const [onOpenDelete, setOnOpenDelete] = useState(false);
+    const [triggeredDeletedId, setTriggeredDeletedId] = useState("");
+    const handleOpenDelete = (id) => {
+        setOnOpenDelete(true);
+        setTriggeredDeletedId(route("unitsaving.delete_mutasi", id));
+    };
+    const handleCloseDelete = (e) => {
+        setOnOpenDelete(false);
+    };
+
     return (
         <Authenticated loading={loading}>
             <Outcome open={showMutasi} onClosed={hideMutasiHandler} />
             <Card judul="Buku Transaksi 1JT">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
-                        <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
-                            <Card.filterItem
-                                filter={filter}
-                                removeFilter={removeFilter}
-                            />
-                        </Card.startContent>
+                        <Card.startContent
+                            className={`flex-wrap mb-3 lg:mb-0`}
+                        ></Card.startContent>
                         <Card.endContent className={`flex-wrap`}>
                             <Search
                                 loading={loading}
@@ -143,7 +183,6 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
                             >
                                 <PrimaryButton
                                     onClick={showMutasiHandler}
-                                    // href={route("unitsaving.create_mutasi")}
                                     title={'Lain"'}
                                     size={"sm"}
                                     type="button"
@@ -154,133 +193,109 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
                         </Card.endContent>
                     </div>
                 </Card.subTitle>
-                <DefaultTable>
-                    <DefaultTable.thead>
-                        {headers.map((item, key) => (
-                            <DefaultTable.th
-                                key={key}
-                                type={item.type}
-                                headers={item.headers}
-                            />
+                <Table className="border">
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup, i) => (
+                            <TableRow key={i}>
+                                {headerGroup.headers.map((header, i) => {
+                                    return (
+                                        <TableHead
+                                            key={i}
+                                            className="text-center"
+                                        >
+                                            {flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                        </TableHead>
+                                    );
+                                })}
+                            </TableRow>
                         ))}
-                    </DefaultTable.thead>
-                    <DefaultTable.tbody>
-                        {returnedData?.map((item, key) => (
-                            <DefaultTable.tr key={key}>
-                                <DefaultTable.td className={`text-center`}>
-                                    {item.bulan}
-                                </DefaultTable.td>
-
-                                <DefaultTable.td className={`text-center`}>
-                                    {dayjs(item.transaction_date).format(
-                                        "DD/MM/YYYY"
-                                    )}
-                                </DefaultTable.td>
-                                <DefaultTable.td className={`text-center`}>
-                                    {item.type_transaksi}
-                                </DefaultTable.td>
-                                <DefaultTable.td className={`text-center`}>
-                                    {item.wilayah}
-                                </DefaultTable.td>
-                                <DefaultTable.td className={`text-center`}>
-                                    {item.unit}
-                                </DefaultTable.td>
-                                <DefaultTable.td className={`text-center`}>
-                                    {item.nama_karyawan}
-                                </DefaultTable.td>
-
-                                <DefaultTable.td
-                                    className={`text-end bg-green-200`}
-                                >
-                                    <NumericFormat
-                                        value={item.bop}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                    />
-                                </DefaultTable.td>
-
-                                <DefaultTable.td
-                                    className={`text-end bg-emerald-300`}
-                                >
-                                    <NumericFormat
-                                        value={item.debit}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                    />
-                                </DefaultTable.td>
-
-                                <DefaultTable.td
-                                    className={`text-end bg-red-200`}
-                                >
-                                    <NumericFormat
-                                        value={item.kredit}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                    />
-                                </DefaultTable.td>
-
-                                <DefaultTable.td
-                                    className={`text-end bg-blue-200`}
-                                >
-                                    <NumericFormat
-                                        value={item.saldo}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                    />
-                                </DefaultTable.td>
-                            </DefaultTable.tr>
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows.length
+                            ? table.getRowModel().rows.map((row, i) => (
+                                  <React.Fragment key={i}>
+                                      <TableRow key={i} className="text-center">
+                                          {row
+                                              .getVisibleCells()
+                                              .map((cell, i) => (
+                                                  <TableCell
+                                                      key={i}
+                                                      className={
+                                                          cell.column.columnDef
+                                                              .className
+                                                      }
+                                                  >
+                                                      {cell.column.columnDef
+                                                          .type == "action" ? (
+                                                          <div className="flex items-center justify-center">
+                                                              <div>
+                                                                  {flexRender(
+                                                                      cell.row
+                                                                          .original
+                                                                          .deletable
+                                                                  ) ==
+                                                                  "true" ? (
+                                                                      <button
+                                                                          className="bg-red-500 text-white rounded p-2"
+                                                                          onClick={() =>
+                                                                              handleOpenDelete(
+                                                                                  cell
+                                                                                      .row
+                                                                                      .original
+                                                                                      .id
+                                                                              )
+                                                                          }
+                                                                      >
+                                                                          <FaTrash />
+                                                                      </button>
+                                                                  ) : (
+                                                                      ""
+                                                                  )}
+                                                              </div>
+                                                          </div>
+                                                      ) : (
+                                                          flexRender(
+                                                              cell.column
+                                                                  .columnDef
+                                                                  .cell,
+                                                              cell.getContext()
+                                                          )
+                                                      )}
+                                                  </TableCell>
+                                              ))}
+                                      </TableRow>
+                                  </React.Fragment>
+                              ))
+                            : null}
+                    </TableBody>
+                    <TableFooter>
+                        {table.getFooterGroups().map((headerGroup, i) => (
+                            <TableRow key={i}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead
+                                            key={header.id}
+                                            className="text-center bg-gray-100 text-black"
+                                        >
+                                            {flexRender(
+                                                header.column.columnDef.footer,
+                                                header.getContext()
+                                            )}
+                                        </TableHead>
+                                    );
+                                })}
+                            </TableRow>
                         ))}
-                    </DefaultTable.tbody>
-                    <tfoot>
-                        <tr className="bg-blue-200 font-semibold text-black">
-                            <td className={`px-3 py-1`} colSpan={"6"}>
-                                TOTAL
-                            </td>
-                            <td className={`px-3 py-1 bg-green-500 text-white`}>
-                                <div className={`whitespace-nowrap text-right`}>
-                                    <NumericFormat
-                                        value={totals.bop}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-3 py-1 bg-green-500 text-white`}>
-                                <div className={`whitespace-nowrap text-right`}>
-                                    <NumericFormat
-                                        value={totals.debit}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-3 py-1 bg-red-600 text-white`}>
-                                <div className={`whitespace-nowrap text-right`}>
-                                    <NumericFormat
-                                        value={totals.kredit}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-3 py-1 bg-blue-600 text-white`}>
-                                <div
-                                    className={`whitespace-nowrap text-right `}
-                                >
-                                    <NumericFormat
-                                        value={saldo_akhir}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </DefaultTable>
+                    </TableFooter>
+                </Table>
+                <DeleteDialogContent
+                    open={onOpenDelete}
+                    onClosed={handleCloseDelete}
+                    url={triggeredDeletedId}
+                />
             </Card>
         </Authenticated>
     );

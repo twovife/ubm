@@ -1,65 +1,101 @@
 import LinkButton from "@/Components/LinkButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import Card from "@/Components/Card";
 import Search from "@/Components/Search";
 import useFilter from "@/Hooks/useFilter";
 import DefaultTable from "@/Components/DefaultTable";
 import TabelUnit from "./Components/TabelUnit";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/shadcn/ui/table";
+
+import {
+    createColumnHelper,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    useReactTable,
+} from "@tanstack/react-table";
+import FormatNumbering from "@/Components/FormatNumbering";
 
 const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
     const [loading, setLoading] = useState(false);
-    const { filter, removeFilter, returnedData, totals } = useFilter(
-        datas,
-        100,
-        "unitsaving_index"
-    );
-
-    const headers = [
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Wilayah",
-                column: "wilayah",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Saldo Tabungan",
-                column: "total",
-                format: "currency",
-            },
-        },
-        {
-            type: "default",
-            headers: {
-                filterable: "no",
-                name: "Setoran Terakhir",
-                column: "last_month_payment",
-            },
-        },
-    ];
 
     const [activeTab, setActiveTab] = useState(batch_datas[0]?.wilayah ?? null); // Mengatur tab pertama sebagai aktif
     const handleTabClick = (tabId) => {
         setActiveTab(tabId);
     };
 
+    const [data, setData] = useState(() => datas);
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
+
+    const calculateTotals = (data) => {
+        return data.reduce(
+            (acc, item) => {
+                acc.total += item.total || 0;
+
+                return acc;
+            },
+            {
+                total: 0,
+            }
+        );
+    };
+
+    const totals = calculateTotals(data);
+
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: "wilayah",
+                id: "wilayah",
+                cell: (info) => info.getValue(),
+                header: () => "Wilayah",
+            },
+            {
+                accessorKey: "total",
+                id: "total",
+                cell: (info) => <FormatNumbering value={info.getValue()} />,
+                header: () => "Total",
+                footer: (info) => (
+                    <FormatNumbering value={totals.totalNominal} />
+                ),
+            },
+            {
+                accessorKey: "last_month_payment",
+                id: "last_month_payment",
+                cell: (info) => info.getValue(),
+                header: () => "Keterangan",
+            },
+        ],
+        []
+    );
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    });
+
     return (
         <Authenticated loading={loading}>
             <Card judul="Tabungan 1JT Unit">
                 <Card.subTitle>
                     <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
-                        <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
-                            <Card.filterItem
-                                filter={filter}
-                                removeFilter={removeFilter}
-                            />
-                        </Card.startContent>
+                        <Card.startContent
+                            className={`flex-wrap mb-3 lg:mb-0`}
+                        ></Card.startContent>
                         <Card.endContent className={`flex-wrap`}>
                             <Search
                                 loading={loading}
@@ -67,74 +103,195 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                                 urlLink={route("unitsaving.index")}
                                 localState={"unitsaving_index"}
                                 availableMonth={true}
-                            >
-                                <LinkButton
-                                    href={route("unitsaving.index")}
-                                    title={"Simpanan 1JT"}
-                                    size={"sm"}
-                                    type="button"
-                                    className="block whitespace-nowrap"
-                                    theme="primary"
-                                />
-                                <LinkButton
-                                    href={route("bonpanjer.bon_panjer")}
-                                    title={"Bon Panjer"}
-                                    size={"sm"}
-                                    type="button"
-                                    className="block whitespace-nowrap"
-                                    theme="primary"
-                                />
-                            </Search>
+                            ></Search>
                         </Card.endContent>
                     </div>
                 </Card.subTitle>
-                <DefaultTable>
-                    <DefaultTable.thead>
-                        {headers.map((item, key) => (
-                            <DefaultTable.th
-                                key={key}
-                                type={item.type}
-                                headers={item.headers}
-                            />
+                <Table className="border">
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup, i) => (
+                            <TableRow key={i}>
+                                {headerGroup.headers.map((header, i) => {
+                                    return (
+                                        <TableHead
+                                            key={i}
+                                            className="text-center"
+                                        >
+                                            {flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                        </TableHead>
+                                    );
+                                })}
+                            </TableRow>
                         ))}
-                    </DefaultTable.thead>
-                    <DefaultTable.tbody>
-                        {returnedData?.map((item, index) => (
-                            <DefaultTable.tr key={index}>
-                                <DefaultTable.td className={`text-center`}>
-                                    {item.wilayah}
-                                </DefaultTable.td>
-                                <DefaultTable.td className={`text-end`}>
-                                    <NumericFormat
-                                        value={item.total}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                    />
-                                </DefaultTable.td>
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows.length
+                            ? table.getRowModel().rows.map((row, i) => (
+                                  <React.Fragment key={i}>
+                                      <TableRow key={i} className="text-center">
+                                          {row
+                                              .getVisibleCells()
+                                              .map((cell, i) => (
+                                                  <TableCell
+                                                      key={i}
+                                                      className={
+                                                          cell.column.columnDef
+                                                              .className
+                                                      }
+                                                  >
+                                                      {cell.column.columnDef
+                                                          .type == "action" ? (
+                                                          <div className="flex items-center justify-center-center">
+                                                              <div className="w-full">
+                                                                  {flexRender(
+                                                                      cell.row
+                                                                          .original
+                                                                          .button_type
+                                                                  ) == 2 ? (
+                                                                      <button
+                                                                          onClick={() =>
+                                                                              handleOpenCreate(
+                                                                                  cell
+                                                                                      .row
+                                                                                      .original
+                                                                                      .branch_id,
+                                                                                  cell
+                                                                                      .row
+                                                                                      .original
+                                                                                      .unit
+                                                                              )
+                                                                          }
+                                                                          className="px-2 py-1 rounded-lg bg-green-500 text-white"
+                                                                      >
+                                                                          Baru
+                                                                      </button>
+                                                                  ) : flexRender(
+                                                                        cell.row
+                                                                            .original
+                                                                            .button_type
+                                                                    ) == 3 ? (
+                                                                      <Link
+                                                                          href={route(
+                                                                              "unitsaving.savingdetails",
+                                                                              cell
+                                                                                  .row
+                                                                                  .original
+                                                                                  .id
+                                                                          )}
+                                                                          className="px-2 py-1 rounded-lg bg-gray-500 text-white"
+                                                                      >
+                                                                          Tutup
+                                                                          {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                                      </Link>
+                                                                  ) : flexRender(
+                                                                        cell.row
+                                                                            .original
+                                                                            .button_type
+                                                                    ) == 4 ? (
+                                                                      <div className="px-2 py-1 rounded-lg">
+                                                                          Non
+                                                                          Aktif
+                                                                          {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                                      </div>
+                                                                  ) : flexRender(
+                                                                        cell.row
+                                                                            .original
+                                                                            .button_type
+                                                                    ) == 1 ? (
+                                                                      <Link
+                                                                          href={route(
+                                                                              "unitsaving.savingdetails",
+                                                                              cell
+                                                                                  .row
+                                                                                  .original
+                                                                                  .id
+                                                                          )}
+                                                                          className="px-2 py-1 rounded-lg bg-indigo-500 text-white"
+                                                                      >
+                                                                          Setor
+                                                                          {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                                      </Link>
+                                                                  ) : flexRender(
+                                                                        cell.row
+                                                                            .original
+                                                                            .button_type
+                                                                    ) == 5 ? (
+                                                                      <Link
+                                                                          href={route(
+                                                                              "unitsaving.savingdetails",
+                                                                              cell
+                                                                                  .row
+                                                                                  .original
+                                                                                  .id
+                                                                          )}
+                                                                          className="px-2 py-1 rounded-lg bg-amber-500 text-white"
+                                                                      >
+                                                                          Nihil
+                                                                          {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
+                                                                      </Link>
+                                                                  ) : (
+                                                                      "invalid"
+                                                                  )}
 
-                                <DefaultTable.td className={`text-center`}>
-                                    {item.last_month_payment}
-                                </DefaultTable.td>
-                            </DefaultTable.tr>
+                                                                  {/* {flexRender(
+                                                          cell.row.original
+                                                              .button_type
+                                                      ) == 1 ? (
+                                                          <button
+                                                              className="bg-red-500 text-white rounded p-2"
+                                                              onClick={() =>
+                                                                  handleOpenCreate(
+                                                                      cell.row
+                                                                          .original
+                                                                          .branch_id
+                                                                  )
+                                                              }
+                                                          >
+                                                              <FaTrash />
+                                                          </button>
+                                                      ) : (
+                                                          "2"
+                                                      )} */}
+                                                              </div>
+                                                          </div>
+                                                      ) : (
+                                                          flexRender(
+                                                              cell.column
+                                                                  .columnDef
+                                                                  .cell,
+                                                              cell.getContext()
+                                                          )
+                                                      )}
+                                                  </TableCell>
+                                              ))}
+                                      </TableRow>
+                                  </React.Fragment>
+                              ))
+                            : null}
+                    </TableBody>
+                    <TableFooter>
+                        {table.getFooterGroups().map((headerGroup, i) => (
+                            <TableRow key={i}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead
+                                            key={header.id}
+                                            className="text-center bg-gray-100 text-black"
+                                        >
+                                            {flexRender(
+                                                header.column.columnDef.footer,
+                                                header.getContext()
+                                            )}
+                                        </TableHead>
+                                    );
+                                })}
+                            </TableRow>
                         ))}
-                    </DefaultTable.tbody>
-                    <tfoot>
-                        <tr className="bg-blue-200 font-semibold text-black">
-                            <td className={`px-3 py-1`}>TOTAL</td>
-                            <td className={`px-3 py-1 bg-green-500 text-white`}>
-                                <div className={`whitespace-nowrap text-right`}>
-                                    <NumericFormat
-                                        value={totals.total}
-                                        displayType={"text"}
-                                        thousandSeparator={","}
-                                        prefix={"Rp. "}
-                                    />
-                                </div>
-                            </td>
-                            <td className={`px-3 py-1`}></td>
-                        </tr>
-                    </tfoot>
-                </DefaultTable>
+                    </TableFooter>
+                </Table>
             </Card>
             <Card judul="Wilayah">
                 <div className="w-full">
@@ -168,8 +325,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                                         }
                                     >
                                         <TabelUnit
-                                            data={item}
-                                            // branch={branch}
+                                            triggeredWilayah={item.wilayah}
                                             loading={loading}
                                             setLoading={setLoading}
                                         />

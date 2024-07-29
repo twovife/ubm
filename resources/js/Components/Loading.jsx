@@ -15,7 +15,7 @@ const Loading = ({ show }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
         >
-            <div className="w-full h-screen bg-white/20 absolute top-0 left-0 z-[100] flex justify-center items-center backdrop-blur-[1px]">
+            <div className="w-full h-screen bg-white/20 fixed top-0 left-0 z-[100] flex justify-center items-center backdrop-blur-[1px]">
                 <div className="custom-loader"></div>
             </div>
         </Transition>,

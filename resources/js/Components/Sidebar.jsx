@@ -169,7 +169,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                         <AiFillHome />
                         <span>Home</span>
                     </button>
-                    {/* <SidebarMenuButton
+                    <SidebarMenuButton
                         onClick={() => togglerColapse(1)}
                         active={route().current("emp.*")}
                         show={collapse == 1}
@@ -244,7 +244,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
                         show={collapse == 4}
                         title={`BOP Pusat`}
                         lists={menu2}
-                    /> */}
+                    />
 
                     <SidebarMenuButton
                         onClick={() => togglerColapse(5)}

@@ -239,7 +239,7 @@ const Transaksi = ({ datas, ...props }) => {
                                                                           <FaTrash />
                                                                       </button>
                                                                   ) : (
-                                                                      "2"
+                                                                      ""
                                                                   )}
                                                               </div>
                                                               <div className="flex-1 text-start">

@@ -131,8 +131,8 @@ const Dashboard = ({
                 header: () => "Nama Karyawan",
             },
             {
-                accessorKey: "saldo_sebelumya",
-                id: "saldo_sebelumya",
+                accessorKey: "bop",
+                id: "bop",
                 className: "bg-green-100",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
                 header: () => "BOP",

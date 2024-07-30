@@ -163,7 +163,7 @@ class UnitPaymentController extends Controller
     }
 
 
-    public function goro_create(Request $request): RedirectResponse
+    public function goro_create(Request $request): RedirectResponse //ini goro create
     {
         // $request->all();
         $validate = $request->validate([
@@ -175,6 +175,18 @@ class UnitPaymentController extends Controller
         ]);
 
         $branch = $request->branch_id ? Branch::find($request->branch_id) : null;
+
+
+        $remark = $request->remark;
+
+        if ($request->unit_payment_id == 1) {
+            if ($request->type_transaksi == 2) {
+                $remark = "PENGEMBALIAN GORO UMROH";
+            } else {
+                $remark = "PEMBAYARAN GORO UMROH";
+            }
+        }
+
 
 
         $nominal = $request->nominal;
@@ -190,7 +202,7 @@ class UnitPaymentController extends Controller
                 "employee_id" => $request->employee_id,
                 "transaction_date" => $request->transaction_date,
                 "nominal" => $nominal,
-                "remark" => $request->remark,
+                "remark" =>  $remark,
             ]);
 
 

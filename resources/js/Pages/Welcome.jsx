@@ -1,55 +1,161 @@
-import { Link, Head } from "@inertiajs/react";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/shadcn/ui/card";
+import { Link, Head, router, useForm } from "@inertiajs/react";
+import { useEffect, useState } from "react";
+import Checkbox from "@/Components/Checkbox";
+import GuestLayout from "@/Layouts/GuestLayout";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import TextInput from "@/Components/TextInput";
+import Loading from "@/Components/Loading";
+import { replace } from "lodash";
+import Lottie from "lottie-react";
+import animationData from "/storage/Animation.json";
 
 export default function Welcome(props) {
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState({
+        username: "",
+        password: "",
+        remember: "",
+    });
+    const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        return () => {
+            setData((prevData) => ({
+                ...prevData,
+                ["password"]: null,
+            }));
+        };
+    }, []);
+
+    const handleOnChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setData((prevData) => ({
+            ...prevData,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    const submit = (e) => {
+        e.preventDefault();
+        setLoading(true);
+        router.post(route("login"), data, {
+            replace: true,
+            onFinish: () => setLoading(false),
+            onError: (errors) => {
+                setErrors(errors);
+            },
+        });
+    };
+
     return (
         <>
-            <Head title="Welcome" />
-            <div className="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-                <div className="sm:fixed sm:top-0 sm:right-0 p-6 text-right">
-                    {props.auth.user ? (
-                        props.isMantri ? (
-                            <Link
-                                href={route("mantriapps.index")}
-                                className="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                            >
-                                Mantri Apps
-                            </Link>
-                        ) : (
-                            <Link
-                                href={route("dashboard")}
-                                className="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                            >
-                                Dashboard
-                            </Link>
-                        )
-                    ) : (
-                        <>
-                            <Link
-                                href={route("login")}
-                                className="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                            >
-                                Log in
-                            </Link>
-                        </>
-                    )}
+            <Head title="WELCOME" />
+            <Loading show={loading} />
+            <div className="flex lg:flex-row flex-col w-screen h-screen">
+                <div className="flex-[3] items-center justify-center hidden lg:flex">
+                    <div className="text-center font-mono">
+                        <div className="w-1/2 mx-auto">
+                            <Lottie animationData={animationData} loop={true} />
+                        </div>
+                        <div className="text-4xl font-bold">APLIKASI PUSAT</div>
+                        <div className="text-xl font-light">
+                            usberdigital apps
+                        </div>
+                    </div>
                 </div>
+                <div className="flex-[2] flex items-center justify-center h-full p-5 bg-roman-500">
+                    <Card className="w-full lg:max-w-sm">
+                        <CardHeader>
+                            <CardTitle>Selamat Datang</CardTitle>
+                            <CardDescription>
+                                Silahkan login dengan user yang sudah disediakan
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={submit}>
+                                <div>
+                                    <InputLabel
+                                        htmlFor="username"
+                                        value="Username"
+                                    />
 
-                <div className="text-3xl lg:text-5xl font-semibold text-center">
-                    SELAMAT DATANG
-                    <div className="text-lg font-light">UBM APPS</div>
+                                    <TextInput
+                                        id="username"
+                                        type="text"
+                                        name="username"
+                                        value={data.username}
+                                        className="mt-1 block w-full"
+                                        autoComplete="username"
+                                        isFocused={true}
+                                        onChange={handleOnChange}
+                                    />
+
+                                    <InputError
+                                        message={errors.username}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div className="mt-4">
+                                    <InputLabel
+                                        htmlFor="password"
+                                        value="Password"
+                                    />
+
+                                    <TextInput
+                                        id="password"
+                                        type="password"
+                                        name="password"
+                                        value={data.password}
+                                        className="mt-1 block w-full"
+                                        autoComplete="current-password"
+                                        onChange={handleOnChange}
+                                    />
+
+                                    <InputError
+                                        message={errors.password}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div className="block mt-4">
+                                    <label className="flex items-center">
+                                        <Checkbox
+                                            name="remember"
+                                            value={data.remember}
+                                            onChange={handleOnChange}
+                                        />
+                                        <span className="ml-2 text-sm text-gray-600">
+                                            Remember me
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <div className="flex items-center justify-end mt-4">
+                                    <PrimaryButton
+                                        type="submit"
+                                        className="ml-4"
+                                        disabled={loading}
+                                    >
+                                        Log in
+                                    </PrimaryButton>
+                                </div>
+                            </form>
+                        </CardContent>
+                        <CardFooter className="flex justify-between"></CardFooter>
+                    </Card>
                 </div>
             </div>
-
-            <style>{`
-                .bg-dots-darker {
-                    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E");
-                }
-                @media (prefers-color-scheme: dark) {
-                    .dark\\:bg-dots-lighter {
-                        background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
-                    }
-                }
-            `}</style>
         </>
     );
 }

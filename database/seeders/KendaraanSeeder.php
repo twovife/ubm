@@ -16,7 +16,7 @@ class KendaraanSeeder extends Seeder
      */
     public function run(): void
     {
-        $vehicles = json_decode(file_get_contents(storage_path('kendaraan.json')), true);
+        $vehicles = json_decode(file_get_contents(storage_path('kendaraan2.json')), true);
 
         try {
             DB::beginTransaction();
@@ -79,54 +79,5 @@ class KendaraanSeeder extends Seeder
             DB::rollBack();
             dd($e);
         }
-
-        // $data =  $request->validate([
-        //     "asset_name" => ["required", "string"],
-        //     "asset_type_id" => ["nullable", "integer"],
-        //     "asset_category_id" => ["nullable", "integer"],
-        //     "asset_detail" => ['nullable', 'string'],
-        //     "isactive" => ["required", "in:yes,no"],
-        //     "plat_nomor" => ["required", "string"],
-        //     "tanggal_stnk" => ["required", "date"],
-        //     "tanggal_pajak_tahunan" => ["required", "date"],
-        //     "nama_stnk" => ["required", "string"],
-        //     "branch_id" => ["required", "integer"],
-        //     "before_branch_id" => ["nullable", "integer"],
-        //     "asset_place_id" => ["nullable", "integer"],
-        //     "pengguna" => ["required", "string"],
-        //     "keterangan" => ["nullable", "string"],
-        // ]);
-
-        // try {
-        //     DB::beginTransaction();
-        //     // generate asset master
-        //     $master_asset = AssetMaster::create([
-        //         "asset_name" => $request->asset_name,
-        //         "asset_type_id" => $request->asset_type_id,
-        //         "asset_category_id" => $request->asset_category_id,
-        //         "asset_detail" => $request->asset_detail,
-        //         "isactive" => $request->isactive,
-        //         "purchase_date" => $request->purchase_date,
-        //         // "nonactive_date" => $request->nonactive_date,
-        //         // "nonactive_reason" => $request->nonactive_reason,
-        //         // "batch_pembelian" => $request->batch_pembelian,
-        //     ]);
-
-        //     // generating Kendaraan Detail
-        //     $kendaraan = $master_asset->asset_vehicle()->create([
-        //         "plat_nomor" => $request->plat_nomor,
-        //         "tanggal_stnk" => $request->tanggal_stnk,
-        //         "tanggal_pajak_tahunan" => $request->tanggal_pajak_tahunan,
-        //         "nama_stnk" => $request->nama_stnk,
-        //     ]);
-
-        //     // penempatan kendaraan
-        //     $penempatan = $master_asset->asset_location()->create([
-        //         "branch_id" => $request->branch_id,
-        //         "before_branch_id" => $request->before_branch_id,
-        //         "asset_place_id" => $request->asset_place_id,
-        //         "pengguna" => $request->pengguna,
-        //         "keterangan" => $request->keterangan,
-        //     ]);
     }
 }

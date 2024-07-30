@@ -12,16 +12,18 @@ import {
 import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
 import CurrencyInput from "react-currency-input-field";
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Loading from "@/Components/Loading";
+import SelectList from "@/Components/SelectList";
 
 const Create = ({ open, onClosed, triggeredId, triggeredBranch }) => {
+    const { username } = usePage().props.auth.user;
     const { data, setData, post, processing, errors, reset } = useForm({
         branch_id: "",
         unit_payment_id: 1,
-        remark: "PEMBAYARAN GORO UMROH",
+        remark: "",
         nominal: 1000000,
         transaction_date: "",
         type_transaksi: 1,
@@ -87,6 +89,31 @@ const Create = ({ open, onClosed, triggeredId, triggeredBranch }) => {
                             className="mt-2"
                         />
                     </div>
+                    {username == "suci" && (
+                        <div className="mb-3">
+                            <InputLabel
+                                value={"Tipe Transaksi"}
+                                className="mb-1"
+                            />
+                            <SelectList
+                                name="type_transaksi"
+                                className="w-full inline-block"
+                                onChange={onInputChange}
+                                value={data.type_transaksi}
+                                nullValue={true}
+                                options={[
+                                    { id: 1, display: "Debit", value: 1 },
+                                    { id: 2, display: "Kredit", value: 2 },
+                                ]}
+                                required
+                            />
+                            <InputError
+                                message={errors.type_transaksi}
+                                className="mt-2"
+                            />
+                        </div>
+                    )}
+
                     <div className="mb-3">
                         <InputLabel value={"Nominal"} className="mb-1" />
                         <CurrencyInput

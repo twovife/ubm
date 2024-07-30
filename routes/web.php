@@ -26,14 +26,8 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'isMantri' => auth()->user() ? auth()->user()->hasPermissionTo('area') : false,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+    return Inertia::render('Welcome');
+})->middleware('guest');
 
 // Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -47,20 +41,6 @@ Route::get('/dashboard', function () {
 
 Route::get('/testdump', [HomeController::class, 'testdump']);
 
-
-
-// Route::prefix('aset')->name('aset.')->group(function () {
-//     Route::controller(InventoryController::class)->group(function () {
-//         Route::get('/', 'index')->name('index');
-//         Route::get('/taxalert', 'taxalert')->name('taxalert');
-//         Route::get('/create', 'create')->name('create');
-//         Route::post('/', 'store')->name('store');
-//         Route::put('/put/{inventory}', 'update')->name('update');
-//         Route::get('/show/{inventory}', 'show')->name('show');
-//         Route::put('/edit/{inventory}', 'edit')->name('edit');
-//         Route::put('/mutating/{inventory}', 'mutating')->name('mutating');
-//     });
-// })->middleware('auth');
 
 
 Route::middleware('auth')->group(function () {

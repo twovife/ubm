@@ -30,6 +30,7 @@ const Search = ({
     } = useServerFilter();
 
     const { data, setData, get, processing } = useForm({});
+
     const onSearchChange = (e) => {
         const { name, value } = e.target;
         if (availablePlanText) {

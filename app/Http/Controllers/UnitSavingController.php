@@ -416,8 +416,8 @@ class UnitSavingController extends Controller
 
     public function bon_panjer_create()
     {
-        $branches = Branch::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('id', auth()->user()->employee->branch_id))->get();
-        $employee = Employee::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('branch_id', auth()->user()->employee->branch_id))->get();
+        $branches = Branch::when(auth()->user()->hasPermissionTo('unit'), fn($que) => $que->where('id', auth()->user()->employee->branch_id))->get();
+        $employee = Employee::when(auth()->user()->hasPermissionTo('unit'), fn($que) => $que->where('branch_id', auth()->user()->employee->branch_id))->get();
 
         return Inertia::render('BonPanjer/Create', [
             'branch' => $branches,
@@ -615,8 +615,8 @@ class UnitSavingController extends Controller
 
     public function pinjaman_modal_create()
     {
-        $branches = Branch::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('id', auth()->user()->employee->branch_id))->get();
-        $employee = Employee::when(auth()->user()->hasPermissionTo('unit'), fn ($que) => $que->where('branch_id', auth()->user()->employee->branch_id))->get();
+        $branches = Branch::when(auth()->user()->hasPermissionTo('unit'), fn($que) => $que->where('id', auth()->user()->employee->branch_id))->get();
+        $employee = Employee::when(auth()->user()->hasPermissionTo('unit'), fn($que) => $que->where('branch_id', auth()->user()->employee->branch_id))->get();
 
         return Inertia::render('PinjamanModal/Create', [
             'branch' => $branches,

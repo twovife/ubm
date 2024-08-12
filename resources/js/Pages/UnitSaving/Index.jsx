@@ -68,9 +68,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                 id: "total",
                 cell: (info) => <FormatNumbering value={info.getValue()} />,
                 header: () => "Total",
-                footer: (info) => (
-                    <FormatNumbering value={totals.totalNominal} />
-                ),
+                footer: (info) => <FormatNumbering value={totals.total} />,
             },
             {
                 accessorKey: "last_month_payment",

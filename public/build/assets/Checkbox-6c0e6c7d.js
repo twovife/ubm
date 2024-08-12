@@ -1,1 +1,0 @@
-import{j as e}from"./app-95cea68d.js";function c({className:o="",...r}){return e("input",{...r,type:"checkbox",className:"rounded border-gray-500 text-black shadow-sm focus:ring-black "+o})}export{c as C};

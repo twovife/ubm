@@ -475,7 +475,7 @@ class UnitSavingController extends Controller
 
     public function bon_panjer_show(UnitSavingAccount $unitSavingAccount)
     {
-        $awalBulanIni = $unitSavingAccount->load('unitssaving')->unitssaving()->max('transaction_date');
+        $awalBulanIni = $unitSavingAccount->load('unitssaving')->unitssaving()->max('min');
         $akhirBulanIni = Carbon::now()->endOfMonth()->format('Y-m-d');
         $saving = $unitSavingAccount->unitssaving;
 

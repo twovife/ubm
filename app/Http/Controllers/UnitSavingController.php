@@ -499,7 +499,7 @@ class UnitSavingController extends Controller
                 'angsuran' => $item->transaction == "D" ? $item->nominal : 0,
                 'saldo' => $saldo
             ];
-        })->sortBy('transaction_date')->values();
+        });
 
 
         return Inertia::render('BonPanjer/Detail', [

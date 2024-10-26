@@ -1,11 +1,12 @@
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import TabelUnit from "./Components/TabelUnit";
 import useFilter from "@/Hooks/useFilter";
 import Card from "@/Components/Card";
 import Search from "@/Components/Search";
 import DefaultTable from "@/Components/DefaultTable";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shadcn/ui/tabs";
 
 const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
     const [loading, setLoading] = useState(false);
@@ -14,6 +15,23 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
         100,
         "bop_index"
     );
+
+    const [displayUnitData, setDisplayUnitData] = useState([]);
+    useEffect(() => {
+        setDisplayUnitData(batch_datas);
+    }, [batch_datas, datas]);
+
+    const [savedTabs, setSavedTabs] = useState(0);
+
+    const saveToLocalStorage = (value) => {
+        localStorage.setItem("tabsActive_bop_index", value);
+        setSavedTabs(value);
+    };
+
+    useEffect(() => {
+        const loadedText = localStorage.getItem("tabsActive_bop_index");
+        setSavedTabs(parseInt(loadedText) || 0);
+    }, []);
 
     const headers = [
         {
@@ -43,22 +61,11 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
         },
     ];
 
-    const [activeTab, setActiveTab] = useState(batch_datas[0]?.wilayah ?? null); // Mengatur tab pertama sebagai aktif
-    const handleTabClick = (tabId) => {
-        setActiveTab(tabId);
-    };
-
     return (
         <Authenticated loading={loading}>
             <Card judul="Setoran BOP Pusat">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
-                        <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
-                            <Card.filterItem
-                                filter={filter}
-                                removeFilter={removeFilter}
-                            />
-                        </Card.startContent>
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.endContent className={`flex-wrap`}>
                             <Search
                                 loading={loading}
@@ -101,7 +108,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                         ))}
                     </DefaultTable.tbody>
                     <tfoot>
-                        <tr className="bg-blue-200 font-semibold text-black">
+                        <tr className="font-semibold text-black bg-blue-200">
                             <td className={`px-3 py-1`}>TOTAL</td>
                             <td className={`px-3 py-1 bg-green-500 text-white`}>
                                 <div className={`whitespace-nowrap text-right`}>
@@ -120,48 +127,41 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
             </Card>
             <Card judul="Wilayah">
                 <div className="w-full">
-                    {batch_datas.length > 0 ? (
+                    <Tabs
+                        // defaultValue={savedTabs}
+                        className="w-full"
+                        value={savedTabs}
+                    >
+                        <TabsList>
+                            {displayUnitData.length > 0
+                                ? displayUnitData.map((item, i) => (
+                                      <TabsTrigger
+                                          onClick={() =>
+                                              saveToLocalStorage(item.wilayah)
+                                          }
+                                          value={item.wilayah}
+                                          className="ml-3 first:ml-0"
+                                      >
+                                          {item.wilayah}
+                                      </TabsTrigger>
+                                  ))
+                                : null}
+                        </TabsList>
                         <>
-                            <ul className="tab-list flex justify-start gap-3 flex-wrap">
-                                {batch_datas.map((item) => (
-                                    <li
-                                        key={item.wilayah}
-                                        className={`tab ${
-                                            activeTab === item.wilayah
-                                                ? "active bg-main-400 ring-2 ring-main-500"
-                                                : ""
-                                        } px-3 py-1 border rounded hover:bg-main-400 hover:cursor-pointer`}
-                                        onClick={() =>
-                                            handleTabClick(item.wilayah)
-                                        }
-                                    >
-                                        {item.wilayah}
-                                    </li>
-                                ))}
-                            </ul>
-                            <div className="tab-content mt-3">
-                                {batch_datas.map((item) => (
-                                    <div
-                                        key={item.wilayah}
-                                        className={
-                                            activeTab === item.wilayah
-                                                ? "active"
-                                                : "hidden"
-                                        }
-                                    >
-                                        <TabelUnit
-                                            data={item}
-                                            // branch={branch}
-                                            loading={loading}
-                                            setLoading={setLoading}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                            {displayUnitData.length > 0
+                                ? displayUnitData.map((item, i) => (
+                                      <TabsContent value={item.wilayah}>
+                                          <TabelUnit
+                                              data={item}
+                                              // branch={branch}
+                                              loading={loading}
+                                              setLoading={setLoading}
+                                          />
+                                      </TabsContent>
+                                  ))
+                                : null}
                         </>
-                    ) : (
-                        <div>Belum ada data yang di input di wilayah ini</div>
-                    )}
+                    </Tabs>
                 </div>
             </Card>
         </Authenticated>

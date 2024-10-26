@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 
 function useFilter(datas, itemsPerPage, local_name) {
     const [data, setData] = useState(() => datas);
+
     useEffect(() => {
         setData(datas);
     }, [datas]);
+
     const savedFilterString = localStorage.getItem(local_name);
 
     // Default value jika kondisi tidak terpenuhi
@@ -130,7 +132,7 @@ function useFilter(datas, itemsPerPage, local_name) {
             local_name,
             JSON.stringify({ oldFilter: filter, oldPage: currentPage })
         );
-    }, [currentPage, filter]);
+    }, [currentPage, filter, data]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);

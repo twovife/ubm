@@ -17,6 +17,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/shadcn/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shadcn/ui/tabs";
 
 import {
     createColumnHelper,
@@ -30,12 +31,20 @@ import FormatNumbering from "@/Components/FormatNumbering";
 const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
     const [loading, setLoading] = useState(false);
 
-    const [activeTab, setActiveTab] = useState(batch_datas[0]?.wilayah ?? null); // Mengatur tab pertama sebagai aktif
-    const handleTabClick = (tabId) => {
-        setActiveTab(tabId);
+    const [savedTabs, setSavedTabs] = useState(0);
+
+    const saveToLocalStorage = (value) => {
+        localStorage.setItem("tabsActive_unitsaving_index", value);
+        setSavedTabs(value);
     };
 
+    useEffect(() => {
+        const loadedText = localStorage.getItem("tabsActive_unitsaving_index");
+        setSavedTabs(parseInt(loadedText) || 0);
+    }, []);
+
     const [data, setData] = useState(() => datas);
+
     useEffect(() => {
         setData(datas);
     }, [datas]);
@@ -90,7 +99,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
         <Authenticated loading={loading}>
             <Card judul="Tabungan 1JT Unit">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.startContent
                             className={`flex-wrap mb-3 lg:mb-0`}
                         ></Card.startContent>
@@ -162,7 +171,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                                                                                       .unit
                                                                               )
                                                                           }
-                                                                          className="px-2 py-1 rounded-lg bg-green-500 text-white"
+                                                                          className="px-2 py-1 text-white bg-green-500 rounded-lg"
                                                                       >
                                                                           Baru
                                                                       </button>
@@ -179,7 +188,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                                                                                   .original
                                                                                   .id
                                                                           )}
-                                                                          className="px-2 py-1 rounded-lg bg-gray-500 text-white"
+                                                                          className="px-2 py-1 text-white bg-gray-500 rounded-lg"
                                                                       >
                                                                           Tutup
                                                                           {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
@@ -207,7 +216,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                                                                                   .original
                                                                                   .id
                                                                           )}
-                                                                          className="px-2 py-1 rounded-lg bg-indigo-500 text-white"
+                                                                          className="px-2 py-1 text-white bg-indigo-500 rounded-lg"
                                                                       >
                                                                           Setor
                                                                           {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
@@ -225,7 +234,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                                                                                   .original
                                                                                   .id
                                                                           )}
-                                                                          className="px-2 py-1 rounded-lg bg-amber-500 text-white"
+                                                                          className="px-2 py-1 text-white rounded-lg bg-amber-500"
                                                                       >
                                                                           Nihil
                                                                           {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
@@ -239,7 +248,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                                                               .button_type
                                                       ) == 1 ? (
                                                           <button
-                                                              className="bg-red-500 text-white rounded p-2"
+                                                              className="p-2 text-white bg-red-500 rounded"
                                                               onClick={() =>
                                                                   handleOpenCreate(
                                                                       cell.row
@@ -277,7 +286,7 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                                     return (
                                         <TableHead
                                             key={header.id}
-                                            className="text-center bg-gray-100 text-black"
+                                            className="text-center text-black bg-gray-100"
                                         >
                                             {flexRender(
                                                 header.column.columnDef.footer,
@@ -293,47 +302,40 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
             </Card>
             <Card judul="Wilayah">
                 <div className="w-full">
-                    {batch_datas.length > 0 ? (
+                    <Tabs
+                        // defaultValue={savedTabs}
+                        className="w-full"
+                        value={savedTabs}
+                    >
+                        <TabsList>
+                            {batch_datas.length > 0
+                                ? batch_datas.map((item, i) => (
+                                      <TabsTrigger
+                                          onClick={() =>
+                                              saveToLocalStorage(item.wilayah)
+                                          }
+                                          value={item.wilayah}
+                                          className="ml-3 first:ml-0"
+                                      >
+                                          {item.wilayah}
+                                      </TabsTrigger>
+                                  ))
+                                : null}
+                        </TabsList>
                         <>
-                            <ul className="tab-list flex justify-start gap-3 flex-wrap">
-                                {batch_datas.map((item) => (
-                                    <li
-                                        key={item.wilayah}
-                                        className={`tab ${
-                                            activeTab === item.wilayah
-                                                ? "active bg-main-400 ring-2 ring-main-500"
-                                                : ""
-                                        } px-3 py-1 border rounded hover:bg-main-400 hover:cursor-pointer`}
-                                        onClick={() =>
-                                            handleTabClick(item.wilayah)
-                                        }
-                                    >
-                                        {item.wilayah}
-                                    </li>
-                                ))}
-                            </ul>
-                            <div className="tab-content mt-3">
-                                {batch_datas.map((item) => (
-                                    <div
-                                        key={item.wilayah}
-                                        className={
-                                            activeTab === item.wilayah
-                                                ? "active"
-                                                : "hidden"
-                                        }
-                                    >
-                                        <TabelUnit
-                                            triggeredWilayah={item.wilayah}
-                                            loading={loading}
-                                            setLoading={setLoading}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                            {batch_datas.length > 0
+                                ? batch_datas.map((item, i) => (
+                                      <TabsContent value={item.wilayah}>
+                                          <TabelUnit
+                                              triggeredWilayah={item.wilayah}
+                                              loading={loading}
+                                              setLoading={setLoading}
+                                          />
+                                      </TabsContent>
+                                  ))
+                                : null}
                         </>
-                    ) : (
-                        <div>Belum ada data yang di input di wilayah ini</div>
-                    )}
+                    </Tabs>
                 </div>
             </Card>
         </Authenticated>

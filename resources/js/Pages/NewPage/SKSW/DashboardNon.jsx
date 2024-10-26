@@ -7,12 +7,19 @@ import useFilter from "@/Hooks/useFilter";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import Create from "./Create";
 
 const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
     const [loading, setLoading] = useState(false);
+
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        setData(datas);
+    }, [datas]);
+
     const {
         showFilter,
         setShowFilter,
@@ -23,7 +30,7 @@ const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
         removeFilter,
         returnedData,
         totals,
-    } = useFilter(datas, 100, "sksw_dashboardnon");
+    } = useFilter(data, 100, "sksw_dashboardnon");
 
     const headers = [
         {
@@ -137,7 +144,7 @@ const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
             />
             <Card judul="SKSW Non Aktif">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
                             <Card.filterItem
                                 filter={filter}
@@ -185,7 +192,7 @@ const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
                                             className="text-blue-500 hover:bg-blue-500 hover:text-white  focus:bg-blue-500 focus:text-white text-center px-1 py-0.5 rounded"
                                         >
                                             <span>{key + 1}</span>
-                                            <span className="hidden lg:inline-block ml-2">
+                                            <span className="hidden ml-2 lg:inline-block">
                                                 Edit
                                             </span>
                                         </Link>
@@ -244,7 +251,7 @@ const DashboardNon = ({ branch, server_filters, datas, ...props }) => {
                             </DefaultTable.tr>
                         ))}
                     </DefaultTable.tbody>
-                    <tfoot className="sticky bottom-0 left-0 w-full bg-gray-300 shadow border-t border-t-white">
+                    <tfoot className="sticky bottom-0 left-0 w-full bg-gray-300 border-t shadow border-t-white">
                         <tr>
                             <td
                                 className="px-2 py-1.5 text-center font-bold"

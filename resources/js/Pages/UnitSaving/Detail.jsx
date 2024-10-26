@@ -36,7 +36,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
         <Authenticated loading={processing}>
             <Card judul="Detail Tabungan 1 Juta">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.endContent className={`flex-wrap`}>
                             <LinkButton
                                 href={route("unitsaving.index", [
@@ -52,9 +52,9 @@ const Detail = ({ details, curent_unit, ...props }) => {
                     </div>
                 </Card.subTitle>
                 <div className="sm:px-6 lg:px-8">
-                    <div className="p-3 bg-white rounded shadow max-w-6xl mx-auto mb-3">
+                    <div className="max-w-6xl p-3 mx-auto mb-3 bg-white rounded shadow">
                         <table className="w-full text-xs text-left text-gray-500">
-                            <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
+                            <thead className="sticky top-0 text-xs text-gray-900 uppercase bg-gray-200 whitespace-nowrap">
                                 <tr>
                                     <th className="px-6 py-4">Nomor</th>
                                     <th
@@ -146,10 +146,10 @@ const Detail = ({ details, curent_unit, ...props }) => {
                         </table>
                     </div>
                     {curent_unit.editable && (
-                        <div className="p-3 bg-white rounded shadow max-w-6xl mx-auto">
+                        <div className="max-w-6xl p-3 mx-auto bg-white rounded shadow">
                             <form onSubmit={onSubmitForm} className="w-full">
-                                <div className="lg:flex gap-3 w-full">
-                                    <div className="mb-2 flex-1">
+                                <div className="w-full gap-3 lg:flex">
+                                    <div className="flex-1 mb-2">
                                         <InputLabel
                                             value={"Wilayah"}
                                             className="mb-1"
@@ -160,7 +160,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                         />
                                     </div>
 
-                                    <div className="mb-2 flex-1">
+                                    <div className="flex-1 mb-2">
                                         <InputLabel
                                             value={"Unit"}
                                             className="mb-1"
@@ -171,7 +171,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                         />
                                     </div>
 
-                                    <div className="mb-2 flex-1 w-full">
+                                    <div className="flex-1 w-full mb-2">
                                         <InputLabel
                                             value={"Bulan"}
                                             className="mb-1"

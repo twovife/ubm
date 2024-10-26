@@ -1,18 +1,34 @@
 import Card from "@/Components/Card";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PinjamanModalTable from "./Components/PinjamanModalTable";
 import LinkButton from "@/Components/LinkButton";
 import DefaultTable from "@/Components/DefaultTable";
 import { NumericFormat } from "react-number-format";
 import ButtonWrapper from "@/Components/ButtonWrapper";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shadcn/ui/tabs";
 
 const Index = ({ branch, server_filters, batch_datas, ...props }) => {
-    const [activeTab, setActiveTab] = useState(batch_datas[0]?.wilayah ?? null); // Mengatur tab pertama sebagai aktif
-    const handleTabClick = (tabId) => {
-        setActiveTab(tabId);
+    const [savedTabs, setSavedTabs] = useState(0);
+
+    const saveToLocalStorage = (value) => {
+        localStorage.setItem("tabsActive_pinjamanmodal_index", value);
+        setSavedTabs(value);
     };
+
+    useEffect(() => {
+        const loadedText = localStorage.getItem(
+            "tabsActive_pinjamanmodal_index"
+        );
+        setSavedTabs(parseInt(loadedText) || 0);
+    }, []);
+
     const [loading, setLoading] = useState(false);
+
+    const [datas, setDatas] = useState([]);
+    useEffect(() => {
+        setDatas(batch_datas);
+    }, [batch_datas]);
 
     const calculateTotals = (data) => {
         return data.reduce(
@@ -73,12 +89,12 @@ const Index = ({ branch, server_filters, batch_datas, ...props }) => {
         );
     };
 
-    const totals = calculateTotals(batch_datas);
+    const totals = calculateTotals(datas);
     return (
         <Authenticated loading={loading}>
             <Card judul="Pinjaman Modal ">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.endContent className={`flex-wrap`}>
                             <ButtonWrapper>
                                 <LinkButton
@@ -142,7 +158,7 @@ const Index = ({ branch, server_filters, batch_datas, ...props }) => {
                         </th>
                     </DefaultTable.thead>
                     <DefaultTable.tbody>
-                        {batch_datas.map((item) => (
+                        {datas.map((item) => (
                             <tr
                                 className={`odd:bg-white even:bg-gray-100 hover:bg-roman-50/50 group`}
                             >
@@ -207,7 +223,7 @@ const Index = ({ branch, server_filters, batch_datas, ...props }) => {
                         ))}
                     </DefaultTable.tbody>
                     <tfoot>
-                        <tr className="bg-blue-200 font-semibold text-black">
+                        <tr className="font-semibold text-black bg-blue-200">
                             <td className={`px-3 py-1`}>TOTAL</td>
                             <td className={`px-3 py-1 bg-green-500 text-white`}>
                                 <div className={`whitespace-nowrap text-right`}>
@@ -279,53 +295,41 @@ const Index = ({ branch, server_filters, batch_datas, ...props }) => {
                 </DefaultTable>
             </Card>
             <Card judul="Per Wilayah ">
-                <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
-                        <div className="flex flex-wrap items-center justify-around flex-1">
-                            {batch_datas.length > 0 ? (
-                                <>
-                                    <ul className="tab-list flex justify-start gap-3 flex-wrap w-full">
-                                        {batch_datas.map((item) => (
-                                            <li
-                                                key={item.wilayah}
-                                                className={`tab ${
-                                                    activeTab === item.wilayah
-                                                        ? "active bg-main-400 ring-2 ring-main-500"
-                                                        : ""
-                                                } px-3 py-1 border rounded hover:bg-main-400 hover:cursor-pointer`}
-                                                onClick={() =>
-                                                    handleTabClick(item.wilayah)
-                                                }
-                                            >
-                                                {item.wilayah}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </>
-                            ) : (
-                                <div>
-                                    Belum ada data yang di input di wilayah ini
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </Card.subTitle>
-
-                <div className="tab-content mt-3">
-                    {batch_datas.map((item) => (
-                        <div
-                            key={item.wilayah}
-                            className={
-                                activeTab === item.wilayah ? "active" : "hidden"
-                            }
-                        >
-                            <PinjamanModalTable
-                                data={item}
-                                loading={loading}
-                                setLoading={setLoading}
-                            />
-                        </div>
-                    ))}
+                <div className="w-full">
+                    <Tabs
+                        // defaultValue={savedTabs}
+                        className="w-full"
+                        value={savedTabs}
+                    >
+                        <TabsList>
+                            {datas.length > 0
+                                ? datas.map((item, i) => (
+                                      <TabsTrigger
+                                          onClick={() =>
+                                              saveToLocalStorage(item.wilayah)
+                                          }
+                                          value={item.wilayah}
+                                          className="ml-3 first:ml-0"
+                                      >
+                                          {item.wilayah}
+                                      </TabsTrigger>
+                                  ))
+                                : null}
+                        </TabsList>
+                        <>
+                            {datas.length > 0
+                                ? datas.map((item, i) => (
+                                      <TabsContent value={item.wilayah}>
+                                          <PinjamanModalTable
+                                              data={item}
+                                              loading={loading}
+                                              setLoading={setLoading}
+                                          />
+                                      </TabsContent>
+                                  ))
+                                : null}
+                        </>
+                    </Tabs>
                 </div>
             </Card>
         </Authenticated>

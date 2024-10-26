@@ -34,12 +34,12 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
     const [savedTabs, setSavedTabs] = useState(0);
 
     const saveToLocalStorage = (value) => {
-        localStorage.setItem("tabsActive_unitsaving_index", value);
+        localStorage.setItem("tabsActive_sksw_global_index", value);
         setSavedTabs(value);
     };
 
     useEffect(() => {
-        const loadedText = localStorage.getItem("tabsActive_unitsaving_index");
+        const loadedText = localStorage.getItem("tabsActive_sksw_global_index");
         setSavedTabs(parseInt(loadedText) || 0);
     }, []);
 
@@ -242,26 +242,6 @@ const Index = ({ branch, server_filters, datas, batch_datas, ...props }) => {
                                                                   ) : (
                                                                       "invalid"
                                                                   )}
-
-                                                                  {/* {flexRender(
-                                                          cell.row.original
-                                                              .button_type
-                                                      ) == 1 ? (
-                                                          <button
-                                                              className="p-2 text-white bg-red-500 rounded"
-                                                              onClick={() =>
-                                                                  handleOpenCreate(
-                                                                      cell.row
-                                                                          .original
-                                                                          .branch_id
-                                                                  )
-                                                              }
-                                                          >
-                                                              <FaTrash />
-                                                          </button>
-                                                      ) : (
-                                                          "2"
-                                                      )} */}
                                                               </div>
                                                           </div>
                                                       ) : (

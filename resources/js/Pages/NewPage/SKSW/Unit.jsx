@@ -1,81 +1,85 @@
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TableDetailPerbulan from "./Components/TableDetailPerbulan";
 import Card from "@/Components/Card";
 import Search from "@/Components/Search";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shadcn/ui/tabs";
 
 const Unit = ({ branch, server_filters, batch_datas, ...props }) => {
-    const [activeTab, setActiveTab] = useState(
-        batch_datas[0]?.branch_id ?? null
-    ); // Mengatur tab pertama sebagai aktif
-    const handleTabClick = (tabId) => {
-        setActiveTab(tabId);
-    };
     const [loading, setLoading] = useState(false);
+    const [savedTabs, setSavedTabs] = useState(null);
+
+    const saveToLocalStorage = (value) => {
+        localStorage.setItem("tabsActive_sksw_perunit_index", value);
+        setSavedTabs(value);
+    };
+
+    useEffect(() => {
+        const loadedText = localStorage.getItem(
+            "tabsActive_sksw_perunit_index"
+        );
+        const hasZeroBranchId = batch_datas?.some(
+            (item) => item.branch_id == loadedText
+        );
+        const minBranchId = Math.min(
+            ...batch_datas?.map((item) => item.branch_id)
+        );
+
+        setSavedTabs(hasZeroBranchId ? parseInt(loadedText) : minBranchId);
+    }, []);
 
     return (
         <Authenticated loading={loading}>
             <Card judul="SKSW Per Unit">
-                <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
-                        <div className="flex items-center justify-start flex-1">
-                            {batch_datas.length > 0 ? (
-                                <>
-                                    <ul className="tab-list flex justify-start gap-3 flex-wrap w-full">
-                                        {batch_datas.map((item) => (
-                                            <li
-                                                key={item.branch_id}
-                                                className={`tab ${
-                                                    activeTab === item.branch_id
-                                                        ? "active bg-main-400 ring-2 ring-main-500"
-                                                        : ""
-                                                } px-3 py-1 border rounded hover:bg-main-400 hover:cursor-pointer`}
-                                                onClick={() =>
-                                                    handleTabClick(
-                                                        item.branch_id
-                                                    )
-                                                }
-                                            >
-                                                {item.unit}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </>
-                            ) : (
-                                <div>
-                                    Belum ada data yang di input di wilayah ini
-                                </div>
-                            )}
+                <div className="w-full">
+                    <Tabs
+                        // defaultValue={savedTabs}
+                        className="w-full"
+                        value={savedTabs}
+                    >
+                        <div className="flex flex-col justify-between lg:flex-row">
+                            <TabsList className="flex flex-wrap justify-start w-full gap-3 bg-transparent">
+                                {batch_datas.length > 0
+                                    ? batch_datas.map((item, i) => (
+                                          <TabsTrigger
+                                              onClick={() =>
+                                                  saveToLocalStorage(
+                                                      item.branch_id
+                                                  )
+                                              }
+                                              value={item.branch_id}
+                                              className="border"
+                                          >
+                                              {item.unit}
+                                          </TabsTrigger>
+                                      ))
+                                    : null}
+                            </TabsList>
+                            <div className="w-full ">
+                                <Search
+                                    loading={loading}
+                                    setLoading={setLoading}
+                                    urlLink={route("sksw.unit")}
+                                    localState={"sksw_unit"}
+                                    FilterWilayahOnly={true}
+                                    availableMonth={true}
+                                />
+                            </div>
                         </div>
-                        <Card.endContent className={`flex-wrap`}>
-                            <Search
-                                loading={loading}
-                                setLoading={setLoading}
-                                urlLink={route("sksw.unit")}
-                                localState={"sksw_unit"}
-                                FilterWilayahOnly={true}
-                                availableMonth={true}
-                            />
-                        </Card.endContent>
-                    </div>
-                </Card.subTitle>
-                <div className="tab-content mt-3">
-                    {batch_datas.map((item) => (
-                        <div
-                            key={item.branch_id}
-                            className={
-                                activeTab === item.branch_id
-                                    ? "active"
-                                    : "hidden"
-                            }
-                        >
-                            <TableDetailPerbulan
-                                data={item}
-                                loading={loading}
-                                setLoading={setLoading}
-                            />
-                        </div>
-                    ))}
+                        <>
+                            {batch_datas.length > 0
+                                ? batch_datas.map((item, i) => (
+                                      <TabsContent value={item.branch_id}>
+                                          <TableDetailPerbulan
+                                              data={item}
+                                              loading={loading}
+                                              setLoading={setLoading}
+                                          />
+                                      </TabsContent>
+                                  ))
+                                : null}
+                        </>
+                    </Tabs>
                 </div>
             </Card>
         </Authenticated>

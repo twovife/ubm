@@ -1,77 +1,74 @@
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@/Components/Card";
 import Search from "@/Components/Search";
 import TableGlobalPerbulan from "./Components/TableGlobalPerbulan";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shadcn/ui/tabs";
 
 const Wilayah = ({ server_filter, batch_datas, ...props }) => {
-    const [activeTab, setActiveTab] = useState(batch_datas[0]?.wilayah ?? null); // Mengatur tab pertama sebagai aktif
-    const handleTabClick = (tabId) => {
-        setActiveTab(tabId);
+    const [savedTabs, setSavedTabs] = useState(0);
+
+    const saveToLocalStorage = (value) => {
+        localStorage.setItem("tabsActive_unitsaving_index", value);
+        setSavedTabs(value);
     };
+
+    useEffect(() => {
+        const loadedText = localStorage.getItem("tabsActive_unitsaving_index");
+        setSavedTabs(parseInt(loadedText) || 0);
+    }, []);
+
     const [loading, setLoading] = useState(false);
 
     return (
         <Authenticated loading={loading}>
             <Card judul="SKSW Per Wilayah">
-                <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
-                        <div className="flex flex-wrap items-center justify-around flex-1">
-                            {batch_datas.length > 0 ? (
-                                <>
-                                    <ul className="tab-list flex justify-start gap-3 flex-wrap w-full">
-                                        {batch_datas.map((item) => (
-                                            <li
-                                                key={item.wilayah}
-                                                className={`tab ${
-                                                    activeTab === item.wilayah
-                                                        ? "active bg-main-400 ring-2 ring-main-500"
-                                                        : ""
-                                                } px-3 py-1 border rounded hover:bg-main-400 hover:cursor-pointer`}
-                                                onClick={() =>
-                                                    handleTabClick(item.wilayah)
-                                                }
-                                            >
-                                                {item.wilayah}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </>
-                            ) : (
-                                <div>
-                                    Belum ada data yang di input di wilayah ini
-                                </div>
-                            )}
-                        </div>
-                        <Card.endContent className={`flex-wrap`}>
-                            <Search
-                                loading={loading}
-                                setLoading={setLoading}
-                                urlLink={route("sksw.wilayah")}
-                                localState={"sksw_wilayah"}
-                                availableMonth={true}
-                            />
-                        </Card.endContent>
+                <Tabs
+                    // defaultValue={savedTabs}
+                    className="w-full"
+                    value={savedTabs}
+                >
+                    <div className="flex justify-between">
+                        <TabsList>
+                            {batch_datas.length > 0
+                                ? batch_datas.map((item, i) => (
+                                      <TabsTrigger
+                                          onClick={() =>
+                                              saveToLocalStorage(item.wilayah)
+                                          }
+                                          value={item.wilayah}
+                                          className="ml-3 first:ml-0"
+                                      >
+                                          {item.wilayah}
+                                      </TabsTrigger>
+                                  ))
+                                : null}
+                        </TabsList>
+                        <Search
+                            loading={loading}
+                            setLoading={setLoading}
+                            urlLink={route("sksw.wilayah")}
+                            localState={"sksw_wilayah"}
+                            availableMonth={true}
+                        />
                     </div>
-                </Card.subTitle>
-                <div className="tab-content mt-3">
-                    {batch_datas.map((item) => (
-                        <div
-                            key={item.wilayah}
-                            className={
-                                activeTab === item.wilayah ? "active" : "hidden"
-                            }
-                        >
-                            <TableGlobalPerbulan
-                                data={item}
-                                loading={loading}
-                                setLoading={setLoading}
-                            />
-                        </div>
-                    ))}
-                </div>
+
+                    <>
+                        {batch_datas.length > 0
+                            ? batch_datas.map((item, i) => (
+                                  <TabsContent value={item.wilayah}>
+                                      <TableGlobalPerbulan
+                                          data={item}
+                                          loading={loading}
+                                          setLoading={setLoading}
+                                      />
+                                  </TabsContent>
+                              ))
+                            : null}
+                    </>
+                </Tabs>
             </Card>
-            <div className="mx-auto sm:px-6 lg:px-8 mb-6"></div>
+            <div className="mx-auto mb-6 sm:px-6 lg:px-8"></div>
         </Authenticated>
     );
 };

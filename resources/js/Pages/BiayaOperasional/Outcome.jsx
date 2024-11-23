@@ -1,11 +1,8 @@
-import Card from "@/Components/Card";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
-import LinkButton from "@/Components/LinkButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
-import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { useForm } from "@inertiajs/react";
 import React, { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
@@ -63,8 +60,8 @@ const Outcome = ({ open, onClosed }) => {
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={onSubmitForm} className="w-full">
-                    <div className="lg:flex gap-3 w-full">
-                        <div className="mb-2 flex-1 w-full">
+                    <div className="w-full gap-3 lg:flex">
+                        <div className="flex-1 w-full mb-2">
                             <InputLabel value={"Tanggal"} className="mb-1" />
                             <TextInput
                                 className="block w-full"
@@ -79,7 +76,7 @@ const Outcome = ({ open, onClosed }) => {
                                 className="mt-2"
                             />
                         </div>
-                        <div className="mb-2 flex-1">
+                        <div className="flex-1 mb-2">
                             <InputLabel value={"Nominal"} className="mb-1" />
                             <CurrencyInput
                                 name="nominal"
@@ -99,8 +96,8 @@ const Outcome = ({ open, onClosed }) => {
                             />
                         </div>
                     </div>
-                    <div className="lg:flex gap-3 w-full">
-                        <div className="mb-2 flex-1 w-full">
+                    <div className="w-full gap-3 lg:flex">
+                        <div className="flex-1 w-full mb-2">
                             <InputLabel value={"transaksi"} className="mb-1" />
                             <SelectList
                                 className="block w-full"
@@ -128,7 +125,7 @@ const Outcome = ({ open, onClosed }) => {
                                 className="mt-2"
                             />
                         </div>
-                        <div className="mb-2 flex-1 w-full">
+                        <div className="flex-1 w-full mb-2">
                             <InputLabel value={"Keterangan"} className="mb-1" />
                             <TextInput
                                 className="block w-full"

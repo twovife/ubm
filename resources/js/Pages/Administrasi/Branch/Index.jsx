@@ -1,10 +1,8 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
-import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
 import useFilter from "@/Hooks/useFilter";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import dayjs from "dayjs";
 import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
 
@@ -80,7 +78,7 @@ const Index = ({ datas }) => {
         <Authenticated loading={loading}>
             <Card judul="Daftar Kantor UBM">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.endContent className={`flex-wrap`}>
                             <Search
                                 loading={loading}

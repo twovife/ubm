@@ -1,16 +1,11 @@
-import LinkButton from "@/Components/LinkButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import React, { useEffect, useMemo, useState } from "react";
-import { NumericFormat } from "react-number-format";
+import { useEffect, useMemo, useState } from "react";
 import Card from "@/Components/Card";
 import Search from "@/Components/Search";
-import useFilter from "@/Hooks/useFilter";
-import DefaultTable from "@/Components/DefaultTable";
 import TabelUnit from "./Components/TabelUnit";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableFooter,
     TableHead,
@@ -20,10 +15,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shadcn/ui/tabs";
 
 import {
-    createColumnHelper,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table";
 import FormatNumbering from "@/Components/FormatNumbering";

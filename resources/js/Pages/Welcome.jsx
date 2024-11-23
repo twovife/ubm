@@ -9,13 +9,11 @@ import {
 import { Link, Head, router, useForm } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import Checkbox from "@/Components/Checkbox";
-import GuestLayout from "@/Layouts/GuestLayout";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import Loading from "@/Components/Loading";
-import { replace } from "lodash";
 import Lottie from "lottie-react";
 import animationData from "/storage/Animation.json";
 
@@ -61,9 +59,9 @@ export default function Welcome(props) {
         <>
             <Head title="WELCOME" />
             <Loading show={loading} />
-            <div className="flex lg:flex-row flex-col w-screen h-screen">
+            <div className="flex flex-col w-screen h-screen lg:flex-row">
                 <div className="flex-[3] items-center justify-center hidden lg:flex">
-                    <div className="text-center font-mono">
+                    <div className="font-mono text-center">
                         <div className="w-1/2 mx-auto">
                             <Lottie animationData={animationData} loop={true} />
                         </div>
@@ -94,7 +92,7 @@ export default function Welcome(props) {
                                         type="text"
                                         name="username"
                                         value={data.username}
-                                        className="mt-1 block w-full"
+                                        className="block w-full mt-1"
                                         autoComplete="username"
                                         isFocused={true}
                                         onChange={handleOnChange}
@@ -117,7 +115,7 @@ export default function Welcome(props) {
                                         type="password"
                                         name="password"
                                         value={data.password}
-                                        className="mt-1 block w-full"
+                                        className="block w-full mt-1"
                                         autoComplete="current-password"
                                         onChange={handleOnChange}
                                     />

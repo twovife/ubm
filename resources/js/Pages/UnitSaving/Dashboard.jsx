@@ -1,13 +1,9 @@
 import Card from "@/Components/Card";
-import DefaultTable from "@/Components/DefaultTable";
-import LinkButton from "@/Components/LinkButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
-import useFilter from "@/Hooks/useFilter";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import dayjs from "dayjs";
-import React, { useEffect, useMemo, useState } from "react";
-import { NumericFormat } from "react-number-format";
+import { useEffect, useMemo, useState } from "react";
 import Outcome from "./Outcome";
 import {
     flexRender,
@@ -169,7 +165,7 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
             <Outcome open={showMutasi} onClosed={hideMutasiHandler} />
             <Card judul="Buku Transaksi 1JT">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.startContent
                             className={`flex-wrap mb-3 lg:mb-0`}
                         ></Card.startContent>
@@ -239,7 +235,7 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
                                                                   ) ==
                                                                   "true" ? (
                                                                       <button
-                                                                          className="bg-red-500 text-white rounded p-2"
+                                                                          className="p-2 text-white bg-red-500 rounded"
                                                                           onClick={() =>
                                                                               handleOpenDelete(
                                                                                   cell
@@ -278,7 +274,7 @@ const Dashboard = ({ server_filter, datas, saldo_akhir, ...props }) => {
                                     return (
                                         <TableHead
                                             key={header.id}
-                                            className="text-center bg-gray-100 text-black"
+                                            className="text-center text-black bg-gray-100"
                                         >
                                             {flexRender(
                                                 header.column.columnDef.footer,

@@ -1,11 +1,8 @@
-import Card from "@/Components/Card";
+
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
-import LinkButton from "@/Components/LinkButton";
 import PrimaryButton from "@/Components/PrimaryButton";
-import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
-import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { useForm } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
@@ -69,8 +66,8 @@ const Create = ({ branchId, branch, open, onClosed, ...props }) => {
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={onSubmitForm} className="w-full">
-                    <div className="lg:flex gap-3 w-full">
-                        <div className="mb-2 flex-1">
+                    <div className="w-full gap-3 lg:flex">
+                        <div className="flex-1 mb-2">
                             <InputLabel
                                 value={"Setor Awal Simpanan Wajib"}
                                 className="mb-1"
@@ -92,7 +89,7 @@ const Create = ({ branchId, branch, open, onClosed, ...props }) => {
                                 className="mt-2"
                             />
                         </div>
-                        <div className="mb-2 flex-1">
+                        <div className="flex-1 mb-2">
                             <InputLabel
                                 value={"Jumlah Setor"}
                                 className="mb-1"

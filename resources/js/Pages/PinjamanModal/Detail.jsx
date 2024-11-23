@@ -49,7 +49,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                 }`}
             >
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.endContent className={`flex-wrap`}>
                             <LinkButton
                                 href={route("unitsaving.index")}
@@ -67,12 +67,20 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                 className="block whitespace-nowrap"
                                 theme="primary"
                             />
+                            <LinkButton
+                                href={route("pinjamanmodal.pinjaman_modal")}
+                                title={"Back"}
+                                size={"sm"}
+                                type="button"
+                                className="block whitespace-nowrap"
+                                theme="primary"
+                            />
                         </Card.endContent>
                     </div>
                 </Card.subTitle>
-                <div className="p-3 bg-white rounded shadow w-full mb-3 overflow-auto">
-                    <table className="w-full text-left text-gray-500 text-xs">
-                        <thead className="text-xs text-gray-900 uppercase bg-gray-200 sticky top-0 whitespace-nowrap">
+                <div className="w-full p-3 mb-3 overflow-auto bg-white rounded shadow">
+                    <table className="w-full text-xs text-left text-gray-500">
+                        <thead className="sticky top-0 text-xs text-gray-900 uppercase bg-gray-200 whitespace-nowrap">
                             <tr>
                                 <th className="px-3 py-1">Nomor</th>
                                 <th
@@ -206,15 +214,15 @@ const Detail = ({ details, curent_unit, ...props }) => {
                         </tbody>
                     </table>
                 </div>
-                <div className="flex items-start justify-center flex-col lg:flex-row gap-3">
+                <div className="flex flex-col items-start justify-center gap-3 lg:flex-row">
                     <div className="flex-[3]">
-                        <div className="p-3 bg-white rounded shadow w-full">
-                            <div className="font-semibold text-gray-500 text-xl mb-3">
+                        <div className="w-full p-3 bg-white rounded shadow">
+                            <div className="mb-3 text-xl font-semibold text-gray-500">
                                 Transaksi Pinjaman
                             </div>
                             <form onSubmit={onSubmitForm} className="w-full">
-                                <div className="lg:flex gap-2 w-full">
-                                    <div className="mb-3 flex-1 w-full">
+                                <div className="w-full gap-2 lg:flex">
+                                    <div className="flex-1 w-full mb-3">
                                         <InputLabel
                                             value={"Wilayah"}
                                             className="mb-1"
@@ -226,7 +234,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                         />
                                     </div>
 
-                                    <div className="mb-3 flex-1 w-full">
+                                    <div className="flex-1 w-full mb-3">
                                         <InputLabel
                                             value={"Unit"}
                                             className="mb-1"
@@ -238,7 +246,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                         />
                                     </div>
 
-                                    <div className="mb-3 flex-1 w-full">
+                                    <div className="flex-1 w-full mb-3">
                                         <InputLabel
                                             value={"Nama Karyawan"}
                                             className="mb-1"
@@ -251,7 +259,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                         />
                                     </div>
 
-                                    <div className="mb-3 flex-1 w-full">
+                                    <div className="flex-1 w-full mb-3">
                                         <InputLabel
                                             value={"Bulan"}
                                             className="mb-1"
@@ -268,8 +276,8 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                         />
                                     </div>
                                 </div>
-                                <div className="lg:flex gap-2 w-full">
-                                    <div className="mb-3 flex-1 w-full">
+                                <div className="w-full gap-2 lg:flex">
+                                    <div className="flex-1 w-full mb-3">
                                         <InputLabel
                                             value={"Angsur"}
                                             className="mb-1"
@@ -296,7 +304,7 @@ const Detail = ({ details, curent_unit, ...props }) => {
                                             className="mt-2"
                                         />
                                     </div>
-                                    <div className="mb-3 flex-1 w-full">
+                                    <div className="flex-1 w-full mb-3">
                                         <InputLabel
                                             value={"Jasa Modal 2%"}
                                             className="mb-1"

@@ -1,10 +1,8 @@
 import Card from "@/Components/Card";
 import DefaultTable from "@/Components/DefaultTable";
 import FilterBox from "@/Components/FilterBox";
-import LinkButton from "@/Components/LinkButton";
 import Search from "@/Components/Search";
 import useFilter from "@/Hooks/useFilter";
-import useServerFilter from "@/Hooks/useServerFilter";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import dayjs from "dayjs";
 import React, { useState } from "react";
@@ -144,7 +142,7 @@ const Transaksi = ({ server_filter, datas, saldo_akhir, ...props }) => {
             />
             <Card judul="Buku Transaksi 1JT">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
                             <Card.filterItem
                                 filter={filter}
@@ -272,7 +270,7 @@ const Transaksi = ({ server_filter, datas, saldo_akhir, ...props }) => {
                         ))}
                     </DefaultTable.tbody>
                     <tfoot>
-                        <tr className="bg-blue-200 font-semibold text-black">
+                        <tr className="font-semibold text-black bg-blue-200">
                             <td className={`px-3 py-1`} colSpan={"5"}>
                                 TOTAL
                             </td>

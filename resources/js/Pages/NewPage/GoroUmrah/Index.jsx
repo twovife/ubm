@@ -1,15 +1,10 @@
-import ButtonWrapper from "@/Components/ButtonWrapper";
 import Card from "@/Components/Card";
 import FormatNumbering from "@/Components/FormatNumbering";
-import LinkButton from "@/Components/LinkButton";
 import Search from "@/Components/Search";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Input } from "@/shadcn/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableFooter,
     TableHead,
@@ -18,10 +13,8 @@ import {
 } from "@/shadcn/ui/table";
 
 import {
-    createColumnHelper,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table";
 
@@ -113,7 +106,7 @@ const Index = ({ datas, ...props }) => {
         <Authenticated loading={loading}>
             <Card judul="Goro Umrah">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
                             {/* <Card.filterItem
                                 filter={filter}
@@ -183,7 +176,7 @@ const Index = ({ datas, ...props }) => {
                                                       >
                                                           {cell.column.id ==
                                                           "collapse" ? (
-                                                              <div className="flex w-full items-center justify-center gap-3">
+                                                              <div className="flex items-center justify-center w-full gap-3">
                                                                   <button
                                                                       onClick={() =>
                                                                           getThisParentTr(
@@ -252,7 +245,7 @@ const Index = ({ datas, ...props }) => {
                                             return (
                                                 <TableHead
                                                     key={header.id}
-                                                    className="text-center bg-gray-100 text-black"
+                                                    className="text-center text-black bg-gray-100"
                                                 >
                                                     {flexRender(
                                                         header.column.columnDef

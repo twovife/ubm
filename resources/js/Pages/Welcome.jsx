@@ -14,8 +14,7 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import Loading from "@/Components/Loading";
-import Lottie from "lottie-react";
-import animationData from "/storage/Animation.json";
+import WelcomeAnimation from "./User/WelcomeAnimation";
 
 export default function Welcome(props) {
     const [loading, setLoading] = useState(false);
@@ -63,7 +62,7 @@ export default function Welcome(props) {
                 <div className="flex-[3] items-center justify-center hidden lg:flex">
                     <div className="font-mono text-center">
                         <div className="w-1/2 mx-auto">
-                            <Lottie animationData={animationData} loop={true} />
+                            <WelcomeAnimation />
                         </div>
                         <div className="text-4xl font-bold">APLIKASI PUSAT</div>
                         <div className="text-xl font-light">

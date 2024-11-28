@@ -17,7 +17,6 @@ import {
 } from "@tanstack/react-table";
 
 import dayjs from "dayjs";
-import Edit from "./Edit";
 import HerPayment from "./HerPayment";
 import { usePage } from "@inertiajs/react";
 
@@ -130,14 +129,14 @@ const DetailHer = ({ branchShow }) => {
         <>
             <div className="flex mb-2">
                 <input
-                    className="px-3 py-2 rounded border focus:ring-0 focus:outline-none focus:border-roman-500 shadow"
+                    className="px-3 py-2 border rounded shadow focus:ring-0 focus:outline-none focus:border-roman-500"
                     placeholder="Cari..."
                     value={filtering}
                     onChange={(event) => setFiltering(event.target.value)}
                 />
                 {/* Add additional filter inputs here for specific columns */}
             </div>
-            <Table className=" lg:text-sm text-xs">
+            <Table className="text-xs lg:text-sm">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
@@ -188,7 +187,7 @@ const DetailHer = ({ branchShow }) => {
                                                     </div>
                                                 ) : (
                                                     <button
-                                                        className="px-2 py-1 rounded-md border border-roman-500 hover:bg-roman-500 hover:text-white focus:bg-roman-600 focus:text-white"
+                                                        className="px-2 py-1 border rounded-md border-roman-500 hover:bg-roman-500 hover:text-white focus:bg-roman-600 focus:text-white"
                                                         onClick={() =>
                                                             showEditHandler(
                                                                 cell.row

@@ -10,7 +10,6 @@ import {
 } from "@/shadcn/ui/table";
 
 import {
-    createColumnHelper,
     flexRender,
     getCoreRowModel,
     useReactTable,
@@ -18,10 +17,10 @@ import {
 
 import axios from "axios";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FaPlay } from "react-icons/fa6";
 import DetailPerUnitGoro from "./DetailPerUnitGoro";
-import { router, usePage } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 import Create from "./Create";
 
 const DetailGoro = ({ triggerId }) => {
@@ -204,8 +203,8 @@ const DetailGoro = ({ triggerId }) => {
                                             className={`${cell.column.columnDef.className}`}
                                         >
                                             {cell.column.id == "collapse" ? (
-                                                <div className="flex justify-center items-center gap-2">
-                                                    <div className="flex-none lg:w-1/2 flex justify-end items-center">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <div className="flex items-center justify-end flex-none lg:w-1/2">
                                                         <button
                                                             onClick={() =>
                                                                 getThisParentTr(
@@ -224,7 +223,7 @@ const DetailGoro = ({ triggerId }) => {
                                                             <FaPlay />
                                                         </button>
                                                     </div>
-                                                    <div className="grow w-auto flex items-center justify-start">
+                                                    <div className="flex items-center justify-start w-auto grow">
                                                         <button
                                                             onClick={() =>
                                                                 openCreateDrawer(
@@ -280,7 +279,7 @@ const DetailGoro = ({ triggerId }) => {
                                 return (
                                     <TableHead
                                         key={header.id}
-                                        className="text-center bg-blue-400 text-black"
+                                        className="text-center text-black bg-blue-400"
                                     >
                                         {flexRender(
                                             header.column.columnDef.footer,

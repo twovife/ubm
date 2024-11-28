@@ -1,8 +1,5 @@
-import DefaultTable from "@/Components/DefaultTable";
-import useFilter from "@/Hooks/useFilter";
 import { Link, usePage } from "@inertiajs/react";
 import React, { useEffect, useMemo, useState } from "react";
-import { NumericFormat } from "react-number-format";
 import {
     Table,
     TableBody,
@@ -159,7 +156,7 @@ const TabelUnit = ({ triggeredWilayah, loading, setLoading }) => {
                                                                           .unit
                                                                   )
                                                               }
-                                                              className="px-2 py-1 rounded-lg bg-green-500 text-white"
+                                                              className="px-2 py-1 text-white bg-green-500 rounded-lg"
                                                           >
                                                               Baru
                                                           </button>
@@ -174,7 +171,7 @@ const TabelUnit = ({ triggeredWilayah, loading, setLoading }) => {
                                                                       .original
                                                                       .id
                                                               )}
-                                                              className="px-2 py-1 rounded-lg bg-gray-500 text-white"
+                                                              className="px-2 py-1 text-white bg-gray-500 rounded-lg"
                                                           >
                                                               Tutup
                                                               {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
@@ -198,7 +195,7 @@ const TabelUnit = ({ triggeredWilayah, loading, setLoading }) => {
                                                                       .original
                                                                       .id
                                                               )}
-                                                              className="px-2 py-1 rounded-lg bg-indigo-500 text-white"
+                                                              className="px-2 py-1 text-white bg-indigo-500 rounded-lg"
                                                           >
                                                               Setor
                                                               {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
@@ -214,7 +211,7 @@ const TabelUnit = ({ triggeredWilayah, loading, setLoading }) => {
                                                                       .original
                                                                       .id
                                                               )}
-                                                              className="px-2 py-1 rounded-lg bg-amber-500 text-white"
+                                                              className="px-2 py-1 text-white rounded-lg bg-amber-500"
                                                           >
                                                               Nihil
                                                               {/* <AiFillFolderOpen className="text-blue-500 hover:cursor-pointer" /> */}
@@ -228,7 +225,7 @@ const TabelUnit = ({ triggeredWilayah, loading, setLoading }) => {
                                                               .button_type
                                                       ) == 1 ? (
                                                           <button
-                                                              className="bg-red-500 text-white rounded p-2"
+                                                              className="p-2 text-white bg-red-500 rounded"
                                                               onClick={() =>
                                                                   handleOpenCreate(
                                                                       cell.row
@@ -264,7 +261,7 @@ const TabelUnit = ({ triggeredWilayah, loading, setLoading }) => {
                             return (
                                 <TableHead
                                     key={header.id}
-                                    className="text-center bg-gray-100 text-black"
+                                    className="text-center text-black bg-gray-100"
                                 >
                                     {flexRender(
                                         header.column.columnDef.footer,

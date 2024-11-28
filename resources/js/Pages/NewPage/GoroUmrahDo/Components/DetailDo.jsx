@@ -19,8 +19,6 @@ import {
 import axios from "axios";
 import dayjs from "dayjs";
 
-import { FaPlay } from "react-icons/fa6";
-
 const DetailDo = ({ triggerId }) => {
     const { server_filter, datas } = usePage().props;
     const [data, setData] = useState([]);
@@ -131,7 +129,7 @@ const DetailDo = ({ triggerId }) => {
 
     return (
         <div className="max-h-[40vh] overflow-auto">
-            <Table className="lg:text-sm text-xs">
+            <Table className="text-xs lg:text-sm">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id} className="bg-gray-100">
@@ -192,7 +190,7 @@ const DetailDo = ({ triggerId }) => {
                                 return (
                                     <TableHead
                                         key={header.id}
-                                        className="text-center bg-gray-100 text-blue-600 py-5"
+                                        className="py-5 text-center text-blue-600 bg-gray-100"
                                     >
                                         {flexRender(
                                             header.column.columnDef.footer,

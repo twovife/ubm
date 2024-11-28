@@ -9,7 +9,6 @@ import {
 } from "@/shadcn/ui/table";
 import { usePage } from "@inertiajs/react";
 import {
-    createColumnHelper,
     flexRender,
     getCoreRowModel,
     useReactTable,
@@ -18,7 +17,6 @@ import axios from "axios";
 import dayjs from "dayjs";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { FaPlay } from "react-icons/fa6";
 
 const DetailPerUnitGoro = ({ triggerId }) => {
     const { server_filter, datas } = usePage().props;
@@ -110,7 +108,7 @@ const DetailPerUnitGoro = ({ triggerId }) => {
 
     return (
         <div className="px-3 py-6 bg-gray-50">
-            <Table className="lg:text-sm text-xs ">
+            <Table className="text-xs lg:text-sm ">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>

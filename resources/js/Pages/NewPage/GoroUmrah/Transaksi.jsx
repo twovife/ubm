@@ -1,4 +1,3 @@
-import ButtonWrapper from "@/Components/ButtonWrapper";
 import Card from "@/Components/Card";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
@@ -6,7 +5,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableFooter,
     TableHead,
@@ -15,10 +13,8 @@ import {
 } from "@/shadcn/ui/table";
 
 import {
-    createColumnHelper,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table";
 import dayjs from "dayjs";
@@ -27,7 +23,6 @@ import Search from "@/Components/Search";
 import CreateTransaksi from "./Components/CreateTransaksi";
 import { FaTrash } from "react-icons/fa6";
 import DeleteTransaksi from "./Components/DeleteTransaksi";
-import { router } from "@inertiajs/react";
 
 const Transaksi = ({ datas, ...props }) => {
     const [loading, setLoading] = useState(false);
@@ -156,7 +151,7 @@ const Transaksi = ({ datas, ...props }) => {
         <Authenticated>
             <Card judul="Transaksi Goro">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
                             {/* <Card.filterItem
                                 filter={filter}
@@ -217,7 +212,7 @@ const Transaksi = ({ datas, ...props }) => {
                                                   >
                                                       {cell.column.columnDef
                                                           .type == "action" ? (
-                                                          <div className="flex gap-2 items-center">
+                                                          <div className="flex items-center gap-2">
                                                               <div className="flex-1 text-end">
                                                                   {flexRender(
                                                                       cell.row
@@ -226,7 +221,7 @@ const Transaksi = ({ datas, ...props }) => {
                                                                   ) ==
                                                                   "LAIN" ? (
                                                                       <button
-                                                                          className="bg-red-500 text-white rounded p-2"
+                                                                          className="p-2 text-white bg-red-500 rounded"
                                                                           onClick={() =>
                                                                               handleOpenDelete(
                                                                                   cell
@@ -274,7 +269,7 @@ const Transaksi = ({ datas, ...props }) => {
                                     return (
                                         <TableHead
                                             key={header.id}
-                                            className="text-center bg-gray-100 text-black"
+                                            className="text-center text-black bg-gray-100"
                                         >
                                             {flexRender(
                                                 header.column.columnDef.footer,

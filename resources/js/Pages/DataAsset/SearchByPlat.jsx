@@ -3,14 +3,12 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/shadcn/ui/table";
 
 import {
-    createColumnHelper,
     flexRender,
     getCoreRowModel,
     useReactTable,
@@ -156,7 +154,7 @@ const SearchByPlat = ({ datas }) => {
                                                 </span>
                                             ) : (
                                                 <button
-                                                    className="px-2 py-1 rounded-md border border-roman-500 hover:bg-roman-500 hover:text-white focus:bg-roman-600 focus:text-white"
+                                                    className="px-2 py-1 border rounded-md border-roman-500 hover:bg-roman-500 hover:text-white focus:bg-roman-600 focus:text-white"
                                                     onClick={() =>
                                                         showEditHandler(
                                                             cell.row.original

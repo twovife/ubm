@@ -79,7 +79,7 @@ const Create = ({ open, onClosed, triggeredId, triggeredBranch }) => {
                         <TextInput
                             name="transaction_date"
                             type="date"
-                            className="w-full inline-block"
+                            className="inline-block w-full"
                             onChange={onInputChange}
                             value={data.transaction_date}
                             required
@@ -89,7 +89,7 @@ const Create = ({ open, onClosed, triggeredId, triggeredBranch }) => {
                             className="mt-2"
                         />
                     </div>
-                    {username == "suci" && (
+                    {username == "venny" && (
                         <div className="mb-3">
                             <InputLabel
                                 value={"Tipe Transaksi"}
@@ -97,7 +97,7 @@ const Create = ({ open, onClosed, triggeredId, triggeredBranch }) => {
                             />
                             <SelectList
                                 name="type_transaksi"
-                                className="w-full inline-block"
+                                className="inline-block w-full"
                                 onChange={onInputChange}
                                 value={data.type_transaksi}
                                 nullValue={true}

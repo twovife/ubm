@@ -19,7 +19,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
         }
     };
     const menu1 =
-        auth.user.username == "suci"
+        auth.user.username == "venny"
             ? [
                   {
                       id: "1",
@@ -101,7 +101,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
               ];
 
     const menu2 =
-        auth.user.username == "suci"
+        auth.user.username == "venny"
             ? [
                   {
                       id: "1",
@@ -150,7 +150,7 @@ const Sidebar = ({ isOpen, setIsopen }) => {
               ];
 
     const menu3 =
-        auth.user.username == "suci"
+        auth.user.username == "venny"
             ? [
                   {
                       id: "1",
@@ -201,10 +201,10 @@ const Sidebar = ({ isOpen, setIsopen }) => {
             onClick={setIsopen}
         >
             <div
-                className="w-60 bg-white p-3 h-full border-r"
+                className="h-full p-3 bg-white border-r w-60"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="text-center font-semibold text-roman-600">
+                <div className="font-semibold text-center text-roman-600">
                     Apps Menu
                 </div>
                 <div className="mt-3">

@@ -66,7 +66,7 @@ const Transaksi = ({
                     display: "Debit / Setor",
                 },
             ]);
-            setData({ ...data, nominal_sw: 100000, [name]: value });
+            setData({ ...data, nominal_sw: 200000, [name]: value });
         }
 
         if (value === "K") {
@@ -117,7 +117,7 @@ const Transaksi = ({
         <Authenticated loading={processing || loading}>
             <Card judul="Transaksi SKSW">
                 <Card.subTitle>
-                    <div className="flex lg:flex-row flex-col lg:justify-between items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between">
                         <Card.startContent className={`flex-wrap mb-3 lg:mb-0`}>
                             <p className="text-xs">
                                 * jika ada debit dan kredit dalam satu bulan,
@@ -145,8 +145,8 @@ const Transaksi = ({
                     </div>
                 </Card.subTitle>
             </Card>
-            <div className="p-5 mt-3 bg-gray-50 rounded shadow overflow-auto">
-                <table className="w-full text-sm text-left text-gray-500 shadow rounded">
+            <div className="p-5 mt-3 overflow-auto rounded shadow bg-gray-50">
+                <table className="w-full text-sm text-left text-gray-500 rounded shadow">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th
@@ -175,112 +175,112 @@ const Transaksi = ({
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-blue-200 whitespace-nowrap"
                             >
                                 Saldo SW Sebelumnya
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-blue-200 whitespace-nowrap"
                             >
                                 Debit SW
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-blue-200 whitespace-nowrap"
                             >
                                 Kredit SW
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-blue-200 whitespace-nowrap"
                             >
                                 Saldo SW
                             </th>
 
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-blue-200 whitespace-nowrap"
                             >
                                 Setoran SW(D)
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-blue-200 whitespace-nowrap"
                             >
                                 Debit Mutasi SW(D)
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-blue-200 whitespace-nowrap"
                             >
                                 Pengambilan SW(K)
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-blue-200 whitespace-nowrap"
                             >
                                 Kredit Mutasi SW(K)
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-blue-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-blue-200 whitespace-nowrap"
                             >
                                 Kredit Resign / MD SW(K)
                             </th>
 
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-red-200 whitespace-nowrap"
                             >
                                 Saldo SK Sebelumnya
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-red-200 whitespace-nowrap"
                             >
                                 Debit SK
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-red-200 whitespace-nowrap"
                             >
                                 Kredit SK
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-red-200 whitespace-nowrap"
                             >
                                 Saldo SK
                             </th>
 
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-red-200 whitespace-nowrap"
                             >
                                 Setoran SK(D)
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-red-200 whitespace-nowrap"
                             >
                                 Debit Mutasi SK(D)
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-red-200 whitespace-nowrap"
                             >
                                 Pengambilan SK(K)
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-red-200 whitespace-nowrap"
                             >
                                 Kredit Mutasi SK(K)
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 whitespace-nowrap bg-red-200 text-black font-semibold"
+                                className="px-6 py-3 font-semibold text-black bg-red-200 whitespace-nowrap"
                             >
                                 Kredit Resign / MD SK(K)
                             </th>
@@ -306,7 +306,7 @@ const Transaksi = ({
                                         "DD-MM-YYYY"
                                     )}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-gray-100">
+                                <td className="px-6 py-4 bg-gray-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.sw_balance_before}
                                         displayType={"text"}
@@ -314,7 +314,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-green-100 text-black">
+                                <td className="px-6 py-4 text-black bg-green-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.sw_debit}
                                         displayType={"text"}
@@ -323,7 +323,7 @@ const Transaksi = ({
                                     />
                                 </td>
 
-                                <td className="px-6 py-4 whitespace-nowrap bg-red-100 text-black">
+                                <td className="px-6 py-4 text-black bg-red-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.sw_kredit}
                                         displayType={"text"}
@@ -331,7 +331,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-green-200 text-black font-semibold">
+                                <td className="px-6 py-4 font-semibold text-black bg-green-200 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.sw_saldo}
                                         displayType={"text"}
@@ -339,7 +339,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.D_sw}
                                         displayType={"text"}
@@ -347,7 +347,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.DM_sw}
                                         displayType={"text"}
@@ -355,7 +355,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.K_sw}
                                         displayType={"text"}
@@ -363,7 +363,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.KM_sw}
                                         displayType={"text"}
@@ -372,7 +372,7 @@ const Transaksi = ({
                                     />
                                 </td>
 
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.KRMD_sw}
                                         displayType={"text"}
@@ -389,7 +389,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-green-100 text-black">
+                                <td className="px-6 py-4 text-black bg-green-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.sk_debit}
                                         displayType={"text"}
@@ -397,7 +397,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-red-100 text-black">
+                                <td className="px-6 py-4 text-black bg-red-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.sk_kredit}
                                         displayType={"text"}
@@ -405,7 +405,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-green-200 text-black font-semibold">
+                                <td className="px-6 py-4 font-semibold text-black bg-green-200 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.sk_saldo}
                                         displayType={"text"}
@@ -413,7 +413,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.D_sk}
                                         displayType={"text"}
@@ -421,7 +421,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.DM_sk}
                                         displayType={"text"}
@@ -429,7 +429,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.K_sk}
                                         displayType={"text"}
@@ -437,7 +437,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.KM_sk}
                                         displayType={"text"}
@@ -445,7 +445,7 @@ const Transaksi = ({
                                         prefix={"Rp. "}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap bg-blue-100">
+                                <td className="px-6 py-4 bg-blue-100 whitespace-nowrap">
                                     <NumericFormat
                                         value={item.KRMD_sk}
                                         displayType={"text"}
@@ -458,10 +458,10 @@ const Transaksi = ({
                     </tbody>
                 </table>
             </div>
-            <div className="mx-auto sm:px-6 lg:px-8 mb-6">
-                <div className="p-3 bg-white rounded shadow mt-3">
-                    <div className="lg:flex justify-start items-start gap-3">
-                        <div className="mb-3 flex-1">
+            <div className="mx-auto mb-6 sm:px-6 lg:px-8">
+                <div className="p-3 mt-3 bg-white rounded shadow">
+                    <div className="items-start justify-start gap-3 lg:flex">
+                        <div className="flex-1 mb-3">
                             <InputLabel value={"Nama Karyawan"} />
                             <TextInput
                                 type={"text"}
@@ -471,7 +471,7 @@ const Transaksi = ({
                                 className="w-full uppercase"
                             />
                         </div>
-                        <div className="mb-3 flex-1">
+                        <div className="flex-1 mb-3">
                             <InputLabel value={"Unit Sekarang"} />
                             <TextInput
                                 type={"text"}
@@ -481,7 +481,7 @@ const Transaksi = ({
                                 className="w-full"
                             />
                         </div>
-                        <div className="mb-3 flex-1">
+                        <div className="flex-1 mb-3">
                             <InputLabel value={"Status Karyawan"} />
                             <TextInput
                                 type={"text"}
@@ -491,7 +491,7 @@ const Transaksi = ({
                                 className="w-full"
                             />
                         </div>
-                        <div className="mb-3 flex-1">
+                        <div className="flex-1 mb-3">
                             <InputLabel value={"Status SKSW"} />
                             <TextInput
                                 type={"text"}
@@ -501,19 +501,19 @@ const Transaksi = ({
                                 className="w-full"
                             />
                         </div>
-                        <div className="mb-3 flex-1"></div>
-                        <div className="mb-3 flex-1"></div>
+                        <div className="flex-1 mb-3"></div>
+                        <div className="flex-1 mb-3"></div>
                     </div>
                 </div>
                 {deposit.status_sksw == "Active" && (
                     <>
-                        <div className="p-3 bg-white rounded shadow mt-3">
+                        <div className="p-3 mt-3 bg-white rounded shadow">
                             <form onSubmit={onSubmitForm}>
-                                <span className="font-semibold mb-3">
+                                <span className="mb-3 font-semibold">
                                     Transaksi
                                 </span>
-                                <div className="lg:flex justify-start items-start gap-3">
-                                    <div className="mb-3 flex-1">
+                                <div className="items-start justify-start gap-3 lg:flex">
+                                    <div className="flex-1 mb-3">
                                         <InputLabel
                                             value={"Tanggal Transaksi"}
                                         />
@@ -527,7 +527,7 @@ const Transaksi = ({
                                             className="w-full"
                                         />
                                     </div>
-                                    <div className="mb-3 flex-1">
+                                    <div className="flex-1 mb-3">
                                         <InputLabel value={"Jenis Transaksi"} />
                                         <SelectList
                                             className={"w-full"}
@@ -550,7 +550,7 @@ const Transaksi = ({
                                             ]}
                                         />
                                     </div>
-                                    <div className="mb-3 flex-1">
+                                    <div className="flex-1 mb-3">
                                         <InputLabel value={"Jenis Transaksi"} />
                                         <SelectList
                                             className={"w-full"}

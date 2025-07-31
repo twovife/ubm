@@ -276,7 +276,7 @@ const TableDetailPerbulan = ({ data }) => {
                                 className="text-blue-500 hover:bg-blue-500 hover:text-white  focus:bg-blue-500 focus:text-white text-center px-1 py-0.5 rounded"
                             >
                                 <span>{key + 1}</span>
-                                <span className="hidden lg:inline-block ml-2">
+                                <span className="hidden ml-2 lg:inline-block">
                                     Edit
                                 </span>
                             </Link>
@@ -488,8 +488,8 @@ const TableDetailPerbulan = ({ data }) => {
                     </DefaultTable.tr>
                 ))}
             </DefaultTable.tbody>
-            <tfoot className="sticky bottom-0 left-0 w-full bg-gray-300 shadow border-t border-t-white">
-                <tr className="bg-blue-200 font-semibold text-black">
+            <tfoot className="sticky bottom-0 left-0 w-full bg-gray-300 border-t shadow border-t-white">
+                <tr className="font-semibold text-black bg-blue-200">
                     <td className={`px-3 py-1`} colSpan={5}>
                         TOTAL
                     </td>

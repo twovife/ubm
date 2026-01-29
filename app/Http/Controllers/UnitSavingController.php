@@ -338,7 +338,7 @@ class UnitSavingController extends Controller
 
 
     $data_per_pic = $data->map(function ($queries) use ($requestFilter) {
-      $jumlah_pinjam = $queries->unitssaving->where('transaction', 'K')->first()->nominal;
+      $jumlah_pinjam = $queries->unitssaving->where('transaction', 'K')->sum('nominal');
       $tanggal_pinjaman = $queries->unitssaving->where('transaction', 'K')->first()->transaction_date;
       $setoran_bulan_lalu = $queries->unitssaving->where('transaction', 'D')->where('transaction_date', "<", $requestFilter->startOfMonth)->sum('nominal');
       $setoran_bulan_ini =  $queries->unitssaving->where('transaction', 'D')->whereBetween('transaction_date', [$requestFilter->startOfMonth, $requestFilter->endOfMonth])->sum('nominal') ?? 0;
